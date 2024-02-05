@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import coreCSS from "../../@core/vendor/css/core.module.css"
 import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css"
-import demoCSS from"../../@core/css/demo.module.css"
+// import demoCSS from"../../@core/css/demo.module.css"
 
 function Navbar(){
 
