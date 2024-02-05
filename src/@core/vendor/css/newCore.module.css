@@ -1,0 +1,4 @@
+.layout-navbar{
+    max-width: calc(1440px - calc(1.625rem * 2));
+    
+}
