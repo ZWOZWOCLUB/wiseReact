@@ -6,10 +6,17 @@ import { useEffect, useState } from 'react';
 import{
     SettingMemverListAPICalls
 } from '../../apis/SettingMemverListAPICalls';
+import exp from 'constants';
 
-// function MemberList(){
-//     const dispatch = useDispatch();
-//     const navigate = useNavigate();
-//     const param = useParams();
-//     const member = useSelector(state => state.)
-// }
+function Setting(){
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const param = useParams();
+    // const member = useSelector(state => state.)
+    return(
+        <div>
+        askjfdljk</div>
+    );
+}
+
+export default Setting;
