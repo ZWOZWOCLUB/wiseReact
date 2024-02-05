@@ -1,0 +1,52 @@
+.profile-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.profile-card{
+    margin-right: 40px;
+    margin-top: 10px;
+
+}
+
+.accordion-header > button:hover{
+
+    background:rgba(105, 108, 255, 0.16)
+
+}
+
+
+/*organizationChart-create 의 style*/
+
+#org-tb-head th{
+
+    background: #8184ff;
+    border-color: transparent;
+    color: white;
+}
+
+.org-btn-diabled{
+    pointer-events: none;
+    opacity: 0.45;
+}
+
+.org-middle-manager{
+
+    max-width: 23.5%;
+    margin-top: 15px;
+
+}
+
+.org-flex{
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+}
+
+.org-dep-name{
+    flex-grow: 1; 
+    max-width: 23.5%;
+}
+
+
