@@ -15,13 +15,13 @@ function Navbar() {
           <div className={`${coreCSS[`menu-inner-shadow`]}`} />
           <ul className={`${coreCSS[`menu-inner`]} ${coreCSS[`py-1`]}`}>
             <li className={`${coreCSS[`menu-item`]}`}>
-              <NavLink to ="../../pages/Main.js" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to ="/" className={`${coreCSS[`menu-link`]}`}>
                 <div style={{ width: 40 }}/>
                 <div style={{ paddingLeft: 10 }}>홈</div>
               </NavLink>
             </li>
             <li className={`${coreCSS[`menu-item`]}`}>
-              <NavLink to = "../../pages/schedule/schedule" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to = "/schedule" className={`${coreCSS[`menu-link`]}`}>
               <div style={{ width: 40 }}/>
                 <div style={{ paddingLeft: 10 }}>스케줄</div>
               </NavLink>
@@ -55,14 +55,14 @@ function Navbar() {
               </NavLink>
             </li>
             <li className={`${coreCSS[`menu-item`]} `}>
-              <NavLink to = "/pay/pay" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to = "/pay" className={`${coreCSS[`menu-link`]}`}>
               <div style={{ width: 40 }}/>
 
                 <div style={{ paddingLeft: 10 }}>급여관리</div>
               </NavLink>
             </li>
             <li className={`${coreCSS[`menu-item`]}`}>
-              <NavLink to = "../../pages/setting/allMemberList" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to = "/setting" className={`${coreCSS[`menu-link`]}`}>
               <div style={{ width: 40 }}/>
 
                 <div style={{ paddingLeft: 10 }}>설정</div>

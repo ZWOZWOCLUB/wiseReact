@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './layouts/Layout';
-import Main from '../src/pages/Main';
-import Pay from '../src/pages/pay/pay';
-import Schedule from '../src/pages/schedule/schedule';
-// import Setting  from '../src/pages/setting/allMemberList';
+import Main from './pages/Main';
+import Pay from './pages/pay/pay';
+import Schedule from './pages/schedule/schedule';
+import Setting  from '../src/pages/setting/allMemberList';
 
 
 
@@ -13,9 +13,9 @@ function App() {
             <Routes>
                 <Route path='/' element={<Layout />}>
                     <Route index element={ <Main/>}/>
-                    <Route path="Pay" element={ <Pay />}/>
-                    {/* <Route path="Schedule" element={ <Schedule />}/> */}
-                    {/* <Route path="Setting" element={ <Setting />}/> */}
+                    <Route path='pay' element={ <Pay />}/>
+                    <Route path="Schedule" element={ <Schedule />}/>
+                    <Route path='setting' element={ <Setting />}/>
                 </Route>
             </Routes>
         </BrowserRouter>
