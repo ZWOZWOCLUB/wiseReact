@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.10/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          timeZone: 'UTC',
+          headerToolbar: {
+            left: 'today prev,next',
+            center: 'title',
+            right: ''
+          },
+          initialView: 'resourceTimelineMonth',
+          scrollTime: '08:00',
+          aspectRatio: 1.5,
+          views: {
+            resourceTimelineDay: {
+              buttonText: ':15 slots',
+              slotDuration: '00:15'
+            },
+            resourceTimelineTenDay: {
+              type: 'resourceTimeline',
+              duration: { days: 10 },
+              buttonText: '10 days'
+            }
+          },
+          editable: true,
+          resourceAreaHeaderContent: 'Rooms',
+          resources: '/api/demo-feeds/resources.json?with-nesting&with-colors',
+          events: '/api/demo-feeds/events.json?single-day&for-resource-timeline'
+        });
+
+        calendar.render();
+      });
+    </script>
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "dc4641f860664c6e824b093274f50291"}'></script>
+</head>
+<body>
+    <div id='calendar'></div>
+</body>
+</html>

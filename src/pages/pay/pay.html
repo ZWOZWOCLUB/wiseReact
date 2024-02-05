@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="ko"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8"/>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>급여명세서</title>
+
+    <meta name="description" content="" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../../assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../../assets/css/pay.css" />
+
+    <!-- Helpers -->
+    <script src="../../assets/vendor/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../assets/js/config.js"></script>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+            <a href="../../index.html" class="app-brand-link">
+              <img src="../../assets/img/icons/unicons/logo.png" alt="" style="padding-top: 30px; padding-bottom: 30px;">
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            <!-- Dashboard -->
+            <li class="menu-item">
+              <a href="../../index.html" class="menu-link">
+                <img src="../../assets/img/icons/unicons/home.png" alt="" style="width: 40px;">
+                <div style="padding-left: 10px;">홈</div>
+              </a>
+            </li>
+
+            <!-- Layouts -->
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <img src="../../assets/img/icons/unicons/schedule.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">스케줄</div>
+              </a>
+
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="layouts-without-menu.html" class="menu-link">
+                    <div>Without menu</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link">
+                <img src="../../assets/img/icons/unicons/approval.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">결재</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link">
+                <img src="../../assets/img/icons/unicons/organization .png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">부서</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link">
+                <img src="../../assets/img/icons/unicons/notice.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">공지</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link">
+                <img src="../../assets/img/icons/unicons/document.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">파일함</div>
+              </a>
+            </li>
+            <li class="menu-item active">
+              <a href="../html/pay/pay.html" class="menu-link">
+                <img src="../../assets/img/icons/unicons/pay.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">급여관리</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link">
+                <img src="../../assets/img/icons/unicons/statistics.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">통계</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="../setting/setting.html" class="menu-link">
+                <img src="../../assets/img/icons/unicons/setting.png" alt="" style="width: 40px; ">
+                <div style="padding-left: 10px;">설정</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar"
+          >
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- Search -->
+              <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0"></i>
+                  <input
+                    type="text"
+                    class="form-control border-0 shadow-none"
+                    placeholder="Search..."
+                    aria-label="Search..."
+                  />
+                </div>
+              </div>
+              <!-- /Search -->
+
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+                <li class="nav-item lh-1 me-3">
+                  공지
+                </li>
+                <li class="nav-item lh-1 me-3">
+                  알림
+                </li>
+                <li class="nav-item lh-1 me-3">
+                  쪽지
+                </li>
+
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="../../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              <img src="../../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-semibold d-block">John Doe</span>
+                            <small class="text-muted">Admin</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">My Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">출퇴근</span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="auth-login-basic.html">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!--/ User -->
+              </ul>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!여기에 작성!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">급여 ></span> 급여명세서</h4>
+
+             
+                <!-- Basic Layout -->
+                <div class="col-xxl">
+                  <div class="card mb-4">
+                    <div class="pay-top-wrapper">
+                      <div style="width: 10%;"><b>조회연도</b></div>
+                        <select id="defaultSelect" class="form-select" style="width: 10%;">
+                          <option>--선택--</option>
+                          <option value="2024">2024</option>
+                          <option value="2023">2023</option>
+                          <option value="2022">2022</option>
+                        </select>
+                        <div style="width: 100%;"></div>
+                        <div style="width: 20%;"><b>급여명세표 출력</b></div>
+                        <img src="../../assets/img/icons/unicons/excel.png" class="pay-img"><div style="width: 5%;">엑셀</div>
+                        <img src="../../assets/img/icons/unicons/pdf.png" class="pay-img"><div style="width: 5%;">PDF</div>
+                    </div>
+                    <table class="table table-hover">
+                      <thead>
+                      <tr style="background-color: #DCDCFF;">
+                        <th>지급년월</th>
+                        <th>구분</th>
+                        <th>지급총액</th>
+                        <th>공제총액</th>
+                        <th>차감지급액</th>
+                        <th>은행명</th>
+                        <th>계좌번호</th>
+                        <th>지급일자</th>
+                      </tr>
+                    </thead>
+                      <tr>
+                        <td>2023-11</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-12-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-10</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-11-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-09</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-10-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-08</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-09-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-07</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-08-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-06</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-07-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-05</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-06-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-04</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-05-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-03</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-04-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-02</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-03-25</td>
+                      </tr>
+                      <tr>
+                        <td>2023-01</td>
+                        <td>정기급여</td>
+                        <td>4,000,000원</td>
+                        <td>559,840원</td>
+                        <td>3,440,160원</td>
+                        <td>국민은행</td>
+                        <td>000000-00-000000</td>
+                        <td>2023-02-25</td>
+                      </tr>
+                      <tr style="background-color: #EEEEFF;">
+                        <td>&nbsp;</td>
+                        <td><b>합계</b></td>
+                        <td><b>원</b></td>
+                        <td><b>원</b></td>
+                        <td><b>원</b></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                     </table>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 col-12 mb-md-0 mb-4">
+                    <div class="card">
+                      <h5 class="card-header"><b>지급사항</b></h5>
+                      <table class="table">                        
+                        <tr style="background-color: #DCDCFF;">
+                          <th>항목</th>
+                          <th>금액</th>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">기본급</td>
+                          <td style="text-align: right;">3,800,000원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">식비</td>
+                          <td style="text-align: right;">200,000원</td>
+                        </tr>
+                        <tr>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                          <td style="border-bottom: #ffffff;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                        
+                        <tr style="background-color: #EEEEFF;">
+                          <td style="text-align: left;"><b>합계</b></td>
+                          <td style="text-align: right;"><b>4,000,000원</b></td>
+                        </tr>
+                       </table>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="card">
+                      <h5 class="card-header"><b>공제사항</b></h5>
+                      <table class="table">                        
+                        <tr style="background-color: #DCDCFF;">
+                          <th>항목</th>
+                          <th>금액</th>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">국민연금</td>
+                          <td style="text-align: right;">171,000원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">고용보험</td>
+                          <td style="text-align: right;">34,200원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">건강보험료</td>
+                          <td style="text-align: right;">134,710원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">노인장기요양보험료</td>
+                          <td style="text-align: right;">17,250원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">소득세</td>
+                          <td style="text-align: right;">184,260원</td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: left;">지방소득세</td>
+                          <td style="text-align: right;">18,420원</td>
+                        </tr>
+                        <tr style="background-color: #EEEEFF;">
+                          <td style="text-align: left;"><b>합계</b></td>
+                          <td style="text-align: right;"><b>559,840원</b></td>
+                        </tr>
+                       </table>
+                          
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../assets/vendor/js/bootstrap.js"></script>
+    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+    <script src="../../assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../assets/js/dashboards-analytics.js"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </body>
+</html>
