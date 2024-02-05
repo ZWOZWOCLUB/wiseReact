@@ -1,14 +1,9 @@
-import { combineReducers } from 'redux';
-import memberReducer from './MemberModule';
-import reviewReducer from './ReviewModule';
-import productReducer from './ProductModule';
-import purchaseReducer from './PurchaseModule';
+const { combineReducers } = require("redux");
+
+// 사용할 리듀서들을 여기서 모아놓고 사용합니다.
 
 const rootReducer = combineReducers({
-    memberReducer,
-    reviewReducer,
-    productReducer,
-    purchaseReducer
+
 });
 
 export default rootReducer;
