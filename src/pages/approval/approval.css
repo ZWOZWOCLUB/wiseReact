@@ -1,0 +1,42 @@
+.payment-line {
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 35px;
+}
+
+.payment-line ul {
+    list-style: none;
+    /* border-bottom : solid black 1px; */
+    padding-left: 30px;
+    margin-bottom: 0;
+}
+
+.payment-line li {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.inputDate {
+    margin-inline: 20px;
+    width: 130px;
+    height: 30px;
+}
+
+.payment-type {
+    width: 150px;
+    height: 30px;
+    margin-right: 20px;
+}
+.payment-status {
+    width: 150px;
+    height: 30px;
+    margin-right: 20px;
+}
+
+.payment-insert-button {
+    width: 150px;
+    margin-left: 100px;
+    height: 40px;
+    background-color: #dcdcff;
+    border: none;
+}
