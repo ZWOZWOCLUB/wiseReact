@@ -1,0 +1,11 @@
+.pay-top-wrapper{
+    display: flex;
+    vertical-align: middle;
+    padding: 20px;
+    align-items: center;
+}
+
+.pay-img{
+    width: 1.5rem;
+    margin: 0.5rem;
+}
