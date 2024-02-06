@@ -5,6 +5,7 @@ import Pay from './pages/pay/pay';
 import Schedule from './pages/schedule/schedule';
 import Setting  from '../src/pages/setting/allMemberList';
 import MemberInsert from './pages/setting/MemberInsert';
+import 'boxicons/css/boxicons.min.css';
 
 
 

@@ -5,8 +5,12 @@ import coreCSS from '../../@core/vendor/css/core.module.css';
 import payCSS from '../../@core/css/pay.module.css';
 import pdfImg from '../../@core/img/icons/unicons/pdf.png';
 import excelImg from '../../@core/img/icons/unicons/excel.png';
-import { callPayListAPI, callPayYEARAPI } from '../../apis/PayAPICalls';
-import { GET_PAYLIST } from '../../modules/PayModule';
+import { callPayListAPI } from '../../apis/PayAPICalls';
+import { callPayYEARAPI } from '../../apis/YearAPICalls';
+
+
+
+
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -26,23 +30,23 @@ function Pay(){
   const params = useParams();
 
   const [payDetailsData, setPayDetailsData] = useState();
-  const [yearList, setYearList] = useState();
-
   const firstYearMonth = new Date();
-  const currentYear = firstYearMonth.getFullYear();
+  const currentYears = firstYearMonth.getFullYear();
+  const [currentYear, setCurrentYear] = useState(currentYears);
   console.log(currentYear);
 
+
   const payList = useSelector(state => state.payReducer);
+  const yList = useSelector(state => state.yearReducer);
+  console.log('-------------', yList);
+  console.log('~~~~~~~~~~~~~',payList);
 
   useEffect(
     () => {
       dispatch(callPayYEARAPI({
         memCode: 2
-      })).then((response) => {
-        console.log(yearList);
-        setYearList(response);
-        console.log(yearList);
-      });
+      }));
+      console.log(yList);
     }
     ,[]
   );
@@ -51,11 +55,19 @@ function Pay(){
     () => {
       dispatch(callPayListAPI({
         memCode: 2,
-        yearMonth: 2023
+        yearMonth: currentYear
       }));
+      setPayDetailsData(null);
+      console.log(payDetailsData);
+      console.log(payList);
     }
     ,[]
   );
+
+  useEffect(() => {
+    setPayDetailsData(null);
+  }, [payList]);
+
   const onClickDetailPay = (pdeCode) => {
     const selectedPayDetail = payList.find(pay => pay.pdeCode === pdeCode);
     if (selectedPayDetail) {
@@ -73,6 +85,27 @@ function Pay(){
     }
   },[payList, params.pdeCode]);
 
+  const onClickChangeYear = (e) => {
+    console.log('클릭');
+    setCurrentYear(e.target.value);
+    dispatch(callPayListAPI({
+      memCode: 2,
+      yearMonth: e.target.value
+    }));
+  };
+  
+  const save = async () => {
+      const response = await fetch('your_server_url/payConvertPDF', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          payDetailsData,
+          payList
+        })
+      });
+    };
 
 
 
@@ -92,10 +125,12 @@ function Pay(){
           id="defaultSelect"
           className={`${coreCSS['form-select']}`}
           style={{ width: "10%" }}
+          onChange={onClickChangeYear}
+
         >          
           <option>--선택--</option>
-          { Array.isArray(yearList) && yearList.map((y) => (
-          <option value={y}>{y}</option>
+          { Array.isArray(yList) && yList.map((y) => (
+          <option value={y} >{y}</option>
           ))};
 
         </select>
@@ -103,10 +138,8 @@ function Pay(){
         <div style={{ width: "20%" }}>
           <b>급여명세표 출력</b>
         </div>
-        <img src={excelImg} alt="Excel icon" style={{ width : "1.5rem", margin: "0.5rem"}}/>
-        <div style={{ width: "5%" }}>엑셀</div>
         <img src={pdfImg} alt="pdfImg" style={{ width : "1.5rem", margin: "0.5rem"}}/>
-        <div style={{ width: "5%" }}>PDF</div>
+        <div onClick={save} style={{ width: "5%" }}>PDF</div>
       </div>
       <table className={`${coreCSS['table']} ${coreCSS['table-hover']}`}>
         <thead>
@@ -122,21 +155,24 @@ function Pay(){
           </tr>
         </thead>
         <tbody>
-          { Array.isArray(payList) && payList.map((p) => (
-            <tr 
-              key={ p.pdeCode }
-              onClick={ () => onClickDetailPay(p.pdeCode) }
-              >
-              <td>{ formatDate(p.pdeYymm) }</td>
-              <td>{ "정기급여" }</td>
-              <td>{formatNumber(p.pdeSalary)}</td>
-              <td>{formatNumber(p.totalDeduction)}</td>
-              <td>{formatNumber(p.deductedAmount)}</td>
-              <td>{ p.salCode.salBankName }</td>
-              <td>{ p.salCode.salNumber }</td>
-              <td>{ p.pdeDate }</td>
+          {Array.isArray(payList) && payList.length > 0 ? (
+            payList.map((p) => (
+              <tr key={p.pdeCode} onClick={() => onClickDetailPay(p.pdeCode)}>
+                <td>{formatDate(p.pdeYymm)}</td>
+                <td>{"정기급여"}</td>
+                <td>{formatNumber(p.pdeSalary)}</td>
+                <td>{formatNumber(p.totalDeduction)}</td>
+                <td>{formatNumber(p.deductedAmount)}</td>
+                <td>{p.salCode.salBankName}</td>
+                <td>{p.salCode.salNumber}</td>
+                <td>{p.pdeDate}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8">데이터가 없습니다.</td>
             </tr>
-          ))}          
+          )}   
           {Array.isArray(payList) && payList.length > 0 && (
           <tr style={{ backgroundColor: "#EEEEFF" }}>
             <td>&nbsp;</td>
