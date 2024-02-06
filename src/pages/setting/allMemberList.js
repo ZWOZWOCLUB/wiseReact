@@ -16,9 +16,8 @@ function Setting(){
     return(
         <>
   <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`}>
-    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회
+    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 <span><button>직원 등록</button></span>
   </h4>
-  {/* Basic Layout */}
   <div className={`${coreCSS['col-xxl']}`}>
     <div className={`${coreCSS['card']} ${coreCSS['mb-4']}`}>
       <table className={`${coreCSS['table']} ${coreCSS['table-hover']}`}>
