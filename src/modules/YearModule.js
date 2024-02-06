@@ -2,15 +2,15 @@ import { createActions, handleActions } from 'redux-actions';
 
 const intitialState = [];
 
-export const GET_PAYLIST = 'pay/GET_PAYLIST';
+export const GET_YEAR = 'pay/GET_YEAR'
 
 const actions = createActions({
-    [GET_PAYLIST]: () => {}
+    [GET_YEAR]: () => {}
 });
 
-const payReducer = handleActions(
+const yearReducer = handleActions(
     {
-        [GET_PAYLIST]: (state, { payload }) => {
+        [GET_YEAR]: (state, { payload }) => {
             return payload;
         }
 
@@ -18,4 +18,4 @@ const payReducer = handleActions(
     intitialState
 );
 
-export default payReducer;
+export default yearReducer;
