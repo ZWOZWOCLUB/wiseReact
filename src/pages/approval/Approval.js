@@ -34,46 +34,50 @@ function Approval() {
 
     return (
         <>
-            <div class='layout-wrapper layout-content-navbar'>
-                <div class='layout-container'>
-                    <div class='layout-page'>
-                        <div class='content-wrapper'>
-                            <div class='container-xxl flex-grow-1 container-p-y'>
-                                <h4 class='fw-bold py-3 mb-4'>
-                                    <span class='text-muted fw-light'>결재 {'>'}</span> 받은 결재
+            <div className='layout-wrapper layout-content-navbar'>
+                <div className='layout-container'>
+                    <div className='layout-page'>
+                        <div className='content-wrapper'>
+                            <div className='container-xxl flex-grow-1 container-p-y'>
+                                <h4 className='fw-bold py-3 mb-4'>
+                                    <span className='text-muted fw-light'>결재 {'>'}</span> 받은 결재
                                 </h4>
-                                <div class='payment-line'>
-                                    <ul class='nav nav-pills flex-column flex-md-row mb-3'>
-                                        <li class='nav-item'>
-                                            <button class='nav-link active' onClick={onClickReceiveApproval}>
+                                <div className='payment-line'>
+                                    <ul className='nav nav-pills flex-column flex-md-row mb-3'>
+                                        <li className='nav-item'>
+                                            <button className='nav-link active' onClick={onClickReceiveApproval}>
                                                 {' '}
                                                 받은 결재
                                             </button>
                                         </li>
-                                        <li class='nav-item'>
-                                            <button class='nav-link' onClick={onClickSendApproval}>
+                                        <li className='nav-item'>
+                                            <button className='nav-link' onClick={onClickSendApproval}>
                                                 {' '}
                                                 보낸 결재
                                             </button>
                                         </li>
-                                        <li class='nav-item'>
-                                            <button class='nav-link' onClick={onClickAssignment}>
+                                        <li className='nav-item'>
+                                            <button className='nav-link' onClick={onClickAssignment}>
                                                 {' '}
                                                 전결자 지정
                                             </button>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class='col-xxl'>
-                                    <div class='card mb-4'>
-                                        <div class='pay-top-wrapper'>
+                                <div className='col-xxl'>
+                                    <div className='card mb-4'>
+                                        <div className='pay-top-wrapper'>
                                             <div></div>
-                                            <input class='inputDate' type='date' /> ~
-                                            <input class='inputDate' type='date' />
-                                            <select name='payment-type' class='payment-type' id='payment-type'>
+                                            <input className='inputDate' type='date' /> ~
+                                            <input className='inputDate' type='date' />
+                                            <select name='payment-type1' className='payment-type1' id='payment-type1'>
                                                 <option value='0'>결재유형</option>
                                             </select>
-                                            <select name='payment-status' class='payment-status' id='payment-status'>
+                                            <select
+                                                name='payment-status'
+                                                className='payment-status'
+                                                id='payment-status'
+                                            >
                                                 <option value='0'>결재상태</option>
                                                 <option value='1'>반려</option>
                                                 <option value='2'>승인</option>
@@ -88,12 +92,12 @@ function Approval() {
                                                 src='../../assets/img/paymentimg/search.png'
                                                 style={{ width: '20px', marginLeft: '5px' }}
                                             />
-                                            <button class='payment-insert-button'>결재신청</button>
+                                            <button className='payment-insert-button'>결재신청</button>
                                         </div>
-                                        <table class='table table-hover'>
+                                        <table className='table table-hover'>
                                             <thead>
                                                 <tr style={{ backgroundColor: '#DCDCFF' }}>
-                                                    <th>보낸이</th>
+                                                    <th>상신자</th>
                                                     <th>제목</th>
                                                     <th>요청일</th>
                                                     <th>반려/승인일</th>
@@ -103,14 +107,26 @@ function Approval() {
                                                     <th></th>
                                                 </tr>
                                             </thead>
-                                            <td>이현강</td>
-                                            <td>휴가가겠읍니다</td>
-                                            <td>2024-01-22</td>
-                                            <td></td>
-                                            <td>연차</td>
-                                            <td>대기</td>
-                                            <td>아이콘</td>
-                                            <td>:</td>
+                                            <tbody>
+                                                <td>이현강</td>
+                                                <td>휴가가겠읍니다</td>
+                                                <td>2024-01-22</td>
+                                                <td></td>
+                                                <td>연차</td>
+                                                <td>대기</td>
+                                                <td>아이콘</td>
+                                                <td>:</td>
+                                            </tbody>
+                                            <tbody>
+                                                <td>이현강</td>
+                                                <td>휴가가겠읍니다</td>
+                                                <td>2024-01-22</td>
+                                                <td></td>
+                                                <td>연차</td>
+                                                <td>대기</td>
+                                                <td>아이콘</td>
+                                                <td>:</td>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>

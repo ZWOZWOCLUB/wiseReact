@@ -102,7 +102,7 @@
   font-weight: 400;
   text-overflow: ellipsis;
   color: #777;
-  *display: inline;
+  display: inline;
   zoom: 1;
 }
 

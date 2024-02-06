@@ -5,6 +5,8 @@ import Pay from './pages/pay/pay';
 import Schedule from './pages/schedule/schedule';
 import Setting from '../src/pages/setting/allMemberList';
 import Approval from './pages/approval/Approval';
+import SendApproval from './pages/approval/SendApproval';
+import Assignment from './pages/approval/Assignment';
 
 function App() {
     return (
@@ -16,6 +18,8 @@ function App() {
                     <Route path='Schedule' element={<Schedule />} />
                     <Route path='setting' element={<Setting />} />
                     <Route path='approval' element={<Approval />} />
+                    <Route path='sendapproval' element={<SendApproval />} />
+                    <Route path='assignment' element={<Assignment />} />
                 </Route>
             </Routes>
         </BrowserRouter>

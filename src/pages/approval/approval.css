@@ -22,7 +22,7 @@
     height: 30px;
 }
 
-.payment-type {
+.payment-type1 {
     width: 150px;
     height: 30px;
     margin-right: 20px;
@@ -40,3 +40,15 @@
     background-color: #dcdcff;
     border: none;
 }
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-accent-bg: var(--bs-table-hover-bg);
+    color: var(--bs-table-hover-color);
+}
+
+.table th,
+.table td,
+.table tr {
+    height: 45px; /* 또는 다른 크기로 지정 */
+}
+
