@@ -5,10 +5,23 @@ import { Navigate } from "react-router-dom";
 import coreCSS from '../../@core/vendor/css/core.module.css';
 import payCSS from '../../@core/css/pay.module.css'
 
+import { callPayListAPI } from '../../apis/PayAPICalls';
+
 function Pay(){
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const payList = useSelector(state => state.payReducer);
+
+  useEffect(
+    () => {
+      dispatch(callPayListAPI({
+        memCode: 2,
+        yearMonth: 2023
+      }));
+    }
+    ,[]
+  );
 
 
     return(
