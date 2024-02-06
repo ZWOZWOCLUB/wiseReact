@@ -9,14 +9,22 @@ import{
     SettingMemverListAPICalls
 } from '../../apis/SettingMemverListAPICalls';
 
+
+
 function Setting(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
     // const member = useSelector(state => state.)
+
+    
+    const onClickMemberInsert = () => {
+    console.log(onClickMemberInsert);
+    navigate("/memberInsert", { replace: false });
+    }
     return(
         <>
   <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`}>
-    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 <span><button>직원 등록</button></span>
+    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 <span><button onClick={ onClickMemberInsert }>직원 등록</button></span>
   </h4>
   <div className={`${coreCSS['col-xxl']}`}>
     <div className={`${coreCSS['card']} ${coreCSS['mb-4']}`}>
