@@ -8,15 +8,88 @@ import '../../@core/css/pay.css';
 import '../../@core/css/payment-assignment.css';
 import '../../@core/css/tui-tree.css';
 import '../../@core/css/payment-annual.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { useNavigate } from 'react-router-dom';
+import Calendar from '@toast-ui/calendar';
+import { useEffect, useRef, useState } from 'react';
 
 function Assignment() {
     const navigate = useNavigate();
+    const calendarRef = useRef(null);
+    const [currentDate, setCurrentDate] = useState(new Date());
     // const dipatch = useDispatch();
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
 
     // console.log('approvalList ', approvalList);
+
+    useEffect(() => {
+        if (calendarRef.current) {
+            const container = calendarRef.current;
+
+            const options = {
+                defaultView: 'month',
+                month: {
+                    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                },
+                timezone: {
+                    zones: [
+                        {
+                            timezoneName: 'Asia/Seoul',
+                            displayLabel: 'Seoul',
+                        },
+                        {
+                            timezoneName: 'Europe/London',
+                            displayLabel: 'London',
+                        },
+                    ],
+                },
+            };
+            const calendar = new Calendar(container, options);
+
+            calendar.setTheme({
+                month: {
+                    weekend: {
+                        backgroundColor: 'aliceblue',
+                    },
+                },
+            });
+            setCurrentDate(new Date());
+
+            const todayButton = document.getElementById('today');
+            todayButton.addEventListener('click', function () {
+                calendar.today();
+                displayMonth();
+            });
+
+            const prevButton = document.getElementById('prev');
+            prevButton.addEventListener('click', function () {
+                calendar.prev();
+                displayMonth();
+            });
+
+            const nextButton = document.getElementById('next');
+            nextButton.addEventListener('click', function () {
+                calendar.next();
+                displayMonth();
+            });
+
+            const range = document.querySelector('.range');
+
+            function displayMonth() {
+                var currentDate = calendar.getDate();
+                var year = currentDate.getFullYear();
+                var month = currentDate.getMonth() + 1;
+                if (month < 10) {
+                    month = '0' + month;
+                }
+
+                range.textContent = year + '년 ' + month + '월';
+            }
+
+            displayMonth();
+        }
+    }, []);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -32,6 +105,7 @@ function Assignment() {
         console.log('ReceiveApproval click');
         navigate(`/Approval`, { replace: false });
     };
+
     return (
         <>
             <div className='layout-wrapper layout-content-navbar'>
@@ -70,11 +144,21 @@ function Assignment() {
                                         <div className='pay-top-wrapper'>
                                             <div className='container'>
                                                 <div>
-                                                    <button className='prev'>{'<'}</button>
-                                                    <span className='range'></span>
-                                                    <button className='next'>{'>'}</button>
-                                                    <button className='today'>Today</button>
-                                                    <div className='payment-calendar' id='calendar'></div>
+                                                    <button className='prev' id='prev'>
+                                                        {'<'}
+                                                    </button>
+                                                    <span className='range' id='range'></span>
+                                                    <button className='next' id='next'>
+                                                        {'>'}
+                                                    </button>
+                                                    <button className='today' id='today'>
+                                                        Today
+                                                    </button>
+                                                    <div
+                                                        className='payment-calendar'
+                                                        id='calendar'
+                                                        ref={calendarRef}
+                                                    ></div>
                                                 </div>
                                                 <div className='payment-table'>
                                                     <h5>결재선정보</h5>
