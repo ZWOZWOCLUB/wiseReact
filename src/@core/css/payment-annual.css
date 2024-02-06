@@ -1,81 +1,78 @@
-.payment-type{
-    width:100%;
+.payment-type {
+    width: 100%;
     height: 800px;
-    background-color: #F5F5F9;
+    background-color: #f5f5f9;
     margin-top: 20px;
-    margin-bottom : 20px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
-    padding-top:10px;
+    padding-top: 10px;
     padding-left: 10px;
 }
 
-.people{
+.people {
     width: 40%;
 }
 
-.in-people{
+.in-people {
     display: flex;
     align-items: center;
 }
 
-#payment-type{
-    margin-left: 20px; 
+#payment-type {
+    margin-left: 20px;
     width: 60%;
 }
 
-#manager-btn{
+#manager-btn {
     margin-top: 40px;
     padding-left: 20px;
     display: flex;
     justify-content: space-between;
 }
 
-#tree-btn{
+#tree-btn {
     width: 100px;
     border: none;
-    color:white;
+    color: white;
     background-color: #696cff;
     border-radius: 10%;
 }
 
-.payment-manager{
+.payment-manager {
     width: 100%;
     height: 15%;
     background-color: white;
-    
 }
 
-
-#manager-btn2{
+#manager-btn2 {
     margin-top: 40px;
     padding-left: 20px;
     display: flex;
     justify-content: space-between;
 }
 
-#tree-btn2{
+#tree-btn2 {
     width: 100px;
     border: none;
-    color:white;
+    color: white;
     background-color: #696cff;
     border-radius: 10%;
 }
 
-#payment-manager2{
+#payment-manager2 {
     width: 100%;
     height: 43%;
-    background-color: white; 
+    background-color: white;
 }
 
-#payment-manager1{
+#payment-manager1 {
     width: 100%;
     height: 10%;
-    background-color: white; 
+    background-color: white;
 }
 
-
-.kind{
+.kind {
     width: 60%;
     background-color: white;
     margin-left: 150px;
@@ -83,25 +80,33 @@
     margin-right: 50px;
     margin-bottom: 25px;
     padding-left: 50px;
-    padding-top:50px;
+    padding-top: 50px;
 }
 
-.kind input, select, textarea{
+.kind input,
+select,
+textarea {
     border: solid 1px #e0dfdf;
 }
 
-#input-name{
+#input-name {
     margin-left: 20px;
     border: solid 1px #e0dfdf;
     width: 80%;
 }
 
-#margintop div{
+#margintop div {
     margin-top: 30px;
 }
 
-#annual-contents{
+#annual-contents {
     margin-left: 20px;
-    height: 300px; 
+    height: 300px;
     width: 70%;
+}
+
+#last-thing {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
 }
