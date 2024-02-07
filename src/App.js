@@ -25,6 +25,8 @@ import SettingDocument from './pages/setting/settingDocument';
 import SettingVacation from './pages/setting/settingVaction';
 import SettingAttendance from './pages/setting/settingAttendance';
 import 'boxicons/css/boxicons.min.css';
+import Sign from './pages/mypage/01_sign';
+import Organization from './pages/organizationChart/organizationChart';
 
 function App() {
     return (
@@ -39,6 +41,18 @@ function App() {
                     <Route path='approval' element={<Approval />} />
                     <Route path='sendapproval' element={<SendApproval />} />
                     <Route path='assignment' element={<Assignment />} />
+                    <Route path='mp' element={<MyPage />} />
+                    <Route path='mpUpdate' element={<MyPageUpdate />} />
+                    <Route path='mppersonnelInfo' element={<PersonnelInfo />} />
+                    <Route path='mpvacation' element={<MPVacation />} />
+                    <Route path='mpattendance' element={<MPAttendance />} />
+                    <Route path='mpdocument' element={<MPDocument />} />
+                    <Route path='alarm' element={<Alarm />} />
+                    <Route path='message' element={<Message />} />
+                    <Route path='message3' element={<Message3 />} />
+                    <Route path='sign' element={<Sign />} />
+                    <Route path='/login' element={<Login />} /> {/* 로그인 페이지 라우트 추가 */}
+                    <Route path='organizationChart' element={<Organization />} />
                     <Route path='mp' element={ <MyPage /> }/>
                     <Route path='mpUpdate' element={ <MyPageUpdate /> }/>
                     <Route path='mppersonnelInfo' element={ <PersonnelInfo /> }/>
@@ -54,7 +68,7 @@ function App() {
                      <Route path='settingVacation' element={ <SettingVacation/>}/>
                      <Route path='settingAttendance' element={ <SettingAttendance/>}/>
                 </Route>
-                <Route path='sign' element={ <SignatureCanvas /> }/>
+                {/* <Route path='sign' element={ <SignatureCanvas /> }/> */}
             </Routes>
         </BrowserRouter>
     );

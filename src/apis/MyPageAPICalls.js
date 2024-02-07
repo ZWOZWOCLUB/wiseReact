@@ -1,7 +1,8 @@
-import { GET_MEM, POST_LOGIN, POST_REGISTER } from '../modules/MypageModule';
+import { GET_MEM } from '../modules/MypageModule';
 
 
 export const callMemberDetailAPI = ({ memCode }) => {
+    console.log('api memCode',memCode);
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/searchMem/${memCode}`;
 
     return async (dispatch, getState) => {
@@ -10,14 +11,14 @@ export const callMemberDetailAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
         console.log('[callMemberDetailAPI] callMemberDetailAPI RESULT : ', result);
         if (result.status === 200) {
             console.log('[callMemberDetailAPI] callMemberDetailAPI SUCCESS');
-            dispatch({ type: GET_MEM, payload: result.data });
+            dispatch({ type: GET_MEM, payload: result });
         }
     };
 };

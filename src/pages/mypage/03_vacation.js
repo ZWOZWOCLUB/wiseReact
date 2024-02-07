@@ -38,9 +38,6 @@ function MPVacation(){
 
     return(
         <>
-    <div className="layout-wrapper layout-content-navbar">
-      <div className="layout-container">
-        
 
         <div className="layout-page">
 
@@ -285,10 +282,7 @@ function MPVacation(){
             <div className="content-backdrop fade"></div>
           </div>
         </div>
-      </div>
 
-      <div className="layout-overlay layout-menu-toggle"></div>
-    </div>
     
         </>
     )
