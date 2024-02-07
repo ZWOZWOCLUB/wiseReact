@@ -12,7 +12,7 @@ import {
 } from '../modules/ApprovalModule.js';
 
 export const callReceiveApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedpayment/${memCode}`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${memCode}`;
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
@@ -20,7 +20,7 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
+                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
             },
         }).then((response) => response.json());
 
@@ -31,7 +31,7 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
 };
 
 export const callSendApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendpayment/${memCode}`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${memCode}`;
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
@@ -39,7 +39,7 @@ export const callSendApprovalAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
+                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
             },
         }).then((response) => response.json());
 

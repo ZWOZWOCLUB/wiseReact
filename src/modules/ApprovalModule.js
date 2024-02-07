@@ -1,5 +1,4 @@
-import { createAction } from 'redux-action';
-import { handleAction } from 'redux-actions';
+import { createActions, handleActions } from 'redux-actions';
 
 // 초기값은 빈 배열
 const initialState = [];
@@ -16,7 +15,7 @@ export const PUT_APPROVAL_COMPLTE = 'approval/PUT_APPROVAL_COMPLETE';
 export const PUT_APPROVAL_ROLE_UPDATE = 'approval/PUT_APPROVAL_ROLE_UPDATE';
 export const PUT_APPROVAL_ROLE_RECOVERY = 'approval/PUT_APPROVAL_ROLE_RECOVERY';
 
-const actions = createAction({
+const actions = createActions({
     [GET_RECIEVE_APPROVAL]: () => {},
     [GET_SEND_APPROVAL]: () => {},
     [POST_APPROVAL_ANNUAL]: () => {},
@@ -30,7 +29,7 @@ const actions = createAction({
 });
 
 // 리듀서
-const approvalReducer = handleAction(
+const approvalReducer = handleActions(
     {
         [GET_RECIEVE_APPROVAL]: (state, { payload }) => {
             return payload;

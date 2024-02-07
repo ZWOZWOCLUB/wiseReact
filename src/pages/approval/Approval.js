@@ -5,13 +5,26 @@ import '../../@core/css/demo.css';
 import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { callReceiveApprovalAPI } from '../../apis/ApprovalAPICalls';
 
 // const { useDispatch, useSelector } = require('react-redux');
 const { useNavigate } = require('react-router-dom');
 
 function Approval() {
     const navigate = useNavigate();
-    // const dipatch = useDispatch();
+    const dispatch = useDispatch();
+    const approvalList = useSelector((state) => state.approvalReducer);
+
+    useEffect(() => {
+        dispatch(
+            callReceiveApprovalAPI({
+                memCode: 3,
+            })
+        );
+    }, []);
+
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
 
@@ -108,25 +121,25 @@ function Approval() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <td>이현강</td>
-                                                <td>휴가가겠읍니다</td>
-                                                <td>2024-01-22</td>
-                                                <td></td>
-                                                <td>연차</td>
-                                                <td>대기</td>
-                                                <td>아이콘</td>
-                                                <td>:</td>
+                                                {Array.isArray(approvalList) && approvalList.length > 0 ? (
+                                                    approvalList.map((a) => (
+                                                        <tr key={a.appCode}>
+                                                            <td>{a.approval.approvalMember.memName}</td>
+                                                            <td>{a.approval.payName}</td>
+                                                            <td>{a.approval.payDate}</td>
+                                                            <td>{a.appDate}</td>
+                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.appState}</td>
+                                                            <td>:</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <td style={{ display: 'flex', textAlign: 'center' }}>
+                                                        받은 결재가 없습니다.
+                                                    </td>
+                                                )}
                                             </tbody>
-                                            <tbody>
-                                                <td>이현강</td>
-                                                <td>휴가가겠읍니다</td>
-                                                <td>2024-01-22</td>
-                                                <td></td>
-                                                <td>연차</td>
-                                                <td>대기</td>
-                                                <td>아이콘</td>
-                                                <td>:</td>
-                                            </tbody>
+                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>
