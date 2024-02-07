@@ -20,6 +20,7 @@ function Setting(){
     const [pageEnd, setPageEnd] = useState(1);
     const [search, setSearch] = useState('');
     const pageInfo = member.pageInfo || {};
+    const [searchMember, setSearchMember ] = useState([]);
 
     console.log('pageInfo', pageInfo);
     console.log('pageInfo.pageEnd', pageInfo.pageEnd);
@@ -43,9 +44,15 @@ function Setting(){
     }, [currentPage]
     );
     
-    const onClickMemberInsert = (e) => {
+    const onClickMemberInsert = () => {
     console.log(onClickMemberInsert);
-    setSearch(e.target.value);
+    navigate("/memberAdd",{replace:true})
+
+  }
+
+  const onClickAttendance = () => {
+    console.log(onClickAttendance);
+    navigate("/settingAttendance", {replace:true})
   }
 
     
@@ -55,22 +62,29 @@ function Setting(){
     }
 
   const onEnterKeyHandler = (e) => {
-      if (e.key === 'Enter') {
           console.log('Enter key', search);
+          const searchResult = memberList.filter(member => member.memName.includes(search));
+          setSearchMember(searchResult);
+          console.log(searchMember);
+        }
+
           
-          navigate(`/search?value=${search}`, { replace: false });
-          
-          // dispatch(callSearchProductAPI({
-          //     search: search
-          // }));
-          window.location.reload();
-      }
-  }
+  
     return(
         <>
-  <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`}>
-    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 <span><button onClick={ onClickMemberInsert }>직원 등록</button></span>
+        <div style={{ display: "flex", justifyContent: "space-between"}}>
+  <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`} style={{ flex: 5}}>
+    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 
   </h4>
+  <ul className="nav nav-pills flex-column flex-md-row mb-3" style={{ flex: 1, display:"flex", justifyContent: "space-between"}}>
+  <li className={`nav-item`} style={{ cursor: "pointer"}}>
+    <li className={`nav-link active`} onClick={ onClickMemberInsert }>직원 등록</li>
+    </li>
+    <li className={`nav-item`} style={{ cursor: "pointer"}}>
+    <li className={`nav-link active`} onClick={ onClickAttendance }>근태 조회</li>
+    </li>
+    </ul>
+  </div>
   <div className={`${coreCSS['col-xxl']}`}>
     <div className={`${coreCSS['card']} ${coreCSS['mb-4']}`}>
       <table className={`${coreCSS['table']} ${coreCSS['table-hover']}`}>
@@ -87,13 +101,28 @@ function Setting(){
           </tr>
         </thead>
         <tbody>
-        { Array.isArray(memberList) && memberList.map((m) => (
-          <tr>
-            <td></td>
+        { Array.isArray(searchMember) && searchMember.length > 0? (
+          searchMember.map((s, index) => (
+            <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{s.memCode}</td>
+            <td>{s.memName}</td>
+            <td>{s.departmentDTO ? s.departmentDTO.depName : '-'}</td>
+            <td>{s.positionDTO ? s.positionDTO.posName : '-'}</td>
+            <td>{s.memHireDate}</td>
+            <td>{s.memEndDate ? s.memEndDate: '-'}</td>
+            <td>{s.memPhone}</td>
+          </tr>
+          ))
+        ) :
+        
+        Array.isArray(memberList) && memberList.map((m, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
             <td>{m.memCode}</td>
             <td>{m.memName}</td>
-            <td>{}</td>
-            <td>{}</td>
+            <td>{m.departmentDTO ? m.departmentDTO.depName : '-'}</td>
+            <td>{m.positionDTO ? m.positionDTO.posName : '-'}</td>
             <td>{m.memHireDate}</td>
             <td>{m.memEndDate ? m.memEndDate: '-'}</td>
             <td>{m.memPhone}</td>
@@ -105,7 +134,7 @@ function Setting(){
       </table>
       <div className={`${payCSS['input-group2']}`}>
         <span className={`${payCSS['input-group-text2']}`} id="basic-addon11">
-          성명
+          이름
         </span>
         <input
           type="text"
@@ -114,7 +143,8 @@ function Setting(){
           onKeyUp={ onEnterKeyHandler }
           onChange={onSearchChangeHandler }
         />
-        <span className={`${coreCSS['input-group-text']}`} id="basic-addon-search31">
+        <span className={`${coreCSS['input-group-text']}`} id="basic-addon-search31"
+        onClick={ onEnterKeyHandler }>
           <i className="bx bx-search" />
         </span>
       </div>
@@ -132,7 +162,7 @@ function Setting(){
             </li>
           </li>)}
           <li className={`${coreCSS['page-item']} ${coreCSS['prev']}`}
-           onClick={() => setCurrentPage(currentPage - 1)}
+           onClick={() => (currentPage === 1 || currentPage === 0)? undefined :setCurrentPage(currentPage - 1)}
            disabled={currentPage === 1 || currentPage === 0}>           
             <li className={`${coreCSS['page-link']}`}>
               <i className="tf-icon bx bx-chevron-left" />
@@ -140,16 +170,19 @@ function Setting(){
           </li>
           {pageNumber.map((num) => (
           <li key={num}  className={ currentPage === num? `${coreCSS['page-item']} ${coreCSS['active']}` : `${coreCSS['page-item']}`}
-            onClick={() => setCurrentPage(currentPage === num)}
-          >
+            onClick={() => setCurrentPage(num)}>
             <li className={`${coreCSS['page-link']}`} >
               {num}
             </li>
           </li>
           ))}
+
+          
           <li className={`${coreCSS['page-item']} ${coreCSS['next']}`}
+          
           disabled={currentPage === pageInfo.pageEnd || pageInfo.total === 0}
-            onClick={() => setCurrentPage(currentPage + 1)}>   
+          onClick={() => (currentPage === pageInfo.pageEnd || currentPage === 0)? undefined :setCurrentPage(currentPage + 1)}>
+
             <li className={`${coreCSS['page-link']}`} >
               <i className="tf-icon bx bx-chevron-right" />
             </li>

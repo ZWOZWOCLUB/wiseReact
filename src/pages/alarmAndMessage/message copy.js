@@ -44,7 +44,7 @@ function Message3(){
 <button 
 className="nav-item lh-1 me-3"
 data-bs-toggle="offcanvas"
-data-bs-target="#offcanvasEnd"
+data-bs-target="#offcanvasEnd2"
 onClick={() => handleTabChange('sended')}>알림함</button>
 
                     <div className="col-lg-3 col-md-6">
@@ -52,7 +52,7 @@ onClick={() => handleTabChange('sended')}>알림함</button>
                         <div
                           className="offcanvas offcanvas-end"
                           tabindex="-1"
-                          id="offcanvasEnd"
+                          id="offcanvasEnd2"
                           aria-labelledby="offcanvasEndLabel"
                         >
                           <div className="offcanvas-header">
