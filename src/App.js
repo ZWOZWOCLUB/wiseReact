@@ -21,6 +21,9 @@ import Message3 from './pages/alarmAndMessage/message copy';
 import SignatureCanvas from './pages/mypage/sign';
 import MyPageUpdate from './pages/mypage/01_profileUpdate';
 import 'boxicons/css/boxicons.min.css';
+import Organization from './pages/organizationChart/organizationChart';
+
+
 
 function App() {
     return (
@@ -45,6 +48,8 @@ function App() {
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
                      <Route path="/login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
+
+                    <Route path='organizationChart' element={ <Organization/>}/>
                 </Route>
                 <Route path='sign' element={ <SignatureCanvas /> }/>
             </Routes>
