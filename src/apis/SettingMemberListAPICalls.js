@@ -23,8 +23,8 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
             headers: {
             'Content-Type': 'application/json',
             Accept: '*/*',
-            "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
-            },
+            Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+        },
         }).then((response) => response.json());
     
         console.log('[SettingMemberListAPICalls] callSearchSettingMemberAPI RESULT : ', result);
@@ -76,7 +76,7 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
                 headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
                 },
             }).then((response) => response.json());
         
@@ -89,25 +89,48 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
         };
 
 //회원 등록
-export const callMemberAddAPI = ({ form, image }) => {
+export const callMemberAddAPI = ({ form,profile }) => {
     console.log('callMemberAddAPI Call');
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/member`;
-
+    console.log('form', form);
+    console.log('profile', profile);
+    console.log('----------', window.localStorage.getItem('accessToken'));
     return async (dispatch, getState) => {
+
+        // const formData = new FormData();
+
+        // formData.append('memName', form.memName);
+        // formData.append('memPhone', form.memPhone);
+        // formData.append('memEmail', form.memEmail);
+        // formData.append('memAddress', form.memAddress);
+        // formData.append('memBirth', form.memBirth);
+        // formData.append('memPassword', form.memPassword);
+        // formData.append('memHireDate', form.memHireDate);
+        // formData.append('memStatus', form.memStatus);
+        // formData.append('memRole', form.memRole);
+        // formData.append('posCode', form.posCode);
+        // formData.append('depCode', form.depCode);
+
+        // formData.append('profile', profile);
+
+
+        // console.log('!!!!!!!!!!!!!!!!',formData);
         const result = await fetch(requestURL, {
         method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
+        headers: {
+            'Content-Type': 'multipart/form-data',
             Accept: '*/*',
-            "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
-            },
+            Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            
+        },
+        
+        body: {form, profile}
         }).then((response) => response.json());
     
         console.log('[callMemberAddAPI] callMemberAddAPI RESULT : ', result);
-        if (result.status === 200) {
-            console.log('[callMemberAddAPI] callMemberAddAPI SUCCESS');
-            dispatch({ type: POST_MEMBERADD, payload: result.data });
-            }
+       
+            dispatch({ type: POST_MEMBERADD, payload: result });
+       
         };
     };
 

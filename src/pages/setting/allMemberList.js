@@ -50,6 +50,11 @@ function Setting(){
 
   }
 
+  const onClickAttendance = () => {
+    console.log(onClickAttendance);
+    navigate("/settingAttendance", {replace:true})
+  }
+
     
     const onSearchChangeHandler = (e) => {
       console.log('~~~~~~~~~~~~', e.target.value);  
@@ -67,9 +72,19 @@ function Setting(){
   
     return(
         <>
-  <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`}>
-    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 <span><button onClick={ onClickMemberInsert }>직원 등록</button></span>
+        <div style={{ display: "flex", justifyContent: "space-between"}}>
+  <h4 className={`${coreCSS['fw-bold']} ${coreCSS['py-3']} ${coreCSS['mb-4']}`} style={{ flex: 5}}>
+    <span className={`${coreCSS['text-muted']} ${coreCSS['fw-light']}`}>설정 &gt;</span> 전체직원조회 
   </h4>
+  <ul className="nav nav-pills flex-column flex-md-row mb-3" style={{ flex: 1, display:"flex", justifyContent: "space-between"}}>
+  <li className={`nav-item`} style={{ cursor: "pointer"}}>
+    <li className={`nav-link active`} onClick={ onClickMemberInsert }>직원 등록</li>
+    </li>
+    <li className={`nav-item`} style={{ cursor: "pointer"}}>
+    <li className={`nav-link active`} onClick={ onClickAttendance }>근태 조회</li>
+    </li>
+    </ul>
+  </div>
   <div className={`${coreCSS['col-xxl']}`}>
     <div className={`${coreCSS['card']} ${coreCSS['mb-4']}`}>
       <table className={`${coreCSS['table']} ${coreCSS['table-hover']}`}>

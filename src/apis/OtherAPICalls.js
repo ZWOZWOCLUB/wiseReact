@@ -15,7 +15,7 @@ export const callPayYEARAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
@@ -39,7 +39,7 @@ export const callPayYEARAPI = ({ memCode }) => {
                 headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
                 },
             }).then((response) => response.json());
         

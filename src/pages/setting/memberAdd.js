@@ -9,6 +9,7 @@ import { callSearchPosAPI } from '../../apis/OtherAPICalls';
 function MemberAdd(){
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [profile, setProfile] = useState(null);
     const [profileUrl, setProfileUrl] = useState();
@@ -18,8 +19,9 @@ function MemberAdd(){
     const hireDate = new Date();
     const formattedDate = hireDate.toISOString().slice(0, 10); 
     const [currentDate, setCurrentDate] = useState(formattedDate);
+    const [activeTab, setActiveTab] = useState('프로필 정보');
     console.log('~~~~~~~~', currentDate);
-    
+    console.log('MemberAdd----------', window.localStorage.getItem('accessToken'));
     useEffect(
         () => {
             dispatch(callSearchDepAPI());
@@ -42,9 +44,9 @@ function MemberAdd(){
         memAddress: '',
         memBirth: '',
         memPassword: '0000',
-        memHireDate: 'currentDate',
+        memHireDate: currentDate,
         memStatus: 'N',
-        memRole: 'N',
+        memRole: '일반사원',
         posCode: 0,
         depCode: 0,
 
@@ -87,22 +89,38 @@ function MemberAdd(){
             ...form,
             [e.target.name]: e.target.value
         });
-        console.log(form);
+        console.log('~~~~~~~~~~~~~~', form);
     };
 
     const onClickMemberInsertHandler = () => {
         console.log('~~~~~~~~~onClickMemberInsertHandler' , onClickMemberInsertHandler);
-        dispatch(callMemberAddAPI(form, profile));
+        dispatch(callMemberAddAPI({form, profile}));
         console.log(form);
         console.log(profile);
         
+        
     }
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+  
+        if (tab === '프로필 정보'){
+          navigate("/memberAdd", { replace: true })
+        }
+        if (tab === '인사 정보'){
+          navigate("/settingInfo", { replace: true })
+        }
+        if (tab === '연차 관리'){
+          navigate("/settingVacation", { replace: true })
+        }
+        if (tab === '서류함'){
+          navigate("/settingDocument", { replace: true })
+        }
+      };
 
 
 
     return(
         <>
-        <div className="container-xxl flex-grow-1 container-p-y">
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">설정 &gt;</span> 직원 등록
             </h4>
@@ -112,23 +130,29 @@ function MemberAdd(){
             <div className="row">
                 <div className="col-md-12">
                 <ul className="nav nav-pills flex-column flex-md-row mb-3">
-                    <li className="nav-item">
-                    <a className="nav-link active" href="../setting/memberAdd.html">
+            <li className={`nav-item`} style={{ cursor: "pointer"}}>
+                <li className={`nav-link active`}
+                     onClick={() => handleTabClick('프로필 정보')}>
                         프로필 정보
-                    </a>
                     </li>
-                    <li className="nav-item">
-                    <a className="nav-link" href="../setting/personnelInfo.html">
+                    </li>
+                    <li className={`nav-item`} style={{ cursor: "pointer"}}>
+                <li className={`nav-link `}
+                     onClick={() => handleTabClick('인사 정보')}>
                         인사 정보
-                    </a>
                     </li>
-                    <li className="nav-item">
-                    <a
-                        className="nav-link"
-                        href="pages-account-settings-connections.html"
-                    >
+                    </li>
+                    <li className={`nav-item`} style={{ cursor: "pointer"}}>
+                <li className={`nav-link`}
+                     onClick={() => handleTabClick('프로필 정보')}>
                         서류함
-                    </a>
+                    </li>
+                    </li>
+                    <li className={`nav-item`} style={{ cursor: "pointer"}}>
+                <li className={`nav-link`}
+                     onClick={() => handleTabClick('프로필 정보')}>
+                    연차 관리
+                    </li>
                     </li>
                 </ul>
                 <div className="card mb-4">
@@ -292,7 +316,6 @@ function MemberAdd(){
                     </div>
                 </div>
                 </div>
-            </div>
             </div>
 
         </>
