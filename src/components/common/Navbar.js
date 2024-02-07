@@ -45,7 +45,7 @@ function Navbar() {
               </NavLink>
             </li>
             <li className={`${coreCSS[`menu-item`]}`}>
-              <NavLink to ="../../pages/notice/noticeMain" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to ="/notice" className={`${coreCSS[`menu-link`]}`}>
               <img src={notice} style={{ width: 40 }}/>
                 <div style={{ paddingLeft: 10 }}>공지</div>
               </NavLink>
