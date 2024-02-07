@@ -2,7 +2,18 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import coreCSS from './Navbar.module.css';
 import themDefaultCSS from '../../@core/vendor/css/themeDefault.module.css';
+import { decodeJwt } from '../../utils/tokenUtils';
+
 function Navbar() {
+  const isLogin = window.localStorage.getItem('accessToken');
+    let decoded = null;
+
+    if (isLogin !== undefined && isLogin !== null) {
+        const temp = decodeJwt(window.localStorage.getItem('accessToken'));
+        console.log('decoded ------------> ', temp);
+        decoded = temp.memberRole;
+        console.log('---------------> ', decoded);
+    }
   return (
         <div id="layout-menu" className={`${coreCSS[`layout-menu`]} ${coreCSS[`menu-vertical`]} ${coreCSS[`menu`]} ${themDefaultCSS[`bg-menu-theme`]}`}>
           <NavLink to ="../../pages/Main.js" className={`${coreCSS[`app-brand-link`]}`}>
