@@ -8,9 +8,9 @@ function DataFormat() {
     <div className="layout-page">
       <div className="content-wrapper">
         <div className="container-xxl flex-grow-1 container-p-y">
-          <h4 className="fw-bold py-3 mb-4">
-            <span className="text-muted fw-light" />
-          </h4>
+        <h4 className='fw-bold py-3 mb-4'>
+                                    <span className='text-muted fw-light'>자료실 {'>'}</span> 서식자료실
+                                </h4>
           <div className="col-xxl">
             <div className="card mb-4">
               <div className="pay-top-wrapper">

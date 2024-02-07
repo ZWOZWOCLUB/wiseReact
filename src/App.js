@@ -23,6 +23,10 @@ import MyPageUpdate from './pages/mypage/01_profileUpdate';
 import 'boxicons/css/boxicons.min.css';
 import Sign from './pages/mypage/01_sign';
 import Organization from './pages/organizationChart/organizationChart';
+import DataFormat from './pages/dataformat/DataFormat';
+import NoticeMain from './pages/notice/NoticeMain';
+import NoticeWrite from './pages/notice/NoticeWrite';
+import NoticeDetail from './pages/notice/NoticeDetail';
 
 function App() {
     return (
@@ -49,6 +53,10 @@ function App() {
                     <Route path='sign' element={<Sign />} />
                     <Route path='/login' element={<Login />} /> {/* 로그인 페이지 라우트 추가 */}
                     <Route path='organizationChart' element={<Organization />} />
+                    <Route path='dataformat' element={<DataFormat />} />
+                    <Route path='notice' element={<NoticeMain />} />
+                    <Route path='noticeWrite' element={<NoticeWrite />} />
+                    <Route path='noticeDetail' element={<NoticeDetail />} />
                 </Route>
                 {/* <Route path='sign' element={ <SignatureCanvas /> }/> */}
             </Routes>

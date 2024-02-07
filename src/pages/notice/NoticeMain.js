@@ -9,8 +9,6 @@ import "../../assets/js/config.js";
 import './noticeMain.css';
  function NoticeMain() {
 
-  
-
   return(
      <>
   <div className="layout-wrapper layout-content-navbar">
@@ -18,9 +16,9 @@ import './noticeMain.css';
       <div className="layout-page">
         <div className="content-wrapper">
           <div className="container-xxl flex-grow-1 container-p-y">
-            <h4 className="fw-bold py-3 mb-4">
-              <span className="text-muted fw-light" />
-            </h4>
+          <h4 className='fw-bold py-3 mb-4'>
+                                    <span className='text-muted fw-light'>공지 {'>'}</span> 공지사항
+                                </h4>
             <div className="col-xxl">
               <div className="card mb-4">
                 <div className="pay-top-wrapper">
