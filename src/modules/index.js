@@ -1,5 +1,5 @@
 import payReducer from './PayModule';
-import yearReducer from './YearModule'
+import otherReducer from './OtherModule'
 import settingReducer from './SettingModule'
 
 const { combineReducers } = require("redux");
@@ -8,7 +8,7 @@ const { combineReducers } = require("redux");
 
 const rootReducer = combineReducers({
     payReducer,
-    yearReducer,
+    otherReducer,
     settingReducer
 
 });

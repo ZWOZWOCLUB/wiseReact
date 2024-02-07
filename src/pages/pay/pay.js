@@ -6,7 +6,7 @@ import payCSS from '../../@core/css/pay.module.css';
 import pdfImg from '../../@core/img/icons/unicons/pdf.png';
 import excelImg from '../../@core/img/icons/unicons/excel.png';
 import { callPayListAPI } from '../../apis/PayAPICalls';
-import { callPayYEARAPI } from '../../apis/YearAPICalls';
+import { callPayYEARAPI } from '../../apis/OtherAPICalls';
 
 
 
