@@ -5,13 +5,3 @@
     align-items: center;
 }
 
-.today, .next, .prev {
-    color: #696cff;
-    background-color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    /* margin-right: 10px; */
-    border: #fff 1px solid;
-    width: 10rem;
-    border-radius: 1rem;
-}

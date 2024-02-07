@@ -10,6 +10,7 @@ import Approval from './pages/approval/Approval';
 import SendApproval from './pages/approval/SendApproval';
 import Assignment from './pages/approval/Assignment';
 
+import DataFormat from './pages/dataformat/dataformat';
 import NoticeMain from './pages/notice/NoticeMain';
 import MyPage from './pages/mypage/01_profileInfo';
 import PersonnelInfo from './pages/mypage/02_personnelInfo';
@@ -49,6 +50,7 @@ function App() {
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
                     <Route path='notice' element={ <NoticeMain /> }/>
+                    <Route path='dataformat' element={ <DataFormat /> }/>
 
                 </Route>
                 <Route path='sign' element={ <SignatureCanvas /> }/>

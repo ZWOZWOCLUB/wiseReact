@@ -51,7 +51,7 @@ function Navbar() {
               </NavLink>
             </li>
             <li className={`${coreCSS[`menu-item`]}`}>
-              <NavLink to = "../../pages/fromdata/formdata" className={`${coreCSS[`menu-link`]}`}>
+              <NavLink to = "/dataformat" className={`${coreCSS[`menu-link`]}`}>
               <img src={document} style={{ width: 40 }}/>
                 <div style={{ paddingLeft: 10 }}>파일함</div>
               </NavLink>
