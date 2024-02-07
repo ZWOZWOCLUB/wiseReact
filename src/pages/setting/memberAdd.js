@@ -94,7 +94,23 @@ function MemberAdd(){
 
     const onClickMemberInsertHandler = () => {
         console.log('~~~~~~~~~onClickMemberInsertHandler' , onClickMemberInsertHandler);
-        dispatch(callMemberAddAPI({form, profile}));
+
+        const formData = new FormData();
+
+        formData.append('memName', form.memName);
+        formData.append('memPhone', form.memPhone);
+        formData.append('memEmail', form.memEmail);
+        formData.append('memAddress', form.memAddress);
+        formData.append('memBirth', form.memBirth);
+        formData.append('memPassword', form.memPassword);
+        formData.append('memHireDate', form.memHireDate);
+        formData.append('memStatus', form.memStatus);
+        formData.append('memRole', form.memRole);
+        formData.append('posCode', form.posCode);
+        formData.append('depCode', form.depCode);
+
+        formData.append('profile', profile);
+        dispatch(callMemberAddAPI({ form: formData }));
         console.log(form);
         console.log(profile);
         

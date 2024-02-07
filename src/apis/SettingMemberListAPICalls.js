@@ -89,42 +89,23 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
         };
 
 //회원 등록
-export const callMemberAddAPI = ({ form,profile }) => {
+export const callMemberAddAPI = ({ form }) => {
     console.log('callMemberAddAPI Call');
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/member`;
-    console.log('form', form);
-    console.log('profile', profile);
+    console.log('formData', form);
+    // console.log('profile', profile);
     console.log('----------', window.localStorage.getItem('accessToken'));
     return async (dispatch, getState) => {
-
-        // const formData = new FormData();
-
-        // formData.append('memName', form.memName);
-        // formData.append('memPhone', form.memPhone);
-        // formData.append('memEmail', form.memEmail);
-        // formData.append('memAddress', form.memAddress);
-        // formData.append('memBirth', form.memBirth);
-        // formData.append('memPassword', form.memPassword);
-        // formData.append('memHireDate', form.memHireDate);
-        // formData.append('memStatus', form.memStatus);
-        // formData.append('memRole', form.memRole);
-        // formData.append('posCode', form.posCode);
-        // formData.append('depCode', form.depCode);
-
-        // formData.append('profile', profile);
-
-
-        // console.log('!!!!!!!!!!!!!!!!',formData);
         const result = await fetch(requestURL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'multipart/form-data',
+            // 'Content-Type': 'multipart/form-data',
             Accept: '*/*',
             Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             
         },
         
-        body: {form, profile}
+        body: form, 
         }).then((response) => response.json());
     
         console.log('[callMemberAddAPI] callMemberAddAPI RESULT : ', result);
