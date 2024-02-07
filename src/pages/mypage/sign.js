@@ -1,10 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
 
 function SignatureCanvas() {
   const canvasRef = useRef(null);
   const [drawble, setDrawble] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const div = canvas.parentElement;
@@ -105,14 +108,32 @@ function SignatureCanvas() {
     link.click();
     document.body.removeChild(link);
   };
+  const onClickBack = () => {
+    navigate("/mp",{replace:true})
+  };
 
   return (
     <div>
-      <div style={{ width: "300px", height: "300px" }}>
+      <div style={{ width: "600px", height: "300px" }}>
         <canvas ref={canvasRef} style={{ border: "1px solid black" }} />
       </div>
       <div>
         <button onClick={handleSaveClick}>save</button>
+
+        <div className="mb-3 col-md-6">
+                            <div id="container">
+                              <button id="btn-modal1" className="modalButton" onClick={ onClickBack }>이전으로</button>
+                            </div>
+                          </div>
+
+
+
+                          <div className="mb-3 col-md-6">
+                            <div id="container">
+                              <button id="btn-modal2" className="modalButton" onClick="location.href='zwo01_profileUpdate'"
+                              >저장</button>
+                            </div>
+                          </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import coreCSS from './Navbar.module.css';
 import themDefaultCSS from '../../@core/vendor/css/themeDefault.module.css';
+import { decodeJwt } from '../../utils/tokenUtils';
 import logo from '../../@core/img/icons/unicons/logo.png';
 import home from '../../@core/img/icons/unicons/home.png';
 import notice from '../../@core/img/icons/unicons/notice.png';
