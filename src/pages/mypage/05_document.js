@@ -38,8 +38,7 @@ function MPDocument(){
 
     return(
         <>
-    <div className="layout-wrapper layout-content-navbar">
-      <div className="layout-container">
+
         <div className="layout-page">
 
           <div className="content-wrapper">
@@ -190,12 +189,6 @@ function MPDocument(){
                   </div>
                   
                 </div>
-              </div>
-            </div>
-
-           
-
-            <div className="content-backdrop fade"></div>
 
         </>
     )

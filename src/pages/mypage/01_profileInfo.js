@@ -7,32 +7,35 @@ import "../../assets/vendor/js/bootstrap.js";
 import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
 import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { decodeJwt } from '../../utils/tokenUtils.js';
-import PersonnelInfo from './02_personnelInfo.js';
-// import {
-//   callMemberDetailAPI
-// } from '../../apis/MyPageAPICalls.js';
+import { callMemberDetailAPI } from '../../apis/MyPageAPICalls.js'
 
 function MyPage(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const params = useParams();
-    const member = useSelector(state => state.memberReducer);
+    const member = useSelector(state => state.mypageReducer);
+    const token = decodeJwt(window.localStorage.getItem("accessToken")); 
+    const memberDetail = member.data;
 
-    const dessertList = useSelector(state => state.productReducer); 
+    useEffect(
+        () => {
+          console.log('useEffect의 token---->',token);
+          console.log('useEffect의 token.memCode--->', token.memCode);
 
-    // useEffect(
-    //     () => {
-    //         dispatch(callMemberDetailAPI({
-    //           // memCode: params.memCode
-    //           memCode: 3
-    //         }));            
-    //     }
-    //     ,[]
-    // );
+          if(token !== null) {
+  
+            dispatch(callMemberDetailAPI({	
+                memCode: token.memCode
+            }));            
+        }        
+        }
+      ,[]
+    );
+
+    console.log('memberDetail-->',memberDetail);
 
     const onClickUpdate = () => {
       navigate("/mpUpdate",{replace:true})
@@ -67,6 +70,8 @@ function MyPage(){
       }
     };
 
+
+
     return (
         <>
          {/* 파비콘 */}
@@ -91,14 +96,14 @@ function MyPage(){
 {/* Vendors CSS */}
 <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
-    <div className="layout-wrapper layout-content-navbar">
-      <div className="layout-container">
+<div className="layout-page">
 
-        <div className="layout-page">
+          <div className="content-wrapper"
+         >
 
-          <div className="content-wrapper">
-
-            <div className="container-xxl flex-grow-1 container-p-y">
+            <div className="core_container-xxl__GqtyU core_flex-grow-1__irjv6 core_container-p-y__ZccVZ"
+       
+            >
               <h4 className="fw-bold py-3 mb-4"><span className="text-muted fw-light">계정 설정 /</span> 계정</h4>
 
               <div className="row">
@@ -147,46 +152,58 @@ function MyPage(){
                     </div>
                     <hr className="my-0" />
                     <div className="card-body">
-                      <form id="formAccountSettings" method="POST" onSubmit="return false">
+                        {memberDetail && 
                         <div className="row">
                           <div className="mb-3 col-md-6">
                             <label htmlFor="firstName" className="form-label">이름</label>
                             <div>
-                              샘 해밍턴
+                              {memberDetail.memName}
                             </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="lastName" className="form-label">사번</label>
-                            <div>user01</div>
+                            <div>
+                              {memberDetail.memCode}
+                            </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="lastName" className="form-label">생년월일</label>
-                            <div>1989.03.05</div>
+                            <div>
+                            {memberDetail.memBirth}
+                            </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="email" className="form-label">이메일</label>
-                            <div>sam@gmail.com</div>
+                            <div>
+                            {memberDetail.memEmail}
+                            </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="organization" className="form-label">부서</label>
                             <div>
-                              간호 1팀
+                              {memberDetail.depName}
                             </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="organization" className="form-label">직위</label>
-                            <div>중간 관리자</div>
+                            <div>
+                            직위명
+                            </div>
                           </div>
                           
                           <div className="mb-3 col-md-6">
                             <label className="form-label" htmlFor="phoneNumber">전화번호</label>
                             <div className="input-group input-group-merge">
-                              <div>010-0101-0101</div>
+                              <div>
+                                {memberDetail.memPhone}
+                              </div>
                             </div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="address" className="form-label">주소</label>
-                            <div>30330 인사동길 12 대일빌딩 7층</div>
+                            <div>
+                              {memberDetail.memAddress}
+                            </div>
                           </div>
 
 
@@ -222,7 +239,7 @@ function MyPage(){
                         
 
                         </div>
-                      </form>
+                        }
                     </div>
                   </div>
                   
@@ -232,7 +249,7 @@ function MyPage(){
               {/* 비밀번호 변경 모달 */}
 
               {/* 모달 화면 시작 */}
-              <div className="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+              <div className="modal fade" id="modalCenter" tabIndex="-1" aria-hidden="true">
                                           <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
                                               <div className="modal-header">
@@ -360,11 +377,7 @@ function MyPage(){
 
             <div className="content-backdrop fade"></div>
           </div>
-        </div>
-      </div>
-
-      <div className="layout-overlay layout-menu-toggle"></div>
-    </div>
+          </div>
         </>
     )
 
