@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import coreCSS from './Navbar.module.css';
 import themDefaultCSS from '../../@core/vendor/css/themeDefault.module.css';
+import { decodeJwt } from '../../utils/tokenUtils';
 import logo from '../../@core/img/icons/unicons/logo.png';
 import home from '../../@core/img/icons/unicons/home.png';
 import notice from '../../@core/img/icons/unicons/notice.png';
@@ -13,6 +14,7 @@ import pay from '../../@core/img/icons/unicons/pay.png';
 import organization from '../../@core/img/icons/unicons/organization .png';
 
 function Navbar() {
+
   return (
         <div id="layout-menu" className={`${coreCSS[`layout-menu`]} ${coreCSS[`menu-vertical`]} ${coreCSS[`menu`]} ${themDefaultCSS[`bg-menu-theme`]}`}>
           <NavLink to ="/" className={`${coreCSS[`app-brand-link`]}`}>

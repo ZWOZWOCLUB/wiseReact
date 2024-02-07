@@ -3,8 +3,9 @@ import Layout from './layouts/Layout';
 import Main from './pages/Main';
 import Pay from './pages/pay/pay';
 import Schedule from './pages/schedule/schedule';
-
 import Setting from '../src/pages/setting/allMemberList';
+import Login from './pages/login/Login'; // Login 컴포넌트 임포트
+import MemberInsert from './pages/setting/MemberInsert';
 import MemberAdd from './pages/setting/memberAdd';
 import Approval from './pages/approval/Approval';
 import SendApproval from './pages/approval/SendApproval';
@@ -22,14 +23,11 @@ import SignatureCanvas from './pages/mypage/sign';
 import MyPageUpdate from './pages/mypage/01_profileUpdate';
 import 'boxicons/css/boxicons.min.css';
 
-
-
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<Layout />}>
-
                     <Route index element={<Main />} />
                     <Route path='pay' element={<Pay />} />
                     <Route path='Schedule' element={<Schedule />} />
@@ -47,6 +45,7 @@ function App() {
                     <Route path='alarm' element={ <Alarm /> }/>
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
+                     <Route path="/login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
                 </Route>
                 <Route path='sign' element={ <SignatureCanvas /> }/>
             </Routes>
