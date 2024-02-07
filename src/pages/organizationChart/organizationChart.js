@@ -74,19 +74,16 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
     function Organization(){
       return(
     <>
-    {/* <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div> */}
-    <div>부서페이지</div>
-    </>
-      );
-  }
-    <div className="col-md mb-4 mb-md-0">
-      <small className="text-light fw-semibold">Basic Accordion</small>
-      <div className="accordion mt-3" id="accordionExample">
-        <div className="card accordion-item active">
-          <h2 className="accordion-header" id="headingOne">
+    <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
+
+    <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
+      {/* <small className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>Basic Accordion</small> */}
+      <div className={`${coreCSS[`accordion`]} ${coreCSS[`mt-3`]}`} id="accordionExample">
+        <div className={`${coreCSS[`card`]} ${coreCSS[`accordion-item`]} ${coreCSS[`active`]}`}>
+          <h2 className={`${organizationCSS[`accordion-header`]}`} id="headingOne">
             <button
               type="button"
-              className="accordion-button"
+              className={`${coreCSS[`accordion-button`]}`}
               data-bs-toggle="collapse"
               data-bs-target="#accordionOne"
               aria-expanded="true"
@@ -97,14 +94,14 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
           </h2>
           <div
             id="accordionOne"
-            className="accordion-collapse collapse show"
+            className={`${coreCSS[`accordion-collapse`]} ${coreCSS[`collapse`]} ${coreCSS[`show`]}`}
             data-bs-parent="#accordionExample"
           >
-            <div className="accordion-body profile-container">
-              <div className="profile-card">
+            <div className={`${coreCSS[`accordion-body`]} ${organizationCSS[`profile-container`]}`}>
+              <div className={`${organizationCSS[`profile-card`]}`}>
                 <button
                   type="button"
-                  className="btn rounded-pill btn-outline-primary"
+                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
                   data-bs-toggle="modal"
                   data-bs-target="#basicModal"
                   data-name="홍진경"
@@ -114,10 +111,10 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
                   홍진경 과장
                 </button>
               </div>
-              <div className="profile-card">
+              <div className={`${coreCSS[`profile-card`]}`}>
                 <button
                   type="button"
-                  className="btn rounded-pill btn-outline-primary"
+                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
                   data-bs-toggle="modal"
                   data-bs-target="#basicModal"
                   data-name="유재석"
@@ -127,10 +124,10 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
                   유재석 전문의
                 </button>
               </div>
-              <div className="profile-card">
+              <div className={`${coreCSS[`profile-card`]}`}>
                 <button
                   type="button"
-                  className="btn rounded-pill btn-outline-primary"
+                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
                   data-bs-toggle="modal"
                   data-bs-target="#basicModal"
                   data-name="전현무"
@@ -140,10 +137,10 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
                   전현무 교수
                 </button>
               </div>
-              <div className="profile-card">
+              <div className={`${coreCSS[`profile-card`]}`}>
                 <button
                   type="button"
-                  className="btn rounded-pill btn-outline-primary"
+                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
                   data-bs-toggle="modal"
                   data-bs-target="#basicModal"
                   data-name="이장우"
@@ -153,10 +150,10 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
                   이장우 부교수
                 </button>
               </div>
-              <div className="profile-card">
+              <div className={`${coreCSS[`profile-card`]}`}>
                 <button
                   type="button"
-                  className="btn rounded-pill btn-outline-primary"
+                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
                   data-bs-toggle="modal"
                   data-bs-target="#basicModal"
                   data-name="박나래"
@@ -171,6 +168,12 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
         </div>
       </div>
     </div>
-  // </div>
+
+
+
+    </>
+      );
+  }
+
 
 export default Organization;
