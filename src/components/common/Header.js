@@ -12,13 +12,21 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 import Modal from './Modal';
 import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { replace } from "stylis";
+
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 function Header(){
+  const navigate = useNavigate();
   const [tab, setTab] = useState('sended'); // State to keep track of the active tab
 
   const handleTabChange = (selectedTab) => {
     setTab(selectedTab);
   };
+
+  const onClickMyPage = () => {
+    navigate("/mp", {replace:true})
+  }
 
 
 
@@ -75,7 +83,14 @@ function Header(){
               className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
               style={{ alignSelf: "center", height: 24, borderLeft: "1px solid #d3d3d3" }}
             />
-            <NavLink to="">
+
+            {/* 공지사항? */}
+            <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
+            >
+              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
+            </li>
+
+            {/* 쪽지함 */}
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
          
             data-bs-toggle="offcanvas"
@@ -83,25 +98,31 @@ function Header(){
             onClick={() => handleTabChange('sended')}
             >
               <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
-              
             </li>
-            </NavLink>
-            <li
+
+            {/* 알림함 */}
+            <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
+         
             data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasEnd1"
             onClick={() => handleTabChange('sended')}
+            >
+              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
+            </li>
+
+            <li
               className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
               style={{ alignSelf: "center", height: 24, borderLeft: "1px solid #d3d3d3" }}
             />
-            <NavLink to="">
-            <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}>
+            <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
+            onClick={onClickMyPage}
+            >
               <img
                 src={profile}
                 alt=""
                 className={`${coreCSS[`w-px-30`]} ${coreCSS[`h-auto`]} ${coreCSS[`rounded-circle`]}`}
               />           
             </li>
-            </NavLink>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
               <i className="bx bx-log-out" style={{ fontSize: 28 }} />
             </li>
