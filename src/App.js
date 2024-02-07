@@ -21,6 +21,7 @@ import Message3 from './pages/alarmAndMessage/message copy';
 import SignatureCanvas from './pages/mypage/sign';
 import MyPageUpdate from './pages/mypage/01_profileUpdate';
 import 'boxicons/css/boxicons.min.css';
+import Sign from './pages/mypage/01_sign';
 
 
 
@@ -47,8 +48,9 @@ function App() {
                     <Route path='alarm' element={ <Alarm /> }/>
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
+                    <Route path='sign' element={ <Sign /> }/>
                 </Route>
-                <Route path='sign' element={ <SignatureCanvas /> }/>
+                {/* <Route path='sign' element={ <SignatureCanvas /> }/> */}
             </Routes>
         </BrowserRouter>
     );

@@ -8,6 +8,7 @@ import "../../assets/vendor/js/bootstrap.js";
 import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
 import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
+import Modal from './Modal';
 import React, { useState } from 'react';
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 function Header(){
@@ -16,6 +17,7 @@ function Header(){
   const handleTabChange = (selectedTab) => {
     setTab(selectedTab);
   };
+
 
 
 
@@ -44,7 +46,6 @@ function Header(){
 
 {/* Vendors CSS */}
 <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-
       <nav
         className={`${coreCSS[`layout-navbar`]} ${coreCSS[`container-xxl`]} ${coreCSS[`navbar`]} ${coreCSS[`navbar-expand-xl`]} ${coreCSS[`navbar-detached`]} ${coreCSS[`align-items-center`]} ${themDefaultCSS[`bg-navbar-theme`]}`}
         id="layout-navbar"
@@ -74,14 +75,14 @@ function Header(){
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
             data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasEnd"
+            data-bs-target="#offcanvasEnd1"
             onClick={() => handleTabChange('sended')}
             >
               알림
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${coreCSS[`me-3`]}`}
             data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasEnd1"
+            data-bs-target="#offcanvasEnd"
             onClick={() => handleTabChange('sended')}
             >
               쪽지
@@ -142,8 +143,8 @@ function Header(){
 {/* 알림함 시작 */}
         <div
                           className="offcanvas offcanvas-end"
-                          tabindex="-1"
-                          id="offcanvasEnd"
+                          tabIndex="-1"
+                          id="offcanvasEnd1"
                           aria-labelledby="offcanvasEndLabel"
                         >
                           <div className="offcanvas-header">
@@ -233,8 +234,8 @@ function Header(){
                         {/* 메신저 시작 */}
                         <div
                           className="offcanvas offcanvas-end"
-                          tabindex="-1"
-                          id="offcanvasEnd1"
+                          tabIndex="-1"
+                          id="offcanvasEnd"
                           aria-labelledby="offcanvasEndLabel"
                         >
                           <div className="offcanvas-header">
@@ -344,62 +345,12 @@ function Header(){
                                  <div>
                                     <div>수신자</div>
                                     <input id="receiver" type="button" data-bs-toggle="modal" data-bs-target="#modalCenter"/>
-                                    <div class="col-lg-4 col-md-6">
+                                    <div className="col-lg-4 col-md-6">
                                       <div className="mt-3">
-                                        {/* <div className="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-                                          <div className="modal-dialog modal-dialog-centered" role="document">
-                                            <div className="modal-content">
-                                              <div className="modal-header">
-                                                <h5 className="modal-title" id="modalCenterTitle">수신자 선택</h5>
-                                                <button
-                                                  type="button"
-                                                  className="btn-close"
-                                                  data-bs-dismiss="modal"
-                                                  aria-label="Close"
-                                                ></button>
-                                              </div>
-                                              <div className="modal-body">
-                                                <div className="row">
-                                                  <div className="col mb-3">
-                                                    <label for="nameWithTitle" className="form-label">조직도가 보여질 화면</label>
-                                                    <input
-                                                      type="text"
-                                                      id="nameWithTitle"
-                                                      className="form-control"
-                                                    />
-                                                  </div>
-                                                </div>
-                                                <div className="row">
-                                                  <div className="col mb-3">
-                                                    <label for="nameWithTitle" className="form-label">변경할 비밀번호</label>
-                                                    <input
-                                                      type="text"
-                                                      id="nameWithTitle"
-                                                      className="form-control"
-                                                    />
-                                                  </div>
-                                                </div>
-                                                <div className="row">
-                                                  <div className="col mb-3">
-                                                    <label for="nameWithTitle" className="form-label">변경할 비밀번호 재입력</label>
-                                                    <input
-                                                      type="text"
-                                                      id="nameWithTitle"
-                                                      className="form-control"
-                                                    />
-                                                  </div>
-                                                </div>
 
-                                              </div>
-                                              <div className="modal-footer">
-                                                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                                  닫기
-                                                </button>
-                                                <button type="button" className="btn btn-primary">선택</button>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div> */}
+
+                                        
+
                                       </div>
                                     </div>
                                   </div>
@@ -422,7 +373,9 @@ function Header(){
                                   >
                                   보내기
                                   </button>
+
                               </div>
+                              
                             )}
                           </div>
                         </div>
@@ -433,7 +386,63 @@ function Header(){
       </nav>
 
 
+{/* 모달 화면 시작 */}
+<div className="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                                          <div className="modal-dialog modal-dialog-centered" role="document">
+                                            <div className="modal-content">
+                                              <div className="modal-header">
+                                                <h5 className="modal-title" id="modalCenterTitle">수신자 선택</h5>
+                                                <button
+                                                  type="button"
+                                                  className="btn-close"
+                                                  data-bs-dismiss="modal"
+                                                  aria-label="Close"
+                                                ></button>
+                                              </div>
+                                              <div className="modal-body">
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label htmlFor="nameWithTitle" className="form-label">조직도가 보여질 화면</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label htmlFor="nameWithTitle" className="form-label">변경할 비밀번호</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label htmlFor="nameWithTitle" className="form-label">변경할 비밀번호 재입력</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
 
+                                              </div>
+                                              <div className="modal-footer">
+                                                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                  닫기
+                                                </button>
+                                                <button type="button" className="btn btn-primary">선택</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {/* 모달 화면 끝 */}
 
 
 
@@ -441,5 +450,8 @@ function Header(){
 
           );
 }
+
+
+
 
 export default Header;

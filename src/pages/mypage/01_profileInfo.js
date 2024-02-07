@@ -1,6 +1,12 @@
 
 import './01_profileInfo.css';
 import './core.css'
+import "../../assets/vendor/libs/jquery/jquery.js";
+import "../../assets/vendor/libs/popper/popper.js";
+import "../../assets/vendor/js/bootstrap.js";
+import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
+import "../../assets/vendor/js/menu.js";
+import "../../assets/js/config.js";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -36,7 +42,7 @@ function MyPage(){
   }
 
     function openSignatureCanvasPopup() {
-      window.open('/sign', 'SignatureCanvas', 'width=500,height=500,left=200,top=200');
+      navigate("/sign",{replace: true})
     }
 
     const [activeTab, setActiveTab] = useState('프로필 정보');
@@ -63,6 +69,28 @@ function MyPage(){
 
     return (
         <>
+         {/* 파비콘 */}
+ <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
+
+{/* Fonts */}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+  rel="stylesheet"
+/>
+
+{/* Icons */}
+<link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
+
+{/* Core CSS */}
+<link rel="stylesheet" href="../../assets/vendor/css/core.css" className="template-customizer-core-css" />
+<link rel="stylesheet" href="../../assets/vendor/css/theme-default.css" className="template-customizer-theme-css" />
+<link rel="stylesheet" href="../../assets/css/demo.css" />
+
+{/* Vendors CSS */}
+<link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
     <div className="layout-wrapper layout-content-navbar">
       <div className="layout-container">
 
@@ -165,7 +193,9 @@ function MyPage(){
 
                           <div className="mb-3 col-md-6">
                             <div id="container">
-                              <button id="btn-modal1" className="modalButton">비밀번호 변경</button>
+                              <button id="btn-modal1" className="modalButton" type='button'
+                              data-bs-toggle="modal" data-bs-target="#modalCenter"
+                              >비밀번호 변경</button>
                             </div>
                           </div>
 
@@ -199,44 +229,69 @@ function MyPage(){
                 </div>
               </div>
 
-              <div id="modal1" className="modal-overlay overlay-css" tabIndex="-1" aria-hidden="true">
-                <div className="modal-window window-css" role="document">
-        
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="modalCenterTitle" style={{fontSize: '1.125rem'}}>비밀번호 변경</h5>
-                            <div className="close-area1 close-css">X</div>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col mb-3">
-                                    <label htmlFor="nameWithTitle" className="form-label">현재 비밀번호</label>
-                                    <input type="text" id="nameWithTitle" className="form-control" />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col mb-3">
-                                    <label htmlFor="nameWithTitle" className="form-label">변경할 비밀번호</label>
-                                    <input type="text" id="nameWithTitle" className="form-control" />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col mb-3">
-                                    <label htmlFor="nameWithTitle" className="form-label">변경할 비밀번호 재입력</label>
-                                    <input type="text" id="nameWithTitle" className="form-control" />
-                                </div>
-                            </div>
-        
-                        </div>
-                        <div className="modal-footer">
-        
-                            <button type="button" className="btn btn-primary">저장</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              {/* 비밀번호 변경 모달 */}
 
-            <div id="modal2" className="modal-overlay overlay-css" tabindex="-1" aria-hidden="true">
+              {/* 모달 화면 시작 */}
+              <div className="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                                          <div className="modal-dialog modal-dialog-centered" role="document">
+                                            <div className="modal-content">
+                                              <div className="modal-header">
+                                                <h5 className="modal-title" id="modalCenterTitle">수신자 선택</h5>
+                                                <button
+                                                  type="button"
+                                                  className="btn-close"
+                                                  data-bs-dismiss="modal"
+                                                  aria-label="Close"
+                                                ></button>
+                                              </div>
+                                              <div className="modal-body">
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label for="nameWithTitle" className="form-label">조직도가 보여질 화면</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label for="nameWithTitle" className="form-label">변경할 비밀번호</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
+                                                <div className="row">
+                                                  <div className="col mb-3">
+                                                    <label for="nameWithTitle" className="form-label">변경할 비밀번호 재입력</label>
+                                                    <input
+                                                      type="text"
+                                                      id="nameWithTitle"
+                                                      className="form-control"
+                                                    />
+                                                  </div>
+                                                </div>
+
+                                              </div>
+                                              <div className="modal-footer">
+                                                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                  닫기
+                                                </button>
+                                                <button type="button" className="btn btn-primary">선택</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {/* 모달 화면 끝 */}
+
+            {/* 비밀번호 변경 모달 끝 */}
+
+            <div id="modal2" className="modal-overlay overlay-css" tabIndex="-1" aria-hidden="true">
               <div className="modal-window window-css" role="document">
       
                   <div className="modal-content">
@@ -273,7 +328,7 @@ function MyPage(){
               </div>
           </div>
 
-          <div id="modal3" className="modal-overlay overlay-css" tabindex="-1" aria-hidden="true">
+          <div id="modal3" className="modal-overlay overlay-css" tabIndex="-1" aria-hidden="true">
             <div className="modal-window window-css" role="document" >
     
                 <div className="modal-content">

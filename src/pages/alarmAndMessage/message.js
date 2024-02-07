@@ -44,15 +44,17 @@ function Message(){
 <button 
 className="nav-item lh-1 me-3"
 data-bs-toggle="offcanvas"
-data-bs-target="#offcanvasEnd"
+data-bs-target="#offcanvasEnd4"
 onClick={() => handleTabChange('sended')}>메신저</button>
 
                     <div className="col-lg-3 col-md-6">
                       <div className="mt-3">
+
+                        {/* 사이드바 시작 */}
                         <div
                           className="offcanvas offcanvas-end"
                           tabindex="-1"
-                          id="offcanvasEnd"
+                          id="offcanvasEnd4"
                           aria-labelledby="offcanvasEndLabel"
                         >
                           <div className="offcanvas-header">
@@ -190,8 +192,12 @@ onClick={() => handleTabChange('sended')}>메신저</button>
                                  <div>
                                     <div>수신자</div>
                                     <input id="receiver" type="button" data-bs-toggle="modal" data-bs-target="#modalCenter"/>
+
+                                    
                                     <div class="col-lg-4 col-md-6">
                                       <div className="mt-3">
+
+                                        {/* 모달 화면 시작 */}
                                         <div className="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
                                           <div className="modal-dialog modal-dialog-centered" role="document">
                                             <div className="modal-content">
@@ -246,6 +252,9 @@ onClick={() => handleTabChange('sended')}>메신저</button>
                                             </div>
                                           </div>
                                         </div>
+
+                                        {/* 모달 화면 끝 */}
+
                                       </div>
                                     </div>
                                   </div>
@@ -271,6 +280,10 @@ onClick={() => handleTabChange('sended')}>메신저</button>
                             )}
                           </div>
                         </div>
+
+                        {/* 사이드바 끝 */}
+
+
                       </div>
                     </div>
         </>

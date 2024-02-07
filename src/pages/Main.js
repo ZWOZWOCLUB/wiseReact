@@ -8,11 +8,11 @@ function Main(){
         navigate("/mp",{replace: true})
     }
 
-
     return(
         <>
         <div>메인~~~</div>
         <div onClick={ onClickMyPage }>마이페이지로 가기</div>
+
 
         </>
     
