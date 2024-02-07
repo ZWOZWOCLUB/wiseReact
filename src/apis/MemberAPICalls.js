@@ -24,6 +24,7 @@ export const callLoginAPI = ({ form }) => {
             window.localStorage.removeItem('accessToken');  // 나중에 꼭 빼야함
             window.localStorage.setItem('accessToken', result.userInfo.accessToken);
         }
+        alert('로그인 성공!');
         dispatch({ type: POST_LOGIN, payload: result });
     };
 };

@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import Login from './login/Login';
 
 
 function Main(){
@@ -14,7 +15,8 @@ function Main(){
         <>
             <div>메인~~~</div>
             <div onClick={ onClickMyPage }>마이페이지로 가기</div>
-            { checkLogin ? null : <Login /> } 
+            {/* { checkLogin ? null : <Login /> }  */}
+            <Login />
         </>
     );
 }

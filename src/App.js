@@ -5,7 +5,6 @@ import Pay from './pages/pay/pay';
 import Schedule from './pages/schedule/schedule';
 import Setting from '../src/pages/setting/allMemberList';
 import Login from './pages/login/Login'; // Login 컴포넌트 임포트
-import Setting from '../src/pages/setting/allMemberList';
 import MemberInsert from './pages/setting/MemberInsert';
 import Approval from './pages/approval/Approval';
 import SendApproval from './pages/approval/SendApproval';
