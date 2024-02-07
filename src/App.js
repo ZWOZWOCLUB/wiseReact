@@ -10,6 +10,8 @@ import Approval from './pages/approval/Approval';
 import SendApproval from './pages/approval/SendApproval';
 import Assignment from './pages/approval/Assignment';
 
+import DataFormat from './pages/dataformat/dataformat';
+import NoticeMain from './pages/notice/NoticeMain';
 import MyPage from './pages/mypage/01_profileInfo';
 import PersonnelInfo from './pages/mypage/02_personnelInfo';
 import MPVacation from './pages/mypage/03_vacation';
@@ -48,6 +50,9 @@ function App() {
                     <Route path='alarm' element={ <Alarm /> }/>
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
+                    <Route path='notice' element={ <NoticeMain /> }/>
+                    <Route path='dataformat' element={ <DataFormat /> }/>
+
                     <Route path='sign' element={ <Sign /> }/>
                      <Route path="/login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
 
