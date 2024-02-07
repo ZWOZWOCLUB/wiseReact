@@ -1,17 +1,21 @@
-import Login from '../pages/login/Login';
-import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 function Main(){
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     console.log('-------토큰-------', window.localStorage.getItem('accessToken'));
+    let checkLogin = window.localStorage.getItem('accessToken');
+    const onClickMyPage = () => {
+        navigate("/mp",{replace: true})
+    }
+
 
     return(
-    <>
-    <div>메인~~~</div>
-    <Login />
-    </>
-    
-
+        <>
+            <div>메인~~~</div>
+            <div onClick={ onClickMyPage }>마이페이지로 가기</div>
+            { checkLogin ? null : <Login /> } 
+        </>
     );
 }
 
