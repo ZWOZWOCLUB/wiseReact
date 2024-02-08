@@ -62,7 +62,6 @@ function App() {
                     <Route path='alarm' element={ <Alarm /> }/>
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
-                     <Route path="/login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
                      <Route path='settingInfo' element={ <SettingInfo/>}/>
                      <Route path='settingDocument' element={ <SettingDocument/>}/>
                      <Route path='settingVacation' element={ <SettingVacation/>}/>

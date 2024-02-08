@@ -1,7 +1,6 @@
 import{
     GET_MEMBERLIST,
     GET_DEPARTMENTLIST,
-    POST_MEMBERADD,
 } from '../modules/SettingModule.js';
 
 //전체 회원 조회
@@ -31,6 +30,7 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
         if (result.status === 200) {
             console.log('[SettingMemberListAPICalls] callSearchSettingMemberAPI SUCCESS');
             dispatch({ type: GET_MEMBERLIST, payload: result.data });
+            
             }
         };
     };
@@ -87,31 +87,4 @@ export const callSearchSettingMemberAPI = ({ currentPage }) => {
                 }
             };
         };
-
-//회원 등록
-export const callMemberAddAPI = ({ form }) => {
-    console.log('callMemberAddAPI Call');
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/member`;
-    console.log('formData', form);
-    // console.log('profile', profile);
-    console.log('----------', window.localStorage.getItem('accessToken'));
-    return async (dispatch, getState) => {
-        const result = await fetch(requestURL, {
-        method: 'POST',
-        headers: {
-            // 'Content-Type': 'multipart/form-data',
-            Accept: '*/*',
-            Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
-            
-        },
-        
-        body: form, 
-        }).then((response) => response.json());
-    
-        console.log('[callMemberAddAPI] callMemberAddAPI RESULT : ', result);
-       
-            dispatch({ type: POST_MEMBERADD, payload: result });
-       
-        };
-    };
 

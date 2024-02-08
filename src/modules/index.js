@@ -4,6 +4,7 @@ import otherReducer from './OtherModule'
 import settingReducer from './SettingModule'
 import mypageReducer from "./MypageModule";
 import approvalReducer from './ApprovalModule';
+import settingMemberReducer from './SettingMemberModule';
 
 const { combineReducers } = require('redux');
 
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     mypageReducer,
     approvalReducer,
     otherReducer,
-    settingReducer
+    settingReducer,
+    settingMemberReducer,
 });
 
 export default rootReducer;
