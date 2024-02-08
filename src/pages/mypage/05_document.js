@@ -79,108 +79,52 @@ function MPDocument(){
                     <h5 className="card-header">서류함</h5>
                     <hr className="my-0" />
 
-                      <div className="docContainer">
+                    <div id="iwantoverflow">
+                      <div className="card-body" style={{overflowY: 'auto', height: '700px'}}>
+                    
 
-                        <div className="card" 
-                        style={{height: '150px',
-                        marginLeft: '20px', 
-                        marginRight: '20px',
-                         marginBottom: '15px', 
-                         marginTop: '5px' ,
-                         width: '45%'}} >
-                          <div className="card-body">
-                            <div className="card-title d-flex align-items-start justify-content-between">
-                              <div className="avatar flex-shrink-0">
-                                <i className="bx bx-link-alt me-1"></i>
-                              </div>
-                              <button className="dropdown">
-                               
-                                <i className='bx bxs-download' style={{cursor: 'pointer'}}></i>
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                                  <span className="dropdown-item" href="javascript:void(0);">다운로드</span>
-                                  <span className="dropdown-item" href="javascript:void(0);">미리보기</span>
-                                </div>
-                              </div>
-                            </div>
-                            <span className="fw-semibold d-block mb-1">제출일자 : 2023-01-01</span>
-                            <h4 className="card-title mb-2">졸업 증명서</h4>
-                          </div>
+                        <div className="card">
+                          <div className="table-responsive text-nowrap"></div>
+
+                    <table className="table table-striped" id="table">
+       
+        <thead>
+          <tr style={{ textAlign: "center" }}>
+            <th>증빙서류</th>
+            <th>제출일</th>
+            <th>다운로드</th>
+          </tr>
+        </thead>
+        <tbody className="table-border-bottom-0">
+          <tr style={{ textAlign: "center" }} className="List">
+
+            <td>
+              <div>전기기능사</div>
+            </td>
+
+            <td>0000-00-0000</td>
+           
+            <td>
+              <i
+                className="bx bx-down-arrow-alt"
+                style={{ paddingRight: 10 }}
+              />
+            </td>
+           
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      </div>
+      </div>
+      </div>
+
+                      
+                        
                         </div>
-                        <div className="card" 
-                        style={{height: '150px',
-                        marginLeft: '20px', 
-                        marginRight: '20px',
-                         marginBottom: '15px', 
-                         marginTop: '5px' ,
-                         width: '45%'}} >
-                          <div className="card-body">
-                            <div className="card-title d-flex align-items-start justify-content-between">
-                              <div className="avatar flex-shrink-0">
-                                <i className="bx bx-link-alt me-1"></i>
-                              </div>
-                              <button className="dropdown">
-                                <i className='bx bxs-download'  style={{cursor: 'pointer'}}></i>
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                                <span className="dropdown-item" href="javascript:void(0);">다운로드</span>
-                                  <span className="dropdown-item" href="javascript:void(0);">미리보기</span>
-                                </div>
-                              </div>
-                            </div>
-                            <span className="fw-semibold d-block mb-1">제출일자 : 2023-01-01</span>
-                            <h4 className="card-title mb-2">개인정보활용동의서</h4>
-                          </div>
+                        
                         </div>
-                        <div className="card" 
-                        style={{height: '150px',
-                        marginLeft: '20px', 
-                        marginRight: '20px',
-                         marginBottom: '15px', 
-                         marginTop: '5px' ,
-                         width: '45%'}} >
-                          <div className="card-body">
-                            <div className="card-title d-flex align-items-start justify-content-between">
-                              <div className="avatar flex-shrink-0">
-                                <i className="bx bx-link-alt me-1"></i>
-                              </div>
-                              <button className="dropdown">
-                                <i className='bx bxs-download'  style={{cursor: 'pointer'}}></i>
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                                <span className="dropdown-item" href="javascript:void(0);">다운로드</span>
-                                  <span className="dropdown-item" href="javascript:void(0);">미리보기</span>
-                                </div>
-                              </div>
-                            </div>
-                            <span className="fw-semibold d-block mb-1">(주)한컴타자</span>
-                            <h4 className="card-title mb-2">재직증명서</h4>
-                          </div>
-                        </div>
-                        <div className="card" 
-                        style={{height: '150px',
-                        marginLeft: '20px', 
-                        marginRight: '20px',
-                         marginBottom: '15px', 
-                         marginTop: '5px' ,
-                         width: '45%'}} >
-                          <div className="card-body">
-                            <div className="card-title d-flex align-items-start justify-content-between">
-                              <div className="avatar flex-shrink-0">
-                                <i className="bx bx-link-alt me-1"></i>
-                              </div>
-                              <button className="dropdown">
-                                <i className='bx bxs-download'  style={{cursor: 'pointer'}}></i>
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                                <span className="dropdown-item" href="javascript:void(0);">다운로드</span>
-                                  <span className="dropdown-item" href="javascript:void(0);">미리보기</span>
-                                </div>
-                              </div>
-                            </div>
-                            <span className="fw-semibold d-block mb-1">우리은행</span>
-                            <h4 className="card-title mb-2">통장 사본</h4>
-                          </div>
+                        
                         </div>
                         
                         
@@ -188,7 +132,7 @@ function MPDocument(){
                       </div>
                   </div>
                   
-                </div>
+          
 
         </>
     )

@@ -3,7 +3,8 @@ import './core.css'
 import './01_profileInfo.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Calendar from '@toast-ui/calendar';
 import { decodeJwt } from '../../utils/tokenUtils.js';
 
 function MPAttendance(){
@@ -35,6 +36,86 @@ function MPAttendance(){
         navigate("/mpdocument", { replace: true })
       }
     };
+
+    // 캘린더 시작
+
+    const calendarRef = useRef(null);
+    const [currentDate, setCurrentDate] = useState(new Date());
+    // const dipatch = useDispatch();
+    // const approvals = useSelector((state) => state.approvalReducer);
+    // const approvalList = approvals.data;
+
+    // console.log('approvalList ', approvalList);
+
+    useEffect(() => {
+        if (calendarRef.current) {
+            const container = calendarRef.current;
+
+            const options = {
+                defaultView: 'month',
+                month: {
+                    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                },
+                timezone: {
+                    zones: [
+                        {
+                            timezoneName: 'Asia/Seoul',
+                            displayLabel: 'Seoul',
+                        },
+                        {
+                            timezoneName: 'Europe/London',
+                            displayLabel: 'London',
+                        },
+                    ],
+                },
+            };
+            const calendar = new Calendar(container, options);
+
+            calendar.setTheme({
+                month: {
+                    weekend: {
+                        backgroundColor: 'aliceblue',
+                    },
+                },
+            });
+            setCurrentDate(new Date());
+
+            const todayButton = document.getElementById('today');
+            todayButton.addEventListener('click', function () {
+                calendar.today();
+                displayMonth();
+            });
+
+            const prevButton = document.getElementById('prev');
+            prevButton.addEventListener('click', function () {
+                calendar.prev();
+                displayMonth();
+            });
+
+            const nextButton = document.getElementById('next');
+            nextButton.addEventListener('click', function () {
+                calendar.next();
+                displayMonth();
+            });
+
+            const range = document.querySelector('.range');
+
+            function displayMonth() {
+                var currentDate = calendar.getDate();
+                var year = currentDate.getFullYear();
+                var month = currentDate.getMonth() + 1;
+                if (month < 10) {
+                    month = '0' + month;
+                }
+
+                range.textContent = year + '년 ' + month + '월';
+            }
+
+            displayMonth();
+        }
+    }, []);
+
+    // 캘린더 끝
 
     return(
         <>
@@ -85,28 +166,51 @@ function MPAttendance(){
                   <div className="card h-100">
                     <div className="card-header d-flex align-items-center justify-content-between">
                       <h5 className="card-title m-0 me-2">기록</h5>
-                      
                     </div>
                     <div className="card-body">
 
-                     <div id='calendar'></div>
+                     {/* <div id='calendar'></div> */}
+
+                     {/* 캘린더 시작 */}
+                     <div>
+                                                    <button className='prev' id='prev'>
+                                                        {'<'}
+                                                    </button>
+                                                    <span className='range' id='range'></span>
+                                                    <button className='next' id='next'>
+                                                        {'>'}
+                                                    </button>
+                                                    <button className='today' id='today'>
+                                                        Today
+                                                    </button>
+                                                    <div
+                                                        className='payment-calendar'
+                                                        id='calendar'
+                                                        ref={calendarRef}
+                                                    ></div>
+                                                </div>
+                     {/* 캘린더 끝 */}
 
                     </div>
                   </div>
                 </div>
                 <div className="col-6 mb-4">
+
+
                   <div className="card" id="firstItem">
                     <div className="card-body">
                       <div className="card-title d-flex align-items-start justify-content-between">
                         <div className="avatar flex-shrink-0">
                           <img src="../../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" className="rounded" />
                         </div>
-                        
                       </div>
                       <span className="fw-semibold d-block mb-1">출근 시각</span>
                       <h3 className="card-title mb-2">08:31</h3>
                     </div>
                   </div>
+
+
+
                   <div className="card" id="secondItem">
                     <div className="card-body">
                       <div className="card-title d-flex align-items-start justify-content-between">
@@ -119,6 +223,9 @@ function MPAttendance(){
                       <h3 className="card-title mb-2">퇴근 전 or 18:01</h3>
                     </div>
                   </div>
+
+
+
                   <div className="card" id="thirdItem">
                     <div className="card-body">
                       <div className="card-title d-flex align-items-start justify-content-between">
@@ -132,6 +239,9 @@ function MPAttendance(){
                       <small className="text-success fw-semibold">쉬는시간 제외</small>
                     </div>
                   </div>
+
+
+
                 </div>
                   
               </div>
