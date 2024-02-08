@@ -1,3 +1,24 @@
+#re-div {
+    margin-left: 50px;
+    width: 85%;
+    height: 30%;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    border: solid 1px #e0dfdf;
+}
+
+#top-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    height: 50%;
+}
+
+#bottom-section {
+    padding-left: 25px;
+}
+
 .payment-type {
     width: 100%;
     height: 800px;
@@ -40,7 +61,7 @@
     color: white;
 }
 
-.payment-manager1 {
+.payment-manager {
     width: 100%;
     height: 15%;
     background-color: white;
@@ -64,7 +85,7 @@
 
 #payment-manager2 {
     width: 100%;
-    height: 40%;
+    height: 43%;
     background-color: white;
 }
 
@@ -83,6 +104,7 @@
     margin-bottom: 25px;
     padding-left: 50px;
     padding-top: 50px;
+    padding-right: 50px;
 }
 
 .kind input,
@@ -97,43 +119,26 @@ textarea {
     width: 80%;
 }
 
-#margintop div {
-    margin-top: 30px;
+/* #margintop div{
+    margin-top: 40px;
+} */
+
+#clean-btn {
+    width: 20%;
+    box-shadow: 0px 0px 10px #bbbdfc;
+    background-color: #bbbdfc;
+    border-color: #bbbdfc;
 }
 
-#annual-contents {
-    margin-left: 20px;
-    height: 300px;
-    width: 70%;
-}
-
-#last-thing {
-    display: flex;
-    justify-content: space-between;
-    margin-top: auto;
-}
-
-#complete-payment1 {
-    width: 25%;
-    height: 10%;
+#complete-payment {
+    width: 20%;
     box-shadow: 0px 0px 10px #bbbdfc;
     background-color: #bbbdfc;
     border-color: #bbbdfc;
     color: white;
-    margin-top: 30px;
 }
 
-#clean-btn1 {
-    width: 25%;
-    box-shadow: 0px 0px 10px #bbbdfc;
-    background-color: #bbbdfc;
-    border-color: #bbbdfc;
-    height: 10%;
-    margin-top: 30px;
-}
-
-#annual-date {
-    width: 80%;
-    margin-left: 10px;
-    margin-right: 10px;
-}
+/* #last-thing {
+    display: flex;
+    justify-content: space-between;
+} */

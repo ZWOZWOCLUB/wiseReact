@@ -14,6 +14,7 @@ export const POST_APPROVAL_REQ_DOCUMENT = 'approval/POST_APPROVAL_REQ_DOCUMENT';
 export const PUT_APPROVAL_COMPLTE = 'approval/PUT_APPROVAL_COMPLETE';
 export const PUT_APPROVAL_ROLE_UPDATE = 'approval/PUT_APPROVAL_ROLE_UPDATE';
 export const PUT_APPROVAL_ROLE_RECOVERY = 'approval/PUT_APPROVAL_ROLE_RECOVERY';
+export const GET_APPROVAL_MEMBER_INFO = 'approval/GET_APPROVAL_MEMBER_INFO';
 
 const actions = createActions({
     [GET_RECIEVE_APPROVAL]: () => {},
@@ -26,6 +27,7 @@ const actions = createActions({
     [PUT_APPROVAL_COMPLTE]: () => {},
     [PUT_APPROVAL_ROLE_UPDATE]: () => {},
     [PUT_APPROVAL_ROLE_RECOVERY]: () => {},
+    [GET_APPROVAL_MEMBER_INFO]: () => {},
 });
 
 // 리듀서
@@ -59,6 +61,9 @@ const approvalReducer = handleActions(
             return payload;
         },
         [PUT_APPROVAL_ROLE_RECOVERY]: (state, { payload }) => {
+            return payload;
+        },
+        [GET_APPROVAL_MEMBER_INFO]: (state, { payload }) => {
             return payload;
         },
     },

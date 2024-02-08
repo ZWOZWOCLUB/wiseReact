@@ -9,6 +9,7 @@ import {
     PUT_APPROVAL_COMPLTE,
     PUT_APPROVAL_ROLE_UPDATE,
     PUT_APPROVAL_ROLE_RECOVERY,
+    GET_APPROVAL_MEMBER_INFO,
 } from '../modules/ApprovalModule.js';
 
 export const callReceiveApprovalAPI = ({ memCode }) => {
@@ -45,6 +46,25 @@ export const callSendApprovalAPI = ({ memCode }) => {
 
         if (result.status === 200) {
             dispatch({ type: GET_SEND_APPROVAL, payload: result.data });
+        }
+    };
+};
+
+export const callMemberInfoAPI = ({ memCode }) => {
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/memberinfo/${memCode}`;
+
+    return async (dispatch) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: '*/*',
+                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+            },
+        }).then((response) => response.json());
+
+        if (result.status === 200) {
+            dispatch({ type: GET_APPROVAL_MEMBER_INFO, payload: result.data });
         }
     };
 };
