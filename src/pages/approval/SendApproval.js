@@ -21,7 +21,7 @@ function SendApproval() {
                 memCode: 3,
             })
         );
-    });
+    }, []);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -110,13 +110,12 @@ function SendApproval() {
                                                     <th>결재 유형</th>
                                                     <th>상태</th>
                                                     <th>참조자</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {Array.isArray(approvalList) && approvalList.length > 0 ? (
                                                     approvalList.map((a) => (
-                                                        <tr key={a.appCode}>
+                                                        <tr key={a.approval.payCode}>
                                                             <td>{a.approvalMember.memName}</td>
                                                             <td>{a.approval.payName}</td>
                                                             <td>{a.approval.payDate}</td>
@@ -127,9 +126,14 @@ function SendApproval() {
                                                         </tr>
                                                     ))
                                                 ) : (
-                                                    <td style={{ display: 'flex', textAlign: 'center' }}>
-                                                        보낸 결재가 없습니다.
-                                                    </td>
+                                                    <tr>
+                                                        <td
+                                                            colSpan={6}
+                                                            style={{ display: 'flex', textAlign: 'center' }}
+                                                        >
+                                                            보낸 결재가 없습니다.
+                                                        </td>
+                                                    </tr>
                                                 )}
                                             </tbody>
                                         </table>

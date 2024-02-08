@@ -114,7 +114,7 @@ function Assignment() {
                         <div className='content-wrapper'>
                             <div className='container-xxl flex-grow-1 container-p-y'>
                                 <h4 className='fw-bold py-3 mb-4'>
-                                    <span className='text-muted fw-light'>결재 {'>'}</span> 받은 결재
+                                    <span className='text-muted fw-light'>결재 {'>'}</span> 전결자 지정
                                 </h4>
                                 <div className='payment-line'>
                                     <ul className='nav nav-pills flex-column flex-md-row mb-3'>
