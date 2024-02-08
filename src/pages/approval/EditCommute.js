@@ -42,12 +42,12 @@ function EditCommute() {
                     ></textarea>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label for='formFileMultiple' class='form-label'>
+                    <label for='formFileMultiple' className='form-label'>
                         파일첨부
                     </label>
 
                     <div
-                        class='input-group'
+                        className='input-group'
                         style={{
                             marginLeft: '20px',
                             width: '80%',
@@ -56,7 +56,7 @@ function EditCommute() {
                     >
                         <input
                             type='file'
-                            class='form-control'
+                            className='form-control'
                             id='inputGroupFile02'
                             style={{
                                 width: '70%',
@@ -64,7 +64,7 @@ function EditCommute() {
                                 paddingBottom: '30px',
                             }}
                         />
-                        <label class='input-group-text' for='inputGroupFile02' style={{ height: '31.5px' }}>
+                        <label className='input-group-text' for='inputGroupFile02' style={{ height: '31.5px' }}>
                             Upload
                         </label>
                     </div>
@@ -73,7 +73,7 @@ function EditCommute() {
             <hr />
             <div id='last-thing'>
                 <div
-                    class='btn btn-danger'
+                    className='btn btn-danger'
                     id='clean-btn1'
                     style={{
                         width: '20%',
@@ -84,7 +84,7 @@ function EditCommute() {
                 >
                     <b>초기화</b>
                 </div>
-                <button type='button' class='btn btn-primary' id='complete-payment1'>
+                <button type='button' className='btn btn-primary' id='complete-payment1'>
                     작성 완료
                 </button>
             </div>
