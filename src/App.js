@@ -23,7 +23,7 @@ import MyPageUpdate from './pages/mypage/01_profileUpdate';
 import 'boxicons/css/boxicons.min.css';
 import Sign from './pages/mypage/01_sign';
 import Organization from './pages/organizationChart/organizationChart';
-import DataFormat from './pages/dataformat/DataFormat';
+import DataFormat from './pages/dataformat/dataformat';
 import NoticeMain from './pages/notice/NoticeMain';
 import NoticeWrite from './pages/notice/NoticeWrite';
 import NoticeDetail from './pages/notice/NoticeDetail';
