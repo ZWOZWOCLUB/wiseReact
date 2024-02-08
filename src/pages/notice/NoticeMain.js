@@ -7,7 +7,24 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 // import '../../@core/css/notice.module.css';
 import './noticeMain.css';
- function NoticeMain() {
+
+const { useNavigate } = require('react-router-dom');
+
+function NoticeMain() {
+  const navigate = useNavigate();
+  
+
+
+
+
+  
+  const onClickNoticeWrite = () => {
+
+    // 공지작성
+    console.log('NoticeWrite click');
+    navigate(`/NoticeWrite`, { replace: false });
+};
+
 
   return(
      <>
@@ -54,11 +71,11 @@ import './noticeMain.css';
                   </form>
                   <div style={{ width: "5%" }} />
                   <a
-                    className="btn btn btn-primary"
-                    style={{ width: "15%" }}
-                    href="./noticewrite.html"
+              className="btn btn-primary"
+              style={{ width: "15%", color: 'white' }} 
+              onClick={onClickNoticeWrite}
                   >
-                    공지작성
+                   공지작성
                   </a>
                   <div style={{ width: "7%" }} />
                 </div>
