@@ -161,13 +161,15 @@ function MemberAdd() {
       if (memList.memCode === undefined) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
-        navigate(`/settingInfo`, { replace: true }, {state : {value : memList.code}});
-        
+        navigate(
+          `/settingInfo?memCode=${memList.memCode}`,
+          { replace: true }
+        )
       }
     } else if (tab === "연차 관리") {
-      navigate("/settingVacation", { replace: true });
+        alert("직원 정보를 먼저 등록해주세요");
     } else if (tab === "서류함") {
-      navigate("/settingDocument", { replace: true });
+        alert("인사 정보를 먼저 등록해주세요");
     }
   };
 
@@ -201,7 +203,7 @@ function MemberAdd() {
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
               <li
                 className={`nav-link`}
-                onClick={() => handleTabClick("프로필 정보")}
+                onClick={() => handleTabClick("서류함")}
               >
                 서류함
               </li>
@@ -209,7 +211,7 @@ function MemberAdd() {
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
               <li
                 className={`nav-link`}
-                onClick={() => handleTabClick("프로필 정보")}
+                onClick={() => handleTabClick("연차 관리")}
               >
                 연차 관리
               </li>
