@@ -11,7 +11,8 @@ import ReqDocument from './ReqDocument';
 import EditCommute from './EditCommute';
 import EditSchedule from './EditSchedule';
 import Annual from './Annual';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 function RequestApproval() {
     const [selectOption, setSelectOption] = useState('1');
@@ -19,6 +20,10 @@ function RequestApproval() {
     const optionChange = (e) => {
         setSelectOption(e.target.value);
     };
+    const dispatch = useDispatch();
+
+    const memberInfo = useSelector((state) => state.approvalReducer);
+    
 
     const renderSelectedPage = () => {
         switch (selectOption) {
@@ -59,7 +64,7 @@ function RequestApproval() {
                                                                     marginRight: '20px',
                                                                 }}
                                                             ></div>
-                                                            <span>이현강</span>
+                                                            <span>이동락</span>
                                                             <select
                                                                 name='type'
                                                                 id='payment-type'
