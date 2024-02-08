@@ -6,8 +6,30 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
+import { useState } from 'react';
 
 function Annual() {
+    const [form, setForm] = useState({
+        vacKind: '',
+        vacContents: '',
+        vacStartDate: '',
+        vacEndDate: '',
+        approval: {
+            payDate: '',
+            payKind: '연차 신청',
+            approvalMember: {
+                memCode: '',
+            },
+        },
+    });
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
+
     return (
         <>
             <div>
@@ -17,25 +39,38 @@ function Annual() {
             <div id='margintop'>
                 <div>
                     연차구분<span style={{ color: 'red' }}> *</span>
-                    <select name='annual-type' id='annual-type' style={{ marginLeft: '10px', width: '77%' }}>
+                    <select
+                        name='vacKind'
+                        id='annual-type'
+                        style={{ marginLeft: '10px', width: '77%' }}
+                        onChange={onChange}
+                    >
                         <option value='0'>--선택</option>
-                        <option value='1'>무급</option>
-                        <option value='2'>유급</option>
+                        <option value='무급'>무급</option>
+                        <option value='유급'>유급</option>
                     </select>
                 </div>
                 <div>
                     신청일<span style={{ color: 'red' }}> *</span>
                     <input
                         type='date'
-                        id='annual-date'
+                        className='annual-date'
                         style={{
                             marginLeft: '10px',
                             marginRight: '10px',
                             width: '36%',
                         }}
+                        onChange={onChange}
+                        name='vacStartDate'
                     />
                     <span> ~ </span>
-                    <input type='date' id='annual-date' style={{ marginLeft: '10px', width: '36%' }} />
+                    <input
+                        type='date'
+                        className='annual-date'
+                        style={{ marginLeft: '10px', width: '36%' }}
+                        onChange={onChange}
+                        name='vacEndDate'
+                    />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <label for='basic-default-message'>
@@ -49,10 +84,12 @@ function Annual() {
                             width: '80%',
                             marginLeft: '20px',
                         }}
+                        onChange={onChange}
+                        name='vacContents'
                     ></textarea>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label for='formFileMultiple' className='form-label'>
+                    <label for='formFileMultiple' className='form-label' onChange={onChange}>
                         파일첨부
                     </label>
 

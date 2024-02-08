@@ -23,7 +23,6 @@ function RequestApproval() {
     const dispatch = useDispatch();
 
     const memberInfo = useSelector((state) => state.approvalReducer);
-    
 
     const renderSelectedPage = () => {
         switch (selectOption) {
@@ -32,7 +31,7 @@ function RequestApproval() {
             case '2':
                 return <ReqDocument />;
             case '3':
-                return <Retiredment />; // Replace with the actual component for retirement
+                return <Retiredment />;
             case '4':
                 return <EditCommute />;
             case '5':
@@ -81,13 +80,22 @@ function RequestApproval() {
                                                         <div id='manager-btn'>
                                                             결재자<button id='tree-btn'>조직도</button>
                                                         </div>
-                                                        <div className='payment-manager1'></div>
+                                                        <div className='payment-manager1'>
+                                                            <div style={{ backgroundColor: 'black' }}>
+                                                                <span>이현강</span>
+                                                            </div>
+                                                        </div>
                                                         <div id='manager-btn'>전결자</div>
-                                                        <div id='payment-manager1'></div>
+                                                        <div id='payment-manager1'>
+                                                            <span>이동락</span>
+                                                        </div>
                                                         <div id='manager-btn2'>
                                                             참조자<button id='tree-btn2'>조직도</button>
                                                         </div>
-                                                        <div id='payment-manager2'></div>
+                                                        <div id='payment-manager2'>
+                                                            <span>이동건</span>
+                                                            <span>도우제</span>
+                                                        </div>
                                                     </div>
                                                     <div className='kind'>{renderSelectedPage()}</div>
                                                 </div>
