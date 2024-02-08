@@ -12,6 +12,10 @@ import aamPerAlarmReducer from './AAMPerAlarmModule';
 import aamSendMessageReducer from './AAMSendMessageModule';
 import aamRecMessageReducer from './AAMRecMessageModule';
 import settingMemberReducer from './SettingMemberModule';
+import mpDocReducer from './MPDocModule';
+import mpATTReducer from './MPATTModule';
+import mpVacHisReducer from './MPVacHisModule';
+import mpVacReducer from './MPVacModule';
 
 const { combineReducers } = require('redux');
 
@@ -33,6 +37,10 @@ const rootReducer = combineReducers({
     otherReducer,
     settingReducer,
     settingMemberReducer,
+    mpDocReducer,
+    mpATTReducer,
+    mpVacHisReducer,
+    mpVacReducer
 });
 
 export default rootReducer;

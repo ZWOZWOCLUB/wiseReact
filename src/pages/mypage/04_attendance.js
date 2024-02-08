@@ -6,12 +6,39 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import Calendar from '@toast-ui/calendar';
 import { decodeJwt } from '../../utils/tokenUtils.js';
+import { callATTAPI } from '../../apis/MyPageAPICalls.js';
 
 function MPAttendance(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
-    const member = useSelector(state => state.memberReducer);
+    const token = decodeJwt(window.localStorage.getItem("accessToken"));
+    const att = useSelector((state) => state.mpATTReducer);
+
+    const attDetail = att.data;
+
+
+    useEffect(
+      () => {
+        console.log('useEffect의 token---->',token);
+        console.log('useEffect의 token.memCode--->', token.memCode);
+  
+        if(token !== null) {
+  
+          dispatch(callATTAPI({	
+              memCode: 2
+            // memCode: token.memCode
+            // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
+            // 마찬가지로 date도 useState로 캘린더에서 클릭한 값을 넘겨줘야함(기본값은 오늘 날짜로)
+     
+          }));         
+      }        
+      }
+    ,[]
+  );
+
+  console.log('att--->',att);
+  console.log('attDetail--->',attDetail);
 
     
 
@@ -36,6 +63,8 @@ function MPAttendance(){
         navigate("/mpdocument", { replace: true })
       }
     };
+
+
 
     // 캘린더 시작
 
@@ -196,6 +225,10 @@ function MPAttendance(){
                 </div>
                 <div className="col-6 mb-4">
 
+{attDetail ? 
+
+<div>
+
 
                   <div className="card" id="firstItem">
                     <div className="card-body">
@@ -205,7 +238,7 @@ function MPAttendance(){
                         </div>
                       </div>
                       <span className="fw-semibold d-block mb-1">출근 시각</span>
-                      <h3 className="card-title mb-2">08:31</h3>
+                      <h3 className="card-title mb-2">{ attDetail.attStartTime }</h3>
                     </div>
                   </div>
 
@@ -220,7 +253,11 @@ function MPAttendance(){
                         
                       </div>
                       <span className="fw-semibold d-block mb-1">퇴근 시각</span>
-                      <h3 className="card-title mb-2">퇴근 전 or 18:01</h3>
+                      <h3 className="card-title mb-2">
+                      <h3 className="card-title mb-2">
+                        {attDetail.attEndTime ? attDetail.attEndTime : '퇴근전'}
+                      </h3>
+                        </h3>
                     </div>
                   </div>
 
@@ -235,11 +272,12 @@ function MPAttendance(){
                        
                       </div>
                       <span className="fw-semibold d-block mb-1">총 근무 시간</span>
-                      <h3 className="card-title mb-2">8시간 30분</h3>
+                      <h3 className="card-title mb-2">{ attDetail.totalWork }</h3>
                       <small className="text-success fw-semibold">쉬는시간 제외</small>
                     </div>
                   </div>
 
+                  </div> : '로딩중'}
 
 
                 </div>
