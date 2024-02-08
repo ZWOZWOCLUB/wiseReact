@@ -4,15 +4,44 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { decodeJwt } from '../../utils/tokenUtils.js';
+import { callDegreeDetailAPI } from '../../apis/MyPageAPICalls.js'
+import { callCerDetailAPI } from '../../apis/MyPageAPICalls.js'
+import { callCareerDetailAPI } from '../../apis/MyPageAPICalls.js'
 
 function PersonnelInfo(){
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const params = useParams();
-    const member = useSelector(state => state.memberReducer);
+    const token = decodeJwt(window.localStorage.getItem("accessToken"));
+    const degree = useSelector(state => state.mpDegreeReducer);
+    const career = useSelector(state => state.mpCareerReducer);
+    const cer = useSelector(state => state.mpCerReducer);
 
-    
+    const degreeList = degree.data;
+    const careerList = career.data;
+    const cerList = cer.data;
+
+
+    useEffect(
+      () => {
+        console.log('useEffect의 token---->',token);
+        console.log('useEffect의 token.memCode--->', token.memCode);
+
+        if(token !== null) {
+
+          dispatch(callDegreeDetailAPI({	
+              memCode: token.memCode
+          })); 
+          dispatch(callCerDetailAPI({	
+              memCode: token.memCode
+          })); 
+          dispatch(callCareerDetailAPI({	
+              memCode: token.memCode
+          }));            
+      }        
+      }
+    ,[]
+  );
 
     const [activeTab, setActiveTab] = useState('프로필 정보');
 
@@ -98,13 +127,24 @@ function PersonnelInfo(){
                                 </tr>
                               </thead>
                               <tbody className="table-border-bottom-0">
-                                <tr>
+                                { cerList && cerList.map(
+                                  (cer) => (
+                                    <tr>
+                                      <td><i className="fab fa-angular fa-lg text-danger me-3"></i><strong>{ cer.cerKind }</strong></td>
+                                      <td>{ cer.cerDay }</td>
+                                      <td>{ cer.cerKind }</td>
+                                      <td>{ cer.cerInstitution }</td>
+                                    </tr>
+                                  )
+                                )}
+
+                                {/* <tr>
                                   <td><i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>컴퓨터 활용능력 1급</strong></td>
                                   <td>2023-03-01</td>
                                   <td>100-044-0033</td>
                                   <td>대한상공회의소</td>
-                                </tr>
-                                <tr>
+                                </tr> */}
+                                {/* <tr>
                                   <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
                                     <strong>전기기능사</strong></td>
                                   <td>2023-05-03</td>
@@ -124,7 +164,7 @@ function PersonnelInfo(){
                                   <td>2023-08-17</td>
                                   <td>2022-032-0333</td>
                                   <td>한국산업인력공단</td>
-                                </tr>
+                                </tr> */}
                               </tbody>
                             </table>
                           </div>
@@ -141,24 +181,22 @@ function PersonnelInfo(){
                                   <th>회사명</th>
                                   <th>입사일</th>
                                   <th>퇴직일</th>
-                                  <th>직무</th>
                                   <th>직위(직책)</th>
                                 </tr>
                               </thead>
                               <tbody class="table-border-bottom-0">
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
-                                      <strong>(주)오리엔텔코리아</strong></td>
-                                  <td>2020-03-04</td>
-                                  <td>
-                                    2020-09-21
-                                  </td>
-                                  <td>사무업무</td>
-                                  <td>
-                                    사원
-                                  </td>
-                                </tr>
-                                <tr>
+                                { careerList && careerList.map(
+                                  (career) => (
+                                    <tr>
+                                      <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
+                                      <strong>{ career.crrName }</strong></td>
+                                      <td>{ career.crrStartDate }</td>
+                                      <td>{ career.crrEndDate }</td>
+                                      <td>{ career.crrPosition }</td>
+                                    </tr>
+                                  )
+                                ) }
+                                {/* <tr>
                                   <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
                                       <strong>(주)씨아이에스엠텍</strong></td>
                                   <td>2020-10-01</td>
@@ -193,7 +231,7 @@ function PersonnelInfo(){
                                   <td>
                                     사원
                                   </td>
-                                </tr>
+                                </tr> */}
                               </tbody>
                             </table>
                           </div>
@@ -215,7 +253,19 @@ function PersonnelInfo(){
                                 </tr>
                               </thead>
                               <tbody className="table-border-bottom-0">
-                                <tr>
+                                { degreeList && degreeList.map(
+                                  (degree) => (
+                                    <tr>
+                                      <td><i class="fab fa-angular fa-lg text-danger me-3"></i> 
+                                      <strong>{ degree.degName }</strong></td>
+                                      <td>{ degree.degAdmissions }</td>
+                                      <td>{ degree.degGraduation }</td>
+                                      <td>{ degree.degMajor }</td>
+                                      <td>{ degree.degState }</td>
+                                    </tr>
+                                  )
+                                )}
+                                {/* <tr>
                                   <td><i class="fab fa-angular fa-lg text-danger me-3"></i> 
                                     <strong>자운고등학교</strong></td>
                                   <td>2019-03-04</td>
@@ -264,7 +314,7 @@ function PersonnelInfo(){
                                   <td>
                                     중퇴
                                   </td>
-                                </tr>
+                                </tr> */}
                               </tbody>
                             </table>
                           </div>
