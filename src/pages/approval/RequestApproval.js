@@ -13,6 +13,7 @@ import EditSchedule from './EditSchedule';
 import Annual from './Annual';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { decodeJwt } from '../../utils/tokenUtils.js';
 
 function RequestApproval() {
     const [selectOption, setSelectOption] = useState('1');
@@ -24,7 +25,11 @@ function RequestApproval() {
 
     const memberInfo = useSelector((state) => state.approvalReducer);
 
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+
     const renderSelectedPage = () => {
+        console.log(token);
+
         switch (selectOption) {
             case '1':
                 return <Annual />;
@@ -63,7 +68,7 @@ function RequestApproval() {
                                                                     marginRight: '20px',
                                                                 }}
                                                             ></div>
-                                                            <span>이동락</span>
+                                                            <span>{token.memName}</span>
                                                             <select
                                                                 name='type'
                                                                 id='payment-type'
