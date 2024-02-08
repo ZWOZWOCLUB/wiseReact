@@ -4,17 +4,17 @@ import { createActions, handleActions } from 'redux-actions';
 const initialState = [];
 
 /* 액션 */
-export const GET_MEM   = 'login/GET_MEM';
+export const GET_REC_MESSAGE   = 'login/GET_REC_MESSAGE';
 
 const actions = createActions({
-    [GET_MEM]: () => {},
+    [GET_REC_MESSAGE]: () => {},
 
 });
 
 /* 리듀서 */
-const mypageReducer = handleActions(
+const aamRecMessageReducer = handleActions(
     {
-        [GET_MEM]: (state, { payload }) => {
+        [GET_REC_MESSAGE]: (state, { payload }) => {
             
             return payload;
         },
@@ -23,4 +23,5 @@ const mypageReducer = handleActions(
     initialState
 );
 
-export default mypageReducer;
+export default aamRecMessageReducer;
+
