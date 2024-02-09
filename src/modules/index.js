@@ -1,8 +1,21 @@
 import memberReducer from './MemberModule';
 import payReducer from './PayModule';
-import yearReducer from './YearModule';
-import settingReducer from './SettingModule';
+import otherReducer from './OtherModule'
+import settingReducer from './SettingModule'
+import mypageReducer from "./MPModule";
 import approvalReducer from './ApprovalModule';
+import mpCareerReducer from './MPCareerModule';
+import mpCerReducer from './MPCerModule';
+import mpDegreeReducer from './MPDegreeModule';
+import aamAllAlarmReducer from './AAMAllAlarmModule';
+import aamPerAlarmReducer from './AAMPerAlarmModule';
+import aamSendMessageReducer from './AAMSendMessageModule';
+import aamRecMessageReducer from './AAMRecMessageModule';
+import settingMemberReducer from './SettingMemberModule';
+import mpDocReducer from './MPDocModule';
+import mpATTReducer from './MPATTModule';
+import mpVacHisReducer from './MPVacHisModule';
+import mpVacReducer from './MPVacModule';
 
 const { combineReducers } = require('redux');
 
@@ -11,9 +24,23 @@ const { combineReducers } = require('redux');
 const rootReducer = combineReducers({
     memberReducer,
     payReducer,
-    yearReducer,
     settingReducer,
+    mypageReducer,
     approvalReducer,
+    mpCareerReducer,
+    mpCerReducer,
+    mpDegreeReducer,
+    aamAllAlarmReducer,
+    aamPerAlarmReducer,
+    aamSendMessageReducer,
+    aamRecMessageReducer,
+    otherReducer,
+    settingReducer,
+    settingMemberReducer,
+    mpDocReducer,
+    mpATTReducer,
+    mpVacHisReducer,
+    mpVacReducer
 });
 
 export default rootReducer;
