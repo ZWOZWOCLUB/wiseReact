@@ -16,6 +16,7 @@ import mpDocReducer from './MPDocModule';
 import mpATTReducer from './MPATTModule';
 import mpVacHisReducer from './MPVacHisModule';
 import mpVacReducer from './MPVacModule';
+import noticeReducer from './NoticeModule';
 
 const { combineReducers } = require('redux');
 
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
     mpDocReducer,
     mpATTReducer,
     mpVacHisReducer,
-    mpVacReducer
+    mpVacReducer,
+    noticeReducer
 });
 
 export default rootReducer;
