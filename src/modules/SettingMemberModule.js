@@ -2,14 +2,12 @@ import { createActions, handleActions } from "redux-actions";
 
 const initialState = [];
 
-export const POST_MEMBERADD             = 'settingMember/POST_MEMBERADD';
-export const PUT_MEMBERADD              = 'settingMember/PUT_MEMBERADD';
-export const POST_CERTIFICATE           = 'settingMember/POST_CERTIFICATE'
+export const POST_MEMBERADD = 'settingMember/POST_MEMBERADD';
+export const PUT_MEMBERADD = 'settingMember/PUT_MEMBERADD';
 
 const actions = createActions({
-    [POST_MEMBERADD]: () => {},
-    [PUT_MEMBERADD]: () => {},
-    [POST_CERTIFICATE]: () => {},
+    [POST_MEMBERADD]: () => { },
+    [PUT_MEMBERADD]: () => { },
 });
 
 const settingMemberReducer = handleActions(
@@ -19,11 +17,7 @@ const settingMemberReducer = handleActions(
         },
         [PUT_MEMBERADD]: (state, { payload }) => {
             return payload;
-        },        
-        [POST_CERTIFICATE]: (state, { payload }) => {
-            return payload;
         },
-
     },
     initialState
 );

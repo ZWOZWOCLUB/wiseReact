@@ -1,7 +1,6 @@
 import {
   POST_MEMBERADD,
   PUT_MEMBERADD,
-  POST_CERTIFICATE,
 } from "../modules/SettingMemberModule.js";
 
 //회원 등록
@@ -55,31 +54,3 @@ export const callMemberUpdateAPI = ({ form }) => {
   };
 };
 
-//자격정보 등록
-export const callCertificateInsertAPI = ({ cerForm }) => {
-  console.log("callCertificateInsertAPI Call");
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/certificate`;
-  console.log("cerForm", cerForm);
-  return async (dispatch, getState) => {
-    const result = await fetch(requestURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "*/*",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-      body: JSON.stringify(cerForm), 
-    }).then((response) => response.json());
-
-    console.log(
-      "[callCertificateInsertAPI] callCertificateInsertAPI RESULT : ",
-      result
-    );
-
-    dispatch({ type: POST_CERTIFICATE, payload: result });
-    console.log({ result });
-  };
-};
-
-//학위정보 등록
-//경력정보 등록

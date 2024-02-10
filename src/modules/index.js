@@ -5,6 +5,10 @@ import settingReducer from './SettingModule'
 import mypageReducer from "./MypageModule";
 import approvalReducer from './ApprovalModule';
 import settingMemberReducer from './SettingMemberModule';
+import settingCareerReducer from './SettingCareearModule';
+import settingDegreeReducer from './SettingDegreeModule';
+import settingCertificateReducer from './SettingCertificateModule';
+import settingInfoSearchReducer from './SettingInfoSearchModuel';
 
 const { combineReducers } = require('redux');
 
@@ -19,6 +23,11 @@ const rootReducer = combineReducers({
     otherReducer,
     settingReducer,
     settingMemberReducer,
+    settingCareerReducer,
+    settingDegreeReducer,
+    settingCertificateReducer,
+    settingInfoSearchReducer,
+
 });
 
 export default rootReducer;

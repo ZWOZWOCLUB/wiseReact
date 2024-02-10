@@ -5,7 +5,7 @@ import { callSearchDepAPI } from "../../apis/SettingMemberListAPICalls";
 import {
   callMemberAddAPI,
   callMemberUpdateAPI,
-} from "../../apis/SettingMemberAddAPICalls";
+} from "../../apis/SettingMemberAPICalls";
 import { callSearchPosAPI } from "../../apis/OtherAPICalls";
 import imageSample from "../../@core/img/icons/unicons/image.png";
 
@@ -58,7 +58,6 @@ function MemberAdd() {
   });
 
   useEffect(() => {
-    // 이미지 업로드시 미리보기 세팅
     if (profile) {
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
@@ -167,9 +166,9 @@ function MemberAdd() {
         )
       }
     } else if (tab === "연차 관리") {
-        alert("직원 정보를 먼저 등록해주세요");
+      alert("직원 정보를 먼저 등록해주세요");
     } else if (tab === "서류함") {
-        alert("인사 정보를 먼저 등록해주세요");
+      alert("인사 정보를 먼저 등록해주세요");
     }
   };
 
