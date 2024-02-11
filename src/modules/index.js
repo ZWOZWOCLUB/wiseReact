@@ -16,7 +16,7 @@ import mpDocReducer from './MPDocModule';
 import mpATTReducer from './MPATTModule';
 import mpVacHisReducer from './MPVacHisModule';
 import mpVacReducer from './MPVacModule';
-import settingCareerReducer from './SettingCareearModule';
+import settingCareerReducer from './SettingCareearModule'
 import settingDegreeReducer from './SettingDegreeModule';
 import settingCertificateReducer from './SettingCertificateModule';
 import settingInfoSearchReducer from './SettingInfoSearchModuel';
@@ -45,7 +45,7 @@ const rootReducer = combineReducers({
     mpDocReducer,
     mpATTReducer,
     mpVacHisReducer,
-    mpVacReducer
+    mpVacReducer,
     settingCareerReducer,
     settingDegreeReducer,
     settingCertificateReducer,
