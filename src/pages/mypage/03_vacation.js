@@ -5,14 +5,46 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { decodeJwt } from '../../utils/tokenUtils.js';
+import { callVacAPI, callVacHisAPI } from '../../apis/MyPageAPICalls.js';
 
 function MPVacation(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
-    const member = useSelector(state => state.memberReducer);
+    const vac = useSelector((state)=> state.mpVacReducer);
+    const vacHis = useSelector((state)=> state.mpVacHisReducer);
+    const token = decodeJwt(window.localStorage.getItem("accessToken"));
 
-    
+    const vacDetail = vac.data;
+    const vacHisList = vacHis.data;
+
+
+    useEffect(
+      () => {
+        console.log('useEffect의 token---->',token);
+        console.log('useEffect의 token.memCode--->', token.memCode);
+  
+        if(token !== null) {
+  
+          dispatch(callVacAPI({	
+              memCode: 2
+              // memCode: token.memCode
+              // 마찬가지로 사번 1의 샘플데이터가 없어서 2번과 3번으로 대체
+     
+          }));   
+          dispatch(callVacHisAPI({	
+            memCode: 3
+   
+        }));      
+      }        
+      }
+    ,[]
+  );
+
+    console.log('vac---->',vac);
+    console.log('vacHis---->',vacHis);
+    console.log('vacDetail---->',vacDetail);
+    console.log('vacHisList---->',vacHisList);
 
     const [activeTab, setActiveTab] = useState('프로필 정보');
 
@@ -140,44 +172,34 @@ function MPVacation(){
                   <table className="table table-striped">
                     <thead>
                       <tr>
-                        <th>사용일자</th>
+                        <th>시작일자</th>
+                        <th>종료일자</th>
                       </tr>
                     </thead>
+                    { vacHisList ?  
                     <tbody className="table-border-bottom-0">
-                      <tr>
+                      { vacHisList && vacHisList.map(
+                        (vacHis) => (
+                        <tr>
+                          <td>{vacHis.vacStartDate}</td>
+                          <td>{vacHis.vacEndDate}</td>
+                        </tr>
+                        )
+                      ) }
+                      {/* <tr>
                         <td>2020-03-04</td>
-                      </tr>
-                      <tr>
                         <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
-                      <tr>
-                        <td>2020-03-04</td>
-                      </tr>
+                      </tr> */}
+                      
                     </tbody>
+                    : '로딩중' }
                   </table>
                 </div>
 
                     </div>
                   </div>
                 </div>
+                {vacDetail ? 
                 <div className="col-6 mb-4">
                   <div className="card" id="firstItem">
                     <div className="card-body">
@@ -203,7 +225,7 @@ function MPVacation(){
                         </div>
                       </div>
                       <span className="fw-semibold d-block mb-1">사용 가능 연차</span>
-                      <h3 className="card-title mb-2">10회</h3>
+                      <h3 className="card-title mb-2">{vacDetail.vctCount}회</h3>
                       <small className="text-success fw-semibold"></small>
                     </div>
                   </div>
@@ -231,7 +253,7 @@ function MPVacation(){
                         </div>
                       </div>
                       <span className="fw-semibold d-block mb-1">소멸 예정 연차</span>
-                      <h3 className="card-title mb-2">3회</h3>
+                      <h3 className="card-title mb-2">{vacDetail.vctDeadline}회</h3>
                       <small className="text-success fw-semibold">2025.01.01 소멸 예정</small>
                     </div>
                   </div>
@@ -259,11 +281,12 @@ function MPVacation(){
                         </div>
                       </div>
                       <span className="fw-semibold d-block mb-1">누적 사용 연차</span>
-                      <h3 className="card-title mb-2">5회</h3>
+                      <h3 className="card-title mb-2">{vacHisList.length}회</h3>
                       <small className="text-success fw-semibold">이번년도 기준</small>
                     </div>
                   </div>
                 </div>
+                : '로딩중' }
                 
                     
                     

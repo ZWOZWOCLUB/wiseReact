@@ -187,7 +187,7 @@ function MyPage(){
                           <div className="mb-3 col-md-6">
                             <label htmlFor="organization" className="form-label">직위</label>
                             <div>
-                            직위명
+                            {memberDetail.posName}
                             </div>
                           </div>
                           
