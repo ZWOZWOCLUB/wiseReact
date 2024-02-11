@@ -21,6 +21,7 @@ import settingDegreeReducer from './SettingDegreeModule';
 import settingCertificateReducer from './SettingCertificateModule';
 import settingInfoSearchReducer from './SettingInfoSearchModuel';
 import settingDocumentReducer from './SettingDocumentModule';
+import noticeReducer from './NoticeModule';
 
 const { combineReducers } = require('redux');
 
@@ -51,6 +52,8 @@ const rootReducer = combineReducers({
     settingCertificateReducer,
     settingInfoSearchReducer,
     settingDocumentReducer,
+    mpVacReducer,
+    noticeReducer
 });
 
 export default rootReducer;

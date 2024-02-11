@@ -5,8 +5,6 @@ const initialState = [];
 
 //액션 타입
 
-// 공지등록
-export const GET_INSERT_NOTICE = "notice/GET_INSERT_NOTICE"
 // 공지전체조회
 export const GET_ALLVIEW_NOTICE = "notice/GET_ALL_VIEW_NOTICE"
 //공지 제목, 내용, 작성자로 조회
@@ -15,6 +13,8 @@ export const GET_SEARCH_COMMENT_NOTICE = "notice/GET_SEARCH_COMMENT_NOTICE"
 export const GET_SEARCH_MEMBER_NOTICE = "notice/GET_SEARCH_MEMBER_NOTICE"
 //공지 상세페이지 조회
 export const GET_DETAILL_NOTICE = "notice/GET_DETAILL_NOTICE"
+// 공지등록
+export const GET_INSERT_NOTICE = "notice/GET_INSERT_NOTICE"
 //공지 상세페이지 수정
 export const PUT_UPDATE_NOTICE = "notice/PUT_UPDATE_NOTICE"
 
