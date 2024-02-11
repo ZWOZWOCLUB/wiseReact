@@ -26,8 +26,8 @@ function NoticeMain() {
   const [start, setStart] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
-  const [search, setSearch] = useState('');
   const pageInfo = notice.pageInfo || {};
+  const [search, setSearch] = useState('');
   const [searchNotice, setSearchNotice] = useState([]);
 
   console.log('pageInfo', pageInfo);
@@ -39,6 +39,7 @@ function NoticeMain() {
       pageNumber.push(i);
     }
   }
+
 
 
   useEffect(() => {
@@ -59,6 +60,50 @@ function NoticeMain() {
     // 공지작성
     console.log('NoticeWrite click');
     navigate(`/NoticeWrite`, { replace: false });
+};
+
+
+
+const onSearchChangeHandler = (e) => {
+  console.log('~~~~~~~~~~~~', e.target.value);  
+  setSearch(e.target.value);
+};
+
+// const onEnterKeyHandler = (e) => {
+//   console.log('Enter key', search);
+//   const searchResult = noticeList.filter(notice => notice.notMember.memName?.includes(search));
+//   setSearchNotice(searchResult);
+//   console.log(searchNotice);
+// }
+
+
+// 선택한 검색 조건을 저장할 상태 (기본값은 'title'로 설정)
+const [searchType, setSearchType] = useState('title');
+
+const onSearchTypeChange = (e) => {
+  setSearchType(e.target.value);
+};
+
+const onEnterKeyHandler = (e) => {
+  if (e.key === 'Enter' || e.type === 'click') { // 엔터키 누르거나 검색 아이콘 클릭 시
+    let searchResult = [];
+    if (searchType === 'title') {
+      // 제목으로 검색
+      searchResult = noticeList.filter(notice => notice.notName.includes(search));
+    } else if (searchType === 'author') {
+      // 작성자로 검색
+      searchResult = noticeList.filter(notice => notice.notMember.memName?.includes(search));
+    } else if (searchType === 'content') {
+      // 내용으로 검색
+      searchResult = noticeList.filter(notice => notice.notComment?.includes(search));
+    }
+    setSearchNotice(searchResult);
+  }
+};
+
+const handleFormSubmit = (e) => {
+  e.preventDefault(); // 폼 제출의 기본 동작 방지
+  onEnterKeyHandler(e); // 검색 실행
 };
 
 
@@ -84,25 +129,32 @@ function NoticeMain() {
                     id="defaultSelect"
                     className="form-select"
                     style={{ width: "15%" }}
+                    onChange={onSearchTypeChange}
                   >
-                    <option value={2024}>제목</option>
-                    <option value={2023}>작성자</option>
-                    <option value={2022}>내용</option>
+                    <option value="title">제목</option>
+                    <option value="author">작성자</option>
+                    <option value="content">내용</option>
                   </select>
                   <form
                     className="d-flex"
-                    onsubmit="return false"
+  
+                    onSubmit={handleFormSubmit}
                     style={{ width: "30%" }}
                   >
                     <div className="input-group">
                       <input
                         type="text"
+                        value = {search}
+                        onChange={onSearchChangeHandler}
+                        onKeyUp={(e) => e.key === 'Enter' && onEnterKeyHandler(e)}
                         className="form-control"
                         placeholder="검색"
                       />
-                      <span className="input-group-text">
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAd5JREFUSEu11cvLTWEUx/HPGxnIpSiXiZAwcIuSAQpFL2XqUgxIURhQBv4AMiEhDCgk5Q+Q0VsImSAlopTIgFwi9+uz6nl1HO/e5xnssya7zn7O+j5rrd9v7R5djp4u51cHmIB1WInZ+SJ3cAkX8LzkcgMBRuAcVtck+I2L2IRPdaB2wFDcwgx8xUkcxpOcZDJ2YQuG5LOL8L0K0g44iw14hhV4UPHHWbicLjAeB7G7BDAT9/Aj9Xk+ot91sRhX8A2T8GKgw60VHMF2HMWOkgHiPNYnyF7s7wR4jCm5//cLAUvQh2vpGRX9F60VfEQMeRB+FQJGpWpf4w1GdwK8x3AMQ8BKIs5+wCuM6QS4mw01L3ngdkn2pKQFSW03c5uWdQIcSKbZgxPYVgg4kzyyMbUnBLKzE2AqHuJnoUzDYFdz0sqq2412Ktv/KZYnCT6qqGRONtrY7PatJUaLM62r4guO41B2dryPKmNVbMbgnDRmEK6PYdfKtP/lyGygVTVzeJd20b7U0rWYm12/FPH7P1G3ridml/Yids/nrK4bOIa3CB+E0WKdhwpDSeGJv9HEBycg1zEdsQ0W4mU/oQlA5AqThaKm5fmcbhoQ+cal9b4mfz8abVGtJ5tqUSWk64A/OxFWGSrrSC8AAAAASUVORK5CYII=" />
-                      </span>
+                      <span className="input-group-text"
+                      onClick={onEnterKeyHandler}
+                      >  
+                        <i className="bx bx-search" />
+                        </span>
                     </div>
                   </form>
                   <div style={{ width: "5%" }} />
@@ -210,16 +262,8 @@ function NoticeMain() {
                     </li>
                       ))
                     }
-                    <li className="page-item">
-                      <a className="page-link " href="javascript:void(0);">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        3
-                      </a>
-                    </li>
+
+
                     <li className="page-item next">
                       <a className="page-link" href="javascript:void(0);">
                         <i className="tf-icon bx bx-chevrons-right">
