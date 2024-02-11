@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, useRef, createContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { callSearchDepAPI } from "../../apis/SettingMemberListAPICalls";
@@ -8,19 +8,25 @@ import {
 } from "../../apis/SettingMemberAPICalls";
 import { callSearchPosAPI } from "../../apis/OtherAPICalls";
 import imageSample from "../../@core/img/icons/unicons/image.png";
+import { callMemberDetailAPI } from "../../apis/MyPageAPICalls";
 
 export const MemberContext = createContext(null);
 
 function MemberAdd() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [updateState, setUpdateState] = useState(false);
 
+  const memberCode = searchParams.get("memCode");
   const [profile, setProfile] = useState(null);
   const [profileUrl, setProfileUrl] = useState();
   const profileInput = useRef();
   const depList = useSelector((state) => state.settingReducer);
   const posList = useSelector((state) => state.otherReducer);
   const memList = useSelector((state) => state.settingMemberReducer);
+  const memDetailList = useSelector((state) => state.mypageReducer);
+  const resutlList = memDetailList.data;
   const [memCode, setMemCode] = useState(0);
   const hireDate = new Date();
   const formattedDate = hireDate.toISOString().slice(0, 10);
@@ -28,11 +34,7 @@ function MemberAdd() {
   const [activeTab, setActiveTab] = useState("프로필 정보");
   const [resultMemCode, setResultMemCode] = useState(0);
   console.log("~~~~~~~~memList", memList);
-  console.log("####################", memList.memCode);
-  console.log(
-    "MemberAdd----------",
-    window.localStorage.getItem("accessToken")
-  );
+  console.log("~~~~~~~~resutlList", resutlList);
 
   useEffect(() => {
     dispatch(callSearchDepAPI());
@@ -42,9 +44,20 @@ function MemberAdd() {
     dispatch(callSearchPosAPI());
   }, []);
 
+  useEffect(() => {
+    if (memberCode) {
+
+      dispatch(callMemberDetailAPI({
+        memCode: memberCode
+      }));
+    }
+  }, [memberCode])
+
+
+
   const [form, setForm] = useState({
     memCode: 0,
-    memName: "",
+    memName: '',
     memPhone: "",
     memEmail: "",
     memAddress: "",
@@ -52,10 +65,26 @@ function MemberAdd() {
     memPassword: "0000",
     memHireDate: currentDate,
     memStatus: "N",
-    memRole: "일반사원",
+    memRole: "",
     posCode: 0,
     depCode: 0,
   });
+
+  useEffect(() => {
+    if (resutlList) {
+      setForm(prevForm => ({
+        ...prevForm,
+        memName: resutlList.memName,
+        memBirth: resutlList.memBirth,
+        memEmail: resutlList.memEmail,
+        memPhone: resutlList.memPhone,
+        memAddress: resutlList.memAddress,
+        depCode: resutlList.depCode,
+        posCode: resutlList.posCode,
+        memRole: resutlList.memRole,
+      }));
+    }
+  }, [resutlList]);
 
   useEffect(() => {
     if (profile) {
@@ -87,10 +116,15 @@ function MemberAdd() {
   };
 
   const onChangeHandler = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setUpdateState(true);
+
+    const { name, value } = e.target;
+
+    setForm(prevForm => ({
+      ...prevForm,
+      [name]: value,
+    }));
+    console.log(form);
   };
 
   const onClickMemberInsertHandler = () => {
@@ -127,7 +161,7 @@ function MemberAdd() {
 
   const onClickUpdateHandler = () => {
     const updateData = new FormData();
-    updateData.append("memCode", memList.memCode);
+    updateData.append("memCode", memberCode ? memberCode : memList.memCode);
     updateData.append("memName", form.memName);
     updateData.append("memPhone", form.memPhone);
     updateData.append("memEmail", form.memEmail);
@@ -157,7 +191,7 @@ function MemberAdd() {
     if (tab === "프로필 정보") {
       navigate(`/memberAdd`, { replace: true });
     } else if (tab === "인사 정보") {
-      if (memList.memCode === undefined) {
+      if (memList.length === 0 && memberCode === 0) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
         navigate(
@@ -166,12 +200,20 @@ function MemberAdd() {
         )
       }
     } else if (tab === "연차 관리") {
-      alert("직원 정보를 먼저 등록해주세요");
-    } else if (tab === "서류함") {
-      alert("인사 정보를 먼저 등록해주세요");
+      if (memList.length === 0 && memberCode === 0) {
+        alert("직원 정보를 먼저 등록해주세요");
+      } else {
+        navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+      }
     }
-  };
-
+    else if (tab === "서류함") {
+      if (memList.length === 0 && memberCode === 0) {
+        alert("인사 정보를 먼저 등록해주세요");
+      } else {
+        navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+      }
+    }
+  }
   return (
     <>
       <h4 className="fw-bold py-3 mb-4">
@@ -286,7 +328,7 @@ function MemberAdd() {
                     type="text"
                     id="memCode"
                     name="memCode"
-                    defaultValue={memList.memCode}
+                    defaultValue={memberCode ? memberCode : memList.memCode}
                     disabled="true"
                     input
                   />
@@ -301,6 +343,7 @@ function MemberAdd() {
                     name="memName"
                     id="Name"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.memName : '') : form.memName}
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -312,7 +355,9 @@ function MemberAdd() {
                     className="form-control"
                     id="birthday"
                     name="memBirth"
-                    onChange={onChangeHandler}
+                    onChange={(e) => onChangeHandler(e)}
+                    value={!updateState ? (resutlList ? resutlList.memBirth : '') : form.memBirth}
+
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -326,6 +371,8 @@ function MemberAdd() {
                     name="memEmail"
                     placeholder="abc@example.com"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.memEmail : '') : form.memEmail}
+
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -336,6 +383,8 @@ function MemberAdd() {
                     name="depCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.depCode : '') : form.depCode}
+
                   >
                     {Array.isArray(depList) &&
                       depList.map((d) => (
@@ -352,6 +401,8 @@ function MemberAdd() {
                     name="posCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.posCode : '') : form.posCode}
+
                   >
                     {Array.isArray(posList) &&
                       posList.map((p) => (
@@ -371,12 +422,38 @@ function MemberAdd() {
                     >
                       관리자로 지정
                     </label>
-                    <input
-                      type="checkbox"
-                      name="memRole"
-                      id="memRole"
-                      onChange={onChangeHandler}
-                    />
+                    <label style={{
+                      paddingTop: "0.5rem",
+                      paddingRight: "1rem",
+                      paddingLeft: "0.5rem",
+                    }}>
+                      <input
+                        type="radio"
+                        name="memRole"
+                        id="memRole"
+                        onChange={onChangeHandler}
+                        value={"Y"}
+                        checked={!updateState ? (resutlList ? (resutlList.memRole === '중간관리자' || resutlList.memRole === '최고관리자') : false) : form.memRole === 'Y'}
+                        style={{
+                          paddingRight: "1rem",
+                          marginRight: "0.5rem"
+                        }}
+                      />
+                      예 </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="memRole"
+                        id="memRole"
+                        onChange={onChangeHandler}
+                        value={"N"}
+                        style={{
+                          paddingRight: "1rem",
+                          marginRight: "0.5rem"
+                        }}
+                        checked={!updateState ? (resutlList ? (resutlList.memRole === '일반사원') : false) : form.memRole === 'N'}
+                      />
+                      아니오</label>
                   </span>
                 </div>
                 <div className="mb-3 col-md-6">
@@ -390,6 +467,8 @@ function MemberAdd() {
                     name="memPhone"
                     placeholder="000-0000-0000"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.memPhone : '') : form.memPhone}
+
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -402,6 +481,8 @@ function MemberAdd() {
                     id="address"
                     name="memAddress"
                     onChange={onChangeHandler}
+                    value={!updateState ? (resutlList ? resutlList.memAddress : '') : form.memAddress}
+
                   />
                 </div>
                 <div className="btn-wrapper">
@@ -409,12 +490,11 @@ function MemberAdd() {
                     type="button"
                     className="btn btn-primary"
                     onClick={
-                      memCode === 0
-                        ? onClickMemberInsertHandler
-                        : onClickUpdateHandler
+                      memCode != 0 || resutlList ? onClickUpdateHandler
+                        : onClickMemberInsertHandler
                     }
                   >
-                    {memCode === 0 ? "등록" : "수정"}
+                    {memCode != 0 || resutlList ? "수정" : "등록"}
                   </button>
                 </div>
               </div>

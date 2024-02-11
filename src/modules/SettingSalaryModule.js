@@ -4,10 +4,12 @@ const initialState = [];
 
 export const POST_SALAY_FILE = 'settingMember/POST_SALAY_FILE';
 export const PUT_SALAY_FILE = 'settingMember/PUT_SALAY_FILE';
+export const DELETE_SALAY_FILE = 'settingMember/DELETE_SALAY_FILE';
 
 const actions = createActions({
     [POST_SALAY_FILE]: () => { },
     [PUT_SALAY_FILE]: () => { },
+    [DELETE_SALAY_FILE]: () => { },
 });
 
 const settingSalaryReducer = handleActions(
@@ -16,6 +18,9 @@ const settingSalaryReducer = handleActions(
             return payload;
         },
         [PUT_SALAY_FILE]: (state, { payload }) => {
+            return payload;
+        },
+        [DELETE_SALAY_FILE]: (state, { payload }) => {
             return payload;
         },
 

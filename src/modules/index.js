@@ -9,6 +9,7 @@ import settingCareerReducer from './SettingCareearModule';
 import settingDegreeReducer from './SettingDegreeModule';
 import settingCertificateReducer from './SettingCertificateModule';
 import settingInfoSearchReducer from './SettingInfoSearchModuel';
+import settingDocumentReducer from './SettingDocumentModule';
 
 const { combineReducers } = require('redux');
 
@@ -27,7 +28,7 @@ const rootReducer = combineReducers({
     settingDegreeReducer,
     settingCertificateReducer,
     settingInfoSearchReducer,
-
+    settingDocumentReducer,
 });
 
 export default rootReducer;

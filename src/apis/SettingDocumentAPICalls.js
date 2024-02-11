@@ -1,13 +1,13 @@
-import { 
-  POST_SALAY_FILE, 
-  PUT_SALAY_FILE,
-  DELETE_SALAY_FILE,
- } from "../modules/SettingSalaryModule";
+import {
+  POST_DOCUMENT_FILE,
+  PUT_DOCUMENT_FILE,
+  DELETE_DOCUMENT_FILE,
+} from "../modules/SettingDocumentModule";
 
-//통장 파일 등록
-export const callSalaryFileInsertAPI = ({ formData }) => {
-  console.log("callSalaryFileInsertAPI Call");
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/salaryFile`;
+//자격 파일 등록
+export const callDocumentFileInsertAPI = ({ formData }) => {
+  console.log("callDocumentFileInsertAPI Call");
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/documentFile`;
   console.log("formData", formData);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -20,18 +20,18 @@ export const callSalaryFileInsertAPI = ({ formData }) => {
     }).then((response) => response.json());
 
     console.log(
-      "[callSalaryFileInsertAPI] callSalaryFileInsertAPI RESULT : ",
+      "[callDocumentFileInsertAPI] callDocumentFileInsertAPI RESULT : ",
       result
     );
 
-    dispatch({ type: POST_SALAY_FILE, payload: result.data });
+    dispatch({ type: POST_DOCUMENT_FILE, payload: result.data });
     console.log({ result });
   };
 };
-//통장 파일 수정
-export const callSalaryFileUpdateAPI = ({ formData }) => {
-  console.log("callSalaryFileUpdateAPI Call");
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/salaryFile`;
+//자격 파일 수정
+export const callDocumentFileUpdateAPI = ({ formData }) => {
+  console.log("callDocumentFileUpdateAPI Call");
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/documentFile`;
   console.log("formData", formData);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -44,19 +44,18 @@ export const callSalaryFileUpdateAPI = ({ formData }) => {
     }).then((response) => response.json());
 
     console.log(
-      "[callSalaryFileUpdateAPI] callSalaryFileUpdateAPI RESULT : ",
+      "[callDocumentFileUpdateAPI] callDocumentFileUpdateAPI RESULT : ",
       result
     );
 
-    dispatch({ type: PUT_SALAY_FILE, payload: result.data });
+    dispatch({ type: PUT_DOCUMENT_FILE, payload: result.data });
     console.log({ result });
   };
 };
-
-//통장 파일 삭제
-export const callSalaryFileDeleteAPI = ({ formData }) => {
-  console.log("callSalaryFileDeleteAPI Call");
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/salaryFile`;
+//자격 파일 삭제
+export const callDocumentFileDeleteAPI = ({ formData }) => {
+  console.log("callDocumentFileDeleteAPI Call");
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/documentFile`;
   console.log("formData", formData);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -69,11 +68,11 @@ export const callSalaryFileDeleteAPI = ({ formData }) => {
     }).then((response) => response.json());
 
     console.log(
-      "[callSalaryFileDeleteAPI] callSalaryFileDeleteAPI RESULT : ",
+      "[callDocumentFileDeleteAPI] callDocumentFileDeleteAPI RESULT : ",
       result
     );
 
-    dispatch({ type: DELETE_SALAY_FILE, payload: result.data });
+    dispatch({ type: DELETE_DOCUMENT_FILE, payload: result.data });
     console.log({ result });
   };
 };

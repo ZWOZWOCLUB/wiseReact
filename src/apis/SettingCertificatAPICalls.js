@@ -1,7 +1,8 @@
 import {
   POST_CERTIFICATE,
   POST_CERTIFICATE_FILE,
-  PUT_CERTIFICATE_FILE
+  PUT_CERTIFICATE_FILE,
+  DELETE_CERTIFICATE_FILE,
 } from "../modules/SettingCertificateModule";
 
 
@@ -31,8 +32,8 @@ export const callCertificateInsertAPI = ({ formData }) => {
   };
 };
 //자격 파일 등록
-export const calCertificateFileInsertAPI = ({ formData }) => {
-  console.log("calCertificateFileInsertAPI Call");
+export const callCertificateFileInsertAPI = ({ formData }) => {
+  console.log("callCertificateFileInsertAPI Call");
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/certificateFile`;
   console.log("formData", formData);
   return async (dispatch, getState) => {
@@ -46,7 +47,7 @@ export const calCertificateFileInsertAPI = ({ formData }) => {
     }).then((response) => response.json());
 
     console.log(
-      "[calCertificateFileInsertAPI] calCertificateFileInsertAPI RESULT : ",
+      "[callCertificateFileInsertAPI] callCertificateFileInsertAPI RESULT : ",
       result
     );
 
@@ -78,3 +79,29 @@ export const callCertificateFileUpdateAPI = ({ formData }) => {
     console.log({ result });
   };
 };
+
+//자격 파일 삭제
+export const callCertificateFileDELETEAPI = ({ formData }) => {
+  console.log("callCertificateFileDELETEAPI Call");
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/certificateFile`;
+  console.log("formData", formData);
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "DELETE",
+      headers: {
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+      body: formData,
+    }).then((response) => response.json());
+
+    console.log(
+      "[callCertificateFileDELETEAPI] callCertificateFileDELETEAPI RESULT : ",
+      result
+    );
+
+    dispatch({ type: DELETE_CERTIFICATE_FILE, payload: result.data });
+    console.log({ result });
+  };
+};
+

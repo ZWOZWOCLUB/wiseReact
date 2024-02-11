@@ -67,6 +67,14 @@ function Setting() {
     console.log(searchMember);
   }
 
+  const onClickMemberDetail = (memCode) => {
+    return () => {
+      console.log(memCode,'클릭');
+      navigate(`/memberAdd?memCode=${memCode}`, { replace: true });
+    }
+  }
+  
+
 
 
   return (
@@ -102,7 +110,7 @@ function Setting() {
             <tbody>
               {Array.isArray(searchMember) && searchMember.length > 0 ? (
                 searchMember.map((s, index) => (
-                  <tr key={index}>
+                  <tr key={index} onDoubleClick={onClickMemberDetail(s.memCode)}>
                     <td>{index + 1}</td>
                     <td>{s.memCode}</td>
                     <td>{s.memName}</td>
@@ -114,9 +122,8 @@ function Setting() {
                   </tr>
                 ))
               ) :
-
                 Array.isArray(memberList) && memberList.map((m, index) => (
-                  <tr key={index}>
+                  <tr key={index} onDoubleClick={onClickMemberDetail(m.memCode)}>
                     <td>{index + 1}</td>
                     <td>{m.memCode}</td>
                     <td>{m.memName}</td>
@@ -127,8 +134,6 @@ function Setting() {
                     <td>{m.memPhone}</td>
                   </tr>
                 ))}
-
-
             </tbody>
           </table>
           <div className={`${payCSS['input-group2']}`}>
