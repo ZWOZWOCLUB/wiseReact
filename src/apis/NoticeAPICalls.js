@@ -95,8 +95,8 @@ export const callSearchMemberNameNoticeAPI = ({form}) => {
     }
 }
 
-export const callDetaillNoticeAPI = ({notCode}) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detaill`;
+export const callDetailNoticeAPI = ({notCode}) => {
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detail?nc=${notCode}`;
 
     return async (dispatch) =>{
         const result = await fetch(requestURL, {

@@ -11,8 +11,6 @@ import { useEffect, useState } from 'react';
 import { callAllViewNoticeAPI } from '../../apis/NoticeAPICalls.js';
 
 import { useNavigate } from 'react-router-dom';
-// const { useNavigate } = require('react-router-dom');
-
 
 function NoticeMain() {
   const dispatch = useDispatch();
@@ -102,9 +100,16 @@ const onEnterKeyHandler = (e) => {
 };
 
 const handleFormSubmit = (e) => {
-  e.preventDefault(); // 폼 제출의 기본 동작 방지
+  e.preventDefault(); // 폼 동작 방지
   onEnterKeyHandler(e); // 검색 실행
 };
+
+//공지상세페이지
+const navigateToDetailPage = (notCode) => {
+  navigate(`/notice/detaill?nc=${notCode}`); 
+};
+
+
 
 
   return(
@@ -213,7 +218,9 @@ const handleFormSubmit = (e) => {
                     
                     Array.isArray(noticeList) && noticeList.map((not, index) => (
                         
-                    <tr key={index}>
+                    <tr key={index}
+                    onClick={() => navigateToDetailPage(not.notCode)} style={{ cursor: 'pointer' }}
+                    >
                       <td>
                         <input
                           className="form-check-input mt-0"
