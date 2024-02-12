@@ -5,9 +5,6 @@ import coreCSS from '../../@core/vendor/css/core.module.css';
 import payCSS from '../../@core/css/pay.module.css'
 import { callSearchSettingMemberAPI } from '../../apis/SettingMemberListAPICalls';
 
-
-
-
 function Setting() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,6 +17,9 @@ function Setting() {
   const [search, setSearch] = useState('');
   const pageInfo = member.pageInfo || {};
   const [searchMember, setSearchMember] = useState([]);
+  const firstDayOfMonth = new Date().toISOString().slice(0, 7);
+  const [currentYearMonth, setCurrentYearMonth] = useState(firstDayOfMonth);
+  const resultList = useSelector((state) => state.settingReducer);
 
   console.log('pageInfo', pageInfo);
   console.log('pageInfo.pageEnd', pageInfo.pageEnd);
@@ -61,10 +61,13 @@ function Setting() {
   }
 
   const onEnterKeyHandler = (e) => {
+    if (e.key === 'Enter') {
+
     console.log('Enter key', search);
     const searchResult = memberList.filter(member => member.memName.includes(search));
     setSearchMember(searchResult);
     console.log(searchMember);
+    }
   }
 
   const onClickMemberDetail = (memCode) => {

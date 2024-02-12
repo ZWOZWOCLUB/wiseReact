@@ -194,23 +194,41 @@ function MemberAdd() {
       if (memList.length === 0 && memberCode === 0) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
-        navigate(
-          `/settingInfo?memCode=${memList.memCode}`,
-          { replace: true }
-        )
+        if (memList.length > 0) {
+          navigate(
+            `/settingInfo?memCode=${memList.memCode}`,
+            { replace: true }
+          );
+        } else {
+          navigate(`/settingInfo?memCode=${memberCode}`, { replace: true });
+        }
       }
     } else if (tab === "연차 관리") {
       if (memList.length === 0 && memberCode === 0) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
-        navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+        if (memList.length > 0) {
+          navigate(
+            `/settingVacation?memCode=${memList.memCode}`,
+            { replace: true }
+          )
+        } else {
+          navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+        }
       }
     }
     else if (tab === "서류함") {
       if (memList.length === 0 && memberCode === 0) {
         alert("인사 정보를 먼저 등록해주세요");
       } else {
-        navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+        if (memList.length > 0) {
+          navigate(
+            `/settingDocument?memCode=${memList.memCode}`,
+            { replace: true }
+          )
+        } else {
+          navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+        }
       }
     }
   }

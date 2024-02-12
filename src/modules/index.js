@@ -45,7 +45,7 @@ const rootReducer = combineReducers({
     mpDocReducer,
     mpATTReducer,
     mpVacHisReducer,
-    mpVacReducer
+    mpVacReducer,
     settingCareerReducer,
     settingDegreeReducer,
     settingCertificateReducer,
