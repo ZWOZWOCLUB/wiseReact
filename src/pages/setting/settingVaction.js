@@ -203,7 +203,7 @@ function SettingVacation() {
                             onClick={onClickHandler}
                           >수정</button>
                         </div>
-                        <small className="text-success fw-semibold">(-차감수)를 입력하면 차감됩니다.</small>
+                        <small className="text-success fw-semibold">음수를 입력하면 차감됩니다.</small>
                       </div>
                     </div>
                   </div>

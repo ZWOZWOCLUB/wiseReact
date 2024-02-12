@@ -401,8 +401,7 @@ function MemberAdd() {
                     name="depCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.depCode : '') : form.depCode}
-
+                    value={!updateState ? (resutlList ? resutlList.depCode ? resutlList.depCode : '' : '') : form.depCode}
                   >
                     {Array.isArray(depList) &&
                       depList.map((d) => (
@@ -420,7 +419,6 @@ function MemberAdd() {
                     className="select2 form-select"
                     onChange={onChangeHandler}
                     value={!updateState ? (resutlList ? resutlList.posCode : '') : form.posCode}
-
                   >
                     {Array.isArray(posList) &&
                       posList.map((p) => (

@@ -36,12 +36,12 @@ function SettingAttendance() {
 
     
 
-    const eventsList = resultList.map(list => ({
+    const eventsList = Array.isArray(resultList) ? resultList.map(list => ({
         resourceId: list.memCode,
         title: list.attendances.attStatus,
         start: `${list.attendances.attWorkDate}T${list.attendances.attStartTime}`,
         end: `${list.attendances.attWorkDate}T${list.attendances.attEndTime}`,
-    }));
+    })) : [];
 
     console.log(';;;;;;;;;;;;;;;;;;;',events)
 
