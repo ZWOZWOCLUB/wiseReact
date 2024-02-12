@@ -7,6 +7,8 @@ import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { callAprovalAnnualAPI } from '../../apis/ApprovalAPICalls';
 
 function Annual() {
     const [form, setForm] = useState({
@@ -23,11 +25,32 @@ function Annual() {
         },
     });
 
+    const dispatch = useDispatch();
+
     const onChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value,
         });
+    };
+
+    const approvalComplete = () => {
+        console.log('머임 이거 되는거 맞음?');
+
+        const formData = new FormData();
+
+        formData.append('vacKind', form.vacKind);
+        formData.append('vacContents', form.vacContents);
+        formData.append('vacStartDate', form.vacStartDate);
+        formData.append('vacEndDate', form.vacEndDate);
+        formData.append('approval[payDate]', form.approval.payDate);
+        formData.append('approval[approvalMember][memCode]', form.approval.approvalMember.memCode);
+
+        dispatch(
+            callAprovalAnnualAPI({
+                form: formData,
+            })
+        );
     };
 
     return (
@@ -127,7 +150,7 @@ function Annual() {
                     >
                         <b>초기화</b>
                     </div>
-                    <button type='button' className='btn btn-primary' id='complete-payment1'>
+                    <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
                         작성 완료
                     </button>
                 </div>

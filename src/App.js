@@ -59,7 +59,7 @@ function App() {
                     <Route path='sign' element={<Sign />} />
                     <Route path='/login' element={<Login />} /> {/* 로그인 페이지 라우트 추가 */}
                     <Route path='organizationChart' element={<Organization />} />
-                    <Route path='dataformat' element={<DataFormat />} />
+                    {/* <Route path='dataformat' element={<DataFormat />} /> */}
                     <Route path='notice' element={<NoticeMain />} />
                     <Route path='noticeWrite' element={<NoticeWrite />} />
                     <Route path='noticeDetail' element={<NoticeDetail />} />
