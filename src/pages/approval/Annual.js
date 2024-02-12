@@ -6,15 +6,16 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
-import { decodeJwt } from '../../utils/tokenUtils';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { callAprovalCommuteAPI } from '../../apis/ApprovalAPICalls';
+import { callAprovalAnnualAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils.js';
+import { useNavigate } from 'react-router-dom';
 
-function EditCommute() {
+function Annual() {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
+    const [img, setImg] = useState(null);
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -25,16 +26,14 @@ function EditCommute() {
 
     const memberCode = 240130003;
 
-    const [img, setImg] = useState(null);
-
     const [form, setForm] = useState({
-        ediKind: '',
-        ediDate: '',
-        ediContents: '',
-        ediTime2: '',
+        vacKind: '',
+        vacContents: '',
+        vacStartDate: '',
+        vacEndDate: '',
         approval: {
             payDate: formattedDate,
-            payKind: '출퇴근 정정',
+            payKind: '연차 신청',
             approvalMember: {
                 memCode: token.memCode,
             },
@@ -81,14 +80,16 @@ function EditCommute() {
     };
 
     const approvalComplete = () => {
-        console.log('form : ', form);
+        console.log('Form:', form);
+        console.log('form.vac', form.vacKind);
+        console.log('formDate', form.approval.payDate);
 
         const formData = new FormData();
 
-        formData.append('ediKind', form.ediKind);
-        formData.append('ediDate', form.ediDate);
-        formData.append('ediTime', form.ediTime2);
-        formData.append('ediContents', form.ediContents);
+        formData.append('vacKind', form.vacKind);
+        formData.append('vacContents', form.vacContents);
+        formData.append('vacStartDate', form.vacStartDate);
+        formData.append('vacEndDate', form.vacEndDate);
         formData.append('approval.payDate', form.approval.payDate);
         formData.append('approval.approvalMember.memCode', form.approval.approvalMember.memCode);
         formData.append('approval.payName', form.approval.payName);
@@ -99,44 +100,61 @@ function EditCommute() {
             formData.append('approvalFile', form.file);
         }
 
+        console.log('file', form.file);
+
+        console.log('FormData123:', formData.get('cMember.memCode'));
+
         dispatch(
-            callAprovalCommuteAPI({
+            callAprovalAnnualAPI({
                 form: formData,
-            })
+            }),
+            console.log('dt')
         );
 
-        console.log('time', formData.get('ediTime'));
-
-        // navigate(`/Approval`, { replace: true });
+        navigate(`/Approval`, { replace: true });
     };
 
     return (
         <>
             <div>
-                제목<span style={{ color: 'red' }}> *</span>{' '}
+                제목<span style={{ color: 'red' }}> *</span>
                 <input type='text' id='input-name' onChange={(e) => changePayname(e.target.value)} name='payName' />
             </div>
             <div id='margintop'>
                 <div>
-                    신청구분<span style={{ color: 'red' }}> *</span>
+                    연차구분<span style={{ color: 'red' }}> *</span>
                     <select
-                        name='ediKind'
+                        name='vacKind'
                         id='annual-type'
                         style={{ marginLeft: '10px', width: '77%' }}
                         onChange={onChange}
                     >
-                        <option value='0'>--선택--</option>
-                        <option value='퇴근시간'>퇴근시간</option>
-                        <option value='출근시간'>출근시간</option>
-                        <option value='결근(근무)'>결근(근무)</option>
-                        <option value='결근(지각)'>결근(지각)</option>
-                        <option value='결근(조퇴)'>결근(조퇴)</option>
+                        <option value='0'>--선택</option>
+                        <option value='무급'>무급</option>
+                        <option value='유급'>유급</option>
                     </select>
                 </div>
                 <div>
-                    정정일 / 시간<span style={{ color: 'red' }}> *</span>
-                    <input type='date' id='annual-date' onChange={onChange} name='ediDate' />
-                    <input type='time' id='annual-time' onChange={onChange} name='ediTime2' />
+                    신청일<span style={{ color: 'red' }}> *</span>
+                    <input
+                        type='date'
+                        className='annual-date'
+                        style={{
+                            marginLeft: '10px',
+                            marginRight: '10px',
+                            width: '36%',
+                        }}
+                        onChange={onChange}
+                        name='vacStartDate'
+                    />
+                    <span> ~ </span>
+                    <input
+                        type='date'
+                        className='annual-date'
+                        style={{ marginLeft: '10px', width: '36%' }}
+                        onChange={onChange}
+                        name='vacEndDate'
+                    />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <label for='basic-default-message'>
@@ -151,7 +169,7 @@ function EditCommute() {
                             marginLeft: '20px',
                         }}
                         onChange={onChange}
-                        name='ediContents'
+                        name='vacContents'
                     ></textarea>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -182,27 +200,27 @@ function EditCommute() {
                         />
                     </div>
                 </div>
-            </div>
-            <hr />
-            <div id='last-thing'>
-                <div
-                    className='btn btn-danger'
-                    id='clean-btn1'
-                    style={{
-                        width: '20%',
-                        boxShadow: '0px 0px 10px #bbbdfc',
-                        backgroundColor: '#bbbdfc',
-                        borderColor: '#bbbdfc',
-                    }}
-                >
-                    <b>초기화</b>
+                <hr />
+                <div id='last-thing'>
+                    <div
+                        className='btn btn-danger'
+                        id='clean-btn1'
+                        style={{
+                            width: '20%',
+                            boxShadow: '0px 0px 10px #bbbdfc',
+                            backgroundColor: '#bbbdfc',
+                            borderColor: '#bbbdfc',
+                        }}
+                    >
+                        <b>초기화</b>
+                    </div>
+                    <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
+                        작성 완료
+                    </button>
                 </div>
-                <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
-                    작성 완료
-                </button>
             </div>
         </>
     );
 }
 
-export default EditCommute;
+export default Annual;

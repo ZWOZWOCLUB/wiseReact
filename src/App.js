@@ -28,7 +28,7 @@ import 'boxicons/css/boxicons.min.css';
 import Sign from './pages/mypage/01_sign';
 import Organization from './pages/organizationChart/organizationChart';
 import DataFormat from './pages/dataformat/dataformat';
-// import RequestApproval from './pages/approval/RequestApproval';
+import RequestApproval from './pages/approval/RequestApproval';
 import NoticeMain from './pages/notice/NoticeMain';
 import NoticeWrite from './pages/notice/NoticeWrite';
 import NoticeDetail from './pages/notice/NoticeDetail';
@@ -46,7 +46,7 @@ function App() {
                     <Route path='approval' element={<Approval />} />
                     <Route path='sendapproval' element={<SendApproval />} />
                     <Route path='assignment' element={<Assignment />} />
-                    {/* <Route path='requestapproval' element={<RequestApproval />} /> */}
+                    <Route path='requestapproval' element={<RequestApproval />} />
                     <Route path='mp' element={<MyPage />} />
                     <Route path='mpUpdate' element={<MyPageUpdate />} />
                     <Route path='mppersonnelInfo' element={<PersonnelInfo />} />
