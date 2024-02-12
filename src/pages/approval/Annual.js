@@ -9,19 +9,38 @@ import '../../@core/css/payment-annual.css';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalAnnualAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils.js';
+import { useNavigate } from 'react-router-dom';
 
 function Annual() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const navigate = useNavigate();
+    const [img, setImg] = useState(null);
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+
+    const formattedDate = year + '-' + month + '-' + day;
+
+    const memberCode = 240130003;
+
     const [form, setForm] = useState({
         vacKind: '',
         vacContents: '',
         vacStartDate: '',
         vacEndDate: '',
         approval: {
-            payDate: '',
+            payDate: formattedDate,
             payKind: '연차 신청',
             approvalMember: {
-                memCode: '',
+                memCode: token.memCode,
             },
+            payName: '',
+        },
+        cMember: {
+            memCode: memberCode,
         },
     });
 
@@ -32,10 +51,38 @@ function Annual() {
             ...form,
             [e.target.name]: e.target.value,
         });
+        console.log(form);
+    };
+
+    const changePayname = (payname) => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            approval: {
+                ...prevForm.approval,
+                payName: payname,
+            },
+        }));
+
+        console.log(form);
+    };
+
+    const fileChange = (e) => {
+        const file = e.target.files[0];
+
+        console.log('file name : ', file.name);
+
+        setImg(file);
+
+        setForm((prevForm) => ({
+            ...prevForm,
+            file: file,
+        }));
     };
 
     const approvalComplete = () => {
-        console.log('머임 이거 되는거 맞음?');
+        console.log('Form:', form);
+        console.log('form.vac', form.vacKind);
+        console.log('formDate', form.approval.payDate);
 
         const formData = new FormData();
 
@@ -43,21 +90,35 @@ function Annual() {
         formData.append('vacContents', form.vacContents);
         formData.append('vacStartDate', form.vacStartDate);
         formData.append('vacEndDate', form.vacEndDate);
-        formData.append('approval[payDate]', form.approval.payDate);
-        formData.append('approval[approvalMember][memCode]', form.approval.approvalMember.memCode);
+        formData.append('approval.payDate', form.approval.payDate);
+        formData.append('approval.approvalMember.memCode', form.approval.approvalMember.memCode);
+        formData.append('approval.payName', form.approval.payName);
+        formData.append('approval.payKind', form.approval.payKind);
+        formData.append('cMember.memCode', form.cMember.memCode);
+
+        if (form.file) {
+            formData.append('approvalFile', form.file);
+        }
+
+        console.log('file', form.file);
+
+        console.log('FormData123:', formData.get('cMember.memCode'));
 
         dispatch(
             callAprovalAnnualAPI({
                 form: formData,
-            })
+            }),
+            console.log('dt')
         );
+
+        navigate(`/Approval`, { replace: true });
     };
 
     return (
         <>
             <div>
                 제목<span style={{ color: 'red' }}> *</span>
-                <input type='text' id='input-name' />
+                <input type='text' id='input-name' onChange={(e) => changePayname(e.target.value)} name='payName' />
             </div>
             <div id='margintop'>
                 <div>
@@ -133,6 +194,9 @@ function Annual() {
                                 height: '30px',
                                 paddingBottom: '30px',
                             }}
+                            name='approvalFile'
+                            accept='image/jpg,image/png,image/jpeg,image/gif'
+                            onChange={fileChange}
                         />
                     </div>
                 </div>

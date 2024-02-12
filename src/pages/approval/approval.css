@@ -52,3 +52,12 @@
     height: 45px; /* 또는 다른 크기로 지정 */
 }
 
+#annual-time {
+    margin-left: 20px;
+    width: 28%;
+}
+
+#annual-date {
+    margin-left: 20px;
+    width: 28%;
+}
