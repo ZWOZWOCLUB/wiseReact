@@ -8,20 +8,31 @@ GET_DETAILL_NOTICE,
 PUT_UPDATE_NOTICE
 } from '../modules/NoticeModule.js'
 
-export const callAllViewNoticeAPI = ({form}) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/allNoticeSearch`;
+export const callAllViewNoticeAPI = ({ currentPage }) => {
+    console.log('[NoticeListAPICall] callAllViewNoticeAPI Call')
+    console.log(currentPage);
+    let requestURL;
 
-    return async (dispatch) =>{
+    if(currentPage !== undefined || currentPage !== null) {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/allNoticeSearch?offset=${currentPage}`;
+    }else{
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/allNoticeSearch`;
+    }
+   
+    return async (dispatch, getState) =>{
         const result = await fetch(requestURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                // Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
+        console.log('[NoticeListAPICall] callAllViewNoticeAPI Result : ', result);
         if (result.status === 200) {
+            console.log('[NoticeListAPICall] callAllViewNoticeAPI SUCCESS');
             dispatch({ type: GET_ALLVIEW_NOTICE, payload: result.data });
         }
     }

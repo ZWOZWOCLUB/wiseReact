@@ -21,14 +21,14 @@ import Message from './pages/alarmAndMessage/message';
 import Message3 from './pages/alarmAndMessage/message copy';
 import SignatureCanvas from './pages/mypage/sign';
 import MyPageUpdate from './pages/mypage/01_profileUpdate';
-import SettingDocument from './pages/setting/settingDocument';
+// import SettingDocument from './pages/setting/SettingDocument';
 import SettingVacation from './pages/setting/settingVaction';
 import SettingAttendance from './pages/setting/settingAttendance';
 import 'boxicons/css/boxicons.min.css';
 import Sign from './pages/mypage/01_sign';
 import Organization from './pages/organizationChart/organizationChart';
-import RequestApproval from './pages/approval/RequestApproval';
-// import DataFormat from './pages/dataformat/DataFormat';
+import DataFormat from './pages/dataformat/dataformat';
+// import RequestApproval from './pages/approval/RequestApproval';
 import NoticeMain from './pages/notice/NoticeMain';
 import NoticeWrite from './pages/notice/NoticeWrite';
 import NoticeDetail from './pages/notice/NoticeDetail';
@@ -46,7 +46,7 @@ function App() {
                     <Route path='approval' element={<Approval />} />
                     <Route path='sendapproval' element={<SendApproval />} />
                     <Route path='assignment' element={<Assignment />} />
-                    <Route path='requestapproval' element={<RequestApproval />} />
+                    {/* <Route path='requestapproval' element={<RequestApproval />} /> */}
                     <Route path='mp' element={<MyPage />} />
                     <Route path='mpUpdate' element={<MyPageUpdate />} />
                     <Route path='mppersonnelInfo' element={<PersonnelInfo />} />
@@ -74,7 +74,7 @@ function App() {
                     <Route path='message3' element={<Message3 />} />
                     <Route path='/login' element={<Login />} /> {/* 로그인 페이지 라우트 추가 */}
                     <Route path='settingInfo' element={<SettingInfo />} />
-                    <Route path='settingDocument' element={<SettingDocument />} />
+                    {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
                     <Route path='settingVacation' element={<SettingVacation />} />
                     <Route path='settingAttendance' element={<SettingAttendance />} />
                 </Route>

@@ -76,7 +76,7 @@ function Header() {
 
   useEffect(() => {
     console.log("useEffect의 token---->", token);
-    console.log("useEffect의 token.memCode--->", token.memCode);
+    // console.log("useEffect의 token.memCode--->", token.memCode);
   }, []);
 
   return (

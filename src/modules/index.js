@@ -12,6 +12,16 @@ import aamPerAlarmReducer from './AAMPerAlarmModule';
 import aamSendMessageReducer from './AAMSendMessageModule';
 import aamRecMessageReducer from './AAMRecMessageModule';
 import settingMemberReducer from './SettingMemberModule';
+import mpDocReducer from './MPDocModule';
+import mpATTReducer from './MPATTModule';
+import mpVacHisReducer from './MPVacHisModule';
+import mpVacReducer from './MPVacModule';
+import settingCareerReducer from './SettingCareearModule'
+import settingDegreeReducer from './SettingDegreeModule';
+import settingCertificateReducer from './SettingCertificateModule';
+import settingInfoSearchReducer from './SettingInfoSearchModuel';
+import settingDocumentReducer from './SettingDocumentModule';
+import noticeReducer from './NoticeModule';
 
 const { combineReducers } = require('redux');
 
@@ -33,6 +43,17 @@ const rootReducer = combineReducers({
     otherReducer,
     settingReducer,
     settingMemberReducer,
+    mpDocReducer,
+    mpATTReducer,
+    mpVacHisReducer,
+    mpVacReducer,
+    settingCareerReducer,
+    settingDegreeReducer,
+    settingCertificateReducer,
+    settingInfoSearchReducer,
+    settingDocumentReducer,
+    mpVacReducer,
+    noticeReducer
 });
 
 export default rootReducer;
