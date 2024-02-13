@@ -216,6 +216,10 @@
     height: 100%;
 }
 
+.container
+{
+    width: 3000px !important
+}
 .department{
     flex : 1;
     height: 100%;

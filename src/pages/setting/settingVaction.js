@@ -1,14 +1,34 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import coreCSS from '../../@core/vendor/css/core.module.css';
-import payCSS from '../../@core/css/pay.module.css';
+import { callVacAPI, callVacHisAPI } from '../../apis/MyPageAPICalls';
+import { callMemberVacationAPI } from '../../apis/SettingMemberAPICalls';
 
 function SettingVacation() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
+  const [searchParams] = useSearchParams();
+  const memberCode = searchParams.get("memCode");
   const [activeTab, setActiveTab] = useState();
+  const vac = useSelector((state) => state.mpVacReducer);
+  const vacHis = useSelector((state) => state.mpVacHisReducer);
+  const vacData = vac.data;
+  const vacHisData = vacHis.data;
+
+  console.log(vacData)
+  console.log(vacHisData)
+  useEffect(
+    () => {
+
+      dispatch(callVacAPI({
+        memCode: memberCode
+      }));
+      dispatch(callVacHisAPI({
+        memCode: memberCode
+      }));
+    }
+    , []
+  );
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -26,6 +46,43 @@ function SettingVacation() {
       navigate("/settingDocument", { replace: true })
     }
   };
+  function getLastDayOfMonth(month, year) {
+    return new Date(year, month + 1, 0).getDate();
+  }
+
+  const year = new Date().getFullYear();
+  const lastDayOfMonth = getLastDayOfMonth(2, year);
+  console.log(`${year}.03.${lastDayOfMonth} 소멸 예정`);
+
+  const [form, setForm] = useState({
+    memCode: memberCode,
+    vctCount: 0,
+  });
+
+  const onChangeHandler = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+    console.log(form, '!!!!!!!!!!!!!!!');
+  }
+  const onEnterKeyHandler = (e) => {
+    if (e.key === 'Enter') {
+      console.log('Enter key');
+      onClickHandler();
+    }
+  }
+
+  const onClickHandler = () => {
+
+    dispatch(callMemberVacationAPI({
+      memCode: memberCode,
+      vctCount: form.vctCount
+
+    }));
+
+    window.location.reload();
+  }
 
   return (
     <>
@@ -72,7 +129,6 @@ function SettingVacation() {
                     <h5 className="card-title m-0 me-2">올해 사용한 연차
                       <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <small>
-
                         </small></span></h5>
                     <div className="dropdown">
                       <button
@@ -97,41 +153,25 @@ function SettingVacation() {
                       <table className="table table-striped">
                         <thead>
                           <tr>
-                            <th>사용일자</th>
+                            <th>사용 시작 일자</th>
+                            <th>사용 종료 일자</th>
                           </tr>
                         </thead>
                         <tbody className="table-border-bottom-0">
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
-                          <tr>
-                            <td>2020-03-04</td>
-                          </tr>
+                          {Array.isArray(vacHisData) && vacHisData.length > 0 ? (
+                            vacHisData.map((v, index) => (
+                              <tr>
+                                <td>{v.vacStartDate}</td>
+                                <td>{v.vacEndDate}</td>
+                              </tr>
+                            ))) :
+                            <tr>
+                              <td colSpan="2" className="text-center">사용한 이력이 없습니다.</td>
+                            </tr>
+                          }
                         </tbody>
                       </table>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -142,26 +182,30 @@ function SettingVacation() {
                       <div className="avatar flex-shrink-0">
                         <img src="../../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" className="rounded" />
                       </div>
-                      <div className="dropdown">
-                        <button
-                          className="btn p-0"
-                          type="button"
-                          id="cardOpt1"
-                          data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          <i className="bx bx-dots-vertical-rounded"></i>
-                        </button>
-                        <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                          <span className="dropdown-item" href="javascript:void(0);">View More</span>
-                          <span className="dropdown-item" href="javascript:void(0);">Delete</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <span className="fw-semibold d-block mb-1">사용 가능 연차</span>
+                        <h3 className="card-title mb-2">{vacData ? vacData.vctCount : 0}회</h3>
+                      </div>
+                      <div style={{ width: '50%' }}>
+                        <span className="fw-semibold d-block mb-1" >연차 수정</span>
+                        <div>
+                          <input
+                            type='number'
+                            className="card-title mb-2"
+                            name='vctCount'
+                            onChange={(e) => onChangeHandler(e)}
+                            onKeyUp={onEnterKeyHandler}
+                          />
+                          <button className='btn btn-sm btn-outline-primary'
+                            style={{ marginLeft: 10, marginTop: 10 }}
+                            onClick={onClickHandler}
+                          >수정</button>
                         </div>
+                        <small className="text-success fw-semibold">음수를 입력하면 차감됩니다.</small>
                       </div>
                     </div>
-                    <span className="fw-semibold d-block mb-1">사용 가능 연차</span>
-                    <h3 className="card-title mb-2">10회</h3>
-                    <small className="text-success fw-semibold"></small>
                   </div>
                 </div>
                 <div className="card" id="secondItem">
@@ -170,26 +214,10 @@ function SettingVacation() {
                       <div className="avatar flex-shrink-0">
                         <img src="../../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" className="rounded" />
                       </div>
-                      <div className="dropdown">
-                        <button
-                          className="btn p-0"
-                          type="button"
-                          id="cardOpt1"
-                          data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          <i className="bx bx-dots-vertical-rounded"></i>
-                        </button>
-                        <div className="dropdown-menu" aria-labelledby="cardOpt1">
-                          <span className="dropdown-item" href="javascript:void(0);">View More</span>
-                          <span className="dropdown-item" href="javascript:void(0);">Delete</span>
-                        </div>
-                      </div>
                     </div>
                     <span className="fw-semibold d-block mb-1">소멸 예정 연차</span>
-                    <h3 className="card-title mb-2">3회</h3>
-                    <small className="text-success fw-semibold">2025.01.01 소멸 예정</small>
+                    <h3 className="card-title mb-2">{vacData ? vacData.vctDeadline : 0}회</h3>
+                    <small className="text-success fw-semibold">{`${year}.03.${lastDayOfMonth}`} 소멸 예정</small>
                   </div>
                 </div>
                 <div className="card" id="thirdItem">
@@ -221,18 +249,10 @@ function SettingVacation() {
                   </div>
                 </div>
               </div>
-
-
-
-
             </div>
-
-
-
           </div>
         </div>
       </div>
-
     </>
   )
 };

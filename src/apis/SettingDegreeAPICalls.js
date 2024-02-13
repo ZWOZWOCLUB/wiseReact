@@ -1,6 +1,7 @@
 import {
   POST_DEGREE,
   PUT_DEGREE,
+  DELETE_DEGREE,
   POST_DEGREE_FILE,
   PUT_DEGREE_FILE,
   DELETE_DEGREE_FILE,
@@ -8,10 +9,10 @@ import {
 } from "../modules/SettingDegreeModule";
 
 //학위정보 등록
-export const callDegreeInsertAPI = ({ degForm }) => {
+export const callDegreeInsertAPI = ({ insertDegForm }) => {
   console.log("callDegreeInsertAPI Call");
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/degree`;
-  console.log("degForm", degForm);
+  console.log("insertDegForm", insertDegForm);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
       method: "POST",
@@ -20,7 +21,7 @@ export const callDegreeInsertAPI = ({ degForm }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify(degForm),
+      body: JSON.stringify(insertDegForm),
     }).then((response) => response.json());
 
     console.log(
@@ -34,11 +35,10 @@ export const callDegreeInsertAPI = ({ degForm }) => {
 };
 
 //학위정보 수정
-
-export const callDegreeUpdateAPI = ({ updatedForm }) => {
-  console.log("callDegreeInsertAPI Call");
+export const callDegreeUpdateAPI = ({ updateDegForm }) => {
+  console.log("callDegreeUpdateAPI Call");
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/degree`;
-  console.log("updatedForm", updatedForm);
+  console.log("updateDegForm", updateDegForm);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
       method: "PUT",
@@ -47,16 +47,45 @@ export const callDegreeUpdateAPI = ({ updatedForm }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify(updatedForm),
+      body: JSON.stringify(updateDegForm),
     }).then((response) => response.json());
 
     console.log(
-      "[callDegreeInsertAPI] callDegreeInsertAPI RESULT : ",
+      "[callDegreeUpdateAPI] callDegreeUpdateAPI RESULT : ",
       result
     );
-
+    if (result.status === 200) {
     dispatch({ type: PUT_DEGREE, payload: result });
     console.log({ result });
+    }
+  };
+};
+
+
+//학위정보 삭제
+export const callDegreeDeleteAPI = ({ degCode }) => {
+  console.log("callDegreeDeleteAPI Call");
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/setting/degree`;
+  console.log("degCode", degCode);
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+      body: JSON.stringify(degCode),
+    }).then((response) => response.json());
+
+    console.log(
+      "[callDegreeDeleteAPI] callDegreeDeleteAPI RESULT : ",
+      result
+    );
+    if (result.status === 200) {
+      dispatch({ type: DELETE_DEGREE, payload: result });
+      console.log({ result });
+    }
   };
 };
 
@@ -79,9 +108,11 @@ export const callDegreeFileInsertAPI = ({ formData }) => {
       "[callDegreeFileInsertAPI] callDegreeFileInsertAPI RESULT : ",
       result
     );
+    if (result.status === 200) {
 
     dispatch({ type: POST_DEGREE_FILE, payload: result.data });
     console.log({ result });
+    }
   };
 };
 //학위 파일 수정
@@ -103,9 +134,11 @@ export const callDegreeFileUpdateAPI = ({ formData }) => {
       "[callDegreeFileUpdateAPI] callDegreeFileUpdateAPI RESULT : ",
       result
     );
+    if (result.status === 200) {
 
     dispatch({ type: PUT_DEGREE_FILE, payload: result.data });
     console.log({ result });
+    }
   };
 };
 //학위 파일 삭제
@@ -127,8 +160,10 @@ export const callDegreeFileDeleteAPI = ({ formData }) => {
       "[callDegreeFileDeleteAPI] callDegreeFileDeleteAPI RESULT : ",
       result
     );
+    if (result.status === 200) {
 
     dispatch({ type: DELETE_DEGREE_FILE, payload: result.data });
     console.log({ result });
+    }
   };
 };
