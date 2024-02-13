@@ -31,7 +31,7 @@ function Login() {
         
         if(loginMember.status === 200){
             console.log("[Login] Login SUCCESS {}", loginMember);
-            navigate("/", { replace: true });
+            navigate("/main", { replace: true });
         }
     }
     ,[loginMember]);

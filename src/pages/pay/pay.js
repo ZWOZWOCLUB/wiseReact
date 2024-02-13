@@ -6,11 +6,8 @@ import payCSS from '../../@core/css/pay.module.css';
 import pdfImg from '../../@core/img/icons/unicons/pdf.png';
 import excelImg from '../../@core/img/icons/unicons/excel.png';
 import { callPayListAPI } from '../../apis/PayAPICalls';
-import { callPayYEARAPI } from '../../apis/YearAPICalls';
-
-
-
-
+import { callPayYEARAPI } from '../../apis/OtherAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -23,46 +20,46 @@ function formatDate(date) {
   return `${month}-${year}`;
 }
 
-
-
 function Pay(){
   const dispatch = useDispatch();
   const params = useParams();
-
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const [payDetailsData, setPayDetailsData] = useState();
   const firstYearMonth = new Date();
   const currentYears = firstYearMonth.getFullYear();
   const [currentYear, setCurrentYear] = useState(currentYears);
-  console.log(currentYear);
+  console.log('currentYear : ', currentYear);
 
 
   const payList = useSelector(state => state.payReducer);
-  const yList = useSelector(state => state.yearReducer);
-  console.log('-------------', yList);
-  console.log('~~~~~~~~~~~~~',payList);
-
-  useEffect(
-    () => {
-      dispatch(callPayYEARAPI({
-        memCode: 2
-      }));
-      console.log(yList);
-    }
-    ,[]
-  );
+  const yList = useSelector(state => state.otherReducer);
+  console.log('yList -------------', yList);
+  console.log('payList ~~~~~~~~~~~~~',payList);
 
   useEffect(
     () => {
       dispatch(callPayListAPI({
-        memCode: 2,
+        memCode: token.memCode,
         yearMonth: currentYear
       }));
       setPayDetailsData(null);
       console.log(payDetailsData);
       console.log(payList);
     }
+    ,[currentYear]
+  );
+  
+  useEffect(
+    () => {
+      dispatch(callPayYEARAPI({
+        memCode: token.memCode,
+      }));
+      console.log(yList);
+    }
     ,[]
   );
+
+
 
   useEffect(() => {
     setPayDetailsData(null);
@@ -88,11 +85,8 @@ function Pay(){
   const onClickChangeYear = (e) => {
     console.log('클릭');
     setCurrentYear(e.target.value);
-    dispatch(callPayListAPI({
-      memCode: 2,
-      yearMonth: e.target.value
-    }));
-  };
+
+    };
   
   const save = async () => {
       const response = await fetch('your_server_url/payConvertPDF', {

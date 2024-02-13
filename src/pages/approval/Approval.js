@@ -5,13 +5,26 @@ import '../../@core/css/demo.css';
 import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { callReceiveApprovalAPI } from '../../apis/ApprovalAPICalls';
 
 // const { useDispatch, useSelector } = require('react-redux');
 const { useNavigate } = require('react-router-dom');
 
 function Approval() {
     const navigate = useNavigate();
-    // const dipatch = useDispatch();
+    const dispatch = useDispatch();
+    const approvalList = useSelector((state) => state.approvalReducer);
+
+    useEffect(() => {
+        dispatch(
+            callReceiveApprovalAPI({
+                memCode: 3,
+            })
+        );
+    }, []);
+
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
 
@@ -30,6 +43,14 @@ function Approval() {
     const onClickReceiveApproval = () => {
         console.log('ReceiveApproval click');
         navigate(`/Approval`, { replace: false });
+    };
+
+    const ondblclickapproval = () => {
+        console.log('왔냐');
+    };
+
+    const requestApproval = () => {
+        navigate(`/RequestApproval`, { replace: false });
     };
 
     return (
@@ -92,7 +113,9 @@ function Approval() {
                                                 src='../../assets/img/paymentimg/search.png'
                                                 style={{ width: '20px', marginLeft: '5px' }}
                                             />
-                                            <button className='payment-insert-button'>결재신청</button>
+                                            <button className='payment-insert-button' onClick={requestApproval}>
+                                                결재신청
+                                            </button>
                                         </div>
                                         <table className='table table-hover'>
                                             <thead>
@@ -104,28 +127,35 @@ function Approval() {
                                                     <th>결재 유형</th>
                                                     <th>상태</th>
                                                     <th>참조자</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <td>이현강</td>
-                                                <td>휴가가겠읍니다</td>
-                                                <td>2024-01-22</td>
-                                                <td></td>
-                                                <td>연차</td>
-                                                <td>대기</td>
-                                                <td>아이콘</td>
-                                                <td>:</td>
-                                            </tbody>
-                                            <tbody>
-                                                <td>이현강</td>
-                                                <td>휴가가겠읍니다</td>
-                                                <td>2024-01-22</td>
-                                                <td></td>
-                                                <td>연차</td>
-                                                <td>대기</td>
-                                                <td>아이콘</td>
-                                                <td>:</td>
+                                                {Array.isArray(approvalList) && approvalList.length > 0 ? (
+                                                    approvalList.map((a) => (
+                                                        <tr key={a.approval.payCode} onDoubleClick={ondblclickapproval}>
+                                                            <td>{a.approval.approvalMember.memName}</td>
+                                                            <td>{a.approval.payName}</td>
+                                                            <td>{a.approval.payDate}</td>
+                                                            <td>{a.appDate}</td>
+                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.appState}</td>
+                                                            <td>:</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td
+                                                            colSpan={6}
+                                                            style={{
+                                                                display: 'flex',
+                                                                textAlign: 'center',
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            보낸 결재가 없습니다.
+                                                        </td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>

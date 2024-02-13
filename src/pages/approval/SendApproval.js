@@ -6,9 +6,22 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { callSendApprovalAPI } from '../../apis/ApprovalAPICalls';
 
 function SendApproval() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const approvalList = useSelector((state) => state.approvalReducer);
+
+    useEffect(() => {
+        dispatch(
+            callSendApprovalAPI({
+                memCode: 3,
+            })
+        );
+    }, []);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -97,17 +110,32 @@ function SendApproval() {
                                                     <th>결재 유형</th>
                                                     <th>상태</th>
                                                     <th>참조자</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
-                                            <td>이현강</td>
-                                            <td>휴가가겠읍니다</td>
-                                            <td>2024-01-22</td>
-                                            <td></td>
-                                            <td>연차</td>
-                                            <td>대기</td>
-                                            <td>아이콘</td>
-                                            <td>:</td>
+                                            <tbody>
+                                                {Array.isArray(approvalList) && approvalList.length > 0 ? (
+                                                    approvalList.map((a) => (
+                                                        <tr key={a.approval.payCode}>
+                                                            <td>{a.approvalMember.memName}</td>
+                                                            <td>{a.approval.payName}</td>
+                                                            <td>{a.approval.payDate}</td>
+                                                            <td>{a.appDate}</td>
+                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.appState}</td>
+                                                            <td>:</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td
+                                                            colSpan={6}
+                                                            style={{ display: 'flex', textAlign: 'center' }}
+                                                        >
+                                                            보낸 결재가 없습니다.
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>

@@ -4,6 +4,9 @@ import {
 
 export const callPayListAPI = ({ memCode, yearMonth }) => {
     console.log('[PayListAPICalls] caalPayListAPI Call');
+    console.log('[memCode]', memCode);
+    console.log('[yearMonth]', yearMonth);
+    
 
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/pay/payList/${memCode}/${yearMonth}`
 
@@ -13,7 +16,7 @@ export const callPayListAPI = ({ memCode, yearMonth }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                "Authorization": `Bearer ${process.env.REACT_APP_TOKEN_KEY}`
+                Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
             },
         }).then((response) => response.json());
 
