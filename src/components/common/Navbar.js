@@ -29,7 +29,6 @@ function Navbar() {
     }
     
     function AfterLogin() {
-    
 
         return (
         <div>
