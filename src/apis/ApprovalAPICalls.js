@@ -21,7 +21,7 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
@@ -40,7 +40,7 @@ export const callSendApprovalAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
@@ -59,7 +59,7 @@ export const callMemberInfoAPI = ({ memCode }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
 
@@ -70,38 +70,43 @@ export const callMemberInfoAPI = ({ memCode }) => {
 };
 
 export const callAprovalAnnualAPI = ({ form }) => {
+    console.log('formCode', form.get('cMember.memCode'));
+    console.log('file', form.get('approvalFile'));
+
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/annual`;
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
 
+        console.log('result', result);
+
         dispatch({ type: POST_APPROVAL_ANNUAL, payload: result });
+        console.log('result2', result);
     };
 };
 
 export const callAprovalCommuteAPI = ({ form }) => {
+    console.log('formCode', form.get('cMember.memCode'));
+
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/commute`;
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
+        console.log('result', result);
 
         dispatch({ type: POST_APPROVAL_COMMUTE, payload: result });
     };
@@ -116,8 +121,7 @@ export const callAprovalScheduleAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
@@ -135,8 +139,7 @@ export const callAprovalRequestDocumentAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
@@ -154,8 +157,7 @@ export const callAprovalRetiredAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
@@ -173,8 +175,7 @@ export const callAprovalCompleteAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
@@ -192,8 +193,7 @@ export const callRoleUpdateAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
@@ -211,8 +211,7 @@ export const callRoleRecoveryAPI = ({ form }) => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                'Access-Control-Allow-Origin': '*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
             body: form,
         }).then((response) => response.json());
