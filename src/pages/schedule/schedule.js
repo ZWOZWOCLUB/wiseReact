@@ -8,6 +8,7 @@ import "tui-tree/dist/tui-tree.css";
 import Calendar from "@toast-ui/react-calendar";
 import { options } from "@fullcalendar/core/preact";
 import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 
 function Schedule() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Schedule() {
   const calendarRef = useRef(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const scheduleList = useSelector((state) => state.scheduleReducer);
+  const departmentList = useSelector((state) => state.organizationChartReducer);
 
   function formatDate(date) {
     const year = date.getFullYear();
@@ -36,32 +38,44 @@ function Schedule() {
   console.log(scheduleList);
 
   useEffect(() => {
-    const options = {
-      data: [
-        {
-          text: "rootA",
-          children: [
-            { text: "root-1A" },
-            { text: "root-1B" },
-            { text: "root-1C" },
-            {
-              text: "root-2A",
-              children: [{ text: "sub_sub_1A" }],
-            },
-            { text: "sub_2A" },
-          ],
-        },
-      ],
-      nodeIdPrefix: "tui-tree-node-",
-      nodeDefaultState: "closed",
-      stateLabels: {
-        opened: "-",
-        closed: "+",
-      },
-    };
-
-    const tree = new Tree("#tree", options);
+    dispatch(callOrganizationTreeAPI());
   }, []);
+
+  console.log(departmentList);
+
+  useEffect(() => {
+    if (departmentList && departmentList.children) {
+      const options = {
+        data: [
+          {
+            text: departmentList.depName,
+            children: departmentList.children.map((dep) => ({
+              text: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      text: mem.memName,
+                    }))
+                  : dep.children.map((chi) => ({
+                      text: chi.depName,
+                      children: chi.memberList.map((mem) => ({
+                        text: mem.memName,
+                      })),
+                    })),
+            })),
+          },
+        ],
+        nodeIdPrefix: "tui-tree-node-",
+        nodeDefaultState: "opened",
+        stateLabels: {
+          opened: "-",
+          closed: "+",
+        },
+      };
+
+      const tree = new Tree("#tree", options);
+    }
+  }, [departmentList]);
 
   useEffect(() => {
     const options = {
