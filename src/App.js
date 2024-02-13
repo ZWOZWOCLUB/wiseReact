@@ -82,7 +82,7 @@ function App() {
           <Route path="message" element={<Message />} />
           <Route path="message3" element={<Message3 />} />
           <Route path="organizationCreate" element={<OrganizationCreate />} />
-          <Route path="organizationEdit" element={<OrganizationEdit />} />
+          <Route path="organizationEdit/:depCode" element={<OrganizationEdit />} />
           <Route path="settingInfo" element={<SettingInfo />} />
           {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
           <Route path="settingVacation" element={<SettingVacation />} />

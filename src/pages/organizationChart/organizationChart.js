@@ -98,8 +98,8 @@ import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
 
 
       //편집버튼에 연결(부서 편집 페이지)
-      const onClickEditDepartment = () => {
-        navigate("/organizationEdit", { replace: true })
+      const onClickEditDepartment = (depCode) => {
+        navigate("/organizationEdit", { state: { depCode: depCode }, replace: true });
       }
 
       return(
@@ -118,33 +118,77 @@ import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
           부서 편집
           </NavLink>
 
-          <div>
-            {cardData
-            .filter((department) => department.repDepCode !== null && department.repDepCode !== 1)
-            .map((department) => (
-              <div key={department.depCode} className="card mb-3">
-                <div className="card-header">
-                  {department.depName}
+
+          <div className={`${coreCSS['col-md']} ${coreCSS['mb-4']} ${coreCSS['mb-md-0']}`}>
+            <div className={`${coreCSS['accordion']} ${coreCSS['mt-3']}`} id="accordionExample">
+              {cardData.map(({ depCode, depName, memberList }) => (
+                <div key={depCode} className={`${coreCSS['card']} ${coreCSS['accordion-item']} ${coreCSS['active']}`}>
+                  <h2 className={`${organizationCSS['accordion-header']}`} id={`heading${depCode}`}>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <button
+                        type="button"
+                        className={`${coreCSS['accordion-button']}`}
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#accordion${depCode}`}
+                        aria-expanded="false"
+                        aria-controls={`accordion${depCode}`}
+                      >
+                        {depName}
+                      </button>
+                      <div className="ms-auto me-3 mt-3">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-primary me-3"
+                          onClick={() => onClickEditDepartment(depCode)}
+                        >
+                          편집
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-danger"
+                          // onClick={}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+                  </h2>
+                  <div
+                    id={`accordion${depCode}`}
+                    className={`${coreCSS['accordion-collapse']} ${coreCSS['collapse']} ${coreCSS[`show`]}`}
+                    aria-labelledby={`heading${depCode}`}
+                  >
+                    <div className={`${coreCSS['accordion-body']} ${organizationCSS['profile-container']}`}>
+                      {memberList.length > 0 ? (
+                        memberList.map(({ memCode, memName, orgPosition, email, contact }) => (
+                          <div key={memCode} className={`${organizationCSS['profile-card']}`}>
+                            <button
+                              type="button"
+                              className={`${coreCSS['btn']} ${coreCSS['rounded-pill']} ${coreCSS['btn-outline-primary']}`}
+                              data-bs-toggle="modal"
+                              data-bs-target="#basicModal"
+                              data-name={memName}
+                              data-email={email}
+                              data-contact={contact}
+                            >
+                              {memName} {orgPosition.posName}
+                            </button>
+                          </div>
+                        ))
+                      ) : null}
+                    </div>
+                  </div>
                 </div>
-                <div className="card-body">
-                  {department.memberList.length > 0 ? (
-                    <ul className="list-group list-group-flush">
-                      {department.memberList.map((member) => (
-                        <li key={member.memCode} className="list-group-item">
-                          {member.memName} {member.orgPosition.posName}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>이 부서에는 멤버가 없습니다.</p>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        );
-        
-          {/* <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
+
+          
+        </>
+      );
+    }
+    
+              {/* <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
             <div className={`${coreCSS[`accordion`]} ${coreCSS[`mt-3`]}`} id="accordionExample">
               <div className={`${coreCSS[`card`]} ${coreCSS[`accordion-item`]} ${coreCSS[`active`]}`}>
                 <h2 className={`${organizationCSS[`accordion-header`]}`} id="headingOne">
@@ -216,10 +260,6 @@ import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
               </div>
             </div>
           </div> */}
-        </>
-      );
-    }
-    
 
 
 export default Organization;
