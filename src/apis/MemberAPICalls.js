@@ -20,12 +20,19 @@ export const callLoginAPI = ({ form }) => {
         }).then((response) => response.json());
 
         console.log('[MemberAPICalls] callLoginAPI RESULT : ', result);
-        if (result.status === 200) {
-            window.localStorage.removeItem('accessToken');  // 나중에 꼭 빼야함
-            window.localStorage.setItem('accessToken', result.userInfo.accessToken);
+
+if (result.status === 200) {
+            window.localStorage.removeItem('accessToken');  // 필요에 따라 기존 토큰 제거
+            window.localStorage.setItem('accessToken', result.userInfo.accessToken); // 새 토큰 저장
+
+            alert('로그인 성공!'); // 성공 알림
+            dispatch({ type: POST_LOGIN, payload: result });
+            
+        } else {
+            // 로그인 실패 시 사용자에게 실패 알림
+            alert('로그인 실패: ' + (result.message || '로그인 실패'));
         }
-        alert('로그인 성공!');
-        dispatch({ type: POST_LOGIN, payload: result });
+        
     };
 };
 

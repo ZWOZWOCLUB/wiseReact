@@ -4,12 +4,12 @@ const initialState = [];
 
 export const GET_MEMBERLIST             = 'setting/GET_MEMBERLIST';
 export const GET_DEPARTMENTLIST         = 'setting/GET_DEPARTMENTLIST';
-export const POST_MEMBERADD             = 'setting/POST_MEMBERADD';
+export const POST_ATTENDANCE         = 'setting/POST_ATTENDANCE';
 
 const actions = createActions({
     [GET_MEMBERLIST]: () => {},
     [GET_DEPARTMENTLIST]: () => {},
-    [POST_MEMBERADD]: () => {},
+    [POST_ATTENDANCE]: () => {},
 });
 
 const settingReducer = handleActions(
@@ -20,10 +20,9 @@ const settingReducer = handleActions(
         [GET_DEPARTMENTLIST]: (state, { payload }) => {
             return payload;
         },
-        [POST_MEMBERADD]: (state, { payload }) => {
+        [POST_ATTENDANCE]: (state, { payload }) => {
             return payload;
-        }
-
+        },
     },
     initialState
 );

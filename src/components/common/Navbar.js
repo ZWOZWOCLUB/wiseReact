@@ -45,19 +45,19 @@ function Navbar() {
                     </NavLink>
                 </li>
                 <li className={`${coreCSS[`menu-item`]}`}>
-                    <NavLink to='../../pages/organizationChart/organizationChart' className={`${coreCSS[`menu-link`]}`}>
+                    <NavLink to='/organizationChart' className={`${coreCSS[`menu-link`]}`}>
                         <img src={organization} style={{ width: 40 }} />
                         <div style={{ paddingLeft: 10 }}>부서</div>
                     </NavLink>
                 </li>
                 <li className={`${coreCSS[`menu-item`]}`}>
-                    <NavLink to='../../pages/notice/noticeMain' className={`${coreCSS[`menu-link`]}`}>
+                    <NavLink to='/notice' className={`${coreCSS[`menu-link`]}`}>
                         <img src={notice} style={{ width: 40 }} />
                         <div style={{ paddingLeft: 10 }}>공지</div>
                     </NavLink>
                 </li>
                 <li className={`${coreCSS[`menu-item`]}`}>
-                    <NavLink to='../../pages/fromdata/formdata' className={`${coreCSS[`menu-link`]}`}>
+                    <NavLink to='/dataformat' className={`${coreCSS[`menu-link`]}`}>
                         <img src={document} style={{ width: 40 }} />
                         <div style={{ paddingLeft: 10 }}>파일함</div>
                     </NavLink>

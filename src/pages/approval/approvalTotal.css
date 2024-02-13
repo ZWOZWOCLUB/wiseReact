@@ -1,0 +1,138 @@
+.payment-type {
+    width: 100%;
+    height: 800px;
+    background-color: #f5f5f9;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px 10px 10px;
+}
+
+.people {
+    width: 40%;
+}
+
+.in-people {
+    display: flex;
+    align-items: center;
+}
+
+#payment-type {
+    margin-left: 20px;
+    width: 60%;
+}
+
+#manager-btn,
+#manager-btn2 {
+    margin-top: 40px;
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#tree-btn,
+#tree-btn2 {
+    width: 100px;
+    border: none;
+    box-shadow: 0px 0px 10px #bbbdfc;
+    background-color: #bbbdfc;
+    border-color: #bbbdfc;
+    color: white;
+}
+
+.payment-manager {
+    width: 100%;
+    height: 15%;
+    background-color: white;
+}
+
+#payment-manager2 {
+    height: 43%;
+}
+
+#payment-manager1,
+#payment-manager2 {
+    width: 100%;
+    background-color: white;
+}
+
+.kind {
+    width: 60%;
+    background-color: white;
+    margin: 60px 50px 25px 150px;
+    padding: 50px;
+}
+
+.kind input,
+select,
+textarea {
+    border: solid 1px #e0dfdf;
+}
+
+#input-name {
+    margin-left: 20px;
+    border: solid 1px #e0dfdf;
+    width: 80%;
+}
+
+#clean-btn,
+#complete-payment {
+    width: 20%;
+    box-shadow: 0px 0px 10px #bbbdfc;
+    background-color: #bbbdfc;
+    border-color: #bbbdfc;
+    margin-top: 30px;
+}
+
+#complete-payment {
+    color: white;
+}
+
+.payment-line {
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 35px;
+}
+
+.payment-line ul {
+    list-style: none;
+    padding-left: 30px;
+    margin-bottom: 0;
+}
+
+.payment-line li {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.inputDate {
+    margin-inline: 20px;
+    width: 130px;
+    height: 30px;
+}
+
+.payment-type1,
+.payment-status {
+    width: 150px;
+    height: 30px;
+    margin-right: 20px;
+}
+
+.payment-insert-button {
+    width: 150px;
+    margin-left: 100px;
+    height: 40px;
+    background-color: #dcdcff;
+    border: none;
+}
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-accent-bg: var(--bs-table-hover-bg);
+    color: var(--bs-table-hover-color);
+}
+
+.table th,
+.table td,
+.table tr {
+    height: 45px;
+}
