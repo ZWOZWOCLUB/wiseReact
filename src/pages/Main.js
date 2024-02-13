@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import Login from './login/Login';
 import { decodeJwt } from '../utils/tokenUtils';
+import "./Main.css"
 
 function Main(){
     
@@ -28,10 +29,71 @@ function Main(){
 
     return(
         <>
-            <div>메인~~~</div>
-            {/* { checkLogin ? null : <Login /> }  */}
-            {/* <Login /> */}
+
+            <div className="container-xxl flex-grow-1 container-p-y">
+                {/*결재 관리*/}
+                <div className="card-body">
+                <div className="row main-flex">
+                    <div className="col-lg-4">
+                    <div className="card mb-4 mb-lg-0">
+                        <div className="card-body">
+                        <div
+                            className="status-numbers"
+                            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+                        >
+                            <div className="status-item-container">
+                            <div className="status-item">
+                                <div style={{ color: "blue" }}>2</div>
+                                <div>승인</div>
+                            </div>
+                            </div>
+                            <div className="status-item-container">
+                            <div className="status-item">
+                                <div style={{ color: "red" }}>1</div>
+                                <div>반려</div>
+                            </div>
+                            </div>
+                            <div className="status-item-container">
+                            <div className="status-item">
+                                <div style={{ color: "aquamarine" }}>5</div>
+                                <div>대기</div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    {/* 근태관리 */}
+                    <div className="col-lg-8">
+                    <div className="card mb-4">
+                        <div className="main-flex main-between">
+                        <p className="card-header main-att-date">2024.01.12</p>
+                        <a href="/index.html" className="card-header">
+                            상세보기
+                        </a>
+                        </div>
+                        <div className="card-body main-flex main-between">
+                        <div className="main-att-btn">
+                            <button className="btn btn-primary btn-lg">출근</button>
+                            <p className="card-text main-att-time">AM 09:00</p>
+                        </div>
+                        <div className="main-att-btn">
+                            <button className="btn btn-secondary btn-lg">퇴근</button>
+                            <p
+                            className="card-text main-att-time"
+                            style={{ color: "#d3d3d3" }}
+                            >
+                            PM 06:00
+                            </p>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
         </>
+
     );
 }
 
