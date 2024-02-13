@@ -85,15 +85,17 @@ import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
 
       console.log(cardData);
 
-      const [organizationData, setOrganizationData] = useState([]);
+      // const [organizationData, setOrganizationData] = useState([]);
+
+      // useEffect(() => {
+      //   setOrganizationData(cardData);
+      // }, [cardData]);
 
       useEffect(()=>{
         dispatch(callOrganizationCardAPI());
       }, []);
 
-      useEffect(() => {
-        setOrganizationData(cardData);
-      }, [cardData]);
+
 
       //편집버튼에 연결(부서 편집 페이지)
       const onClickEditDepartment = () => {
@@ -107,24 +109,29 @@ import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
           <NavLink to="/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
           트리로 이동
           </NavLink>
+          
+          <NavLink to="/organizationCreate" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
+          부서 생성
+          </NavLink>
+
+          <NavLink to="/organizationEdit" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
+          부서 편집
+          </NavLink>
 
           <div>
-            {organizationData.map((department) => (
+            {cardData
+            .filter((department) => department.repDepCode !== null && department.repDepCode !== 1)
+            .map((department) => (
               <div key={department.depCode} className="card mb-3">
                 <div className="card-header">
                   {department.depName}
                 </div>
                 <div className="card-body">
-                  <h5 className="card-title">멤버 리스트</h5>
                   {department.memberList.length > 0 ? (
                     <ul className="list-group list-group-flush">
                       {department.memberList.map((member) => (
                         <li key={member.memCode} className="list-group-item">
-                          {member.memName} - {member.orgPosition.posName}
-                          <br />
-                          Email: {member.memEmail}
-                          <br />
-                          Phone: {member.memPhone}
+                          {member.memName} {member.orgPosition.posName}
                         </li>
                       ))}
                     </ul>
