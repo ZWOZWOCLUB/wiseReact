@@ -2,6 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
+import HeaderCSS from './Login.module.css';
+import { callLogoutAPI } from "../../apis/MemberAPICalls.js";
+import styles from './Login.module.css';
+
 
 import {
     callLoginAPI
@@ -15,7 +20,7 @@ function Login() {
     // 리덕스를 이용하기 위한 디스패처, 셀렉터 선언
     const dispatch = useDispatch();
     const loginMember = useSelector(state => state.memberReducer);  // API 요청하여 가져온 loginMember 정보
-    
+
     // 폼 데이터 한번에 변경 및 State에 저장    
     const [form, setForm] = useState({
         memberId: '',
@@ -26,7 +31,7 @@ function Login() {
         
         if(loginMember.status === 200){
             console.log("[Login] Login SUCCESS {}", loginMember);
-            navigate("/", { replace: true });
+            navigate("/main", { replace: true });
         }
     }
     ,[loginMember]);
@@ -53,42 +58,90 @@ function Login() {
     }
     
 
+      const isLogin = window.localStorage.getItem('accessToken');
+
+  const onClickLogoutHandler = () => {
+    window.localStorage.removeItem('accessToken');
+    //로그아웃
+    // dispatchEvent(callLogoutAPI());
+
+    alert('로그아웃 완료! 메인화면으로 이동');
+    navigate('/', {replace: true})
+    // window.location.reload();
+
+  }
+
+  const handleLogin = () => {
+    dispatch(callLoginAPI({
+        form: form
+    }));
+};
+    const handleSubmit = (e) => {
+    e.preventDefault(); // **폼 제출시 페이지 리로드 방지**
+    handleLogin(); // **로그인 처리 함수 호출**
+};
+
+  function BeforeLogin() {
+
+    return (
+        <div>
+            <NavLink to="/login">로그인</NavLink>
+        </div>
+    );
+}
+
+  function AfterLogin() {
+
+    return (            
+        <div>
+            <button className={ HeaderCSS.HeaderBtn } onClick={ onClickLogoutHandler }>로그아웃</button>
+        </div>
+    );
+}
+
     return (
         <>
         
-            <div className="container-xxl">
-                <div className="authentication-wrapper authentication-basic container-p-y">
-                    <div className="authentication-inner">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="mb-2">Welcome!! 👋</h4>
-                                    <div className="mb-3">
-                                        <label htmlFor="memberId" className="form-label"><b>사원번호</b></label>
-                                        <input
-                                            type="text"
-                                            placeholder="사원번호"
-                                            name="memberId"
-                                            onChange={onChangeHandler}
-                                        />
-                                    </div>
-                                    <div className="mb-3 form-password-toggle">
-                                        <label className="form-label" htmlFor="memberPassword">비밀번호</label>
-                                        <input
-                                            type="password"
-                                            placeholder="●●●●●●●"
-                                            name="memberPassword"
-                                            onChange={onChangeHandler}
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <button onClick={onClickLoginHandler}>로그인</button>
-                                        
-                                    </div>
-                            </div>
+            <div id="card" className={styles.card}>
+                <div className='card'>
+                <div className="card-body custom-card-body">
+                    <div className ="qwer">
+                    <h4 className="mb-2">Welcome!! 슬기로운HR+ 👋</h4>
+                    <form onSubmit={handleSubmit} className="mb-3">
+                        <div className="mb-3">
+                            <label htmlFor="memberCode" className="form-label"><b>사원번호</b></label>
+                            <input
+                                className={styles.memberCodeInput}
+                                type="text"
+                                placeholder="사원번호"
+                                name="memberId"
+                                onChange={onChangeHandler}
+                            />
                         </div>
+                        <div className="mb-3 form-password-toggle">
+                            <label className="form-label" htmlFor="memberPassword"><b>비밀번호</b></label>
+                            <input
+                                className={styles.memberPasswordInput}
+                                type="password"
+                                placeholder="●●●●●●●"
+                                name="memberPassword"
+                                onChange={onChangeHandler}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            {/* <button onClick={onClickLoginHandler}>로그인</button> */}
+                            <button type="submit" className="btn btn-primary">로그인</button>
+                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="loginControl" className="login-control">
+            {isLogin == null || isLogin === undefined ? <BeforeLogin /> : <AfterLogin />}
+            
+        </div>
         </>
     );
 }

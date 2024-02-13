@@ -37,7 +37,14 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Layout />}>
+                <Route path='/' element={<Login />}>
+                    {/* <Route path='/layout' element={<Layout />}/> */}
+                    <Route index element={<Login />}/>
+                    <Route path='login' element={<Login />}/>
+                </Route>
+                {/* <Route path='sign' element={ <SignatureCanvas /> }/> */}
+
+                <Route path="/main" element={<Layout />}>
                     <Route index element={<Main />} />
                     <Route path='pay' element={<Pay />} />
                     <Route path='Schedule' element={<Schedule />} />
@@ -58,18 +65,26 @@ function App() {
                     <Route path='message' element={<Message />} />
                     <Route path='message3' element={<Message3 />} />
                     <Route path='sign' element={<Sign />} />
-                    <Route path='/login' element={<Login />} /> {/* 로그인 페이지 라우트 추가 */}
                     <Route path='organizationChart' element={<Organization />} />
                     {/* <Route path='dataformat' element={<DataFormat />} /> */}
                     <Route path='notice' element={<NoticeMain />} />
                     <Route path='noticeWrite' element={<NoticeWrite />} />
                     <Route path='notice/detail/:notCode' element={<NoticeDetail />} />
+                    <Route path='mp' element={<MyPage />} />
+                    <Route path='mpUpdate' element={<MyPageUpdate />} />
+                    <Route path='mppersonnelInfo' element={<PersonnelInfo />} />
+                    <Route path='mpvacation' element={<MPVacation />} />
+                    <Route path='mpattendance' element={<MPAttendance />} />
+                    <Route path='mpdocument' element={<MPDocument />} />
+                    <Route path='alarm' element={<Alarm />} />
+                    <Route path='message' element={<Message />} />
+                    <Route path='message3' element={<Message3 />} />
+    
                     <Route path='settingInfo' element={<SettingInfo />} />
                     {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
                     <Route path='settingVacation' element={<SettingVacation />} />
                     <Route path='settingAttendance' element={<SettingAttendance />} />
                 </Route>
-                {/* <Route path='sign' element={ <SignatureCanvas /> }/> */}
             </Routes>
         </BrowserRouter>
     );
