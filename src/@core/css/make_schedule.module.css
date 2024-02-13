@@ -94,7 +94,7 @@
     align-items: center;
   }
   
-  #new_group{
+  .new_group{
     width: 60%;
     color: #fff;
     background-color: #696cff;
@@ -190,6 +190,7 @@
     border-bottom-color: #E1E1E2;
     justify-content:space-between; 
     display: flex; 
+    flex: 1 2;
   }
   .middle{
     width: 95%; 
@@ -210,24 +211,22 @@
   }
   .top_left{
     height: 80%;
-    width: 30%;
     margin-top: 6px;
     display: flex;
-
+    align-items: center;
   }
   .top_right{
     height: 80%;
     margin-top: 6px;
     display: flex;
-
+    width: 50%;
   }
   .monToSun{
-    width: 13%;
-    height: 100%;
+    width: 15%;
+    height: 90%;
     margin-top: 10px;
     border: 1px solid #E1E1E2;
     border-radius: 10px;
-    background-color: #696cff;
     box-shadow: 0 0.125rem 0.25rem 0 lightgrey;
     display: flex; 
     justify-content: center; 
@@ -292,12 +291,10 @@
   }
 
   .nickname{
-    width: 50%;
     height: 100%;
-
+    align-items: center;
   }
   .hours{
-    width: 30%;
     height: 100%;
     margin-left: 15px;
     display: flex; 
@@ -330,7 +327,7 @@
     background-color: rgba(0, 0, 0, 0);
   }
 
-  #nickname{
+  .nickname2{
     width: 100%;
     margin-top: 12px;
     margin-left: 5px;
@@ -351,12 +348,13 @@
     text-align: center;
     vertical-align: middle;
     color: gray;
+    margin-left: 10px;
   }
 
 #borderCardWrapper{
   border-radius: 10px; 
   border:1px solid #E1E1E2; 
   height: 250px; 
-  margin:18px 30px 5px 30px; 
+  margin:18px 15px 5px 15px; 
   background-color: #FBFBFB;
 }

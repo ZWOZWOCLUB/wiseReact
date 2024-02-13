@@ -8,10 +8,22 @@ import SettingInfoInsertCertificate from "./settingInfoInsertCertificate";
 import SettingInfoUpdateCareer from "./settingInfoUpdateCareer";
 import SettingInfoInsertCareer from "./settingInfoInsertCareer";
 import SettingInfoDegree from "./settingInfoUpdateDegree";
-import { callCertificateInsertAPI, callCertificateUpdateAPI } from "../../apis/SettingCertificatAPICalls";
-import { callCareerInsertAPI, callCareerUpdateAPI } from "../../apis/SettingCareerAPICalls";
-import { callDegreeInsertAPI, callDegreeUpdateAPI } from "../../apis/SettingDegreeAPICalls";
-import { callSalaryInsertAPI, callSalaryUpdateAPI } from "../../apis/SettingSalAPICalls";
+import {
+  callCertificateInsertAPI,
+  callCertificateUpdateAPI,
+} from "../../apis/SettingCertificatAPICalls";
+import {
+  callCareerInsertAPI,
+  callCareerUpdateAPI,
+} from "../../apis/SettingCareerAPICalls";
+import {
+  callDegreeInsertAPI,
+  callDegreeUpdateAPI,
+} from "../../apis/SettingDegreeAPICalls";
+import {
+  callSalaryInsertAPI,
+  callSalaryUpdateAPI,
+} from "../../apis/SettingSalAPICalls";
 import SettingInfoInsertDegree from "./settingInfoInsertDegree";
 
 function SettingInfo() {
@@ -19,14 +31,19 @@ function SettingInfo() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
-  const prevList = useSelector(state => state.settingInfoSearchReducer);
+  const prevList = useSelector((state) => state.settingInfoSearchReducer);
 
-  useEffect((memCode) => {
-    dispatch(callInfoSearchAPI({
-      memCode: memberCode,
-    }));
-  }, [memberCode])
-  console.log(prevList)
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [memberCode]
+  );
+  console.log(prevList);
 
   const [stateIndex, setStateIndex] = useState();
   const [activeTab, setActiveTab] = useState();
@@ -35,18 +52,20 @@ function SettingInfo() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
-      navigate(
-        `/settingInfo?memCode=${memberCode}`,
-        { replace: true });
+      navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "연차 관리") {
-      navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingVacation?memCode=${memberCode}`, {
+        replace: true,
+      });
     }
     if (tab === "서류함") {
-      navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingDocument?memCode=${memberCode}`, {
+        replace: true,
+      });
     }
   };
   const [salForm, setSalForm] = useState({
@@ -56,27 +75,31 @@ function SettingInfo() {
     salBankName: "",
   });
 
-  const [insertCrrForm, setInsertCrrForm] = useState([{
-    memCode: memberCode,
-    crrCode: "",
-    crrName: "",
-    crrPosition: "",
-    crrStartDate: "",
-    crrEndDate: "",
-    crrState: "Y",
-    crrDescription: "",
-  }]);
+  const [insertCrrForm, setInsertCrrForm] = useState([
+    {
+      memCode: memberCode,
+      crrCode: "",
+      crrName: "",
+      crrPosition: "",
+      crrStartDate: "",
+      crrEndDate: "",
+      crrState: "Y",
+      crrDescription: "",
+    },
+  ]);
 
-  const [insertDegForm, setInsertDegForm] = useState([{
-    memCode: memberCode,
-    degCode: "",
-    degKind: "",
-    degMajor: "",
-    degName: "",
-    degGraduation: "",
-    degState: "",
-    degAdmissions: "",
-  }]);
+  const [insertDegForm, setInsertDegForm] = useState([
+    {
+      memCode: memberCode,
+      degCode: "",
+      degKind: "",
+      degMajor: "",
+      degName: "",
+      degGraduation: "",
+      degState: "",
+      degAdmissions: "",
+    },
+  ]);
 
   const [insertCerForm, setInsertCerForm] = useState([
     {
@@ -91,27 +114,31 @@ function SettingInfo() {
     },
   ]);
 
-  const [updateCrrForm, setUpdateCrrForm] = useState([{
-    memCode: memberCode,
-    crrCode: "",
-    crrName: "",
-    crrPosition: "",
-    crrStartDate: "",
-    crrEndDate: "",
-    crrState: "Y",
-    crrDescription: "",
-  }]);
+  const [updateCrrForm, setUpdateCrrForm] = useState([
+    {
+      memCode: memberCode,
+      crrCode: "",
+      crrName: "",
+      crrPosition: "",
+      crrStartDate: "",
+      crrEndDate: "",
+      crrState: "Y",
+      crrDescription: "",
+    },
+  ]);
 
-  const [updateDegForm, setUpdateDegForm] = useState([{
-    memCode: memberCode,
-    degCode: "",
-    degKind: "",
-    degMajor: "",
-    degName: "",
-    degGraduation: "",
-    degState: "",
-    degAdmissions: "",
-  }]);
+  const [updateDegForm, setUpdateDegForm] = useState([
+    {
+      memCode: memberCode,
+      degCode: "",
+      degKind: "",
+      degMajor: "",
+      degName: "",
+      degGraduation: "",
+      degState: "",
+      degAdmissions: "",
+    },
+  ]);
 
   const [updateCerForm, setUpdateCerForm] = useState([
     {
@@ -148,29 +175,27 @@ function SettingInfo() {
     setInsertDegForm(data);
   };
   const onClickSave = () => {
-
-    if(salForm.salCode){
-    dispatch(callSalaryUpdateAPI({salForm}))}
-    else{
-      dispatch(callSalaryInsertAPI({salForm}))
+    if (salForm.salCode) {
+      dispatch(callSalaryUpdateAPI({ salForm }));
+    } else {
+      dispatch(callSalaryInsertAPI({ salForm }));
     }
-    dispatch(callCertificateInsertAPI({insertCerForm}))
-    dispatch(callCareerInsertAPI({insertCrrForm}))
-    dispatch(callDegreeInsertAPI({insertDegForm}))    
-    dispatch(callCertificateUpdateAPI({updateCerForm}))
-    dispatch(callCareerUpdateAPI({updateCrrForm}))
-    dispatch(callDegreeUpdateAPI({updateDegForm}))
-    console.log('통장정보', salForm);
-    console.log('자격정보등록', insertCerForm);
-    console.log('경력정보등록', insertCrrForm);
-    console.log('학위정보등록', insertDegForm);
-    console.log('자격정보수정', updateCerForm);
-    console.log('경력정보수정', updateCrrForm);
-    console.log('학위정보수정', updateDegForm);
+    dispatch(callCertificateInsertAPI({ insertCerForm }));
+    dispatch(callCareerInsertAPI({ insertCrrForm }));
+    dispatch(callDegreeInsertAPI({ insertDegForm }));
+    dispatch(callCertificateUpdateAPI({ updateCerForm }));
+    dispatch(callCareerUpdateAPI({ updateCrrForm }));
+    dispatch(callDegreeUpdateAPI({ updateDegForm }));
+    console.log("통장정보", salForm);
+    console.log("자격정보등록", insertCerForm);
+    console.log("경력정보등록", insertCrrForm);
+    console.log("학위정보등록", insertDegForm);
+    console.log("자격정보수정", updateCerForm);
+    console.log("경력정보수정", updateCrrForm);
+    console.log("학위정보수정", updateDegForm);
     window.location.reload();
   };
 
-  
   return (
     <>
       <h4 className="fw-bold py-3 mb-4">
@@ -230,7 +255,7 @@ function SettingInfo() {
                   type="button"
                   className="btn btn-primary"
                   onClick={onClickSave}
-                                  >
+                >
                   저장
                 </button>
               </div>

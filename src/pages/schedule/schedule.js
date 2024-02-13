@@ -18,9 +18,17 @@ function Schedule() {
   const scheduleList = useSelector((state) => state.scheduleReducer);
   const departmentList = useSelector((state) => state.organizationChartReducer);
 
+  function scheduleAdd() {
+    navigate(`/main/scheduleAdd`, { replace: true });
+  }
+
+  function schedulePattenAdd() {
+    navigate(`/main/schedulePattenAdd`, { replace: true });
+  }
+
   function formatDate(date) {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월을 2자리 숫자로 만들고, 필요하다면 앞에 0을 채웁니다.
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     return `${year}-${month}`;
   }
 
@@ -166,13 +174,7 @@ function Schedule() {
               <button className={`${payCSS["today"]}`}>Today</button>
               <button
                 className={`${payCSS["patternInscription"]}`}
-                onClick={() =>
-                  window.open(
-                    "../schedule/make_schedule.html",
-                    "new",
-                    "width=1500, height=1000"
-                  )
-                }
+                onClick={schedulePattenAdd}
               >
                 <span
                   className="bx bx-calendar-edit"
@@ -182,13 +184,7 @@ function Schedule() {
               </button>
               <button
                 className={`${payCSS["scheduleAdd"]}`}
-                onClick={() =>
-                  window.open(
-                    "../schedule/scheduleAdd.html",
-                    "new",
-                    "width=1500, height=900"
-                  )
-                }
+                onClick={scheduleAdd}
               >
                 <span
                   className="bx bx-calendar-plus"
@@ -202,7 +198,10 @@ function Schedule() {
               height="70vh"
               ref={calendarRef}
               view="month"
+              isAlways6Weeks={false}
               usageStatistics={false}
+              useDetailPopup={true}
+              gridSelection={false}
               events={[
                 {
                   id: "event1",

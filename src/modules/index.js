@@ -24,6 +24,7 @@ import settingInfoSearchReducer from "./SettingInfoSearchModuel";
 import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
+import schedulePatternReducer from "./SchedulePatternModule";
 
 const { combineReducers } = require("redux");
 
@@ -56,6 +57,7 @@ const rootReducer = combineReducers({
   settingDocumentReducer,
   noticeReducer,
   scheduleReducer,
+  schedulePatternReducer,
 });
 
 export default rootReducer;

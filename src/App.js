@@ -10,6 +10,7 @@ import Approval from "./pages/approval/Approval";
 import SendApproval from "./pages/approval/SendApproval";
 import Assignment from "./pages/approval/Assignment";
 import SettingInfo from "./pages/setting/settingInfo";
+import SettingDocument from "./pages/setting/SettingDocument";
 import MyPage from "./pages/mypage/01_profileInfo";
 import PersonnelInfo from "./pages/mypage/02_personnelInfo";
 import MPVacation from "./pages/mypage/03_vacation";
@@ -20,7 +21,6 @@ import Message from "./pages/alarmAndMessage/message";
 import Message3 from "./pages/alarmAndMessage/message copy";
 import SignatureCanvas from "./pages/mypage/sign";
 import MyPageUpdate from "./pages/mypage/01_profileUpdate";
-// import SettingDocument from './pages/setting/SettingDocument';
 import SettingVacation from "./pages/setting/settingVaction";
 import SettingAttendance from "./pages/setting/settingAttendance";
 import "boxicons/css/boxicons.min.css";
@@ -32,6 +32,8 @@ import RequestApproval from "./pages/approval/RequestApproval";
 import NoticeMain from "./pages/notice/NoticeMain";
 import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeDetail from "./pages/notice/NoticeDetail";
+import ScheduleAdd from "./pages/schedule/ScheduleAdd";
+import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
 
 function App() {
   return (
@@ -81,9 +83,11 @@ function App() {
           <Route path="message3" element={<Message3 />} />
 
           <Route path="settingInfo" element={<SettingInfo />} />
-          {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
+          <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />
           <Route path="settingAttendance" element={<SettingAttendance />} />
+          <Route path="ScheduleAdd" element={<ScheduleAdd />} />
+          <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
         </Route>
       </Routes>
     </BrowserRouter>
