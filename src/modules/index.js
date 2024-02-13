@@ -2,6 +2,7 @@ import memberReducer from "./MemberModule";
 import payReducer from './PayModule';
 import yearReducer from './YearModule'
 import settingReducer from './SettingModule'
+import organizationChartReducer from "./OrganizationChartModule";
 
 const { combineReducers } = require("redux");
 
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
     memberReducer,
     payReducer,
     yearReducer,
-    settingReducer
+    settingReducer,
+    organizationChartReducer
 });
 
 export default rootReducer;

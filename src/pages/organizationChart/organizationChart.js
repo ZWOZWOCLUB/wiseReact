@@ -1,6 +1,7 @@
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css";
 import organizationCSS from "../../@core/css/organizationChart.module.css";
+import { NavLink } from "react-router-dom";
 
   // <div className="container-xxl flex-grow-1 container-p-y">
     {/* Modal */}
@@ -73,107 +74,88 @@ import organizationCSS from "../../@core/css/organizationChart.module.css";
     // </div>
     function Organization(){
       return(
-    <>
-    <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
+        <>
+          <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
 
-    <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
-      {/* <small className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>Basic Accordion</small> */}
-      <div className={`${coreCSS[`accordion`]} ${coreCSS[`mt-3`]}`} id="accordionExample">
-        <div className={`${coreCSS[`card`]} ${coreCSS[`accordion-item`]} ${coreCSS[`active`]}`}>
-          <h2 className={`${organizationCSS[`accordion-header`]}`} id="headingOne">
-            <button
-              type="button"
-              className={`${coreCSS[`accordion-button`]}`}
-              data-bs-toggle="collapse"
-              data-bs-target="#accordionOne"
-              aria-expanded="true"
-              aria-controls="accordionOne"
-            >
-              인사팀
-            </button>
-          </h2>
-          <div
-            id="accordionOne"
-            className={`${coreCSS[`accordion-collapse`]} ${coreCSS[`collapse`]} ${coreCSS[`show`]}`}
-            data-bs-parent="#accordionExample"
-          >
-            <div className={`${coreCSS[`accordion-body`]} ${organizationCSS[`profile-container`]}`}>
-              <div className={`${organizationCSS[`profile-card`]}`}>
-                <button
-                  type="button"
-                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
-                  data-bs-toggle="modal"
-                  data-bs-target="#basicModal"
-                  data-name="홍진경"
-                  data-email="hong@gamil.com"
-                  data-contact="010-1111-1111"
+          <NavLink to="/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
+          트리로 이동
+          </NavLink>
+          <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
+            <div className={`${coreCSS[`accordion`]} ${coreCSS[`mt-3`]}`} id="accordionExample">
+              <div className={`${coreCSS[`card`]} ${coreCSS[`accordion-item`]} ${coreCSS[`active`]}`}>
+                <h2 className={`${organizationCSS[`accordion-header`]}`} id="headingOne">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <button
+                        type="button"
+                        className={`${coreCSS[`accordion-button`]}`}
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordionOne"
+                        aria-expanded="true"
+                        aria-controls="accordionOne"
+                      >
+                        인사팀
+                      </button>
+                    </div>
+                    <div className="ms-auto me-3 mt-3">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-primary me-3"
+                        // onClick={() => handleEditButtonClick("인사팀")}
+                      >
+                        편집
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        // onClick={() => handleDeleteButtonClick("인사팀")}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                </h2>
+                <div
+                  id="accordionOne"
+                  className={`${coreCSS[`accordion-collapse`]} ${coreCSS[`collapse`]} ${coreCSS[`show`]}`}
+                  data-bs-parent="#accordionExample"
                 >
-                  홍진경 과장
-                </button>
-              </div>
-              <div className={`${coreCSS[`profile-card`]}`}>
-                <button
-                  type="button"
-                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
-                  data-bs-toggle="modal"
-                  data-bs-target="#basicModal"
-                  data-name="유재석"
-                  data-email="yoo@gamil.com"
-                  data-contact="010-2222-2222"
-                >
-                  유재석 전문의
-                </button>
-              </div>
-              <div className={`${coreCSS[`profile-card`]}`}>
-                <button
-                  type="button"
-                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
-                  data-bs-toggle="modal"
-                  data-bs-target="#basicModal"
-                  data-name="전현무"
-                  data-email="jeon@gamil.com"
-                  data-contact="010-3333-3333"
-                >
-                  전현무 교수
-                </button>
-              </div>
-              <div className={`${coreCSS[`profile-card`]}`}>
-                <button
-                  type="button"
-                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
-                  data-bs-toggle="modal"
-                  data-bs-target="#basicModal"
-                  data-name="이장우"
-                  data-email="jang@gamil.com"
-                  data-contact="010-4444-4444"
-                >
-                  이장우 부교수
-                </button>
-              </div>
-              <div className={`${coreCSS[`profile-card`]}`}>
-                <button
-                  type="button"
-                  className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
-                  data-bs-toggle="modal"
-                  data-bs-target="#basicModal"
-                  data-name="박나래"
-                  data-email="park@gamil.com"
-                  data-contact="010-5555-5555"
-                >
-                  박나래 인턴
-                </button>
+                  <div className={`${coreCSS[`accordion-body`]} ${organizationCSS[`profile-container`]}`}>
+                    <div className={`${organizationCSS[`profile-card`]}`}>
+                      <button
+                        type="button"
+                        className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
+                        data-bs-toggle="modal"
+                        data-bs-target="#basicModal"
+                        data-name="홍진경"
+                        data-email="hong@gamil.com"
+                        data-contact="010-1111-1111"
+                      >
+                        홍진경 과장
+                      </button>
+                    </div>
+                    <div className={`${coreCSS[`profile-card`]}`}>
+                      <button
+                        type="button"
+                        className={`${coreCSS[`btn`]} ${coreCSS[`rounded-pill`]} ${coreCSS[`btn-outline-primary`]}`}
+                        data-bs-toggle="modal"
+                        data-bs-target="#basicModal"
+                        data-name="유재석"
+                        data-email="yoo@gamil.com"
+                        data-contact="010-2222-2222"
+                      >
+                        유재석 전문의
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-
-
-    </>
+        </>
       );
-  }
+    }
+    
 
 
 export default Organization;
