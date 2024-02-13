@@ -2,6 +2,10 @@ import coreCSS from "../../@core/vendor/css/core.module.css";
 import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css";
 import organizationCSS from "../../@core/css/organizationChart.module.css";
 import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { callOrganizationCardAPI } from "../../apis/OrganizationChartAPICalls";
 
   // <div className="container-xxl flex-grow-1 container-p-y">
     {/* Modal */}
@@ -73,6 +77,29 @@ import { NavLink } from "react-router-dom";
     //   </div>
     // </div>
     function Organization(){
+
+      const dispatch = useDispatch();
+      const navigate = useNavigate();
+
+      const cardData = useSelector(state => state.organizationChartReducer);
+
+      console.log(cardData);
+
+      const [organizationData, setOrganizationData] = useState([]);
+
+      useEffect(()=>{
+        dispatch(callOrganizationCardAPI());
+      }, []);
+
+      useEffect(() => {
+        setOrganizationData(cardData);
+      }, [cardData]);
+
+      //편집버튼에 연결(부서 편집 페이지)
+      const onClickEditDepartment = () => {
+        navigate("/organizationEdit", { replace: true })
+      }
+
       return(
         <>
           <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
@@ -80,7 +107,37 @@ import { NavLink } from "react-router-dom";
           <NavLink to="/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
           트리로 이동
           </NavLink>
-          <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
+
+          <div>
+            {organizationData.map((department) => (
+              <div key={department.depCode} className="card mb-3">
+                <div className="card-header">
+                  {department.depName}
+                </div>
+                <div className="card-body">
+                  <h5 className="card-title">멤버 리스트</h5>
+                  {department.memberList.length > 0 ? (
+                    <ul className="list-group list-group-flush">
+                      {department.memberList.map((member) => (
+                        <li key={member.memCode} className="list-group-item">
+                          {member.memName} - {member.orgPosition.posName}
+                          <br />
+                          Email: {member.memEmail}
+                          <br />
+                          Phone: {member.memPhone}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>이 부서에는 멤버가 없습니다.</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+        
+          {/* <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
             <div className={`${coreCSS[`accordion`]} ${coreCSS[`mt-3`]}`} id="accordionExample">
               <div className={`${coreCSS[`card`]} ${coreCSS[`accordion-item`]} ${coreCSS[`active`]}`}>
                 <h2 className={`${organizationCSS[`accordion-header`]}`} id="headingOne">
@@ -151,7 +208,7 @@ import { NavLink } from "react-router-dom";
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </>
       );
     }
