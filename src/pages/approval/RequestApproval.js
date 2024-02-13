@@ -21,6 +21,10 @@ function RequestApproval() {
     const optionChange = (e) => {
         setSelectOption(e.target.value);
     };
+
+    const [data, setData] = useState('');
+    // 여기서 사원 데이터 모두 가져와서 선택한 값 들어가도록 해결 .
+
     const dispatch = useDispatch();
 
     const memberInfo = useSelector((state) => state.approvalReducer);
@@ -32,15 +36,15 @@ function RequestApproval() {
 
         switch (selectOption) {
             case '1':
-                return <Annual />;
+                return <Annual data={data} />;
             case '2':
-                return <ReqDocument />;
+                return <ReqDocument data={data} />;
             case '3':
-                return <Retiredment />;
+                return <Retiredment data={data} />;
             case '4':
-                return <EditCommute />;
+                return <EditCommute data={data} />;
             case '5':
-                return <EditSchedule />;
+                return <EditSchedule data={data} />;
             default:
                 return null;
         }

@@ -6,26 +6,137 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { callAprovalCommuteAPI } from '../../apis/ApprovalAPICalls';
 
 function EditCommute() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const navigate = useNavigate();
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+
+    const formattedDate = year + '-' + month + '-' + day;
+
+    const memberCode = 240130003;
+
+    const [img, setImg] = useState(null);
+
+    const [form, setForm] = useState({
+        ediKind: '',
+        ediDate: '',
+        ediContents: '',
+        ediTime2: '',
+        approval: {
+            payDate: formattedDate,
+            payKind: '출퇴근 정정',
+            approvalMember: {
+                memCode: token.memCode,
+            },
+            payName: '',
+        },
+        cMember: {
+            memCode: memberCode,
+        },
+    });
+
+    const dispatch = useDispatch();
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+        console.log(form);
+    };
+
+    const changePayname = (payname) => {
+        setForm((prevForm) => ({
+            ...prevForm,
+            approval: {
+                ...prevForm.approval,
+                payName: payname,
+            },
+        }));
+
+        console.log(form);
+    };
+
+    const fileChange = (e) => {
+        const file = e.target.files[0];
+
+        console.log('file name : ', file.name);
+
+        setImg(file);
+
+        setForm((prevForm) => ({
+            ...prevForm,
+            file: file,
+        }));
+    };
+
+    const approvalComplete = () => {
+        console.log('form : ', form);
+
+        const formData = new FormData();
+
+        formData.append('ediKind', form.ediKind);
+        formData.append('ediDate', form.ediDate);
+        formData.append('ediTime', form.ediTime2);
+        formData.append('ediContents', form.ediContents);
+        formData.append('approval.payDate', form.approval.payDate);
+        formData.append('approval.approvalMember.memCode', form.approval.approvalMember.memCode);
+        formData.append('approval.payName', form.approval.payName);
+        formData.append('approval.payKind', form.approval.payKind);
+        formData.append('cMember.memCode', form.cMember.memCode);
+
+        if (form.file) {
+            formData.append('approvalFile', form.file);
+        }
+
+        dispatch(
+            callAprovalCommuteAPI({
+                form: formData,
+            })
+        );
+
+        console.log('time', formData.get('ediTime'));
+
+        // navigate(`/Approval`, { replace: true });
+    };
+
     return (
         <>
             <div>
-                제목<span style={{ color: 'red' }}> *</span> <input type='text' id='input-name' />
+                제목<span style={{ color: 'red' }}> *</span>{' '}
+                <input type='text' id='input-name' onChange={(e) => changePayname(e.target.value)} name='payName' />
             </div>
             <div id='margintop'>
                 <div>
                     신청구분<span style={{ color: 'red' }}> *</span>
-                    <select name='annual-type' id='annual-type' style={{ marginLeft: '10px', width: '77%' }}>
+                    <select
+                        name='ediKind'
+                        id='annual-type'
+                        style={{ marginLeft: '10px', width: '77%' }}
+                        onChange={onChange}
+                    >
                         <option value='0'>--선택--</option>
-                        <option value='1'>퇴근시간</option>
-                        <option value='2'>출근시간</option>
-                        <option value='3'>결근</option>
+                        <option value='퇴근시간'>퇴근시간</option>
+                        <option value='출근시간'>출근시간</option>
+                        <option value='결근(근무)'>결근(근무)</option>
+                        <option value='결근(지각)'>결근(지각)</option>
+                        <option value='결근(조퇴)'>결근(조퇴)</option>
                     </select>
                 </div>
                 <div>
-                    정정일<span style={{ color: 'red' }}> *</span>
-                    <input type='date' id='annual-date' />
+                    정정일 / 시간<span style={{ color: 'red' }}> *</span>
+                    <input type='date' id='annual-date' onChange={onChange} name='ediDate' />
+                    <input type='time' id='annual-time' onChange={onChange} name='ediTime2' />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <label for='basic-default-message'>
@@ -39,10 +150,12 @@ function EditCommute() {
                             width: '80%',
                             marginLeft: '20px',
                         }}
+                        onChange={onChange}
+                        name='ediContents'
                     ></textarea>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label for='formFileMultiple' className='form-label'>
+                    <label for='formFileMultiple' className='form-label' onChange={onChange}>
                         파일첨부
                     </label>
 
@@ -63,10 +176,10 @@ function EditCommute() {
                                 height: '30px',
                                 paddingBottom: '30px',
                             }}
+                            name='approvalFile'
+                            accept='image/jpg,image/png,image/jpeg,image/gif'
+                            onChange={fileChange}
                         />
-                        <label className='input-group-text' for='inputGroupFile02' style={{ height: '31.5px' }}>
-                            Upload
-                        </label>
                     </div>
                 </div>
             </div>
@@ -84,7 +197,7 @@ function EditCommute() {
                 >
                     <b>초기화</b>
                 </div>
-                <button type='button' className='btn btn-primary' id='complete-payment1'>
+                <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
                     작성 완료
                 </button>
             </div>
