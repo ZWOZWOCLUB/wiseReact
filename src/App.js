@@ -26,7 +26,9 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Layout />}>
+                <Route path='/' element={<Login />}>
+                    <Route path='/layout' element={<Layout />}/>
+                    <Route path="/login" element={<Login />}/>
                     <Route index element={<Main />} />
                     <Route path='pay' element={<Pay />} />
                     <Route path='Schedule' element={<Schedule />} />
@@ -44,7 +46,7 @@ function App() {
                     <Route path='alarm' element={ <Alarm /> }/>
                     <Route path='message' element={ <Message /> }/>
                     <Route path='message3' element={ <Message3 /> }/>
-                     <Route path="/login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
+                    <Route path="login" element={<Login />}/>  {/* 로그인 페이지 라우트 추가 */}
                 </Route>
                 <Route path='sign' element={ <SignatureCanvas /> }/>
             </Routes>
