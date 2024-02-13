@@ -4,20 +4,20 @@ import { createActions, handleActions } from "redux-actions";
 const initialState = [];
 
 /* 액션 */
-export const GET_MEM = "login/GET_MEM";
+export const PUT_MEM = "login/PUT_MEM";
 
 const actions = createActions({
-  [GET_MEM]: () => {},
+  [PUT_MEM]: () => {},
 });
 
 /* 리듀서 */
-const mypageReducer = handleActions(
+const mpUpdateReducer = handleActions(
   {
-    [GET_MEM]: (state, { payload }) => {
+    [PUT_MEM]: (state, { payload }) => {
       return payload;
     },
   },
   initialState
 );
 
-export default mypageReducer;
+export default mpUpdateReducer;

@@ -78,7 +78,7 @@ function Header() {
   console.log('recMessageList-->',recMessageList);
 
   const onClickMyPage = () => {
-    navigate("/mp", { replace: true });
+    navigate("/main/mp", { replace: true });
   };
   
 
