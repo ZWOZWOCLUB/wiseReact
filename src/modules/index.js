@@ -2,6 +2,7 @@ import memberReducer from './MemberModule';
 import payReducer from './PayModule';
 import otherReducer from './OtherModule'
 import settingReducer from './SettingModule'
+import organizationChartReducer from "./OrganizationChartModule";
 import mypageReducer from "./MPModule";
 import approvalReducer from './ApprovalModule';
 import mpCareerReducer from './MPCareerModule';
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     memberReducer,
     payReducer,
     settingReducer,
+    organizationChartReducer,
     mypageReducer,
     approvalReducer,
     mpCareerReducer,
@@ -41,7 +43,6 @@ const rootReducer = combineReducers({
     aamSendMessageReducer,
     aamRecMessageReducer,
     otherReducer,
-    settingReducer,
     settingMemberReducer,
     mpDocReducer,
     mpATTReducer,
@@ -52,7 +53,6 @@ const rootReducer = combineReducers({
     settingCertificateReducer,
     settingInfoSearchReducer,
     settingDocumentReducer,
-    mpVacReducer,
     noticeReducer
 });
 

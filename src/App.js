@@ -10,7 +10,6 @@ import Approval from './pages/approval/Approval';
 import SendApproval from './pages/approval/SendApproval';
 import Assignment from './pages/approval/Assignment';
 import SettingInfo from './pages/setting/settingInfo';
-
 import MyPage from './pages/mypage/01_profileInfo';
 import PersonnelInfo from './pages/mypage/02_personnelInfo';
 import MPVacation from './pages/mypage/03_vacation';
@@ -27,6 +26,7 @@ import SettingAttendance from './pages/setting/settingAttendance';
 import 'boxicons/css/boxicons.min.css';
 import Sign from './pages/mypage/01_sign';
 import Organization from './pages/organizationChart/organizationChart';
+import OrganizationTree from './pages/organizationChart/organizationTree';
 import DataFormat from './pages/dataformat/dataformat';
 import RequestApproval from './pages/approval/RequestApproval';
 import NoticeMain from './pages/notice/NoticeMain';
@@ -53,6 +53,7 @@ function App() {
                     <Route path='approval' element={<Approval />} />
                     <Route path='sendapproval' element={<SendApproval />} />
                     <Route path='assignment' element={<Assignment />} />
+                    <Route path='organizationTree' element={ <OrganizationTree/>}/>
                     <Route path='requestapproval' element={<RequestApproval />} />
                     <Route path='mp' element={<MyPage />} />
                     <Route path='mpUpdate' element={<MyPageUpdate />} />
