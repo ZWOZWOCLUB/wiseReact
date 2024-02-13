@@ -66,6 +66,14 @@ function Header() {
     }
   };
 
+  const onClickLogout = () => {
+     alert('로그아웃 합니다.');
+     window.localStorage.removeItem('accessToken');
+      navigate('/login', {replace: true});
+      window.location.reload();
+     
+  }
+
   console.log('sendMessageList-->',sendMessageList);
   console.log('recMessageList-->',recMessageList);
 
@@ -243,7 +251,7 @@ function Header() {
               />
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
-              <i className="bx bx-log-out" style={{ fontSize: 28 }} />
+              <i className="bx bx-log-out" style={{ fontSize: 28 }} onClick={onClickLogout}/>
             </li>
           </ul>
         </div>
