@@ -35,6 +35,7 @@ import NoticeDetail from "./pages/notice/NoticeDetail";
 import OrganizationCreate from "./pages/organizationChart/organizationCreate";
 import OrganizationEdit from "./pages/organizationChart/organizationEdit";
 import ApprovalDetail from './pages/approval/ApprovalDetail';
+import ImageDownloader from "./pages/mypage/test";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
           {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
           <Route path="settingVacation" element={<SettingVacation />} />
           <Route path="settingAttendance" element={<SettingAttendance />} />
+          <Route path="test" element={<ImageDownloader />} />
         </Route>
       </Routes>
     </BrowserRouter>
