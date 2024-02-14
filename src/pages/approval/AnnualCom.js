@@ -1,98 +1,107 @@
-function AnnualCom(data) {
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
+
+function AnnualCom(props) {
+    console.log('props', props);
+
+    console.log('ss', props.data?.approvalComplete[0]?.appCode);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+
+    const formattedDate = year + '-' + month + '-' + day;
+
+    const [form, setForm] = useState({
+        appCode: props?.data?.approvalComplete[0]?.appCode,
+        appState: '',
+        appComment: '',
+        appDate: formattedDate,
+    });
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
+    const approvalComplete = () => {
+        console.log('form', form);
+        dispatch(
+            callAprovalCompleteAPI({
+                form: form,
+            })
+        );
+
+        // navigate(`/Approval`, { replace: false });
+    };
+
     return (
         <>
-            <div>
-                제목<span style={{ color: 'red' }}> *</span>
-                <input type='text' id='input-name' name='payName' />
-            </div>
-            <div id='margintop'>
+            {props.data?.approvalComplete[0]?.appState === '대기' ? (
                 <div>
-                    연차구분<span style={{ color: 'red' }}> *</span>
-                    <select name='vacKind' id='annual-type' style={{ marginLeft: '10px', width: '77%' }}>
-                        <option value='0'>--선택</option>
-                        <option value='무급'>무급</option>
-                        <option value='유급'>유급</option>
-                    </select>
+                    <div id='appDiv'>
+                        <select id='comType' name='appState' onChange={onChange}>
+                            <option value='0'>-- 선택 --</option>
+                            <option value='승인'>승인</option>
+                            <option value='반려'>반려</option>
+                        </select>
+                        <button
+                            type='button'
+                            className='btn btn-primary'
+                            id='complete-payment1'
+                            onClick={approvalComplete}
+                        >
+                            결재
+                        </button>
+                    </div>
+                    <div id='appComentBox'>
+                        <textarea
+                            name='appComment'
+                            onChange={onChange}
+                            id='comentBox'
+                            placeholder='결재 의견을 입력해주세요'
+                        ></textarea>
+                    </div>
                 </div>
+            ) : (
                 <div>
-                    신청일<span style={{ color: 'red' }}> *</span>
-                    <input
-                        type='date'
-                        className='annual-date'
-                        style={{
-                            marginLeft: '10px',
-                            marginRight: '10px',
-                            width: '36%',
-                        }}
-                        name='vacStartDate'
-                    />
-                    <span> ~ </span>
-                    <input
-                        type='date'
-                        className='annual-date'
-                        style={{ marginLeft: '10px', width: '36%' }}
-                        name='vacEndDate'
-                    />
+                    <div id='appDiv'>
+                        <h1 style={{ color: '#bbbdfc' }}>{props.data?.approvalComplete[0]?.appState}</h1>
+                    </div>
+                    <div id='appComentBox'>
+                        <span>결재의견 </span>
+                        <div name='appComment' id='commentBox' style={{ padding: '20px' }}>
+                            {props.data?.approvalComplete[0]?.appComment}
+                        </div>
+                    </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label for='basic-default-message'>
-                        내용<span style={{ color: 'red' }}>*</span>
-                    </label>
-                    <textarea
-                        id='annual-content'
-                        placeholder='내용을 작성해주세요.'
-                        style={{
-                            height: '200px',
-                            width: '80%',
-                            marginLeft: '20px',
-                        }}
-                        name='vacContents'
-                    ></textarea>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label for='formFileMultiple' className='form-label'>
-                        파일첨부
-                    </label>
+            )}
 
-                    <div
-                        className='input-group'
-                        style={{
-                            marginLeft: '20px',
-                            width: '80%',
-                            paddingBottom: '45px',
-                        }}
-                    >
-                        <input
-                            type='file'
-                            className='form-control'
-                            id='inputGroupFile02'
-                            style={{
-                                width: '70%',
-                                height: '30px',
-                                paddingBottom: '30px',
-                            }}
-                            name='approvalFile'
-                            accept='image/jpg,image/png,image/jpeg,image/gif'
-                        />
-                    </div>
+            <hr style={{ marginTop: '50px' }} />
+
+            <div className='approvalTemp'>
+                <div id='margintop2'>
+                    <div>제목</div>
+                    <div>연차구분</div>
+                    <div>신청일</div>
+                    <div style={{ marginTop: '115px' }}>내용</div>
                 </div>
-                <hr />
-                <div id='last-thing'>
-                    <div
-                        className='btn btn-danger'
-                        id='clean-btn1'
-                        style={{
-                            width: '20%',
-                            boxShadow: '0px 0px 10px #bbbdfc',
-                            backgroundColor: '#bbbdfc',
-                            borderColor: '#bbbdfc',
-                        }}
-                    >
-                        <b>초기화</b>
+                <div id='margintop'>
+                    <div>{props.data.approvalComplete[0]?.approval?.payName}</div>
+                    <div>{props.data.approvalType?.vacKind}</div>
+                    <div>
+                        {props.data.approvalType?.vacStartDate} ~ {props.data.approvalType?.vacEndDate}
                     </div>
-                    <button type='button' className='btn btn-primary' id='complete-payment1'>
-                        작성 완료
-                    </button>
+                    <div name='vacContents' id='document-contents2'>
+                        {props.data.approvalType?.vacContents}
+                    </div>
                 </div>
             </div>
         </>

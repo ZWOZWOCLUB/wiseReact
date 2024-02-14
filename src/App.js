@@ -58,7 +58,7 @@ function App() {
           <Route path="assignment" element={<Assignment />} />
           <Route path="organizationTree" element={<OrganizationTree />} />
           <Route path="requestapproval" element={<RequestApproval />} />
-            <Route path='ApprovalDetail' element={<ApprovalDetail />} />
+          <Route path='ApprovalDetail' element={<ApprovalDetail />} />
           <Route path="mp" element={<MyPage />} />
           <Route path="mpUpdate" element={<MyPageUpdate />} />
           <Route path="mppersonnelInfo" element={<PersonnelInfo />} />

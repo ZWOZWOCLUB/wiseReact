@@ -68,7 +68,7 @@ function ReqDocument() {
             console.log('dt')
         );
 
-        // navigate(`/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
     return (
         <>

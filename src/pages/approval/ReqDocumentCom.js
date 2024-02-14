@@ -52,6 +52,7 @@ function ReqDocumentCom(props) {
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
+                            <option value='0'>-- 선택 --</option>
                             <option value='승인'>승인</option>
                             <option value='반려'>반려</option>
                         </select>

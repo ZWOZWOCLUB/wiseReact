@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { callApprovalAttachmentInfoAPI } from '../../apis/ApprovalAPICalls';
-import { callApprovalInfoAPI } from '../../apis/ApprovalInfoAPICalls';
 import { callApprovalCompleteInfoAPI } from '../../apis/ApprovalCompleteInfo';
 import { callApprovalTypeInfoAPI } from '../../apis/ApprovalTypeInfo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,8 +50,6 @@ function ApprovalDetail(props) {
     console.log('type', approvalType);
     console.log('file', approvalAttachment);
     console.log('com', approvalComplete);
-    // console.log('qw', approvalComplete.approvalMember);
-    console.log('we', approvalComplete?.approvalMember?.memName);
 
     const type = approvalType?.approval?.payKind;
 
@@ -92,7 +89,7 @@ function ApprovalDetail(props) {
                                             <div className='container'>
                                                 <div className='payment-type'>
                                                     <div className='people'>
-                                                        <div className='in-people'>
+                                                        <div className='in-people' style={{ marginLeft: '40px' }}>
                                                             <div
                                                                 style={{
                                                                     backgroundColor: 'white',
