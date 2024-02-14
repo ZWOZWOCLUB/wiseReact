@@ -12,14 +12,20 @@ import { useEffect, useState } from "react";
 import { decodeJwt } from "../../utils/tokenUtils.js";
 import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
 import { callPassUpdateAPI } from "../../apis/MyPageAPICalls.js";
+import { callProfileAPI } from "../../apis/MyPageAPICalls.js";
+import { callMainSignAPI } from "../../apis/MyPageAPICalls.js";
 
 function MyPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const member = useSelector((state) => state.mypageReducer);
   const pass = useSelector((state) => state.mpUpdateReducer);
+  const profile = useSelector((state) => state.mpProReducer);
+  const sign = useSelector((state) => state.mpSignReducer);
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const memberDetail = member.data;
+  const profileDetail = profile.data;
+  const signDetail = sign.data;
   
 
   const [error, setError] = useState('');
@@ -96,6 +102,16 @@ function MyPage() {
     if (token !== null) {
       dispatch(
         callMemberDetailAPI({
+          memCode: token.memCode,
+        })
+      );
+      dispatch(
+        callProfileAPI({
+          memCode: token.memCode,
+        })
+      );
+      dispatch(
+        callMainSignAPI({
           memCode: token.memCode,
         })
       );
@@ -250,14 +266,16 @@ function MyPage() {
                   <h5 className="card-header">프로필 정보</h5>
                   <div className="card-body">
                     <div className="d-flex align-items-start align-items-sm-center gap-4">
+                      { profileDetail && (
                       <img
-                        src="../../assets/img/avatars/1.png"
+                        src={ profileDetail.docAtcPath }
                         alt="user-avatar"
                         className="d-block rounded"
                         height="100"
                         width="100"
                         id="uploadedAvatar"
                       />
+                      ) }
                     </div>
                   </div>
                   <hr className="my-0" />
@@ -344,6 +362,16 @@ function MyPage() {
 
                         <div className="mb-3 col-md-6">
                           <div id="container">
+                            { signDetail ? (
+                          <img
+                        src={ signDetail.docAtcPath }
+                        alt="user-avatar"
+                        className="d-block rounded"
+                        height="100"
+                        width="100"
+                        id="uploadedAvatar"
+                      />
+                      ) : '로딩중'}
                             <button
                               id="btn-modal3"
                               className="modalButton"
@@ -351,6 +379,7 @@ function MyPage() {
                             >
                               서명 등록/수정
                             </button>
+                            
                           </div>
                         </div>
                       </div>
