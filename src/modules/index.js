@@ -25,6 +25,10 @@ import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
+import approvalTypeReducer from './ApprovalTypeModule';
+import approvalCompleteReducer from './ApprovalCompleteInfoModule';
+import approvalInfoReducer from './ApprovalInfoModule';
+import notCommentReducer from "./NotCommentModule";
 import approvalTypeReducer from "./ApprovalTypeModule";
 import approvalCompleteReducer from "./ApprovalCompleteInfoModule";
 import approvalInfoReducer from "./ApprovalInfoModule";
@@ -62,6 +66,7 @@ const rootReducer = combineReducers({
   settingInfoSearchReducer,
   settingDocumentReducer,
   noticeReducer,
+  notCommentReducer,
   scheduleReducer,
   mpUpdateReducer,
   approvalInfoReducer,
