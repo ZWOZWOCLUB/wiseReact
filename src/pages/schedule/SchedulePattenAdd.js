@@ -9,26 +9,29 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/ScheduleAPICalls";
-import { callSchedulePatternSearchAPI } from "../../apis/SchedulePatternAPICalls";
+import {
+  callSchedulePatternSearchAPI,
+  callScheduleWorkPatternInsertAPI,
+} from "../../apis/SchedulePatternAPICalls";
+
 function SchedulePattenAdd() {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.scheduleReducer);
-  const patternList = useSelector((state) => state.scheduleReducer);
+  const patternList = useSelector((state) => state.schedulePatternReducer);
   const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
   };
+  const [showModal, setShowModal] = useState(false);
 
-  const [pattern, setPattern] = useState([
-    {
-      wokStartTime: "",
-      wokRestTime: "",
-      wokEndTime: "",
-      wokDeleteState: "",
-      wokColor: "",
-      wokType: "",
-    },
-  ]);
+  const [pattern, setPattern] = useState({
+    wokStartTime: "",
+    wokRestTime: "",
+    wokEndTime: "",
+    wokDeleteState: "N",
+    wokColor: "",
+    wokType: "",
+  });
 
   const onChangeHandler = (e) => {
     setPattern({
@@ -50,8 +53,33 @@ function SchedulePattenAdd() {
 
   const onClickInsertPattern = () => {
     console.log("클릭");
+    dispatch(
+      callScheduleWorkPatternInsertAPI({
+        pattern: pattern,
+      })
+    );
+    setPattern({
+      wokStartTime: "",
+      wokRestTime: "",
+      wokEndTime: "",
+      wokDeleteState: "N",
+      wokColor: "",
+      wokType: "",
+    });
   };
 
+  const onClickCloseModal = () => {
+    setPattern({
+      wokStartTime: "",
+      wokRestTime: "",
+      wokEndTime: "",
+      wokDeleteState: "N",
+      wokColor: "",
+      wokType: "",
+    });
+  };
+
+  console.log(showModal);
   return (
     <div className={`${payCSS["allWrapper"]}`}>
       <div className={`${payCSS["schedule_head"]}`}>
@@ -89,31 +117,38 @@ function SchedulePattenAdd() {
                     <div className={`${payCSS["content_left"]}`}>
                       <div
                         className={`${payCSS["color_box"]}`}
-                        style={{ backgroundColor: p.patternList.wokColor }}
+                        style={{ backgroundColor: p.wokColor }}
                       ></div>
                     </div>
                     <div className={`${payCSS["content_right"]}`}>
                       <div className={`${payCSS["contentRightWrapper"]}`}>
                         <div className={`${payCSS["contentRightWrapper2"]}`}>
-                          <div
-                            className={`${payCSS["schedule"]}`}
-                            style={{ marginTop: 4 }}
-                          >
-                            {p.schType}
+                          <div className={`${payCSS["schedule"]}`}>
+                            {p.wokType}
                           </div>
-                          <button
-                            className={`${payCSS["bx"]} ${coreCSS["bx-dots-vertical-rounded"]}`}
-                            style={{
-                              marginRight: 15,
-                              marginTop: 10,
-                              border: 0,
-                              backgroundColor: "rgba(0, 0, 0, 0)",
-                            }}
-                          />
+                          <div className="dropdown">
+                            <button
+                              className="btn p-0"
+                              type="button"
+                              id="transactionID"
+                              data-bs-toggle="dropdown"
+                              aria-haspopup="true"
+                              aria-expanded="false"
+                            >
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div
+                              className="dropdown-menu dropdown-menu-end"
+                              aria-labelledby="transactionID"
+                            >
+                              <span className="dropdown-item">수정</span>
+                              <span className="dropdown-item">삭제</span>
+                            </div>
+                          </div>
                         </div>
                         <div className={`${payCSS["time"]}`}>
-                          {formatTime(p.patternList.wokStartTime)} ~
-                          {formatTime(p.patternList.wokEndTime)}
+                          {formatTime(p.wokStartTime)} ~
+                          {formatTime(p.wokEndTime)}
                         </div>
                       </div>
                     </div>
@@ -337,6 +372,7 @@ function SchedulePattenAdd() {
               id="modalCenter1"
               tabIndex="-1"
               aria-hidden="true"
+              style={{ display: showModal ? "block" : "none" }}
             >
               <div
                 className="modal-dialog modal-dialog-centered"
@@ -366,6 +402,7 @@ function SchedulePattenAdd() {
                           className={`${payCSS["patternName"]}`}
                           name="wokType"
                           onChange={onChangeHandler}
+                          value={pattern.wokType}
                         />
                       </label>
                     </div>
@@ -385,23 +422,32 @@ function SchedulePattenAdd() {
                         <div className={`${payCSS["modalMiddleText"]}`}>
                           근무종료시간
                         </div>
+                        <div id="timepicker-wrapper"></div>
                         <input
                           type="time"
                           className={`${payCSS["timeInput"]}`}
                           onChange={onChangeHandler}
                           name="wokEndTime"
+                          value={pattern.wokEndTime}
                         />
                       </div>
                       <div className={`${payCSS["modalMiddleWrapper"]}`}>
                         <div className={`${payCSS["modalMiddleText"]}`}>
                           휴게시간
                         </div>
-                        <input
-                          type="time"
-                          className={`${payCSS["timeInput"]}`}
+                        <select
+                          className={`${payCSS["timeSelect"]}`}
                           onChange={onChangeHandler}
                           name="wokRestTime"
-                        />
+                        >
+                          <option value="">--선택--</option>
+                          <option value="00:30:00">00:30</option>
+                          <option value="01:00:00">01:00</option>
+                          <option value="01:30:00">01:30</option>
+                          <option value="02:00:00">02:00</option>
+                          <option value="02:30:00">02:30</option>
+                          <option value="03:00:00">03:00</option>
+                        </select>
                       </div>
                     </div>
                     <hr />
@@ -409,6 +455,7 @@ function SchedulePattenAdd() {
                       <button
                         type="button"
                         className="btn btn-primary"
+                        data-bs-dismiss="modal"
                         style={{ marginRight: "1rem" }}
                         onClick={onClickInsertPattern}
                       >
@@ -418,6 +465,7 @@ function SchedulePattenAdd() {
                         type="button"
                         className="btn btn-outline-secondary"
                         data-bs-dismiss="modal"
+                        onClick={onClickCloseModal}
                       >
                         닫기
                       </button>

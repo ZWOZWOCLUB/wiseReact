@@ -149,12 +149,14 @@
   }
 
   .time{
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
 
   .contentRightWrapper2{
     display: flex;
     justify-content: space-between;
+    margin-right: 0.5rem;
+    margin-top: 1rem;
   }
 
   .work{
@@ -408,7 +410,6 @@ padding: 2rem;
 .colorLabel{
   padding-left: 2rem;
   font-size: 1rem;
-
   font-weight: 700;
   color: #696cff;
 
@@ -422,4 +423,10 @@ padding: 2rem;
 
 .timeInput{
   width: 80%;
+}
+
+.timeSelect{
+  height: 1.7rem;
+  width: 80%;
+  border: #000 solid 1px;
 }
