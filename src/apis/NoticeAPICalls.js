@@ -1,10 +1,10 @@
 import {
 GET_ALLVIEW_NOTICE,
-GET_INSERT_NOTICE,
+POST_INSERT_NOTICE,
 GET_SEARCH_TITLE_NOTICE,
 GET_SEARCH_COMMENT_NOTICE,
 GET_SEARCH_MEMBER_NOTICE,
-GET_DETAILL_NOTICE,
+GET_DETAIL_NOTICE,
 PUT_UPDATE_NOTICE
 } from '../modules/NoticeModule.js'
 
@@ -96,20 +96,38 @@ export const callSearchMemberNameNoticeAPI = ({form}) => {
 }
 
 export const callDetailNoticeAPI = ({notCode}) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detail?nc=${notCode}`;
+  console.log("callDetailNoticeAPI Call");
+console.log("notCode",notCode);
 
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detail?nc=${notCode}`;
+    // const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detail/${notCode}`;
+    
+    
     return async (dispatch) =>{
         const result = await fetch(requestURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: '*/*',
-                Authorization: `Bearer ${process.env.REACT_APP_TOKEN_KEY}`,
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
+
         }).then((response) => response.json());
+        console.log("callDetailNoticeAPI end");
 
         if (result.status === 200) {
-            dispatch({ type: GET_DETAILL_NOTICE, payload: result.data });
+            dispatch({ type: GET_DETAIL_NOTICE, payload: result.data });
         }
+        console.log({ result });
     }
 }
+// NoticeAPICalls.js
+// export const callDetailNoticeAPI = (notCode) => async (dispatch) => {
+//     try {
+//       const response = await fetch(`/api/notice/${notCode}`);
+//       const data = await response.json();
+//       dispatch({ type: "FETCH_NOTICE_DETAIL_SUCCESS", payload: data });
+//     } catch (error) {
+//       dispatch({ type: "FETCH_NOTICE_DETAIL_FAILURE", payload: error });
+//     }
+//   };
