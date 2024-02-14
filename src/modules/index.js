@@ -1,8 +1,8 @@
 import memberReducer from './MemberModule';
 import payReducer from './PayModule';
-import otherReducer from './OtherModule'
-import settingReducer from './SettingModule'
-import mypageReducer from "./MPModule";
+import otherReducer from './OtherModule';
+import settingReducer from './SettingModule';
+import mypageReducer from './MPModule';
 import approvalReducer from './ApprovalModule';
 import mpCareerReducer from './MPCareerModule';
 import mpCerReducer from './MPCerModule';
@@ -16,13 +16,15 @@ import mpDocReducer from './MPDocModule';
 import mpATTReducer from './MPATTModule';
 import mpVacHisReducer from './MPVacHisModule';
 import mpVacReducer from './MPVacModule';
-import settingCareerReducer from './SettingCareearModule'
+import settingCareerReducer from './SettingCareearModule';
 import settingDegreeReducer from './SettingDegreeModule';
 import settingCertificateReducer from './SettingCertificateModule';
 import settingInfoSearchReducer from './SettingInfoSearchModuel';
 import settingDocumentReducer from './SettingDocumentModule';
 import noticeReducer from './NoticeModule';
-
+import approvalTypeReducer from './ApprovalTypeModule';
+import approvalCompleteReducer from './ApprovalCompleteInfoModule';
+import approvalInfoReducer from './ApprovalInfoModule';
 const { combineReducers } = require('redux');
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
@@ -41,7 +43,6 @@ const rootReducer = combineReducers({
     aamSendMessageReducer,
     aamRecMessageReducer,
     otherReducer,
-    settingReducer,
     settingMemberReducer,
     mpDocReducer,
     mpATTReducer,
@@ -52,8 +53,10 @@ const rootReducer = combineReducers({
     settingCertificateReducer,
     settingInfoSearchReducer,
     settingDocumentReducer,
-    mpVacReducer,
-    noticeReducer
+    noticeReducer,
+    approvalInfoReducer,
+    approvalCompleteReducer,
+    approvalTypeReducer,
 });
 
 export default rootReducer;

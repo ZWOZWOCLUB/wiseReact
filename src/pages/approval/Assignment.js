@@ -142,7 +142,7 @@ function Assignment() {
                                 <div className='col-xxl'>
                                     <div className='card mb-4'>
                                         <div className='pay-top-wrapper'>
-                                            <div className='container'>
+                                            <div className='container1'>
                                                 <div>
                                                     <button className='prev' id='prev'>
                                                         {'<'}
