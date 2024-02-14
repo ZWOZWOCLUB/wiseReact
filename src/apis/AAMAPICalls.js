@@ -3,6 +3,7 @@ import { GET_PERALARM } from '../modules/AAMPerAlarmModule';
 import { GET_REC_MESSAGE } from '../modules/AAMRecMessageModule';
 import { GET_SEND_MESSAGE } from '../modules/AAMSendMessageModule';
 
+
 // 개인 알람 조회
 export const callPerAlarmDetailAPI = ({ memCode }) => {
     console.log('api memCode',memCode);
