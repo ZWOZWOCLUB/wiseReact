@@ -2,6 +2,10 @@ import { createActions, handleActions } from 'redux-actions';
 
 /* 초기값 */
 const initialState = [];
+// const initialState = {
+//     detail: {},
+//     error: null,
+//   };
 
 //액션 타입
 
@@ -12,7 +16,7 @@ export const GET_SEARCH_TITLE_NOTICE = "notice/GET_SERARCH_TITLE_NOTICE"
 export const GET_SEARCH_COMMENT_NOTICE = "notice/GET_SEARCH_COMMENT_NOTICE"
 export const GET_SEARCH_MEMBER_NOTICE = "notice/GET_SEARCH_MEMBER_NOTICE"
 //공지 상세페이지 조회
-export const GET_DETAILL_NOTICE = "notice/GET_DETAILL_NOTICE"
+export const GET_DETAIL_NOTICE = "notice/GET_DETAIL_NOTICE"
 // 공지등록
 export const GET_INSERT_NOTICE = "notice/GET_INSERT_NOTICE"
 //공지 상세페이지 수정
@@ -24,7 +28,7 @@ const actions = createActions ({
 [GET_SEARCH_TITLE_NOTICE]: () => {},
 [GET_SEARCH_COMMENT_NOTICE]: () => {},
 [GET_SEARCH_MEMBER_NOTICE]: () => {},
-[GET_DETAILL_NOTICE]: () => {},
+[GET_DETAIL_NOTICE]: () => {},
 [PUT_UPDATE_NOTICE]: () => {}
 
 
@@ -59,7 +63,7 @@ const noticeReducer = handleActions (
             return payload;
         },
 
-        [GET_DETAILL_NOTICE]: (state, {payload}) =>{
+        [GET_DETAIL_NOTICE]: (state, {payload}) =>{
 
             return payload;
         },
