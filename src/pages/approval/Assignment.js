@@ -93,17 +93,17 @@ function Assignment() {
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
-        navigate(`/SendApproval`, { replace: false });
+        navigate(`/main/SendApproval`, { replace: false });
     };
 
     const onClickAssignment = () => {
         console.log('Assignment click');
-        navigate(`/Assignment`, { replace: false });
+        navigate(`/main/Assignment`, { replace: false });
     };
 
     const onClickReceiveApproval = () => {
         console.log('ReceiveApproval click');
-        navigate(`/Approval`, { replace: false });
+        navigate(`/main/Approval`, { replace: false });
     };
 
     return (
@@ -142,7 +142,7 @@ function Assignment() {
                                 <div className='col-xxl'>
                                     <div className='card mb-4'>
                                         <div className='pay-top-wrapper'>
-                                            <div className='container'>
+                                            <div className='container1'>
                                                 <div>
                                                     <button className='prev' id='prev'>
                                                         {'<'}

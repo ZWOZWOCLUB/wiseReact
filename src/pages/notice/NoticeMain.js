@@ -41,14 +41,15 @@ function NoticeMain() {
 
 
   useEffect(() => {
-    console.log(currentPage);
+    console.log("currentPage",currentPage);
     setStart((currentPage - 1) * 5);
     dispatch(
       callAllViewNoticeAPI({
+        
         currentPage: currentPage,
       })
-    );
-  }, [currentPage]
+      );
+    }, [currentPage]
   );
 
   
@@ -106,7 +107,7 @@ const handleFormSubmit = (e) => {
 
 //공지상세페이지
 const navigateToDetailPage = (notCode) => {
-  navigate(`/notice/detaill?nc=${notCode}`); 
+  navigate(`/notice/detail/${notCode}`); 
 };
 
 
@@ -208,7 +209,7 @@ const navigateToDetailPage = (notCode) => {
                           </td>
                           <td>{index + 1}</td>         {/*공지 번호 */}
                           <td>{sn.notName}</td>   {/*공지 제목 */}
-                          <td>{sn.notMember.memName}</td>     {/*작성자 */}
+                          <td>{sn.notMember.posCode.posName} {sn.notMember.memName}</td>     {/*작성자 */}
                           <td>{sn.notCreateDate}</td> {/*작성일 */}
                           <td>{sn.notView}</td>     {/*조회수 */}
                         </tr>

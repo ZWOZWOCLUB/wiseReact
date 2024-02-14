@@ -10,29 +10,55 @@ import "./noticeDetail.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { callDetailNoticeAPI } from "../../apis/NoticeAPICalls.js";
+import { useEffect, useState } from 'react';
+
 
 function NoticeDetail() {
-
+  const { data } = useSelector(state => state.someReducer) || {};
+  console.log("useSelector : ", useSelector);
+  // console.log("data : ",data);
+  
   const { notCode } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const noticeDetail = useSelector((state) => state.noticeDetail);
+  const detail = useSelector((state) => state.noticeReducer);
+  console.log('!!!!!!!!!!!!!!!!',detail)
+  // const noticeDetail = useSelector(state => state.noticeDetail);
+  const [noticeDetail, setNoticeDetail] = useState();
+  const [searchNotice, setSearchNotice] = useState([]);
+  
+  // console.log("searchNotice : ",searchNotice);
+  
+  console.log("notCode: ",notCode);
+  useEffect(() => {
+    
+      dispatch(callDetailNoticeAPI({notCode}))
+        
+        
+        
+  }, [notCode]);
+
+
 
   // useEffect(() => {
-  //   if (notCode) {
-  //     dispatch(callDetailNoticeAPI(notCode))
-  //       .then((response) => {
-  //         // API 호출 성공 시, 상태 업데이트
-  //         setNoticeDetail(response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.error('API call failed:', error);
-  //       });
-  //   }
-  // }, [notCode, dispatch]);
+  //   const fetchNoticeDetail = async () => {
+  //     try {
+  //       const response = await fetch(`/api/notices/${notCode}`);
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       const data = await response.json();
+  //       setNoticeDetail(data); // 상태 업데이트
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
+  //   fetchNoticeDetail();
+  // }, [notCode]);
    
     return(
+      
       <>
 
 <div className="layout-wrapper layout-content-navbar">
@@ -61,19 +87,30 @@ function NoticeDetail() {
                   >
                     <div className="card-title" style={{ fontSize: 20 }}>
                       {/* {제목}  */}
-                      {noticeDetail.notName}
+                      {detail.length > 0 && detail[0].notName}
+                      
+                      
+                      {/* {} */}
+                      
                     </div>
                     <div style={{ display: "flex" }}>
-                      <div style={{ width: "20%" }}>
-                        {/* {작성일}  */}
-                        {noticeDetail.notCreateDate} </div>
+                    <div style={{ width: "20%" }}>
+                 {/* {작성일} */}
+                 {detail.length > 0 && new Date(detail[0].notCreateDate).toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                 month: '2-digit',
+                   day: '2-digit',
+                  }).replace(/. /g, '-').slice(0, -1)}
+                    </div>
+                
                       <div style={{ width: "25%" }}>
                         {/* {작성자직위, 작성자}  */}
-                        {noticeDetail.notMember.posCode.posName} {noticeDetail.notMember.memName}
+                        {detail.length > 0 && detail[0].notMember?.posCode?.posName} {detail.length > 0 && detail[0].notMember?.memName}
                       </div>
                       <div>
                         {/* {조회수}  */}
-                        {noticeDetail.notView}</div>
+                        {detail.length > 0 && detail[0].notView} 조회수
+                        </div>
                     </div>
                     <br />
                     <hr className="m-0" />
@@ -88,8 +125,9 @@ function NoticeDetail() {
                       }}
                     >
                       {/* {내용}  */}
-                      {noticeDetail.notComment}
+                      {detail.length > 0 && detail[0].notComment}
                     </div>
+                    
                     <br />
                     <hr className="m-0" />
                     <br />
@@ -101,30 +139,23 @@ function NoticeDetail() {
                       첨부파일
                     </label>
                     <div style={{ display: "flex" }}>
-                      <div
-                        style={{
-                          backgroundColor: "#d9d9d9",
-                          borderRadius: 5,
-                          fontSize: 12,
-                          padding: 2,
-                          display: "inline-block",
-                          marginRight: 4
-                        }}
-                      >
-                        NO-SHOW.jpg
+                     
+                      {detail.length > 0 && detail[0].notAttachedFile.map((file, index) => (
+                      <div key={index} style={{
+                        backgroundColor: "#d9d9d9",
+                      borderRadius: 5,
+                   fontSize: 12,
+                      padding: 2,
+                     display: "inline-block",
+                           marginRight: "4px" // 오른쪽 여백 추가
+                      }}>
+                       {file.notAtcName}
                       </div>
-                      <div
-                        style={{
-                          backgroundColor: "#d9d9d9",
-                          borderRadius: 5,
-                          fontSize: 12,
-                          padding: 2,
-                          display: "inline-block"
-                        }}
-                      >
-                        Test.jpg
-                      </div>
+                      ))}
+
                     </div>
+
+                    
                     <br />
                     <div style={{ display: "flex" }}>
                       <div style={{ padding: 3, fontSize: "small" }}>

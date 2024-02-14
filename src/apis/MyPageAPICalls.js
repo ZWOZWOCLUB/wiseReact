@@ -4,6 +4,8 @@ import { GET_CER } from "../modules/MPCerModule";
 import { GET_DEGREE } from "../modules/MPDegreeModule";
 import { GET_DOC } from "../modules/MPDocModule";
 import { GET_MEM } from "../modules/MPModule";
+import { GET_PRO } from "../modules/MPProfileModule";
+import { GET_SIGN } from "../modules/MPSignModule";
 import { PUT_MEM } from "../modules/MPUpdateModule";
 import { GET_VAC_HIS } from "../modules/MPVacHisModule";
 import { GET_VAC } from "../modules/MPVacModule";
@@ -102,7 +104,7 @@ export const callCareerDetailAPI = ({ memCode }) => {
 // 서류함 상세 조회
 export const callDocAPI = ({ memCode }) => {
   console.log("api memCode", memCode);
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/document/${memCode}`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/selectDoc/${memCode}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -162,19 +164,20 @@ export const callVacAPI = ({ memCode }) => {
       },
     }).then((response) => response.json());
 
-    console.log("[callATTAPI] callATTAPI RESULT : ", result);
+    console.log("[callVacAPI] callVacAPI RESULT : ", result);
     if (result.status === 200) {
-      console.log("[callATTAPI] callATTAPI SUCCESS");
+      console.log("[callVacAPI] callVacAPI SUCCESS");
       dispatch({ type: GET_VAC, payload: result });
     }
   };
 };
 
 // 사용 연차 상세 조회
-export const callVacHisAPI = ({ memCode }) => {
+export const callVacHisAPI = ({ memCode, year }) => {
   console.log("api memCode", memCode);
+  console.log("api year", year);
 
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/annualHistory/${memCode}`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/annualHistory/${memCode}/${year}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -186,9 +189,9 @@ export const callVacHisAPI = ({ memCode }) => {
       },
     }).then((response) => response.json());
 
-    console.log("[callATTAPI] callATTAPI RESULT : ", result);
+    console.log("[callVacHisAPI] callVacHisAPI RESULT : ", result);
     if (result.status === 200) {
-      console.log("[callATTAPI] callATTAPI SUCCESS");
+      console.log("[callVacHisAPI] callVacHisAPI SUCCESS");
       dispatch({ type: GET_VAC_HIS, payload: result });
     }
   };
@@ -284,3 +287,74 @@ export const callSignInsertAPI = ({ form }) => {
         dispatch({ type: GET_MEM, payload: result });
     };
   };
+
+    // 서명 수정
+export const callSignUpdateAPI = ({ form }) => {
+  console.log('form---->',form);
+  console.log("[callSignUpdateAPI] callSignUpdateAPI Call");
+
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/updateSign`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "PUT",
+      headers: {
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      
+      },
+      body: form,
+    }).then((response) => response.json());
+
+    console.log("[callSignUpdateAPI] callSignUpdateAPI RESULT : ", result);
+
+    dispatch({ type: PUT_MEM, payload: result });
+    
+  };
+};
+
+//   프로필 조회
+export const callProfileAPI = ({ memCode }) => {
+  console.log("api memCode", memCode);
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/selectProfile/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callProfileAPI] callProfileAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callProfileAPI] callProfileAPI SUCCESS");
+      dispatch({ type: GET_PRO, payload: result });
+    }
+  };
+};
+
+//  서명 조회 (GET_MEM 리듀서랑 같은 화면에서 봐야해서 다른 리듀서로 하나 더 만듬)
+export const callMainSignAPI = ({ memCode }) => {
+  console.log("api memCode", memCode);
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/selectSign/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callMainSignAPI] callMainSignAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callMainSignAPI] callMainSignAPI SUCCESS");
+      dispatch({ type: GET_SIGN, payload: result });
+    }
+  };
+};

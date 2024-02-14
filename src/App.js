@@ -34,6 +34,8 @@ import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeDetail from "./pages/notice/NoticeDetail";
 import OrganizationCreate from "./pages/organizationChart/organizationCreate";
 import OrganizationEdit from "./pages/organizationChart/organizationEdit";
+import ApprovalDetail from "./pages/approval/ApprovalDetail";
+import ImageDownloader from "./pages/mypage/test";
 import ScheduleAdd from "./pages/schedule/ScheduleAdd";
 import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
 
@@ -59,6 +61,7 @@ function App() {
           <Route path="assignment" element={<Assignment />} />
           <Route path="organizationTree" element={<OrganizationTree />} />
           <Route path="requestapproval" element={<RequestApproval />} />
+          <Route path="ApprovalDetail" element={<ApprovalDetail />} />
           <Route path="mp" element={<MyPage />} />
           <Route path="mpUpdate" element={<MyPageUpdate />} />
           <Route path="mppersonnelInfo" element={<PersonnelInfo />} />
@@ -92,6 +95,7 @@ function App() {
           <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />
           <Route path="settingAttendance" element={<SettingAttendance />} />
+          <Route path="test" element={<ImageDownloader />} />
           <Route path="ScheduleAdd" element={<ScheduleAdd />} />
           <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
         </Route>

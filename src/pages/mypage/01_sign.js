@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import { decodeJwt } from "../../utils/tokenUtils.js";
-import PersonnelInfo from "./02_personnelInfo.js";
 import { callSignInsertAPI } from "../../apis/MyPageAPICalls.js";
+import { callSignUpdateAPI } from "../../apis/MyPageAPICalls.js";
 import { callSignAPI } from "../../apis/MyPageAPICalls.js";
 
 function Sign() {
@@ -56,12 +56,12 @@ function Sign() {
         })
       );
       
-      setError(sign.status);
-      console.log("맨처음 useEffect에서 setError 설정 완료", error);
+    //   setError(sign.status);
+    //   console.log("맨처음 useEffect에서 setError 설정 완료", error);
     }
-    setError(sign.status);
-    console.log("맨처음 useEffect에서 setError 설정 완료", error);
-    console.log('result---->',sign);
+    // setError(sign.status);
+    // console.log("맨처음 useEffect에서 setError 설정 완료", error);
+    // console.log('result---->',sign);
   }, []);
 
   // result가 변경될때마다 상태 업데이트
@@ -182,9 +182,13 @@ const dataURLtoBlob = (dataURL) => {
   // 저장 버튼 클릭 시 넘어가는 메소드
   const handleSaveClick = () => {
     const canvas = canvasRef.current;
+    console.log('canvas',canvas);
     const link = document.createElement("a");
+
     link.href = canvas.toDataURL("image/png");
+    console.log('link.href',link.href);
     const dataURL = canvas.toDataURL("image/png");
+
     link.download = "image.png";
     document.body.appendChild(link);
     link.click();
@@ -201,10 +205,17 @@ const dataURLtoBlob = (dataURL) => {
 
     // 이미 있으니 update로
     if (sign.status === 200) {
+      console.log('이미 있으니 update 합니다');
+      dispatch(
+        callSignUpdateAPI({
+          form: formData,
+        })
+      );
     }
 
     // 없으니까 insert로
     if (sign.status === 401) {
+      console.log('없으니 insert 합니다.');
       dispatch(
         callSignInsertAPI({
           form: formData,
@@ -212,8 +223,8 @@ const dataURLtoBlob = (dataURL) => {
       );
     }
 
-    // alert("상품 리스트로 이동합니다.");
-    // navigate("/product-management", { replace: true });
+    // alert("서명 등록/수정이 완료되었습니다");
+    // navigate("/main/mp", { replace: true });
     // window.location.reload();
   };
 
