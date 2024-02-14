@@ -6,16 +6,82 @@ import '../../@core/css/demo.css';
 import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { callAprovalRequestDocumentAPI } from '../../apis/ApprovalAPICalls';
 
 function ReqDocument() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const navigate = useNavigate();
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+
+    const formattedDate = year + '-' + month + '-' + day;
+
+    const memberCode = 240130003;
+
+    const [form, setForm] = useState({
+        reqKind: '',
+        reqUse: '',
+        approval: {
+            payDate: formattedDate,
+            payKind: '서류 요청',
+            approvalMember: {
+                memCode: token.memCode,
+            },
+            payName: '서류 요청',
+        },
+        cMember: {
+            memCode: memberCode,
+        },
+    });
+
+    const dispatch = useDispatch();
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+        console.log(form);
+    };
+
+    const approvalComplete = () => {
+        const formData = new FormData();
+
+        formData.append('reqKind', form.reqKind);
+        formData.append('reqUse', form.reqUse);
+        formData.append('approval.payDate', form.approval.payDate);
+        formData.append('approval.approvalMember.memCode', form.approval.approvalMember.memCode);
+        formData.append('approval.payName', form.approval.payName);
+        formData.append('approval.payKind', form.approval.payKind);
+        formData.append('cMember.memCode', form.cMember.memCode);
+
+        dispatch(
+            callAprovalRequestDocumentAPI({
+                form: formData,
+            }),
+            console.log('dt')
+        );
+
+        // navigate(`/Approval`, { replace: false });
+    };
     return (
         <>
             <div id='req-document-div'>
                 <span style={{ paddingLeft: '50px' }}>종류</span>
                 <span style={{ color: 'red', marginRight: '40px' }}>*</span>
-                <select name='document' id='req-document'>
+                <select name='reqKind' id='req-document' onChange={onChange}>
                     <option value='0'>--선택--</option>
-                    <option value='1'>DB에서 map으로 돌릴거야~~</option>
+                    <option value='재직증명서'>재직증명서</option>
+                    <option value='경력증명서'>경력증명서</option>
+                    <option value='연차확인서'>연차확인서</option>
+                    <option value='소득증명서'>소득증명서</option>
+                    <option value='근로계약서'>근로계약서</option>
                 </select>
             </div>
             <div
@@ -29,6 +95,8 @@ function ReqDocument() {
                     내용<span style={{ color: 'red' }}>*</span>
                 </label>
                 <textarea
+                    onChange={onChange}
+                    name='reqUse'
                     id='document-contents'
                     placeholder='증명서 용도 및 기간(년) 등 구체적인 내용을 입력해주세요.'
                 ></textarea>
@@ -47,7 +115,7 @@ function ReqDocument() {
                 >
                     <b>초기화</b>
                 </div>
-                <button type='button' className='btn btn-primary' id='complete-payment1'>
+                <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
                     작성 완료
                 </button>
             </div>

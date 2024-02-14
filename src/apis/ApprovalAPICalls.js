@@ -10,6 +10,7 @@ import {
     PUT_APPROVAL_ROLE_UPDATE,
     PUT_APPROVAL_ROLE_RECOVERY,
     GET_APPROVAL_MEMBER_INFO,
+    GET_APPROVAL_ATTACHMENT_INFO,
 } from '../modules/ApprovalModule.js';
 
 export const callReceiveApprovalAPI = ({ memCode }) => {
@@ -119,7 +120,6 @@ export const callAprovalScheduleAPI = ({ form }) => {
         const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
@@ -137,7 +137,6 @@ export const callAprovalRequestDocumentAPI = ({ form }) => {
         const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
@@ -155,7 +154,6 @@ export const callAprovalRetiredAPI = ({ form }) => {
         const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
@@ -169,6 +167,8 @@ export const callAprovalRetiredAPI = ({ form }) => {
 export const callAprovalCompleteAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/complete`;
 
+    console.log('---------> ', JSON.stringify(form));
+
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
@@ -177,8 +177,10 @@ export const callAprovalCompleteAPI = ({ form }) => {
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
-            body: form,
+            body: JSON.stringify(form),
         }).then((response) => response.json());
+
+        console.log('result', result);
 
         dispatch({ type: PUT_APPROVAL_COMPLTE, payload: result });
     };
@@ -191,7 +193,6 @@ export const callRoleUpdateAPI = ({ form }) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
@@ -209,7 +210,6 @@ export const callRoleRecoveryAPI = ({ form }) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
@@ -217,5 +217,28 @@ export const callRoleRecoveryAPI = ({ form }) => {
         }).then((response) => response.json());
 
         dispatch({ type: PUT_APPROVAL_ROLE_RECOVERY, payload: result });
+    };
+};
+
+export const callApprovalAttachmentInfoAPI = ({ payCode }) => {
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/approvalattachment/${payCode}`;
+
+    console.log('attachment url', requestURL);
+
+    return async (dispatch) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: '*/*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            },
+        }).then((response) => response.json());
+
+        console.log('res', result);
+
+        if (result.status === 200) {
+            dispatch({ type: GET_APPROVAL_ATTACHMENT_INFO, payload: result.data });
+        }
     };
 };

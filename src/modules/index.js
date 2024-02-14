@@ -25,6 +25,9 @@ import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
+import approvalTypeReducer from './ApprovalTypeModule';
+import approvalCompleteReducer from './ApprovalCompleteInfoModule';
+import approvalInfoReducer from './ApprovalInfoModule';
 
 const { combineReducers } = require("redux");
 
@@ -58,6 +61,9 @@ const rootReducer = combineReducers({
   noticeReducer,
   scheduleReducer,
   mpUpdateReducer,
+    approvalInfoReducer,
+    approvalCompleteReducer,
+    approvalTypeReducer,
 });
 
 export default rootReducer;

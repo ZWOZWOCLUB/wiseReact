@@ -34,6 +34,7 @@ import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeDetail from "./pages/notice/NoticeDetail";
 import OrganizationCreate from "./pages/organizationChart/organizationCreate";
 import OrganizationEdit from "./pages/organizationChart/organizationEdit";
+import ApprovalDetail from './pages/approval/ApprovalDetail';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Route path="assignment" element={<Assignment />} />
           <Route path="organizationTree" element={<OrganizationTree />} />
           <Route path="requestapproval" element={<RequestApproval />} />
+            <Route path='ApprovalDetail' element={<ApprovalDetail />} />
           <Route path="mp" element={<MyPage />} />
           <Route path="mpUpdate" element={<MyPageUpdate />} />
           <Route path="mppersonnelInfo" element={<PersonnelInfo />} />

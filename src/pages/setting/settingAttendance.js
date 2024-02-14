@@ -23,18 +23,18 @@ function SettingAttendance() {
             yearMonth: currentYearMonth
         }))
     }, [currentYearMonth]);
-    
+
 
     console.log('yearMonth', yearMonth)
     console.log('currentYearMonth', yearMonth)
 
     const resources = Array.isArray(resultList) ? resultList.map(list => ({
-        id: list.memCode, 
-        title: list.memName 
+        id: list.memCode,
+        title: list.memName
     })) : [];
-    
 
-    
+
+
 
     const eventsList = Array.isArray(resultList) ? resultList.map(list => ({
         resourceId: list.memCode,
@@ -70,4 +70,4 @@ function SettingAttendance() {
     );
 }
 
-export default SettingAttendance;
+export default SettingAttendance
