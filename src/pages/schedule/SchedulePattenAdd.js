@@ -79,6 +79,20 @@ function SchedulePattenAdd() {
     });
   };
 
+  // const [selectedColor, setSelectedColor] = useState("");
+
+  // const onClickColorBox = (e) => {
+  //   const backgroundColor = e.target.style.backgroundColor;
+  //   setSelectedColor(backgroundColor);
+  // };
+
+  // const onClickMonToSun = () => {
+  //   setPattern({
+  //     ...pattern,
+  //     wokColor: selectedColor
+  //   });
+  // };
+
   console.log(showModal);
   return (
     <div className={`${payCSS["allWrapper"]}`}>
@@ -113,7 +127,7 @@ function SchedulePattenAdd() {
             </div>
             {Array.isArray(patternList) && patternList.length > 0
               ? patternList.map((p, index) => (
-                  <div className={`${payCSS["work"]}`} id="work" key={index}>
+                  <div className={`${payCSS["work"]}`} id="work" key={index} onClick={onClickColorBox}>
                     <div className={`${payCSS["content_left"]}`}>
                       <div
                         className={`${payCSS["color_box"]}`}
@@ -161,7 +175,7 @@ function SchedulePattenAdd() {
           <div className={`${payCSS["border_card"]}`}>
             {Array.isArray(allList) && allList.length > 0
               ? allList.map((p, index) => (
-                  <div id={`${payCSS["borderCardWrapper"]}`} key={index}>
+                  <div id={`${payCSS["borderCardWrapper"]}`} key={index} onClick={onClickMonToSun}>
                     <div className={`${payCSS["top"]}`}>
                       <div className={`${payCSS["top_left"]}`}>
                         <div className={`${payCSS["nickname"]}`}>
