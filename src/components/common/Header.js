@@ -78,7 +78,7 @@ function Header() {
   console.log('recMessageList-->',recMessageList);
 
   const onClickMyPage = () => {
-    navigate("/mp", { replace: true });
+    navigate("/main/mp", { replace: true });
   };
   
 
@@ -213,7 +213,7 @@ function Header() {
               data-bs-target="#offcanvasEnd"
               onClick={() => handleTabChange("sended")}
             >
-              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
+              <i className="bx bxs-bell" style={{ fontSize: 27 }} />
             </li>
 
             {/* 알림함 */}
@@ -225,7 +225,7 @@ function Header() {
               data-bs-target="#offcanvasEnd1"
               onClick={() => handleTabChange1("sended")}
             >
-              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
+              <i className="bx bxs-envelope" style={{ fontSize: 27 }} />
             </li>
 
             <li
