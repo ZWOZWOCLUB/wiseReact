@@ -358,3 +358,68 @@
   margin:18px 15px 5px 15px; 
   background-color: #FBFBFB;
 }
+
+.modalTotalWrapper{
+width: 100%;
+height: 100%;
+padding: 2rem;
+}
+
+.modalTopWrapper{
+  display: flex;
+  margin-bottom: 1rem;
+}
+.modalMiddleTotalWrapper{
+  display: flex;
+}
+.modalMiddleWrapper{
+  display: flex;
+  flex: 1 1 ;
+  display: block;
+  justify-content: space-between;
+}
+
+.modalTopText{
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.53;
+  color: #696cff;
+
+}
+
+.modalMiddleText{
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.53;
+  color: #696cff;
+  margin-bottom: 0.5rem;
+}
+
+.inputColor{
+  width: 2rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
+.patternName{
+  margin-left: 1rem;
+}
+
+.colorLabel{
+  padding-left: 2rem;
+  font-size: 1rem;
+
+  font-weight: 700;
+  color: #696cff;
+
+}
+
+.modalBtnWrapper{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.timeInput{
+  width: 80%;
+}

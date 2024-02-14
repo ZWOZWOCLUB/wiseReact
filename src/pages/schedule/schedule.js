@@ -6,6 +6,7 @@ import payCSS from "../../@core/css/pay.module.css";
 import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import Calendar from "@toast-ui/react-calendar";
+import "tui-calendar/dist/tui-calendar.css";
 import { options } from "@fullcalendar/core/preact";
 import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
@@ -13,11 +14,18 @@ import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 function Schedule() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const calendarRef = useRef(null);
+  const calendarRef = useRef();
+  const [calendar, setCalendar] = useState(null);
+  const [rootElement, setRootElement] = useState(null);
+  const [calendarTheme, setCalendarTheme] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const scheduleList = useSelector((state) => state.scheduleReducer);
   const departmentList = useSelector((state) => state.organizationChartReducer);
+  let [yearMonth, setYearMonth] = useState(null);
 
+  console.log(departmentList);
+
+  console.log("scheduleList : ", scheduleList);
   function scheduleAdd() {
     navigate(`/main/scheduleAdd`, { replace: true });
   }
@@ -31,17 +39,16 @@ function Schedule() {
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     return `${year}-${month}`;
   }
-
-  const yearMonth = formatDate(currentDate);
-  console.log(yearMonth);
-
   useEffect(() => {
+    const formattedDate = formatDate(currentDate);
+    setYearMonth(formattedDate);
     dispatch(
       callScheduleSearchAPI({
-        yearMonth: yearMonth,
+        yearMonth: formattedDate,
       })
     );
-  }, [yearMonth]);
+  }, [currentDate]);
+
   console.log(yearMonth);
   console.log(scheduleList);
 
@@ -62,12 +69,15 @@ function Schedule() {
               children:
                 dep.depName === "인사팀"
                   ? dep.memberList.map((mem) => ({
-                      text: mem.memName,
+                      text: mem.memName + " " + mem.posName,
+                      nodeValue: mem.memCode,
                     }))
                   : dep.children.map((chi) => ({
                       text: chi.depName,
+                      state: "closed",
                       children: chi.memberList.map((mem) => ({
-                        text: mem.memName,
+                        text: mem.memName + " " + mem.posName,
+                        nodeValue: mem.memCode,
                       })),
                     })),
             })),
@@ -89,6 +99,10 @@ function Schedule() {
     const options = {
       month: {
         dayNames: ["일", "월", "화", "수", "목", "금", "토"],
+        gridSelection: {
+          enableDblClick: false,
+          enableClick: true,
+        },
       },
     };
 
@@ -99,38 +113,106 @@ function Schedule() {
     }
   }, []);
 
-  function getThisMonthMondays() {
+  useEffect(() => {
+    setCalendar(calendarRef.current.getInstance());
+    setRootElement(calendarRef.current.getRootElement());
+  }, []);
+
+  function getThisDays() {
     const today = new Date();
-    const year = today.getFullYear(); // 현재 연도를 가져옵니다.
-    const month = today.getMonth(); // 현재 월을 가져옵니다.
-    const firstDayOfMonth = new Date(year, month, 1); // 이번 달의 첫 번째 날을 가져옵니다.
-    const firstMonday = new Date(firstDayOfMonth); // 이번 달의 첫 번째 날을 복사합니다.
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const firstDayOfMonth = new Date(year, month, 1);
+    const days = [];
 
-    // 첫 번째 날이 월요일이 아니라면 첫 번째 월요일을 찾을 때까지 날짜를 증가시킵니다.
-    while (firstMonday.getDay() !== 1) {
-      firstMonday.setDate(firstMonday.getDate() + 1);
+    // 이번 달의 1일의 요일을 구함
+    const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 일요일 ~ 6 토요일
+
+    // 이번 달의 첫 번째 요일부터 시작하여 각 요일을 구함
+    for (let i = 0; i < 42; i++) {
+      // 35일까지 반복 (최대 5주)
+      const day = new Date(firstDayOfMonth);
+      day.setDate(firstDayOfMonth.getDate() + i - firstDayOfWeek); // 1일의 요일을 기준으로 올바른 요일을 계산
+      days.push(day);
     }
 
-    const mondays = []; // 월요일들을 담을 배열을 선언합니다.
-
-    // 이번 달의 모든 월요일의 날짜를 구합니다.
-    while (firstMonday.getMonth() === month) {
-      mondays.push(new Date(firstMonday)); // 월요일을 배열에 추가합니다.
-      firstMonday.setDate(firstMonday.getDate() + 7); // 다음 주의 월요일로 이동합니다.
-    }
-
-    return mondays; // 월요일들이 담긴 배열을 반환합니다.
+    return days;
   }
 
-  // 이번 달의 모든 월요일의 날짜를 구합니다.
-  const mondays = getThisMonthMondays();
+  const days = getThisDays();
 
-  // 각각의 월요일의 날짜를 변수에 담습니다.
-  const [firstMonday, secondMonday, thirdMonday, fourthMonday, fifthMonday] =
-    mondays;
+  const [
+    firstSunday,
+    firstMonday,
+    firstTuesday,
+    firstWednesday,
+    firstThursday,
+    firstFriday,
+    firstSaturday,
+    secondSunday,
+    secondMonday,
+    secondTuesday,
+    secondWednesday,
+    secondThursday,
+    secondFriday,
+    secondSaturday,
+    thirdSunday,
+    thirdMonday,
+    thirdTuesday,
+    thirdWednesday,
+    thirdThursday,
+    thirdFriday,
+    thirdSaturday,
+    fourthSunday,
+    fourthMonday,
+    fourthTuesday,
+    fourthWednesday,
+    fourthThursday,
+    fourthFriday,
+    fourthSaturday,
+    fifthSunday,
+    fifthMonday,
+    fifthTuesday,
+    fifthWednesday,
+    fifthThursday,
+    fifthFriday,
+    fifthSaturday,
+    sixSunday,
+    sixMonday,
+    sixTuesday,
+    sixWednesday,
+    sixThursday,
+    sixFriday,
+    sixSaturday,
+  ] = days;
 
-  console.log(firstMonday);
-  console.log(secondMonday);
+  const onClicktree = (name) => {
+    console.log(name, "클릭");
+  };
+
+  function setYearMonthFunction(calendar) {
+    const Date = calendar.getDate();
+    const Year = Date.getFullYear();
+    const Month = (Date.getMonth() + 1).toString().padStart(2, "0");
+    console.log(Year, Month);
+    setYearMonth(Year + "-" + Month);
+    console.log(yearMonth);
+  }
+
+  const onClickToday = () => {
+    calendar.today();
+    setYearMonthFunction(calendar);
+  };
+  const onClickPrev = () => {
+    calendar.prev();
+    setYearMonthFunction(calendar);
+    console.log(yearMonth);
+  };
+  const onClickNext = () => {
+    calendar.next();
+    setYearMonthFunction(calendar);
+    console.log(yearMonth);
+  };
 
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
@@ -141,7 +223,11 @@ function Schedule() {
               <div className={`${payCSS["input-group-text5"]}`}>
                 전체 조직도
               </div>
-              <div id="tree" class="tui-tree-wrap"></div>
+              <div
+                id="tree"
+                class="tui-tree-wrap"
+                onClick={(e) => onClicktree(e)}
+              ></div>
             </div>
           </div>
           <div className={`${payCSS["Wrapper"]}`} style={{ flex: 3 }}>
@@ -158,20 +244,22 @@ function Schedule() {
               >
                 <i className="bx bx-search" />
               </span>
-              <button className={`${payCSS["prev"]}`}>
+              <button className={`${payCSS["prev"]}`} onClick={onClickPrev}>
                 <i
                   className="bx bx-chevron-left"
                   style={{ fontSize: "2rem" }}
                 />
               </button>
-              <div className={`${payCSS["range"]}`} />
-              <button className={`${payCSS["next"]}`}>
+              <div className={`${payCSS["range"]}`}>{yearMonth}</div>
+              <button className={`${payCSS["next"]}`} onClick={onClickNext}>
                 <i
                   className="bx bx-chevron-right"
                   style={{ fontSize: "2rem" }}
                 />
               </button>
-              <button className={`${payCSS["today"]}`}>Today</button>
+              <button className={`${payCSS["today"]}`} onClick={onClickToday}>
+                Today
+              </button>
               <button
                 className={`${payCSS["patternInscription"]}`}
                 onClick={schedulePattenAdd}
@@ -193,42 +281,375 @@ function Schedule() {
                 근무일정추가
               </button>
             </div>
-
             <Calendar
               height="70vh"
               ref={calendarRef}
               view="month"
-              isAlways6Weeks={false}
-              usageStatistics={false}
-              useDetailPopup={true}
-              gridSelection={false}
-              events={[
-                {
-                  id: "event1",
-                  calendarId: "cal1",
-                  title: "주간 회의",
-                  start: firstMonday,
-                  end: firstMonday,
-                },
-                {
-                  id: "event2",
-                  calendarId: "cal1",
-                  title: "점심 약속",
-                  start: "2024-02-08",
-                  end: "2024-02-08",
-                  isAllday: true,
-                  category: "allday",
-                },
-                {
-                  id: "event3",
-                  calendarId: "cal1",
-                  title: "휴가",
-                  start: "2024-02-09",
-                  end: "2024-02-10",
-                  isAllday: true,
-                  category: "allday",
-                },
-              ]}
+              calendars={calendarRef.current && calendarTheme}
+              events={
+                Array.isArray(scheduleList) && scheduleList.length > 0
+                  ? scheduleList
+                      .reduce((events, schedule) => {
+                        if (
+                          Array.isArray(schedule.patternDayList) &&
+                          schedule.patternDayList.length > 0
+                        ) {
+                          schedule.patternDayList.forEach((patternDay) => {
+                            let start, end;
+
+                            switch (patternDay.patternDayID.dayCode) {
+                              case 1:
+                                start = firstMonday;
+                                end = firstMonday;
+                                break;
+                              case 2:
+                                start = firstTuesday;
+                                end = firstTuesday;
+                                break;
+                              case 3:
+                                start = firstWednesday;
+                                end = firstWednesday;
+                                break;
+                              case 4:
+                                start = firstThursday;
+                                end = firstThursday;
+                                break;
+                              case 5:
+                                start = firstFriday;
+                                end = firstFriday;
+                                break;
+                              case 6:
+                                start = firstSaturday;
+                                end = firstSaturday;
+                                break;
+                              case 7:
+                                start = firstSunday;
+                                end = firstSunday;
+                                break;
+                              default:
+                                break;
+                            }
+
+                            events.push({
+                              id: `event_${patternDay.patternDayID.dayCode}`,
+                              calendarId: "cal1",
+                              title: schedule.schType,
+                              start: start,
+                              end: end,
+                              category: "allday",
+                              backgroundColor: schedule.patternList.wokColor,
+                            });
+                          });
+                        }
+                        return events;
+                      }, [])
+                      .concat(
+                        Array.isArray(scheduleList) && scheduleList.length > 0
+                          ? scheduleList.reduce((events, schedule) => {
+                              if (
+                                Array.isArray(schedule.patternDayList) &&
+                                schedule.patternDayList.length > 0
+                              ) {
+                                schedule.patternDayList.forEach(
+                                  (patternDay) => {
+                                    let start, end;
+
+                                    switch (patternDay.patternDayID.dayCode) {
+                                      case 1:
+                                        start = secondMonday;
+                                        end = secondMonday;
+                                        break;
+                                      case 2:
+                                        start = secondTuesday;
+                                        end = secondTuesday;
+                                        break;
+                                      case 3:
+                                        start = secondWednesday;
+                                        end = secondWednesday;
+                                        break;
+                                      case 4:
+                                        start = secondThursday;
+                                        end = secondThursday;
+                                        break;
+                                      case 5:
+                                        start = secondFriday;
+                                        end = secondFriday;
+                                        break;
+                                      case 6:
+                                        start = secondSaturday;
+                                        end = secondSaturday;
+                                        break;
+                                      case 7:
+                                        start = secondSunday;
+                                        end = secondSunday;
+                                        break;
+                                      default:
+                                        break;
+                                    }
+
+                                    events.push({
+                                      id: `event_${patternDay.patternDayID.dayCode}`,
+                                      calendarId: "cal1",
+                                      title: schedule.schType,
+                                      start: start,
+                                      end: end,
+                                      category: "allday",
+                                      backgroundColor:
+                                        schedule.patternList.wokColor,
+                                    });
+                                  }
+                                );
+                              }
+                              return events;
+                            }, [])
+                          : []
+                      )
+                      .concat(
+                        Array.isArray(scheduleList) && scheduleList.length > 0
+                          ? scheduleList.reduce((events, schedule) => {
+                              if (
+                                Array.isArray(schedule.patternDayList) &&
+                                schedule.patternDayList.length > 0
+                              ) {
+                                schedule.patternDayList.forEach(
+                                  (patternDay) => {
+                                    let start, end;
+
+                                    switch (patternDay.patternDayID.dayCode) {
+                                      case 1:
+                                        start = thirdMonday;
+                                        end = thirdMonday;
+                                        break;
+                                      case 2:
+                                        start = thirdTuesday;
+                                        end = thirdTuesday;
+                                        break;
+                                      case 3:
+                                        start = thirdWednesday;
+                                        end = thirdWednesday;
+                                        break;
+                                      case 4:
+                                        start = thirdThursday;
+                                        end = thirdThursday;
+                                        break;
+                                      case 5:
+                                        start = thirdFriday;
+                                        end = thirdFriday;
+                                        break;
+                                      case 6:
+                                        start = thirdSaturday;
+                                        end = thirdSaturday;
+                                        break;
+                                      case 7:
+                                        start = thirdSunday;
+                                        end = thirdSunday;
+                                        break;
+                                      default:
+                                        break;
+                                    }
+
+                                    events.push({
+                                      id: `event_${patternDay.patternDayID.dayCode}`,
+                                      calendarId: "cal1",
+                                      title: schedule.schType,
+                                      start: start,
+                                      end: end,
+                                      category: "allday",
+                                      backgroundColor:
+                                        schedule.patternList.wokColor,
+                                    });
+                                  }
+                                );
+                              }
+                              return events;
+                            }, [])
+                          : []
+                      )
+                      .concat(
+                        Array.isArray(scheduleList) && scheduleList.length > 0
+                          ? scheduleList.reduce((events, schedule) => {
+                              if (
+                                Array.isArray(schedule.patternDayList) &&
+                                schedule.patternDayList.length > 0
+                              ) {
+                                schedule.patternDayList.forEach(
+                                  (patternDay) => {
+                                    let start, end;
+
+                                    switch (patternDay.patternDayID.dayCode) {
+                                      case 1:
+                                        start = fourthMonday;
+                                        end = fourthMonday;
+                                        break;
+                                      case 2:
+                                        start = fourthTuesday;
+                                        end = fourthTuesday;
+                                        break;
+                                      case 3:
+                                        start = fourthWednesday;
+                                        end = fourthWednesday;
+                                        break;
+                                      case 4:
+                                        start = fourthThursday;
+                                        end = fourthThursday;
+                                        break;
+                                      case 5:
+                                        start = fourthFriday;
+                                        end = fourthFriday;
+                                        break;
+                                      case 6:
+                                        start = fourthSaturday;
+                                        end = fourthSaturday;
+                                        break;
+                                      case 7:
+                                        start = fourthSunday;
+                                        end = fourthSunday;
+                                        break;
+                                      default:
+                                        break;
+                                    }
+
+                                    events.push({
+                                      id: `event_${patternDay.patternDayID.dayCode}`,
+                                      calendarId: "cal1",
+                                      title: schedule.schType,
+                                      start: start,
+                                      end: end,
+                                      category: "allday",
+                                      backgroundColor:
+                                        schedule.patternList.wokColor,
+                                    });
+                                  }
+                                );
+                              }
+                              return events;
+                            }, [])
+                          : []
+                      )
+                      .concat(
+                        Array.isArray(scheduleList) && scheduleList.length > 0
+                          ? scheduleList.reduce((events, schedule) => {
+                              if (
+                                Array.isArray(schedule.patternDayList) &&
+                                schedule.patternDayList.length > 0
+                              ) {
+                                schedule.patternDayList.forEach(
+                                  (patternDay) => {
+                                    let start, end;
+
+                                    switch (patternDay.patternDayID.dayCode) {
+                                      case 1:
+                                        start = fifthMonday;
+                                        end = fifthMonday;
+                                        break;
+                                      case 2:
+                                        start = fifthTuesday;
+                                        end = fifthTuesday;
+                                        break;
+                                      case 3:
+                                        start = fifthWednesday;
+                                        end = fifthWednesday;
+                                        break;
+                                      case 4:
+                                        start = fifthThursday;
+                                        end = fifthThursday;
+                                        break;
+                                      case 5:
+                                        start = fifthFriday;
+                                        end = fifthFriday;
+                                        break;
+                                      case 6:
+                                        start = fifthSaturday;
+                                        end = fifthSaturday;
+                                        break;
+                                      case 7:
+                                        start = fifthSunday;
+                                        end = fifthSunday;
+                                        break;
+                                      default:
+                                        break;
+                                    }
+
+                                    events.push({
+                                      id: `event_${patternDay.patternDayID.dayCode}`,
+                                      calendarId: "cal1",
+                                      title: schedule.schType,
+                                      start: start,
+                                      end: end,
+                                      category: "allday",
+                                      backgroundColor:
+                                        schedule.patternList.wokColor,
+                                    });
+                                  }
+                                );
+                              }
+                              return events;
+                            }, [])
+                          : []
+                      )
+                      .concat(
+                        Array.isArray(scheduleList) && scheduleList.length > 0
+                          ? scheduleList.reduce((events, schedule) => {
+                              if (
+                                Array.isArray(schedule.patternDayList) &&
+                                schedule.patternDayList.length > 0
+                              ) {
+                                schedule.patternDayList.forEach(
+                                  (patternDay) => {
+                                    let start, end;
+
+                                    switch (patternDay.patternDayID.dayCode) {
+                                      case 1:
+                                        start = sixMonday;
+                                        end = sixMonday;
+                                        break;
+                                      case 2:
+                                        start = sixTuesday;
+                                        end = sixTuesday;
+                                        break;
+                                      case 3:
+                                        start = sixWednesday;
+                                        end = sixWednesday;
+                                        break;
+                                      case 4:
+                                        start = sixThursday;
+                                        end = sixThursday;
+                                        break;
+                                      case 5:
+                                        start = sixFriday;
+                                        end = sixFriday;
+                                        break;
+                                      case 6:
+                                        start = sixSaturday;
+                                        end = sixSaturday;
+                                        break;
+                                      case 7:
+                                        start = sixSunday;
+                                        end = sixSunday;
+                                        break;
+                                      default:
+                                        break;
+                                    }
+
+                                    events.push({
+                                      id: `event_${patternDay.patternDayID.dayCode}`,
+                                      calendarId: "cal1",
+                                      title: schedule.schType,
+                                      start: start,
+                                      end: end,
+                                      category: "allday",
+                                      backgroundColor:
+                                        schedule.patternList.wokColor,
+                                    });
+                                  }
+                                );
+                              }
+                              return events;
+                            }, [])
+                          : []
+                      )
+                  : []
+              }
             />
           </div>
         </div>

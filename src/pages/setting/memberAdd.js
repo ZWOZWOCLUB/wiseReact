@@ -485,8 +485,8 @@ function MemberAdd() {
                         checked={
                           !updateState
                             ? resutlList
-                              ? resutlList.memRole === "중간관리자" ||
-                                resutlList.memRole === "최고관리자"
+                              ? resutlList.memRole === "ADMIN" ||
+                                resutlList.memRole === "SUPERADMIN"
                               : false
                             : form.memRole === "Y"
                         }
@@ -511,7 +511,7 @@ function MemberAdd() {
                         checked={
                           !updateState
                             ? resutlList
-                              ? resutlList.memRole === "일반사원"
+                              ? resutlList.memRole === "USER"
                               : false
                             : form.memRole === "N"
                         }

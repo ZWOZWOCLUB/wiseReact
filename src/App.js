@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import Main from "./pages/Main";
 import Pay from "./pages/pay/pay";
-import Schedule from "./pages/schedule/schedule";
+import Schedule from "./pages/schedule/Schedule";
 import Setting from "../src/pages/setting/allMemberList";
 import Login from "./pages/login/Login"; // Login 컴포넌트 임포트
 import MemberAdd from "./pages/setting/memberAdd";

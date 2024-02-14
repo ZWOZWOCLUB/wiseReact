@@ -7,22 +7,23 @@ function SettingInfoInsertCareer({ onUpdate }) {
   const memberCode = searchParams.get("memCode");
   const [careerRows, setCareerRows] = useState([0]);
 
-  const [crrForm, setCrrForm] = useState([{
-    memCode: memberCode,
-    crrCode: "",
-    crrName: "",
-    crrPosition: "",
-    crrStartDate: "",
-    crrEndDate: "",
-    crrState: "Y",
-    crrDescription: "",
-  }]);
-
+  const [crrForm, setCrrForm] = useState([
+    {
+      memCode: memberCode,
+      crrCode: "",
+      crrName: "",
+      crrPosition: "",
+      crrStartDate: "",
+      crrEndDate: "",
+      crrState: "Y",
+      crrDescription: "",
+    },
+  ]);
 
   const onChangeCrrHandler = (e, index) => {
     const { name, value } = e.target;
 
-    setCrrForm(prevForms => {
+    setCrrForm((prevForms) => {
       return prevForms.map((form, idx) => {
         if (idx === index) {
           return {
@@ -36,105 +37,107 @@ function SettingInfoInsertCareer({ onUpdate }) {
   };
 
   const handleAddRow = () => {
-      setCareerRows((prevRows) => [...prevRows, {}]);
-      setCrrForm((prevForms) => [
-        ...prevForms,
-        {
-          memCode: memberCode,
-          crrCode: "",
-          crrName: "",
-          crrPosition: "",
-          crrStartDate: "",
-          crrEndDate: "",
-          crrState: "Y",
-          crrDescription: "",
-        },
-      ]);
+    setCareerRows((prevRows) => [...prevRows, {}]);
+    setCrrForm((prevForms) => [
+      ...prevForms,
+      {
+        memCode: memberCode,
+        crrCode: "",
+        crrName: "",
+        crrPosition: "",
+        crrStartDate: "",
+        crrEndDate: "",
+        crrState: "Y",
+        crrDescription: "",
+      },
+    ]);
   };
 
-  const handleRemoveRow = ( index) => {
-      console.log(index)
-      setCareerRows((prevRows) => prevRows.filter((row, i) => i !== index));
-      setCrrForm((prevForms) => prevForms.filter((form, i) => i !== index));
+  const handleRemoveRow = (a) => {
+    console.log(a);
+    setCareerRows((prevRows) =>
+      prevRows.filter((row, index) => {
+        console.log(a, index);
+      })
+    );
+    setCrrForm((prevForms) => prevForms.filter((form, i) => i !== a));
   };
 
   useEffect(() => {
     onUpdate(crrForm);
   }, [crrForm, onUpdate]);
 
-
   return (
     <>
-
-        {careerRows.map((row, index) => (
-          <div className="input-group3" key={index}>
-            <div className="inputWrapper">
-              <input
-                className="form-control3"
-                type="date"
+      {careerRows.map((row, index) => (
+        <div className="input-group3" key={index}>
+          <div className="inputWrapper">
+            <input
+              className="form-control3"
+              type="date"
+              style={{
+                borderTopLeftRadius: "0.375rem",
+                borderBottomLeftRadius: "0.375rem",
+              }}
+              onChange={(e) => onChangeCrrHandler(e, index)}
+              name="crrStartDate"
+            />
+          </div>
+          <div className="inputWrapper">
+            <input
+              className="form-control3"
+              type="date"
+              onChange={(e) => onChangeCrrHandler(e, index)}
+              name="crrEndDate"
+            />
+          </div>
+          <div className="inputWrapper">
+            <input
+              type="text"
+              className="form-control3"
+              aria-describedby="basic-addon11"
+              onChange={(e) => onChangeCrrHandler(e, index)}
+              name="crrName"
+            />
+          </div>
+          <div className="inputWrapper">
+            <input
+              type="text"
+              className="form-control3"
+              aria-describedby="basic-addon11"
+              onChange={(e) => onChangeCrrHandler(e, index)}
+              name="crrPosition"
+            />
+          </div>
+          <div className="inputWrapper">
+            <input
+              type="text"
+              className="form-control3"
+              aria-describedby="basic-addon11"
+              onChange={(e) => onChangeCrrHandler(e, index)}
+              name="crrDescription"
+            />
+          </div>
+          <div>
+            <div
+              className="form-control3"
+              style={{
+                borderTopRightRadius: "0.375rem",
+                borderBottomRightRadius: "0.375rem",
+              }}
+            >
+              <button
+                className="bx bx-x"
+                onClick={() => handleRemoveRow(index)}
                 style={{
-                  borderTopLeftRadius: "0.375rem",
-                  borderBottomLeftRadius: "0.375rem",
+                  border: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0)",
                 }}
-                onChange={(e) => onChangeCrrHandler(e, index)}
-                name="crrStartDate"
-              />
-            </div>
-            <div className="inputWrapper">
-              <input
-                className="form-control3"
-                type="date"
-                onChange={(e) => onChangeCrrHandler(e, index)}
-                name="crrEndDate"
-              />
-            </div>
-            <div className="inputWrapper">
-              <input
-                type="text"
-                className="form-control3"
-                aria-describedby="basic-addon11"
-                onChange={(e) => onChangeCrrHandler(e, index)}
-                name="crrName"
-              />
-            </div>
-            <div className="inputWrapper">
-              <input
-                type="text"
-                className="form-control3"
-                aria-describedby="basic-addon11"
-                onChange={(e) => onChangeCrrHandler(e, index)}
-                name="crrPosition"
-              />
-            </div>
-            <div className="inputWrapper">
-              <input
-                type="text"
-                className="form-control3"
-                aria-describedby="basic-addon11"
-                onChange={(e) => onChangeCrrHandler(e, index)}
-                name="crrDescription"
-              />
-            </div>
-            <div>
-              <div
-                className="form-control3"
-                style={{
-                  borderTopRightRadius: "0.375rem",
-                  borderBottomRightRadius: "0.375rem",
-                }}
-              >
-                <button
-                  className="bx bx-x"
-                  onClick={() => handleRemoveRow(index)}
-                  style={{
-                    border: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                  }}
-                ></button>
-              </div>
+              ></button>
             </div>
           </div>
-        ))}
+        </div>
+      ))}
       <div className="addList" onClick={() => handleAddRow()}>
         +추가
       </div>
