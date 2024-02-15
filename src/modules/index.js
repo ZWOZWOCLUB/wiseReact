@@ -28,8 +28,13 @@ import mpUpdateReducer from "./MPUpdateModule";
 import approvalTypeReducer from './ApprovalTypeModule';
 import approvalCompleteReducer from './ApprovalCompleteInfoModule';
 import approvalInfoReducer from './ApprovalInfoModule';
+import notCommentReducer from "./NotCommentModule";
+import approvalTypeReducer from "./ApprovalTypeModule";
+import approvalCompleteReducer from "./ApprovalCompleteInfoModule";
+import approvalInfoReducer from "./ApprovalInfoModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
+import schedulePatternReducer from "./SchedulePatternModule";
 
 const { combineReducers } = require("redux");
 
@@ -61,13 +66,15 @@ const rootReducer = combineReducers({
   settingInfoSearchReducer,
   settingDocumentReducer,
   noticeReducer,
+  notCommentReducer,
   scheduleReducer,
   mpUpdateReducer,
-    approvalInfoReducer,
-    approvalCompleteReducer,
-    approvalTypeReducer,
-    mpProReducer,
-    mpSignReducer,
+  approvalInfoReducer,
+  approvalCompleteReducer,
+  approvalTypeReducer,
+  mpProReducer,
+  mpSignReducer,
+  schedulePatternReducer,
 });
 
 export default rootReducer;

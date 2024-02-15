@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import Main from "./pages/Main";
 import Pay from "./pages/pay/pay";
-import Schedule from "./pages/schedule/schedule";
+import Schedule from "./pages/schedule/Schedule";
 import Setting from "../src/pages/setting/allMemberList";
 import Login from "./pages/login/Login"; // Login 컴포넌트 임포트
 import MemberAdd from "./pages/setting/memberAdd";
@@ -10,6 +10,7 @@ import Approval from "./pages/approval/Approval";
 import SendApproval from "./pages/approval/SendApproval";
 import Assignment from "./pages/approval/Assignment";
 import SettingInfo from "./pages/setting/settingInfo";
+import SettingDocument from "./pages/setting/SettingDocument";
 import MyPage from "./pages/mypage/01_profileInfo";
 import PersonnelInfo from "./pages/mypage/02_personnelInfo";
 import MPVacation from "./pages/mypage/03_vacation";
@@ -20,7 +21,6 @@ import Message from "./pages/alarmAndMessage/message";
 import Message3 from "./pages/alarmAndMessage/message copy";
 import SignatureCanvas from "./pages/mypage/sign";
 import MyPageUpdate from "./pages/mypage/01_profileUpdate";
-// import SettingDocument from './pages/setting/SettingDocument';
 import SettingVacation from "./pages/setting/settingVaction";
 import SettingAttendance from "./pages/setting/settingAttendance";
 import "boxicons/css/boxicons.min.css";
@@ -34,8 +34,10 @@ import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeDetail from "./pages/notice/NoticeDetail";
 import OrganizationCreate from "./pages/organizationChart/organizationCreate";
 import OrganizationEdit from "./pages/organizationChart/organizationEdit";
-import ApprovalDetail from './pages/approval/ApprovalDetail';
+import ApprovalDetail from "./pages/approval/ApprovalDetail";
 import ImageDownloader from "./pages/mypage/test";
+import ScheduleAdd from "./pages/schedule/ScheduleAdd";
+import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
 
 function App() {
   return (
@@ -59,7 +61,7 @@ function App() {
           <Route path="assignment" element={<Assignment />} />
           <Route path="organizationTree" element={<OrganizationTree />} />
           <Route path="requestapproval" element={<RequestApproval />} />
-          <Route path='ApprovalDetail' element={<ApprovalDetail />} />
+          <Route path="ApprovalDetail" element={<ApprovalDetail />} />
           <Route path="mp" element={<MyPage />} />
           <Route path="mpUpdate" element={<MyPageUpdate />} />
           <Route path="mppersonnelInfo" element={<PersonnelInfo />} />
@@ -85,12 +87,17 @@ function App() {
           <Route path="message" element={<Message />} />
           <Route path="message3" element={<Message3 />} />
           <Route path="organizationCreate" element={<OrganizationCreate />} />
-          <Route path="organizationEdit/:depCode" element={<OrganizationEdit />} />
+          <Route
+            path="organizationEdit/:depCode"
+            element={<OrganizationEdit />}
+          />
           <Route path="settingInfo" element={<SettingInfo />} />
-          {/* <Route path='settingDocument' element={<SettingDocument />} /> */}
+          <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />
           <Route path="settingAttendance" element={<SettingAttendance />} />
           <Route path="test" element={<ImageDownloader />} />
+          <Route path="ScheduleAdd" element={<ScheduleAdd />} />
+          <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
         </Route>
       </Routes>
     </BrowserRouter>

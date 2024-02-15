@@ -6,7 +6,7 @@ import SettingDocumentCertificate from "./SettingDocumentCertificate";
 import SettingDocumentCareer from "./SettingDocumentCareer";
 import SettingDocumentDegree from "./SettingDocumentDegree";
 import SettingDocumentETC from "./SettingDocumentETC";
-import { callDocumentFileInsertAPI } from '../../apis/SettingDocumentAPICalls';
+import { callDocumentFileInsertAPI } from "../../apis/SettingDocumentAPICalls";
 
 function SettingDocument() {
   const navigate = useNavigate();
@@ -19,29 +19,32 @@ function SettingDocument() {
 
   const [activeTab, setActiveTab] = useState();
 
-
   const handleTabClick = (tab) => {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
-      navigate(
-        `/settingInfo?memCode=${memberCode}`,
-        { replace: true });
+      navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "연차 관리") {
-      navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingVacation?memCode=${memberCode}`, {
+        replace: true,
+      });
     }
     if (tab === "서류함") {
-      navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingDocument?memCode=${memberCode}`, {
+        replace: true,
+      });
     }
   };
-  const [form, setForm] = useState([{
-    memCode: memberCode,
-    docAtcKind: '',
-  }]);
+  const [form, setForm] = useState([
+    {
+      memCode: memberCode,
+      docAtcKind: "",
+    },
+  ]);
 
   const onChangedocHandler = (e, index) => {
     const { name, value } = e.target;
@@ -55,32 +58,32 @@ function SettingDocument() {
   };
 
   const handleAddRow = () => {
-    console.log('클릭')
+    console.log("클릭");
     setRows((prevRows) => [...prevRows, {}]);
     setForm((prevForms) => [
       ...prevForms,
       {
         memCode: memberCode,
-        docAtcKind: '',
+        docAtcKind: "",
       },
     ]);
-  }
+  };
 
   const handleRemoveRow = (index) => {
     setRows((prevRows) => prevRows.filter((row, i) => i !== index));
     setForm((prevForms) => prevForms.filter((form, i) => i !== index));
-  }
+  };
 
   const onClickEtcFileUpload = (index) => {
-    console.log('클릭1', index);
+    console.log("클릭1", index);
     etcFileInput.current.click();
   };
 
   const EtcFileChange = (index, e) => {
-    console.log('클릭2')
+    console.log("클릭2");
 
     if (e.target.files.length > 0) {
-      console.log('클릭3')
+      console.log("클릭3");
 
       const file = e.target.files[0]; // 변경된 파일은 배열의 첫 번째 요소입니다.
       setEtcFile(file);
@@ -89,17 +92,15 @@ function SettingDocument() {
   };
 
   const EtcFileUpload = async (file, index) => {
-      const formData = new FormData();
-      formData.append('etcFile', file)
-      formData.append('docAtcKind', form[index].docAtcKind)
-      formData.append('memCode', memberCode)
-      console.log(formData, 'formData555555555555555');
-  
-      dispatch(callDocumentFileInsertAPI({ formData }));
-      window.location.reload();
-  
-  };
+    const formData = new FormData();
+    formData.append("etcFile", file);
+    formData.append("docAtcKind", form[index].docAtcKind);
+    formData.append("memCode", memberCode);
+    console.log(formData, "formData555555555555555");
 
+    dispatch(callDocumentFileInsertAPI({ formData }));
+    window.location.reload();
+  };
 
   return (
     <>
@@ -113,26 +114,34 @@ function SettingDocument() {
         <div className="col-md-12">
           <ul className="nav nav-pills flex-column flex-md-row mb-3">
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li className={`nav-link `}
-                onClick={() => handleTabClick('프로필 정보')}>
+              <li
+                className={`nav-link `}
+                onClick={() => handleTabClick("프로필 정보")}
+              >
                 프로필 정보
               </li>
             </li>
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li className={`nav-link `}
-                onClick={() => handleTabClick('인사 정보')}>
+              <li
+                className={`nav-link `}
+                onClick={() => handleTabClick("인사 정보")}
+              >
                 인사 정보
               </li>
             </li>
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li className={`nav-link active`}
-                onClick={() => handleTabClick('서류함')}>
+              <li
+                className={`nav-link active`}
+                onClick={() => handleTabClick("서류함")}
+              >
                 서류함
               </li>
             </li>
             <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li className={`nav-link `}
-                onClick={() => handleTabClick('연차 관리')}>
+              <li
+                className={`nav-link `}
+                onClick={() => handleTabClick("연차 관리")}
+              >
                 연차 관리
               </li>
             </li>
@@ -165,17 +174,22 @@ function SettingDocument() {
                   <SettingDocumentDegree />
                   <SettingDocumentETC />
                   {rows.map((row, index) => (
-                    <tr style={{ textAlign: "left" }} className="List" key={index}>
+                    <tr
+                      style={{ textAlign: "left" }}
+                      className="List"
+                      key={index}
+                    >
                       <td>
-                        <input type="text"
-                        onChange={(e) => onChangedocHandler(e, index)}
-                          name="docAtcKind" />
+                        <input
+                          type="text"
+                          onChange={(e) => onChangedocHandler(e, index)}
+                          name="docAtcKind"
+                        />
                       </td>
                       <td>-</td>
                       <td>-</td>
-                      <td><i
-                        className="bx bx-down-arrow-alt"
-                      />
+                      <td>
+                        <i className="bx bx-down-arrow-alt" />
                       </td>
                       <td>
                         <label
@@ -183,10 +197,13 @@ function SettingDocument() {
                           style={{ paddingRight: 10, cursor: "pointer" }}
                         >
                           <i className="bx bx-up-arrow-alt" />
-                          <input type="file" id="etcFile" name="etcFile"
-                                            onClick={() => onClickEtcFileUpload(index)}
-                                            onChange={(e) => EtcFileChange(index, e)}
-                                            ref={etcFileInput}
+                          <input
+                            type="file"
+                            id="etcFile"
+                            name="etcFile"
+                            onClick={() => onClickEtcFileUpload(index)}
+                            onChange={(e) => EtcFileChange(index, e)}
+                            ref={etcFileInput}
                           />
                         </label>
                       </td>
@@ -195,7 +212,10 @@ function SettingDocument() {
                           className="bx bx-x"
                           name="btnX"
                           onClick={() => handleRemoveRow(index)}
-                          style={{ border: 0, backgroundColor: "rgba(0, 0, 0, 0)" }}
+                          style={{
+                            border: 0,
+                            backgroundColor: "rgba(0, 0, 0, 0)",
+                          }}
                         />
                       </td>
                     </tr>
@@ -210,7 +230,7 @@ function SettingDocument() {
         </div>
       </div>
     </>
-  )
-};
+  );
+}
 
 export default SettingDocument;

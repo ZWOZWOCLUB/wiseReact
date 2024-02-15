@@ -46,18 +46,17 @@ function MemberAdd() {
 
   useEffect(() => {
     if (memberCode) {
-
-      dispatch(callMemberDetailAPI({
-        memCode: memberCode
-      }));
+      dispatch(
+        callMemberDetailAPI({
+          memCode: memberCode,
+        })
+      );
     }
-  }, [memberCode])
-
-
+  }, [memberCode]);
 
   const [form, setForm] = useState({
     memCode: 0,
-    memName: '',
+    memName: "",
     memPhone: "",
     memEmail: "",
     memAddress: "",
@@ -72,7 +71,7 @@ function MemberAdd() {
 
   useEffect(() => {
     if (resutlList) {
-      setForm(prevForm => ({
+      setForm((prevForm) => ({
         ...prevForm,
         memName: resutlList.memName,
         memBirth: resutlList.memBirth,
@@ -120,7 +119,7 @@ function MemberAdd() {
 
     const { name, value } = e.target;
 
-    setForm(prevForm => ({
+    setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
@@ -189,18 +188,19 @@ function MemberAdd() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/memberAdd`, { replace: true });
+      navigate(`/main/memberAdd`, { replace: true });
     } else if (tab === "인사 정보") {
       if (memList.length === 0 && memberCode === 0) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
         if (memList.length > 0) {
-          navigate(
-            `/settingInfo?memCode=${memList.memCode}`,
-            { replace: true }
-          );
+          navigate(`/main/settingInfo?memCode=${memList.memCode}`, {
+            replace: true,
+          });
         } else {
-          navigate(`/settingInfo?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingInfo?memCode=${memberCode}`, {
+            replace: true,
+          });
         }
       }
     } else if (tab === "연차 관리") {
@@ -208,30 +208,31 @@ function MemberAdd() {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
         if (memList.length > 0) {
-          navigate(
-            `/settingVacation?memCode=${memList.memCode}`,
-            { replace: true }
-          )
+          navigate(`/main/settingVacation?memCode=${memList.memCode}`, {
+            replace: true,
+          });
         } else {
-          navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingVacation?memCode=${memberCode}`, {
+            replace: true,
+          });
         }
       }
-    }
-    else if (tab === "서류함") {
+    } else if (tab === "서류함") {
       if (memList.length === 0 && memberCode === 0) {
         alert("인사 정보를 먼저 등록해주세요");
       } else {
         if (memList.length > 0) {
-          navigate(
-            `/settingDocument?memCode=${memList.memCode}`,
-            { replace: true }
-          )
+          navigate(`/main/settingDocument?memCode=${memList.memCode}`, {
+            replace: true,
+          });
         } else {
-          navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingDocument?memCode=${memberCode}`, {
+            replace: true,
+          });
         }
       }
     }
-  }
+  };
   return (
     <>
       <h4 className="fw-bold py-3 mb-4">
@@ -361,7 +362,13 @@ function MemberAdd() {
                     name="memName"
                     id="Name"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.memName : '') : form.memName}
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.memName
+                          : ""
+                        : form.memName
+                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -374,8 +381,13 @@ function MemberAdd() {
                     id="birthday"
                     name="memBirth"
                     onChange={(e) => onChangeHandler(e)}
-                    value={!updateState ? (resutlList ? resutlList.memBirth : '') : form.memBirth}
-
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.memBirth
+                          : ""
+                        : form.memBirth
+                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -389,8 +401,13 @@ function MemberAdd() {
                     name="memEmail"
                     placeholder="abc@example.com"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.memEmail : '') : form.memEmail}
-
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.memEmail
+                          : ""
+                        : form.memEmail
+                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -401,7 +418,15 @@ function MemberAdd() {
                     name="depCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.depCode ? resutlList.depCode : '' : '') : form.depCode}
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.depCode
+                            ? resutlList.depCode
+                            : ""
+                          : ""
+                        : form.depCode
+                    }
                   >
                     {Array.isArray(depList) &&
                       depList.map((d) => (
@@ -418,7 +443,13 @@ function MemberAdd() {
                     name="posCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.posCode : '') : form.posCode}
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.posCode
+                          : ""
+                        : form.posCode
+                    }
                   >
                     {Array.isArray(posList) &&
                       posList.map((p) => (
@@ -438,24 +469,34 @@ function MemberAdd() {
                     >
                       관리자로 지정
                     </label>
-                    <label style={{
-                      paddingTop: "0.5rem",
-                      paddingRight: "1rem",
-                      paddingLeft: "0.5rem",
-                    }}>
+                    <label
+                      style={{
+                        paddingTop: "0.5rem",
+                        paddingRight: "1rem",
+                        paddingLeft: "0.5rem",
+                      }}
+                    >
                       <input
                         type="radio"
                         name="memRole"
                         id="memRole"
                         onChange={onChangeHandler}
                         value={"Y"}
-                        checked={!updateState ? (resutlList ? (resutlList.memRole === '중간관리자' || resutlList.memRole === '최고관리자') : false) : form.memRole === 'Y'}
+                        checked={
+                          !updateState
+                            ? resutlList
+                              ? resutlList.memRole === "ADMIN" ||
+                                resutlList.memRole === "SUPERADMIN"
+                              : false
+                            : form.memRole === "Y"
+                        }
                         style={{
                           paddingRight: "1rem",
-                          marginRight: "0.5rem"
+                          marginRight: "0.5rem",
                         }}
                       />
-                      예 </label>
+                      예{" "}
+                    </label>
                     <label>
                       <input
                         type="radio"
@@ -465,11 +506,18 @@ function MemberAdd() {
                         value={"N"}
                         style={{
                           paddingRight: "1rem",
-                          marginRight: "0.5rem"
+                          marginRight: "0.5rem",
                         }}
-                        checked={!updateState ? (resutlList ? (resutlList.memRole === '일반사원') : false) : form.memRole === 'N'}
+                        checked={
+                          !updateState
+                            ? resutlList
+                              ? resutlList.memRole === "USER"
+                              : false
+                            : form.memRole === "N"
+                        }
                       />
-                      아니오</label>
+                      아니오
+                    </label>
                   </span>
                 </div>
                 <div className="mb-3 col-md-6">
@@ -483,8 +531,13 @@ function MemberAdd() {
                     name="memPhone"
                     placeholder="000-0000-0000"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.memPhone : '') : form.memPhone}
-
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.memPhone
+                          : ""
+                        : form.memPhone
+                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -497,8 +550,13 @@ function MemberAdd() {
                     id="address"
                     name="memAddress"
                     onChange={onChangeHandler}
-                    value={!updateState ? (resutlList ? resutlList.memAddress : '') : form.memAddress}
-
+                    value={
+                      !updateState
+                        ? resutlList
+                          ? resutlList.memAddress
+                          : ""
+                        : form.memAddress
+                    }
                   />
                 </div>
                 <div className="btn-wrapper">
@@ -506,7 +564,8 @@ function MemberAdd() {
                     type="button"
                     className="btn btn-primary"
                     onClick={
-                      memCode != 0 || resutlList ? onClickUpdateHandler
+                      memCode != 0 || resutlList
+                        ? onClickUpdateHandler
                         : onClickMemberInsertHandler
                     }
                   >
