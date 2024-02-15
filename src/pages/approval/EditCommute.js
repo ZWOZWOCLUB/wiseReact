@@ -107,7 +107,7 @@ function EditCommute() {
 
         console.log('time', formData.get('ediTime'));
 
-        // navigate(`/main/Approval`, { replace: false });
+        navigate(`/main/Approval`, { replace: false });
     };
 
     return (

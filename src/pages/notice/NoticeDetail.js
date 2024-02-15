@@ -9,8 +9,8 @@ import '../../@core/vendor/css/core.module.css';
 import './noticeDetail.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { callDetailNoticeAPI } from '../../apis/NoticeAPICalls.js';
-import { callNoticeCommentAPI } from '../../apis/NoticeCommentAPICall.js';
+// import { callDetailNoticeAPI } from '../../apis/NoticeAPICalls.js';
+// import { callNoticeCommentAPI } from '../../apis/NoticeCommentAPICall.js';
 import { useEffect, useState } from 'react';
 
 function NoticeDetail() {
@@ -33,18 +33,18 @@ function NoticeDetail() {
 
     console.log('notCode: ', notCode);
     useEffect(() => {
-        dispatch(callDetailNoticeAPI({ notCode }));
+        // dispatch(callDetailNoticeAPI({ notCode }));
     }, [notCode]);
   
  useEffect(() => {
      if (notCode) {
-         dispatch(callNoticeCommentAPI({ notCode }));
+        //  dispatch(callNoticeCommentAPI({ notCode }));
      }
  }, [notCode]);
 
  // 댓글 데이터를 리덕스 스토어에서 가져오기
-  const comments = useSelector((state) => state.notCommentReducer);
-  console.log('commentscomments', comments);
+//   const comments = useSelector((state) => state.notCommentReducer);
+//   console.log('commentscomments', comments);
   
  
     return (
@@ -146,10 +146,10 @@ function NoticeDetail() {
                                                     <br />
                                                     <div style={{ display: 'flex' }}>
                                                         <div style={{ padding: 3, fontSize: 'small' }}>
-                                                            {comments &&
+                                                            {/* {comments &&
                                                                 comments.length > 0 &&
                                                                 comments[0].comMember &&
-                                                                comments[0].comMember.memName}
+                                                                comments[0].comMember.memName} */}
                                                             {/* {comment.comMember.memName} */}
                                                             {/* 인사과 인사킹 */}
                                                         </div>
