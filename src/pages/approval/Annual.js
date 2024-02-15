@@ -111,7 +111,7 @@ function Annual() {
             console.log('dt')
         );
 
-        navigate(`/Approval`, { replace: true });
+        navigate(`/main/Approval`, { replace: true });
     };
 
     return (

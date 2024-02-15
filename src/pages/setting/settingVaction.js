@@ -34,16 +34,16 @@ function SettingVacation() {
     setActiveTab(tab);
 
     if (tab === '프로필 정보') {
-      navigate("/memberAdd", { replace: true })
+      navigate("/main/memberAdd", { replace: true })
     }
     if (tab === '인사 정보') {
-      navigate("/settingInfo", { replace: true })
+      navigate("/main/settingInfo", { replace: true })
     }
     if (tab === '연차 관리') {
-      navigate("/settingVacation", { replace: true })
+      navigate("/main/settingVacation", { replace: true })
     }
     if (tab === '서류함') {
-      navigate("/settingDocument", { replace: true })
+      navigate("/main/settingDocument", { replace: true })
     }
   };
   function getLastDayOfMonth(month, year) {

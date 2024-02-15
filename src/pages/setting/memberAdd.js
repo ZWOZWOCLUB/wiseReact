@@ -189,18 +189,18 @@ function MemberAdd() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/memberAdd`, { replace: true });
+      navigate(`/main/memberAdd`, { replace: true });
     } else if (tab === "인사 정보") {
       if (memList.length === 0 && memberCode === 0) {
         alert("직원 정보를 먼저 등록해주세요");
       } else {
         if (memList.length > 0) {
           navigate(
-            `/settingInfo?memCode=${memList.memCode}`,
+            `/main/settingInfo?memCode=${memList.memCode}`,
             { replace: true }
           );
         } else {
-          navigate(`/settingInfo?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });
         }
       }
     } else if (tab === "연차 관리") {
@@ -209,11 +209,11 @@ function MemberAdd() {
       } else {
         if (memList.length > 0) {
           navigate(
-            `/settingVacation?memCode=${memList.memCode}`,
+            `/main/settingVacation?memCode=${memList.memCode}`,
             { replace: true }
           )
         } else {
-          navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingVacation?memCode=${memberCode}`, { replace: true });
         }
       }
     }
@@ -223,11 +223,11 @@ function MemberAdd() {
       } else {
         if (memList.length > 0) {
           navigate(
-            `/settingDocument?memCode=${memList.memCode}`,
+            `/main/settingDocument?memCode=${memList.memCode}`,
             { replace: true }
           )
         } else {
-          navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+          navigate(`/main/settingDocument?memCode=${memberCode}`, { replace: true });
         }
       }
     }

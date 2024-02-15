@@ -35,18 +35,18 @@ function SettingInfo() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
       navigate(
-        `/settingInfo?memCode=${memberCode}`,
+        `/main/settingInfo?memCode=${memberCode}`,
         { replace: true });
     }
     if (tab === "연차 관리") {
-      navigate(`/settingVacation?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingVacation?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "서류함") {
-      navigate(`/settingDocument?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/settingDocument?memCode=${memberCode}`, { replace: true });
     }
   };
   const [salForm, setSalForm] = useState({

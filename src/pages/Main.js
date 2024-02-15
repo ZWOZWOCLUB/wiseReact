@@ -11,7 +11,7 @@ function Main(){
     let checkLogin = window.localStorage.getItem('accessToken');
 
     const onClickMyPage = () => {
-        navigate("/",{replace: true})
+        navigate("/main",{replace: true})
     }
 
 //     const token = window.localStorage.getItem('accessToken');

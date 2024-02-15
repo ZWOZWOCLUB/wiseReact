@@ -45,13 +45,13 @@ function Setting() {
 
   const onClickMemberInsert = () => {
     console.log(onClickMemberInsert);
-    navigate("/memberAdd", { replace: true })
+    navigate("/main/memberAdd", { replace: true })
 
   }
 
   const onClickAttendance = () => {
     console.log(onClickAttendance);
-    navigate("/settingAttendance", { replace: true })
+    navigate("/main/settingAttendance", { replace: true })
   }
 
 
@@ -73,7 +73,7 @@ function Setting() {
   const onClickMemberDetail = (memCode) => {
     return () => {
       console.log(memCode,'클릭');
-      navigate(`/memberAdd?memCode=${memCode}`, { replace: true });
+      navigate(`/main/memberAdd?memCode=${memCode}`, { replace: true });
     }
   }
   

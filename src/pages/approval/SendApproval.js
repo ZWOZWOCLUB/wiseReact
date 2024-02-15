@@ -25,17 +25,17 @@ function SendApproval() {
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
-        navigate(`/SendApproval`, { replace: false });
+        navigate(`/main/SendApproval`, { replace: false });
     };
 
     const onClickAssignment = () => {
         console.log('Assignment click');
-        navigate(`/Assignment`, { replace: false });
+        navigate(`/main/Assignment`, { replace: false });
     };
 
     const onClickReceiveApproval = () => {
         console.log('ReceiveApproval click');
-        navigate(`/Approval`, { replace: false });
+        navigate(`/main/Approval`, { replace: false });
     };
 
     return (

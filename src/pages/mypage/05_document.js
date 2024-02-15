@@ -39,19 +39,19 @@ console.log('docList--->',docList);
     setActiveTab(tab);
 
     if (tab === '프로필 정보') {
-      navigate("/mp", { replace: true })
+      navigate("/main/mp", { replace: true })
     }
     if (tab === '인사 정보') {
-      navigate("/mppersonnelInfo", { replace: true })
+      navigate("/main/mppersonnelInfo", { replace: true })
     }
     if (tab === '연차 관리') {
-      navigate("/mpvacation", { replace: true })
+      navigate("/main/mpvacation", { replace: true })
     }
     if (tab === '출퇴근 정보') {
-      navigate("/mpattendance", { replace: true })
+      navigate("/main/mpattendance", { replace: true })
     }
     if (tab === '서류함') {
-      navigate("/mpdocument", { replace: true })
+      navigate("/main/mpdocument", { replace: true })
     }
   };
 

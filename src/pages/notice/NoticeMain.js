@@ -57,7 +57,7 @@ function NoticeMain() {
 
     // 공지작성
     console.log('NoticeWrite click');
-    navigate(`/NoticeWrite`, { replace: false });
+    navigate(`/main/NoticeWrite`, { replace: false });
 };
 
 
@@ -106,7 +106,7 @@ const handleFormSubmit = (e) => {
 
 //공지상세페이지
 const navigateToDetailPage = (notCode) => {
-  navigate(`/notice/detaill?nc=${notCode}`); 
+  navigate(`/main/notice/detaill?nc=${notCode}`); 
 };
 
 

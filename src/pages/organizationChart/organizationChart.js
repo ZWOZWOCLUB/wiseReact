@@ -77,7 +77,7 @@ import { NavLink } from "react-router-dom";
         <>
           <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
 
-          <NavLink to="/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
+          <NavLink to="/main/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
           트리로 이동
           </NavLink>
           <div className={`${coreCSS[`col-md`]} ${coreCSS[`mb-4`]} ${coreCSS[`mb-md-0`]}`}>
