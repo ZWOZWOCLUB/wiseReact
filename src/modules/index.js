@@ -25,6 +25,13 @@ import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
+import organizationItemReducer from "./OrganizationRefListModule";
+import organizationMemberReducer from "./OrganizationMemberModule";
+import organizationCreateReducer from "./OrganizationCreateModule";
+import organizationListReducer from "./OrganizationListModule";
+import organizationModifyReducer from "./OrganizationModifyModule";
+import organizationDeleteReducer from "./OrganizationDeleteModule";
+import organizationEditReducer from "./OrganizationEditModule";
 
 const { combineReducers } = require("redux");
 
@@ -58,6 +65,13 @@ const rootReducer = combineReducers({
   noticeReducer,
   scheduleReducer,
   mpUpdateReducer,
+  organizationItemReducer,
+  organizationMemberReducer,
+  organizationCreateReducer,
+  organizationListReducer,
+  organizationModifyReducer,
+  organizationDeleteReducer,
+  organizationEditReducer,
 });
 
 export default rootReducer;
