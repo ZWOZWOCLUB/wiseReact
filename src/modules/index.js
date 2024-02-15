@@ -32,6 +32,8 @@ import approvalInfoReducer from './ApprovalInfoModule';
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import aamPutReducer from "./AAMModule";
+import aamPutAlarmReducer from "./AAMPutAlarmModule";
 
 const { combineReducers } = require("redux");
 
@@ -72,6 +74,8 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+  aamPutReducer,
+  aamPutAlarmReducer,
 });
 
 export default rootReducer;

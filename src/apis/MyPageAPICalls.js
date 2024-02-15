@@ -125,10 +125,10 @@ export const callDocAPI = ({ memCode }) => {
 };
 
 // 출퇴근 상세 조회
-export const callATTAPI = ({ memCode }) => {
+export const callATTAPI = ({ memCode, date }) => {
   console.log("api memCode", memCode);
 
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/attendance/${memCode}/2024-01-01`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/attendance/${memCode}/${date}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {

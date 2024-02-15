@@ -1,23 +1,19 @@
-import React from 'react';
+import { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 function ImageDownloader() {
-  const imageUrl = 'http://localhost:8001/salary/d1d5cefa23184c4f9b7be548862379bf.png';
 
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'image.png'; // 파일명을 지정할 수 있습니다.
+  // useState 훅의 초기값으로 현재 날짜를 넣어줌
+  const [today, setToday] = useState(new Date()); 
 
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
+  // onChange 이벤트에 넣어줘서 날짜가 지날 때마다 today값이 업데이트 되도록 구현
+  const onChangeToday = () => {
+    setToday(today);
   };
-
   return (
     <div>
-      <button onClick={handleDownload}>이미지 다운로드</button>
+      <Calendar onChange={onChangeToday} value={today} />
     </div>
   );
 }
