@@ -73,7 +73,7 @@ function App() {
           <Route path="message3" element={<Message3 />} />
           <Route path="sign" element={<Sign />} />
           <Route path="organizationChart" element={<Organization />} />
-          {/* <Route path='dataformat' element={<DataFormat />} /> */}
+          <Route path='dataformat' element={<DataFormat />} />
           <Route path="notice" element={<NoticeMain />} />
           <Route path="noticeWrite" element={<NoticeWrite />} />
           <Route path="notice/detail/:notCode" element={<NoticeDetail />} />
