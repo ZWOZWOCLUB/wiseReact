@@ -6,8 +6,89 @@ import '../../@core/css/demo.css';
 import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { callAprovalRetiredAPI } from '../../apis/ApprovalAPICalls';
 
 function Retiredment() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const navigate = useNavigate();
+    const [img, setImg] = useState(null);
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+
+    const formattedDate = year + '-' + month + '-' + day;
+
+    const memberCode = 240130003;
+
+    const [form, setForm] = useState({
+        tirDate: '',
+        tirContents: '',
+        approval: {
+            payDate: formattedDate,
+            payKind: '퇴직 신청',
+            approvalMember: {
+                memCode: token.memCode,
+            },
+            payName: '퇴직 신청',
+        },
+        cMember: {
+            memCode: memberCode,
+        },
+    });
+
+    const dispatch = useDispatch();
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+        console.log(form);
+    };
+
+    const fileChange = (e) => {
+        const file = e.target.files[0];
+
+        console.log('file name : ', file.name);
+
+        setImg(file);
+
+        setForm((prevForm) => ({
+            ...prevForm,
+            file: file,
+        }));
+    };
+
+    const approvalComplete = () => {
+        const formData = new FormData();
+
+        formData.append('tirDate', form.tirDate);
+        formData.append('tirContents', form.tirContents);
+        formData.append('approval.payDate', form.approval.payDate);
+        formData.append('approval.approvalMember.memCode', form.approval.approvalMember.memCode);
+        formData.append('approval.payName', form.approval.payName);
+        formData.append('approval.payKind', form.approval.payKind);
+        formData.append('cMember.memCode', form.cMember.memCode);
+
+        if (form.file) {
+            formData.append('approvalFile', form.file);
+        }
+
+        dispatch(
+            callAprovalRetiredAPI({
+                form: formData,
+            }),
+            console.log('dt')
+        );
+
+        navigate(`/main/Approval`, { replace: false });
+    };
     return (
         <>
             <div id='re-div'>
@@ -25,6 +106,8 @@ function Retiredment() {
                 <div>
                     퇴직일<span style={{ color: 'red' }}> *</span>
                     <input
+                        onChange={onChange}
+                        name='tirDate'
                         type='date'
                         id='annual-date'
                         style={{
@@ -39,6 +122,8 @@ function Retiredment() {
                         내용<span style={{ color: 'red' }}> *</span>
                     </label>
                     <textarea
+                        onChange={onChange}
+                        name='tirContents'
                         id='annual-content'
                         placeholder='퇴직 사유을 작성해주세요.'
                         style={{
@@ -61,6 +146,8 @@ function Retiredment() {
                         }}
                     >
                         <input
+                            onChange={fileChange}
+                            accept='image/jpg,image/png,image/jpeg,image/gif'
                             type='file'
                             className='form-control'
                             id='inputGroupFile02'
@@ -87,7 +174,7 @@ function Retiredment() {
                 >
                     <b>초기화</b>
                 </div>
-                <button type='button' className='btn btn-primary' id='complete-payment1'>
+                <button type='button' className='btn btn-primary' id='complete-payment1' onClick={approvalComplete}>
                     작성 완료
                 </button>
             </div>

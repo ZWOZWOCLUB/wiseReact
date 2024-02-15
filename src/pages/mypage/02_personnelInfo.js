@@ -25,7 +25,6 @@ function PersonnelInfo(){
     useEffect(
       () => {
         console.log('useEffect의 token---->',token);
-        console.log('useEffect의 token.memCode--->', token.memCode);
 
         if(token !== null) {
 
@@ -52,7 +51,7 @@ function PersonnelInfo(){
         navigate("/main/mp", { replace: true })
       }
       if (tab === '인사 정보'){
-        navigate("/mainmppersonnelInfo", { replace: true })
+        navigate("/main/mppersonnelInfo", { replace: true })
       }
       if (tab === '연차 관리'){
         navigate("/main/mpvacation", { replace: true })

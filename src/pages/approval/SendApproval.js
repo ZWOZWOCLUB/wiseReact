@@ -9,16 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { callSendApprovalAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function SendApproval() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const approvalList = useSelector((state) => state.approvalReducer);
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     useEffect(() => {
         dispatch(
             callSendApprovalAPI({
-                memCode: 3,
+                memCode: token.memCode,
             })
         );
     }, []);
@@ -36,6 +38,13 @@ function SendApproval() {
     const onClickReceiveApproval = () => {
         console.log('ReceiveApproval click');
         navigate(`/main/Approval`, { replace: false });
+    };
+    const requestApproval = () => {
+        navigate(`/main/RequestApproval`, { replace: false });
+    };
+
+    const ondblclickapproval = (payCode) => {
+        navigate(`/main/ApprovalDetail`, { state: { payCode } });
     };
 
     return (
@@ -98,7 +107,9 @@ function SendApproval() {
                                                 src='../../assets/img/paymentimg/search.png'
                                                 style={{ width: '20px', marginLeft: '5px' }}
                                             />
-                                            <button className='payment-insert-button'>결재신청</button>
+                                            <button className='payment-insert-button' onClick={requestApproval}>
+                                                결재신청
+                                            </button>
                                         </div>
                                         <table className='table table-hover'>
                                             <thead>
@@ -115,12 +126,17 @@ function SendApproval() {
                                             <tbody>
                                                 {Array.isArray(approvalList) && approvalList.length > 0 ? (
                                                     approvalList.map((a) => (
-                                                        <tr key={a.approval.payCode}>
-                                                            <td>{a.approvalMember.memName}</td>
-                                                            <td>{a.approval.payName}</td>
-                                                            <td>{a.approval.payDate}</td>
+                                                        <tr
+                                                            key={a.approval.payCode}
+                                                            onDoubleClick={() => {
+                                                                ondblclickapproval(a.approval.payCode);
+                                                            }}
+                                                        >
+                                                            <td>{a.approvalMember?.memName}</td>
+                                                            <td>{a.approval?.payName}</td>
+                                                            <td>{a.approval?.payDate}</td>
                                                             <td>{a.appDate}</td>
-                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.approval?.payKind}</td>
                                                             <td>{a.appState}</td>
                                                             <td>:</td>
                                                         </tr>

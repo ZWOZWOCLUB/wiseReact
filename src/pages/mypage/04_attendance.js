@@ -21,7 +21,6 @@ function MPAttendance(){
     useEffect(
       () => {
         console.log('useEffect의 token---->',token);
-        console.log('useEffect의 token.memCode--->', token.memCode);
   
         if(token !== null) {
   

@@ -8,11 +8,13 @@ import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { callReceiveApprovalAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 // const { useDispatch, useSelector } = require('react-redux');
 const { useNavigate } = require('react-router-dom');
 
 function Approval() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const approvalList = useSelector((state) => state.approvalReducer);
@@ -20,7 +22,7 @@ function Approval() {
     useEffect(() => {
         dispatch(
             callReceiveApprovalAPI({
-                memCode: 3,
+                memCode: token.memCode,
             })
         );
     }, []);
@@ -45,12 +47,12 @@ function Approval() {
         navigate(`/main/Approval`, { replace: false });
     };
 
-    const ondblclickapproval = () => {
-        console.log('왔냐');
-    };
-
     const requestApproval = () => {
         navigate(`/main/RequestApproval`, { replace: false });
+    };
+
+    const ondblclickapproval = (payCode) => {
+        navigate(`/main/ApprovalDetail`, { state: { payCode } });
     };
 
     return (
@@ -132,12 +134,17 @@ function Approval() {
                                             <tbody>
                                                 {Array.isArray(approvalList) && approvalList.length > 0 ? (
                                                     approvalList.map((a) => (
-                                                        <tr key={a.approval.payCode} onDoubleClick={ondblclickapproval}>
-                                                            <td>{a.approval.approvalMember.memName}</td>
-                                                            <td>{a.approval.payName}</td>
-                                                            <td>{a.approval.payDate}</td>
+                                                        <tr
+                                                            key={a.approval.payCode}
+                                                            onDoubleClick={() => {
+                                                                ondblclickapproval(a.approval.payCode);
+                                                            }}
+                                                        >
+                                                            <td>{a.approval?.approvalMember?.memName}</td>
+                                                            <td>{a.approval?.payName}</td>
+                                                            <td>{a.approval?.payDate}</td>
                                                             <td>{a.appDate}</td>
-                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.approval?.payKind}</td>
                                                             <td>{a.appState}</td>
                                                             <td>:</td>
                                                         </tr>

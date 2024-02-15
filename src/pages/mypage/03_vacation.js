@@ -22,18 +22,19 @@ function MPVacation(){
     useEffect(
       () => {
         console.log('useEffect의 token---->',token);
-        console.log('useEffect의 token.memCode--->', token.memCode);
   
         if(token !== null) {
   
           dispatch(callVacAPI({	
-              memCode: 2
+              memCode: 2,
+
               // memCode: token.memCode
               // 마찬가지로 사번 1의 샘플데이터가 없어서 2번과 3번으로 대체
      
           }));   
           dispatch(callVacHisAPI({	
-            memCode: 3
+            memCode: 3,
+            year: 2024
    
         }));      
       }        
@@ -176,7 +177,7 @@ function MPVacation(){
                         <th>종료일자</th>
                       </tr>
                     </thead>
-                    { vacHisList ?  
+                    {  vacHisList ?  
                     <tbody className="table-border-bottom-0">
                       { vacHisList && vacHisList.map(
                         (vacHis) => (
@@ -199,7 +200,7 @@ function MPVacation(){
                     </div>
                   </div>
                 </div>
-                {vacDetail ? 
+                {vacDetail && vacHisList ? 
                 <div className="col-6 mb-4">
                   <div className="card" id="firstItem">
                     <div className="card-body">

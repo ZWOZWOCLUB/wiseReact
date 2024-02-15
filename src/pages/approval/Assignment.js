@@ -60,6 +60,7 @@ function Assignment() {
             todayButton.addEventListener('click', function () {
                 calendar.today();
                 displayMonth();
+                console.log(calendar.getOptions);
             });
 
             const prevButton = document.getElementById('prev');
@@ -90,6 +91,8 @@ function Assignment() {
             displayMonth();
         }
     }, []);
+
+    console.log('cl', calendarRef);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -142,18 +145,20 @@ function Assignment() {
                                 <div className='col-xxl'>
                                     <div className='card mb-4'>
                                         <div className='pay-top-wrapper'>
-                                            <div className='container'>
+                                            <div className='container1'>
                                                 <div>
-                                                    <button className='prev' id='prev'>
-                                                        {'<'}
-                                                    </button>
-                                                    <span className='range' id='range'></span>
-                                                    <button className='next' id='next'>
-                                                        {'>'}
-                                                    </button>
-                                                    <button className='today' id='today'>
-                                                        Today
-                                                    </button>
+                                                    <div id='assignmentArea'>
+                                                        <button className='prev' id='prev'>
+                                                            {'<'}
+                                                        </button>
+                                                        <span className='range' id='range'></span>
+                                                        <button className='next' id='next'>
+                                                            {'>'}
+                                                        </button>
+                                                        <button className='today1' id='today'>
+                                                            Today
+                                                        </button>
+                                                    </div>
                                                     <div
                                                         className='payment-calendar'
                                                         id='calendar'
