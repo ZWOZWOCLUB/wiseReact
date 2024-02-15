@@ -61,7 +61,7 @@ function NoticeMain() {
     const onClickNoticeWrite = () => {
         // 공지작성
         console.log('NoticeWrite click');
-        navigate(`/NoticeWrite`, { replace: false });
+        navigate(`/main/NoticeWrite`, { replace: false });
     };
 
     const onSearchChangeHandler = (e) => {
@@ -247,24 +247,26 @@ function NoticeMain() {
                                             <div style={{ width: '30%' }} />
                                             {/* 페이지이동버튼 */}
                                             <ul className='pagination pagination-sm'>
-                                                {Array.isArray(noticeList) && (
-                                                    <li className='page-item next' onClick={() => setCurrentPage(1)}>
-                                                        <a className='page-link' href='javascript:void(0);'>
-                                                            <i className='tf-icon bx bx-chevrons-left'></i>
-                                                        </a>
-                                                    </li>
-                                                )}
+                                                <li className='page-item' onClick={() => setCurrentPage(1)}>
+                                                    <a className='page-link' href='javascript:void(0);'>
+                                                        <i className='tf-icon bx bx-chevrons-left'></i>
+                                                    </a>
+                                                </li>
                                                 {pageNumber.map((num) => (
                                                     <li
                                                         key={num}
-                                                        className='page-item active'
+                                                        className={`page-item ${currentPage === num ? 'active' : ''}`}
                                                         onClick={() => setCurrentPage(num)}
                                                     >
-                                                        <li className='page-link'>{num}</li>
+                                                        <a className='page-link' href='javascript:void(0);'>
+                                                            {num}
+                                                        </a>
                                                     </li>
                                                 ))}
-
-                                                <li className='page-item next'>
+                                                <li
+                                                    className='page-item'
+                                                    onClick={() => setCurrentPage(pageNumber.length)}
+                                                >
                                                     <a className='page-link' href='javascript:void(0);'>
                                                         <i className='tf-icon bx bx-chevrons-right'></i>
                                                     </a>
