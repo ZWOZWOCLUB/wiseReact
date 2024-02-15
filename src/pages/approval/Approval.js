@@ -140,11 +140,11 @@ function Approval() {
                                                                 ondblclickapproval(a.approval.payCode);
                                                             }}
                                                         >
-                                                            <td>{a.approval.approvalMember.memName}</td>
-                                                            <td>{a.approval.payName}</td>
-                                                            <td>{a.approval.payDate}</td>
+                                                            <td>{a.approval?.approvalMember?.memName}</td>
+                                                            <td>{a.approval?.payName}</td>
+                                                            <td>{a.approval?.payDate}</td>
                                                             <td>{a.appDate}</td>
-                                                            <td>{a.approval.payKind}</td>
+                                                            <td>{a.approval?.payKind}</td>
                                                             <td>{a.appState}</td>
                                                             <td>:</td>
                                                         </tr>

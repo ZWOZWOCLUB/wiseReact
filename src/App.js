@@ -32,7 +32,6 @@ import RequestApproval from "./pages/approval/RequestApproval";
 import NoticeMain from "./pages/notice/NoticeMain";
 import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeDetail from "./pages/notice/NoticeDetail";
-import OrganizationCreate from "./pages/organizationChart/organizationCreate";
 import OrganizationEdit from "./pages/organizationChart/organizationEdit";
 import ApprovalDetail from "./pages/approval/ApprovalDetail";
 import ImageDownloader from "./pages/mypage/test";
@@ -86,11 +85,7 @@ function App() {
           <Route path="alarm" element={<Alarm />} />
           <Route path="message" element={<Message />} />
           <Route path="message3" element={<Message3 />} />
-          <Route path="organizationCreate" element={<OrganizationCreate />} />
-          <Route
-            path="organizationEdit/:depCode"
-            element={<OrganizationEdit />}
-          />
+          <Route path="organizationEdit/:depCode" element={<OrganizationEdit />} />
           <Route path="settingInfo" element={<SettingInfo />} />
           <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />

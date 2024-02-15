@@ -16,6 +16,7 @@ function AnnualCom(props) {
     const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
     const day = ('0' + currentDate.getDate()).slice(-2);
 
+
     const formattedDate = year + '-' + month + '-' + day;
 
     const [form, setForm] = useState({
@@ -31,6 +32,7 @@ function AnnualCom(props) {
             [e.target.name]: e.target.value,
         });
     };
+
     const approvalComplete = () => {
         console.log('form', form);
         dispatch(
@@ -39,7 +41,7 @@ function AnnualCom(props) {
             })
         );
 
-        // navigate(`/Approval`, { replace: false });
+        navigate(`/main/Approval`, { replace: false });
     };
 
     return (

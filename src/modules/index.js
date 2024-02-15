@@ -32,6 +32,13 @@ import approvalInfoReducer from "./ApprovalInfoModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import organizationItemReducer from "./OrganizationRefListModule";
+import organizationMemberReducer from "./OrganizationMemberModule";
+import organizationCreateReducer from "./OrganizationCreateModule";
+import organizationListReducer from "./OrganizationListModule";
+import organizationModifyReducer from "./OrganizationModifyModule";
+import organizationDeleteReducer from "./OrganizationDeleteModule";
+import organizationEditReducer from "./OrganizationEditModule";
 import schedulePatternUpdateReducer from "./SchedulePatternUpdateModule";
 import schedulePatternInsertReducer from "./SchedulePatternInsertModule";
 import schedulePatternDeleteReducer from "./SchedulePatternDeleteModule";
@@ -67,6 +74,7 @@ const rootReducer = combineReducers({
   settingDocumentReducer,
   noticeReducer,
   // notCommentReducer,
+  // notCommentReducer,
   scheduleReducer,
   mpUpdateReducer,
   approvalInfoReducer,
@@ -75,6 +83,13 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+  organizationItemReducer,
+  organizationMemberReducer,
+  organizationCreateReducer,
+  organizationListReducer,
+  organizationModifyReducer,
+  organizationDeleteReducer,
+  organizationEditReducer,
   schedulePatternUpdateReducer,
   schedulePatternInsertReducer,
   schedulePatternDeleteReducer,

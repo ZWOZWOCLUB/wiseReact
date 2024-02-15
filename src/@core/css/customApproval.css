@@ -78,3 +78,19 @@
 #margintop2 div {
     margin-top: 30px;
 }
+
+.today1 {
+    color: #696cff;
+    background-color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+    border: #fff 1px solid;
+    width: 5rem;
+    border-radius: 1rem;
+}
+
+#assignmentArea {
+    display: flex;
+    justify-content: center;
+}
