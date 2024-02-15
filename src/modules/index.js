@@ -32,6 +32,13 @@ import approvalInfoReducer from './ApprovalInfoModule';
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import organizationItemReducer from "./OrganizationRefListModule";
+import organizationMemberReducer from "./OrganizationMemberModule";
+import organizationCreateReducer from "./OrganizationCreateModule";
+import organizationListReducer from "./OrganizationListModule";
+import organizationModifyReducer from "./OrganizationModifyModule";
+import organizationDeleteReducer from "./OrganizationDeleteModule";
+import organizationEditReducer from "./OrganizationEditModule";
 
 const { combineReducers } = require("redux");
 
@@ -72,6 +79,13 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+  organizationItemReducer,
+  organizationMemberReducer,
+  organizationCreateReducer,
+  organizationListReducer,
+  organizationModifyReducer,
+  organizationDeleteReducer,
+  organizationEditReducer,
 });
 
 export default rootReducer;
