@@ -64,7 +64,7 @@ function MemberAdd() {
     memPassword: "0000",
     memHireDate: currentDate,
     memStatus: "N",
-    memRole: "",
+    memRole: "N",
     posCode: 0,
     depCode: 0,
   });
@@ -148,11 +148,6 @@ function MemberAdd() {
 
     formData.append("profile", profile);
     dispatch(callMemberAddAPI({ form: formData }));
-    console.log(form);
-    console.log(profile);
-
-    alert("직원등록이 완료되었습니다.");
-    setMemCode(3);
 
     console.log(memList, "memList#######################");
     console.log(memCode, "memCode@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -233,6 +228,8 @@ function MemberAdd() {
       }
     }
   };
+  console.log("~~~~~~~~memList2", memList);
+
   return (
     <>
       <h4 className="fw-bold py-3 mb-4">
@@ -512,7 +509,7 @@ function MemberAdd() {
                           !updateState
                             ? resutlList
                               ? resutlList.memRole === "USER"
-                              : false
+                              : true
                             : form.memRole === "N"
                         }
                       />
@@ -564,12 +561,14 @@ function MemberAdd() {
                     type="button"
                     className="btn btn-primary"
                     onClick={
-                      memCode != 0 || resutlList
+                      memCode !== 0 || (memList && memList.memCode > 0)
                         ? onClickUpdateHandler
                         : onClickMemberInsertHandler
                     }
                   >
-                    {memCode != 0 || resutlList ? "수정" : "등록"}
+                    {memCode !== 0 || (memList && memList.memCode > 0)
+                      ? "수정"
+                      : "등록"}
                   </button>
                 </div>
               </div>
