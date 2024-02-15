@@ -5,14 +5,16 @@ const initialState = [];
 
 export const GET_ORGANIZATION_TREE = 'organizationChart/GET_ORGANIZATION_TREE';
 export const GET_ORGANIZATION_CARD = 'organizationChart/GET_ORGANIZATION_CARD'; //organizationChart.js
-export const PUT_ORGANIZATION_EDIT = 'organizationChart/GET_ORGANIZATION_EDIT';
-export const PUT_ORGANIZATION_CREATE = 'organizationChart/GET_ORGANIZATION_CREATE';
+// export const GET_ORGANIZATION_EDIT = 'organizationChart/GET_ORGANIZATION_EDIT';
+export const POST_ORGANIZATION_CREATE = 'organizationChart/POST_ORGANIZATION_CREATE';
+
 
 const actions = createActions({
     [GET_ORGANIZATION_TREE] : () => {},
     [GET_ORGANIZATION_CARD] : () => {},
-    [PUT_ORGANIZATION_EDIT] : () => {},
-    [PUT_ORGANIZATION_CREATE] : () => {}
+    // [GET_ORGANIZATION_EDIT] : () => {},
+    [POST_ORGANIZATION_CREATE] : () => {},
+
 
 });
 
@@ -26,13 +28,13 @@ const organizationChartReducer = handleActions(
             return payload;
         },
 
-        [PUT_ORGANIZATION_EDIT] : (state, {payload}) => {
+        // [GET_ORGANIZATION_EDIT] : (state, {payload}) => {
+        //     return payload;
+        // },
+        [POST_ORGANIZATION_CREATE] : (state, { payload }) => {
             return payload;
         },
 
-        [PUT_ORGANIZATION_CREATE] : (state, {payload}) => {
-            return payload;
-        }
     },
     initialState
 );

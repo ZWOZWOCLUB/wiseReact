@@ -9,23 +9,40 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/ScheduleAPICalls";
-import {
-  callSchedulePatternSearchAPI,
-  callScheduleWorkPatternInsertAPI,
-} from "../../apis/SchedulePatternAPICalls";
+import { callSchedulePatternSearchAPI } from "../../apis/SchedulePatternAPICalls";
+import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
+import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
+import { callScheduleWorkPatterDeleteAPI } from "../../apis/SchedulePatternDeleteAPICalls";
 
 function SchedulePattenAdd() {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
+  const [insertRows, serInsertRows] = useState();
+
+  const updateReducer = useSelector(
+    (state) => state.schedulePatternUpdateReducer
+  );
+  const insertReducer = useSelector(
+    (state) => state.schedulePatternInsertReducer
+  );
+  const deleteReducer = useSelector(
+    (state) => state.schedulePatternDeleteReducer
+  );
+  const [sendIndex, setSendIndex] = useState(null);
+  const [updateState, setUpdateState] = useState(false);
+
   const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
   };
   const [showModal, setShowModal] = useState(false);
+  const [reload, setReload] = useState(0);
+  const [sendWokCode, setSendWokCode] = useState(0);
 
   const [pattern, setPattern] = useState({
     wokStartTime: "",
+    wokCode: 0,
     wokRestTime: "",
     wokEndTime: "",
     wokDeleteState: "N",
@@ -33,32 +50,43 @@ function SchedulePattenAdd() {
     wokType: "",
   });
 
-  const onChangeHandler = (e) => {
-    setPattern({
-      ...pattern,
-      [e.target.name]: e.target.value,
-    });
-  };
-  console.log(pattern);
-
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
   }, []);
-  console.log("!!!!!!!!!!!!!!!!!!!!", allList);
+  console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
   useEffect(() => {
     dispatch(callSchedulePatternSearchAPI());
-  }, []);
-  console.log("!!!!!!!!!!!!!!!!!!!!", patternList);
+  }, [insertReducer, updateReducer, deleteReducer]);
+
+  console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
+
+  useEffect(() => {
+    if (updateState) {
+      setPattern((prevForm) => ({
+        ...prevForm,
+        wokCode: patternList[sendIndex].wokCode,
+        wokStartTime: patternList[sendIndex].wokStartTime,
+        wokRestTime: patternList[sendIndex].wokRestTime,
+        wokEndTime: patternList[sendIndex].wokEndTime,
+        wokDeleteState: patternList[sendIndex].wokDeleteState,
+        wokColor: patternList[sendIndex].wokColor,
+        wokType: patternList[sendIndex].wokType,
+      }));
+    }
+  }, [updateState]);
 
   const onClickInsertPattern = () => {
     console.log("클릭");
+
     dispatch(
       callScheduleWorkPatternInsertAPI({
         pattern: pattern,
       })
     );
+
     setPattern({
+      wokCode: 0,
       wokStartTime: "",
       wokRestTime: "",
       wokEndTime: "",
@@ -66,10 +94,24 @@ function SchedulePattenAdd() {
       wokColor: "",
       wokType: "",
     });
+    setSendIndex(0);
+    setSendWokCode(0);
+    setUpdateState(false);
+  };
+
+  const onChangeHandler = (e) => {
+    setUpdateState(true);
+    const { name, value } = e.target;
+    setPattern((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+    console.log("pattern", pattern);
   };
 
   const onClickCloseModal = () => {
     setPattern({
+      wokCode: 0,
       wokStartTime: "",
       wokRestTime: "",
       wokEndTime: "",
@@ -77,9 +119,96 @@ function SchedulePattenAdd() {
       wokColor: "",
       wokType: "",
     });
+    setSendIndex(0);
+    setSendWokCode(0);
+    setUpdateState(false);
   };
 
-  console.log(showModal);
+  const [selectedColor, setSelectedColor] = useState("");
+
+  const onClickColorBox = (event) => {
+    const backgroundColor = event.target.style.backgroundColor;
+    setSelectedColor(backgroundColor);
+    if (selectedDayIndex !== null) {
+      const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
+        selectedDayIndex
+      ];
+      selectedDay.style.background = backgroundColor;
+      console.log(backgroundColor);
+    }
+  };
+
+  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
+
+  const onClickMonToSun = (index) => {
+    setSelectedDayIndex(index);
+    const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
+      index
+    ];
+    selectedDay.style.background = selectedColor;
+    console.log("$$$$$$$$$$$$$$$", index, selectedDayIndex);
+  };
+
+  const onClickDeletePattern = (index) => {
+    console.log("index.........................", index);
+
+    const sendWokCode = patternList[index].wokCode;
+
+    dispatch(callScheduleWorkPatterDeleteAPI({ sendWokCode }));
+  };
+
+  const onClickSendIndex = (index) => {
+    setSendIndex(index);
+    const wokCode = patternList[index].wokCode;
+    setSendWokCode(wokCode);
+  };
+
+  const onClickUpdatePattern = () => {
+    dispatch(callScheduleWorkPatternUpdateAPI({ pattern }));
+
+    setPattern({
+      wokCode: 0,
+      wokStartTime: "",
+      wokRestTime: "",
+      wokEndTime: "",
+      wokDeleteState: "N",
+      wokColor: "",
+      wokType: "",
+    });
+    setSendIndex(0);
+    setSendWokCode(0);
+    setUpdateState(false);
+  };
+
+  // const
+
+  const handleAddRow = () => {
+    serInsertRows((prevRows) => [...prevRows, {}]);
+    // setCrrForm((prevForms) => [
+    //   ...prevForms,
+    //   {
+    //     memCode: memberCode,
+    //     crrCode: "",
+    //     crrName: "",
+    //     crrPosition: "",
+    //     crrStartDate: "",
+    //     crrEndDate: "",
+    //     crrState: "Y",
+    //     crrDescription: "",
+    //   },
+    // ]);
+  };
+
+  // const handleRemoveRow = (a) => {
+  //   console.log(a);
+  //   serInsertRows((prevRows) =>
+  //     prevRows.filter((row, index) => {
+  //       console.log(a, index);
+  //     })
+  //   );
+  //   serInsertRows((prevForms) => prevForms.filter((form, i) => i !== a));
+  // };
+
   return (
     <div className={`${payCSS["allWrapper"]}`}>
       <div className={`${payCSS["schedule_head"]}`}>
@@ -113,7 +242,12 @@ function SchedulePattenAdd() {
             </div>
             {Array.isArray(patternList) && patternList.length > 0
               ? patternList.map((p, index) => (
-                  <div className={`${payCSS["work"]}`} id="work" key={index}>
+                  <div
+                    className={`${payCSS["work"]}`}
+                    id="work"
+                    key={index}
+                    onClick={onClickColorBox}
+                  >
                     <div className={`${payCSS["content_left"]}`}>
                       <div
                         className={`${payCSS["color_box"]}`}
@@ -141,8 +275,20 @@ function SchedulePattenAdd() {
                               className="dropdown-menu dropdown-menu-end"
                               aria-labelledby="transactionID"
                             >
-                              <span className="dropdown-item">수정</span>
-                              <span className="dropdown-item">삭제</span>
+                              <span
+                                className="dropdown-item"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalCenter1"
+                                onClick={() => onClickSendIndex(index)}
+                              >
+                                수정
+                              </span>
+                              <span
+                                className="dropdown-item"
+                                onClick={() => onClickDeletePattern(index)}
+                              >
+                                삭제
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -207,6 +353,9 @@ function SchedulePattenAdd() {
                     <div className={`${payCSS["middle"]}`}>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 1
@@ -227,6 +376,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 2
@@ -247,6 +399,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 3
@@ -267,6 +422,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 4
@@ -288,6 +446,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 5
@@ -309,6 +470,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 6
@@ -330,6 +494,9 @@ function SchedulePattenAdd() {
                       </div>
                       <div
                         className={`${payCSS["monToSun"]}`}
+                        onClick={() => {
+                          onClickMonToSun(index);
+                        }}
                         style={{
                           background: p.patternDayList.some(
                             (day) => day.patternDayID.dayCode === 7
@@ -394,6 +561,13 @@ function SchedulePattenAdd() {
                         className={`${payCSS["inputColor"]}`}
                         name="wokColor"
                         onChange={onChangeHandler}
+                        value={
+                          !updateState
+                            ? sendWokCode > 0
+                              ? patternList[sendIndex].wokColor
+                              : pattern.wokColor
+                            : pattern.wokColor
+                        }
                       />
                       <label className={`${payCSS["colorLabel"]}`}>
                         편성명
@@ -402,7 +576,13 @@ function SchedulePattenAdd() {
                           className={`${payCSS["patternName"]}`}
                           name="wokType"
                           onChange={onChangeHandler}
-                          value={pattern.wokType}
+                          value={
+                            !updateState
+                              ? sendWokCode > 0
+                                ? patternList[sendIndex].wokType
+                                : pattern.wokType
+                              : pattern.wokType
+                          }
                         />
                       </label>
                     </div>
@@ -416,6 +596,11 @@ function SchedulePattenAdd() {
                           name="wokStartTime"
                           className={`${payCSS["timeInput"]}`}
                           onChange={onChangeHandler}
+                          value={
+                            sendWokCode > 0
+                              ? patternList[sendIndex].wokStartTime
+                              : pattern.wokType
+                          }
                         />
                       </div>
                       <div className={`${payCSS["modalMiddleWrapper"]}`}>
@@ -428,7 +613,13 @@ function SchedulePattenAdd() {
                           className={`${payCSS["timeInput"]}`}
                           onChange={onChangeHandler}
                           name="wokEndTime"
-                          value={pattern.wokEndTime}
+                          value={
+                            !updateState
+                              ? sendWokCode > 0
+                                ? patternList[sendIndex].wokEndTime
+                                : pattern.wokEndTime
+                              : pattern.wokEndTime
+                          }
                         />
                       </div>
                       <div className={`${payCSS["modalMiddleWrapper"]}`}>
@@ -439,6 +630,13 @@ function SchedulePattenAdd() {
                           className={`${payCSS["timeSelect"]}`}
                           onChange={onChangeHandler}
                           name="wokRestTime"
+                          value={
+                            !updateState
+                              ? sendWokCode > 0
+                                ? patternList[sendIndex].wokRestTime
+                                : pattern.wokRestTime
+                              : pattern.wokRestTime
+                          }
                         >
                           <option value="">--선택--</option>
                           <option value="00:30:00">00:30</option>
@@ -452,15 +650,27 @@ function SchedulePattenAdd() {
                     </div>
                     <hr />
                     <div className={`${payCSS["modalBtnWrapper"]}`}>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        data-bs-dismiss="modal"
-                        style={{ marginRight: "1rem" }}
-                        onClick={onClickInsertPattern}
-                      >
-                        저장
-                      </button>
+                      {sendWokCode > 0 ? (
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          data-bs-dismiss="modal"
+                          style={{ marginRight: "1rem" }}
+                          onClick={onClickUpdatePattern}
+                        >
+                          수정
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          data-bs-dismiss="modal"
+                          style={{ marginRight: "1rem" }}
+                          onClick={onClickInsertPattern}
+                        >
+                          저장
+                        </button>
+                      )}
                       <button
                         type="button"
                         className="btn btn-outline-secondary"

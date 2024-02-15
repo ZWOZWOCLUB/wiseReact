@@ -8,6 +8,7 @@ import {
     PUT_UPDATE_NOTICE,
 } from '../modules/NoticeModule.js';
 
+//공지 전체조회
 export const callAllViewNoticeAPI = ({ currentPage }) => {
     console.log('[NoticeListAPICall] callAllViewNoticeAPI Call');
     console.log(currentPage);
@@ -38,6 +39,7 @@ export const callAllViewNoticeAPI = ({ currentPage }) => {
     };
 };
 
+//공지 제목으로 조회
 export const callSearchTitleNoticeAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/titleSearch`;
 
@@ -57,6 +59,7 @@ export const callSearchTitleNoticeAPI = ({ form }) => {
     };
 };
 
+//공지 내용으로 조회
 export const callSearchCommentNoticeAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/commentSearch`;
 
@@ -76,6 +79,7 @@ export const callSearchCommentNoticeAPI = ({ form }) => {
     };
 };
 
+//공지 작성자로 조회
 export const callSearchMemberNameNoticeAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/memberNameSearch`;
 
@@ -95,6 +99,7 @@ export const callSearchMemberNameNoticeAPI = ({ form }) => {
     };
 };
 
+//공지 상세페이지 조회
 export const callDetailNoticeAPI = ({ notCode }) => {
     console.log('callDetailNoticeAPI Call');
     console.log('notCode', notCode);
@@ -119,13 +124,26 @@ export const callDetailNoticeAPI = ({ notCode }) => {
         console.log({ result });
     };
 };
-// NoticeAPICalls.js
-// export const callDetailNoticeAPI = (notCode) => async (dispatch) => {
-//     try {
-//       const response = await fetch(`/api/notice/${notCode}`);
-//       const data = await response.json();
-//       dispatch({ type: "FETCH_NOTICE_DETAIL_SUCCESS", payload: data });
-//     } catch (error) {
-//       dispatch({ type: "FETCH_NOTICE_DETAIL_FAILURE", payload: error });
-//     }
-//   };
+
+export const callNoticeInsertAPI = ({ form }) => { 
+    console.log('callNoticeInsertAPI Call');
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/notice`;
+    console.log('formData', form);
+
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                Accept: '*/*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            },
+            body: form,
+        }).then((response) => response.json());
+
+        console.log('callNoticeInsertAPI RESULT : ', result);
+
+        dispatch({ type: POST_INSERT_NOTICE, payload: result.data });
+        console.log({result});   
+    }
+}
+

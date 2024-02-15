@@ -7,8 +7,61 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 import './noticeWrite.css';
 import '../../assets/vendor/libs/apex-charts/apexcharts.js';
-// import "../../assets/js/dashboards-analytics.js";
-function NoticeWrite (){
+import { callNoticeInsertAPI } from '../../apis/NoticeAPICalls.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+function NoticeWrite() {
+  
+  const dispatch = useDispatch();
+  const [file, setFile] = useState(null);
+  const createDate = new Date();
+  const formattedDate = createDate.toISOString().slice(0, 10);
+  const [currentDate, setCurrentDate] = useState(formattedDate);
+  
+  const noticeList = useSelector((state) => state.noticeReducer);
+  // dispatch(callNoticeInsertAPI({ form: formData }));
+  
+  console.log('noticeList', noticeList);
+  
+  // const handleFileChange = (event) => {
+  //   if (event.target.files.length > 0) {
+  //       const selectedFile = event.target.files[0]; // 선택된 파일
+  //       setFile(selectedFile); // 선택된 파일로 상태 업데이트
+  //   }
+  // };
+  
+  //  const handleSubmit = (event) => {
+  //      event.preventDefault(); // 폼 제출 기본 동작 방지
+
+  //      const formData = new FormData();
+  //      if (file) {
+  //          formData.append('noticesFiles', file);
+  //      }
+
+  //      // 여기서 API 호출
+  //      dispatch(callNoticeInsertAPI({ form: formData }));
+  //  };
+    
+  // const formData = new FormData();
+  // formData.append('noticesFiles', file);
+  
+
+  const [form, setForm] = useState({
+    notCode: "",
+    notCodeNumber: "",
+    notName: "",
+    notComment: "",
+    notView: 0,
+    // notCreateDate: currentDate,
+    memCode: 0,
+    notDeleteStatus: "N",
+    notAllArmCheck: "N"
+  });
+  console.log(form);
+  
+  
+  
+
 
     return(
 
