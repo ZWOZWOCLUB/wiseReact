@@ -18,7 +18,7 @@ function SchedulePattenAdd() {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
-  const [insertRows, serInsertRows] = useState();
+  const [insertRows, serInsertRows] = useState([]);
 
   const updateReducer = useSelector(
     (state) => state.schedulePatternUpdateReducer
@@ -180,34 +180,39 @@ function SchedulePattenAdd() {
     setUpdateState(false);
   };
 
-  // const
+  const [scheduleForm, setScheduleForm] = useState([
+    {
+      schCode: "",
+      schType: 0,
+      schStartDate: "",
+      schEndDate: "",
+      schColor: "N",
+      schDeleteStatus: "",
+      wokCode: "",
+      dayCode: "",
+    },
+  ]);
 
   const handleAddRow = () => {
     serInsertRows((prevRows) => [...prevRows, {}]);
-    // setCrrForm((prevForms) => [
-    //   ...prevForms,
-    //   {
-    //     memCode: memberCode,
-    //     crrCode: "",
-    //     crrName: "",
-    //     crrPosition: "",
-    //     crrStartDate: "",
-    //     crrEndDate: "",
-    //     crrState: "Y",
-    //     crrDescription: "",
-    //   },
-    // ]);
+    setScheduleForm((prevForms) => ({
+      ...prevForms,
+
+      schCode: "",
+      schType: 0,
+      schStartDate: "",
+      schEndDate: "",
+      schColor: "N",
+      schDeleteStatus: "",
+      wokCode: "",
+      dayCode: "",
+    }));
   };
 
-  // const handleRemoveRow = (a) => {
-  //   console.log(a);
-  //   serInsertRows((prevRows) =>
-  //     prevRows.filter((row, index) => {
-  //       console.log(a, index);
-  //     })
-  //   );
-  //   serInsertRows((prevForms) => prevForms.filter((form, i) => i !== a));
-  // };
+  const insertSchedule = (e) => {
+    const { name, value } = e.target;
+  };
+  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
 
   return (
     <div className={`${payCSS["allWrapper"]}`}>
@@ -219,7 +224,12 @@ function SchedulePattenAdd() {
           </div>
         </div>
         <div className={`${payCSS["head_right"]}`}>
-          <div className={`${payCSS["new_group"]} `}>+ 새 근무 그룹</div>
+          <div
+            className={`${payCSS["new_group"]} `}
+            onClick={() => handleAddRow()}
+          >
+            + 새 근무 그룹
+          </div>
           <div className={`${payCSS["bx"]} ${payCSS["bx-x"]}`} id="close"></div>
         </div>
       </div>
@@ -305,6 +315,178 @@ function SchedulePattenAdd() {
         </div>
         <div className={`${payCSS["main_content"]}`}>
           <div className={`${payCSS["border_card"]}`}>
+            {insertRows.map((row, index) => (
+              <div id={`${payCSS["borderCardWrapper"]}`} key={index}>
+                <div className={`${payCSS["top"]}`}>
+                  <div className={`${payCSS["top_left"]}`}>
+                    <div className={`${payCSS["nickname"]}`}>
+                      <input
+                        type="text"
+                        className={`${payCSS["nickname2"]}`}
+                        onChange={insertSchedule}
+                      />
+                    </div>
+                    <div className={`${payCSS["hours"]}`}>
+                      <i className={"bx bxs-alarm"} />
+                      <div style={{ marginTop: 3 }}>&nbsp; 35시간</div>
+                    </div>
+                  </div>
+                  <div className={`${payCSS["top_right"]}`}>
+                    <div className={`${payCSS["schedule_date"]}`}>
+                      <input
+                        type="Date"
+                        className={`${payCSS["period"]}`}
+                        onChange={insertSchedule}
+                      />
+                      <input
+                        type="Date"
+                        className={`${payCSS["period"]}`}
+                        onChange={insertSchedule}
+                      />
+                    </div>
+                    <button className={`${payCSS["check"]}`}>
+                      <i className={"bx bx-check"} style={{ marginRight: 1 }} />
+                      <div style={{ marginTop: 3 }}>&nbsp; 적용</div>
+                    </button>
+                    <button className={`${payCSS["threeDot"]}`}>
+                      <i
+                        className={`${payCSS["bx"]} ${payCSS["bx-dots-vertical-rounded"]}`}
+                        style={{ marginTop: 5 }}
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div className={`${payCSS["middle"]}`}>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>월</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>화</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>수</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    {" "}
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>목</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    {" "}
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>금</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    {" "}
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>토</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${payCSS["monToSun"]}`}
+                    onClick={() => {
+                      onClickMonToSun(index);
+                    }}
+                  >
+                    {" "}
+                    <div className={`${payCSS["forColor"]}`}>
+                      <div className={`${payCSS["first"]}`}>
+                        <strong>일</strong>
+                      </div>
+                      <div className={`${payCSS["second"]}`}>데이</div>
+                      <div className={`${payCSS["third"]}`}>
+                        <small>07:00-15:00</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`${payCSS["bottom"]}`}>
+                  <button className={`${payCSS["plus-icon"]}`}>
+                    <i
+                      className={"bx bx-plus"}
+                      style={{ fontSize: "1.5rem", color: "#fff" }}
+                    />
+                  </button>
+                  {/* <div className={`${payCSS["name"]}`}>
+                    <span></span>
+                  </div> */}
+                </div>
+              </div>
+            ))}
             {Array.isArray(allList) && allList.length > 0
               ? allList.map((p, index) => (
                   <div id={`${payCSS["borderCardWrapper"]}`} key={index}>
