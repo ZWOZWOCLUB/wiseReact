@@ -61,7 +61,7 @@ function NoticeMain() {
     const onClickNoticeWrite = () => {
         // 공지작성
         console.log('NoticeWrite click');
-        navigate(`/NoticeWrite`, { replace: false });
+        navigate(`main/NoticeWrite`, { replace: false });
     };
 
     const onSearchChangeHandler = (e) => {
