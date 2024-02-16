@@ -4,6 +4,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
+import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 
 function ScheduleAdd() {
   const dispatch = useDispatch();
@@ -11,36 +13,30 @@ function ScheduleAdd() {
   const [events, setEvents] = useState([]);
   const firstDayOfMonth = new Date().toISOString().slice(0, 7);
   const [currentYearMonth, setCurrentYearMonth] = useState(firstDayOfMonth);
-  const resultList = useSelector((state) => state.settingReducer);
   const [loading, setLoading] = useState(true);
+  const scheduleList = useSelector((state) => state.scheduleReducer);
 
-  console.log("resultList", resultList);
+  console.log("scheduleList", scheduleList);
 
-  // useEffect(() => {
-  //     console.log('currentYearMonth', currentYearMonth);
-  //     dispatch(callAttendanceAPI({
-  //         yearMonth: currentYearMonth
-  //     }))
-  // }, [currentYearMonth]);
+  useEffect(() => {
+    console.log("currentYearMonth", currentYearMonth);
+    dispatch(
+      callScheduleSearchAPI({
+        yearMonth: currentYearMonth,
+      })
+    );
+  }, [currentYearMonth]);
 
   console.log("yearMonth", yearMonth);
   console.log("currentYearMonth", yearMonth);
 
-  const resources = Array.isArray(resultList)
-    ? resultList.map((list) => ({
-        id: list.memCode,
-        title: list.memName,
+  const resources = Array.isArray(scheduleList)
+    ? scheduleList.map((list) => ({
+        id: list.children.memberList.memName,
+        title: list.children.memberList.memName,
       }))
     : [];
-
-  const eventsList = Array.isArray(resultList)
-    ? resultList.map((list) => ({
-        resourceId: list.memCode,
-        title: list.attendances.attStatus,
-        start: `${list.attendances.attWorkDate}T${list.attendances.attStartTime}`,
-        end: `${list.attendances.attWorkDate}T${list.attendances.attEndTime}`,
-      }))
-    : [];
+  // const eventsList = {};
 
   console.log(";;;;;;;;;;;;;;;;;;;", events);
 
@@ -62,7 +58,7 @@ function ScheduleAdd() {
         plugins={[dayGridPlugin, timeGridPlugin, resourceTimelinePlugin]}
         initialView="resourceTimelineMonth"
         resources={resources}
-        events={eventsList}
+        // events={eventsList}
         datesSet={handleDatesSet}
         resourceAreaWidth="8rem"
         resourceAreaHeaderContent="이름"
