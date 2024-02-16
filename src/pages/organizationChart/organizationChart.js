@@ -193,7 +193,7 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
 
 
       //편집버튼에 연결(부서 편집 페이지)
-      const editDepartment = (depCode) => {
+      const goEditDepartmentPage = (depCode) => {
         navigate(`/main/organizationEdit/${depCode}`);
       }
 
@@ -322,7 +322,7 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-primary me-3"
-                          onClick={() => editDepartment(depCode)}
+                          onClick={() => goEditDepartmentPage(depCode)}
                         >
                           편집
                         </button>
@@ -356,7 +356,7 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
                               data-email={email}
                               data-contact={contact}
                             >
-                              {memName} {orgPosition.posName}
+                              {memName} {orgPosition?.posName?? "팀원"}
                             </button>
                           </div>
                         ))

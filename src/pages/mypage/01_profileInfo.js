@@ -193,7 +193,7 @@ function MyPage() {
 
       <div className="layout-page">
         <div className="content-wrapper">
-          <div className="core_container-xxl__GqtyU core_flex-grow-1__irjv6 core_container-p-y__ZccVZ">
+          <div className="container-xxl flex-grow-1 container-p-y">
             <h4 className="fw-bold py-3 mb-4">
               <span className="text-muted fw-light">계정 설정 /</span> 계정
             </h4>

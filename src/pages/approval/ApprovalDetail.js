@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { callApprovalAttachmentInfoAPI } from '../../apis/ApprovalAPICalls';
@@ -32,6 +32,7 @@ function ApprovalDetail(props) {
     }, [payCode]);
 
     useEffect(() => {
+        
         dispatch(
             callApprovalCompleteInfoAPI({
                 payCode: payCode,

@@ -25,6 +25,7 @@
     "react-accessible-treeview": "^2.8.3",
     "react-arborist": "^3.4.0",
     "react-big-scheduler": "^0.2.7",
+    "react-calendar": "^4.8.0",
     "react-checkbox-tree": "^1.8.0",
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
@@ -68,6 +69,7 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.34"
+    "@types/styled-components": "^5.1.34",
+    "typescript": "^5.3.3"
   }
 }
