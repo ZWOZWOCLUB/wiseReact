@@ -9,40 +9,41 @@ import { callATTAPI } from "../../apis/MyPageAPICalls.js";
 // import "tui-calendar/dist/tui-calendar.css";
 import Calendar, { OnClickFunc } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import moment from "moment";
 
 function MPAttendance() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const att = useSelector((state) => state.mpATTReducer);
   const attDetail = att.data;
 
+  const [value, onChange] = useState(new Date()); // 초기값은 현재 날짜
+  const activeDate = moment(value).format("YYYY-MM-DD"); // 클릭한 날짜 (년-월-일))
+  console.log('activeDate-->',activeDate);
+
 
   // 출근 날짜 목록. 예시로 임의로 설정합니다.
-  const workDays = ['2024-02-01', '2024-02-05', '2024-02-10'];
+  const workDays = ["2024-02-01", "2024-02-05", "2024-02-10"];
 
   // 날짜 셀의 클래스 이름을 지정하는 함수
   const tileClassName = ({ date }) => {
     // 날짜를 문자열로 변환하여 출근 날짜 목록에 포함되는지 확인합니다.
-    const dateString = date.toISOString().split('T')[0];
+    const dateString = date.toISOString().split("T")[0];
     if (workDays.includes(dateString)) {
       // 출근 날짜인 경우 'work-day' 클래스를 반환하여 파란색 배경으로 설정합니다.
-      return 'work-day';
+      return "work-day";
     }
     // 출근 날짜가 아닌 경우 'non-work-day' 클래스를 반환하여 빨간색 배경으로 설정합니다.
-    return 'non-work-day';
+    return "non-work-day";
   };
-
-  
-
 
   useEffect(() => {
     if (token !== null) {
       dispatch(
         callATTAPI({
           memCode: 2,
-          date: '2024-01-01'
+          date: "2024-01-01",
           // date: today,
           // memCode: token.memCode
           // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
@@ -52,13 +53,59 @@ function MPAttendance() {
     }
   }, []);
 
-  const onClickDayHandler = (value, event) => {
+  // 일기 작성 날짜 리스트
+  const dayList = [
+    "2024-02-10",
+    "2024-02-02",
+    "2024-02-14",
+  ];
 
+  const holidayList = [
+    '01-01', 
+    '02-05', 
+    '02-06', 
+    '02-07', 
+    '02-08', 
+    '05-01', 
+    '06-06', 
+    '08-15',
+  ];
+
+
+// 각 날짜 타일에 컨텐츠 추가
+const addContent = (date) => {
+  // 해당 날짜(하루)에 추가할 컨텐츠의 배열
+  const contents = [];
+  const today = moment(); // 현재 날짜를 가져옴
+  const yesterday = moment().subtract(1, 'days');
+  const dateString = moment(date).format('YYYY-MM-DD');
+
+  // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
+  if(holidayList.find((day) => day === moment(date).format('MM-DD'))){
+    return <div className="diaryContent" style={{ backgroundColor: 'yellow' }}>공휴일</div>;
+  }
+  else {
+      if (dayList.find((day) => day === moment(date).format('YYYY-MM-DD'))) {
+    // 현재 날짜보다 작은 경우 '출근', 큰 경우 '결근' 표시
+    return <div className="diaryContent" style={{ backgroundColor: 'blue' }}>출근</div>;
+  
+  }
+  if (moment(date) < yesterday) {
+    return <div className="diaryContent" style={{ backgroundColor: 'red' }}>결근</div>;
+  } else {
+    return <div className="diaryContent"></div>;
+  }
+  }
+
+  
+};
+
+  const onClickDayHandler = (value, event) => {
     const year = value.getFullYear();
-    const month = ('0' + (value.getMonth() + 1)).slice(-2);
-    const day = ('0' + value.getDate()).slice(-2);
+    const month = ("0" + (value.getMonth() + 1)).slice(-2);
+    const day = ("0" + value.getDate()).slice(-2);
     const formattedDate = `${year}-${month}-${day}`;
-    console.log('Clicked day:', formattedDate);
+    console.log("Clicked day:", formattedDate);
 
     dispatch(
       callATTAPI({
@@ -73,7 +120,6 @@ function MPAttendance() {
 
   useEffect(() => {
     if (token !== null) {
-     
     }
   }, [att]);
 
@@ -85,7 +131,6 @@ function MPAttendance() {
     setToday(today);
   };
 
-  
   console.log();
 
   const [activeTab, setActiveTab] = useState("프로필 정보");
@@ -198,12 +243,11 @@ function MPAttendance() {
                             {/* 캘린더 시작 */}
                             {/* https://velog.io/@hhjj0513/TIL-React-캘린더-react-calendar-라이브러리-TypeScript-적용- */}
                             <div>
-                              <Calendar
-                              onChange={setToday}
-                              value={today}
-                              style={{ width: '100%' }}
+                              <Calendar 
+                              onChange={onChange} 
+                              value={value}
                               onClickDay={onClickDayHandler}
-                              tileClassName={tileClassName}
+                              tileContent={({ date }) => addContent(date)}
                               />
                             </div>
                             {/* 캘린더 끝 */}
@@ -297,4 +341,5 @@ function MPAttendance() {
     </>
   );
 }
+
 export default MPAttendance;
