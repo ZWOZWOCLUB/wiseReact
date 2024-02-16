@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { callOrganizationCardAPI, callOrgCreateAPI } from "../../apis/OrganizationChartAPICalls";
-import { callOrganizationRefListAPI } from "../../apis/OrganizationRefListAPICalls";
+// import { callOrganizationRefListAPI } from "../../apis/OrganizationRefListAPICalls";
 import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
 // import { callOrgCreateAPI } from "../../apis/OrganizationCreateAPICalls";
 import { callOrgModifyAPI } from "../../apis/OrganizationModifyAPICalls";
@@ -171,9 +171,9 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
         dispatch(callOrganizationCardAPI());
       }, []);
 
-      useEffect(()=>{
-        dispatch(callOrganizationRefListAPI());
-      },[]);
+      // useEffect(()=>{
+      //   dispatch(callOrganizationRefListAPI());
+      // },[]);
 
       useEffect(()=>{
         dispatch(callOrganizationListAPI());

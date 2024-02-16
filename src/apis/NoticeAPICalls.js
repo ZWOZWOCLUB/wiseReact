@@ -125,8 +125,10 @@ export const callDetailNoticeAPI = ({ notCode }) => {
     };
 };
 
+//공지 등록
 export const callNoticeInsertAPI = ({ form }) => { 
     console.log('callNoticeInsertAPI Call');
+    console.log('callNoticeInsertAPI Call', form);
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/notice`;
     console.log('formData', form);
 
