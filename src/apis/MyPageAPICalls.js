@@ -5,6 +5,7 @@ import { GET_DEGREE } from "../modules/MPDegreeModule";
 import { GET_DOC } from "../modules/MPDocModule";
 import { GET_MEM } from "../modules/MPModule";
 import { GET_PRO } from "../modules/MPProfileModule";
+import { GET_SAL } from "../modules/MPSalaryModule";
 import { GET_SIGN } from "../modules/MPSignModule";
 import { PUT_MEM } from "../modules/MPUpdateModule";
 import { GET_VAC_HIS } from "../modules/MPVacHisModule";
@@ -355,6 +356,28 @@ export const callMainSignAPI = ({ memCode }) => {
     if (result.status === 200) {
       console.log("[callMainSignAPI] callMainSignAPI SUCCESS");
       dispatch({ type: GET_SIGN, payload: result });
+    }
+  };
+};
+
+//  통장사본조회
+export const callSalAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/selectSal/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callSalAPI] callSalAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callSalAPI] callSalAPI SUCCESS");
+      dispatch({ type: GET_SAL, payload: result });
     }
   };
 };

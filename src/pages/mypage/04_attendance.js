@@ -18,6 +18,25 @@ function MPAttendance() {
   const att = useSelector((state) => state.mpATTReducer);
   const attDetail = att.data;
 
+
+  // 출근 날짜 목록. 예시로 임의로 설정합니다.
+  const workDays = ['2024-02-01', '2024-02-05', '2024-02-10'];
+
+  // 날짜 셀의 클래스 이름을 지정하는 함수
+  const tileClassName = ({ date }) => {
+    // 날짜를 문자열로 변환하여 출근 날짜 목록에 포함되는지 확인합니다.
+    const dateString = date.toISOString().split('T')[0];
+    if (workDays.includes(dateString)) {
+      // 출근 날짜인 경우 'work-day' 클래스를 반환하여 파란색 배경으로 설정합니다.
+      return 'work-day';
+    }
+    // 출근 날짜가 아닌 경우 'non-work-day' 클래스를 반환하여 빨간색 배경으로 설정합니다.
+    return 'non-work-day';
+  };
+
+  
+
+
   useEffect(() => {
     if (token !== null) {
       dispatch(
@@ -180,10 +199,11 @@ function MPAttendance() {
                             {/* https://velog.io/@hhjj0513/TIL-React-캘린더-react-calendar-라이브러리-TypeScript-적용- */}
                             <div>
                               <Calendar
-                                onChange={onChangeToday}
-                                value={today}
-                                style={{ width: '100%'}}
-                                onClickDay={onClickDayHandler}
+                              onChange={setToday}
+                              value={today}
+                              style={{ width: '100%' }}
+                              onClickDay={onClickDayHandler}
+                              tileClassName={tileClassName}
                               />
                             </div>
                             {/* 캘린더 끝 */}

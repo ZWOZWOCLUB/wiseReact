@@ -31,7 +31,6 @@ import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 
-
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
   const dispatch = useDispatch();
@@ -63,10 +62,8 @@ function Header() {
   //   }
   // }
 
-  
-
   const handleColorChange = () => {
-    console.log('------ handleColorChange 호출 -----');
+    console.log("------ handleColorChange 호출 -----");
     if (token !== null) {
       dispatch(
         callSendMessageAPI({
@@ -81,7 +78,6 @@ function Header() {
       dispatch(callOrganizationTreeAPI());
 
       if (recMessageList !== undefined && recMessageList.length !== 0) {
-   
         if (recMessage.data[0].recMsgCheckStatus === "N") {
           setCheck(true);
           // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
@@ -92,54 +88,61 @@ function Header() {
             })
           );
         }
-
-
       }
     }
   };
 
   // 메신저 탭 처리
   const handleTabChange = (selectedTab) => {
-    console.log('------ handleTabChange 호출 -----');
+    console.log("------ handleTabChange 호출 -----");
     setTab(selectedTab);
   };
   // 받은 메신저 삭제 API 요청
   const onClickRecMsgDelete = (msgCode) => {
-    console.log('------ onClickRecMsgDelete 호출 -----');
+    console.log("------ onClickRecMsgDelete 호출 -----");
 
-    if(window.confirm('정말로 삭제하시겠습니까?')){
-        dispatch(
-      callRecDeleteStatusUpdateAPI({
-        msgCode: msgCode,
-      })
-    );
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      dispatch(
+        callRecDeleteStatusUpdateAPI({
+          msgCode: msgCode,
+        })
+      );
     }
   };
 
   // 보낸 메신저 삭제 API 요청
   const onClickSendMsgDelete = (msgCode) => {
-    console.log('------ onClickSendMsgDelete 호출 -----');
+    console.log("------ onClickSendMsgDelete 호출 -----");
 
-    if(window.confirm('정말로 삭제하시겠습니까?')){
-       dispatch(
-      callSendDeleteStatusUpdateAPI({
-        msgCode: msgCode,
-      })
-    );
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      dispatch(
+        callSendDeleteStatusUpdateAPI({
+          msgCode: msgCode,
+        })
+      );
     }
   };
 
+
+
   // 알림함 탭 처리
   const handleTabChange1 = (selectedTab) => {
-    console.log('------ handleTabChange1 호출 -----');
-    
+    console.log("------ handleTabChange1 호출 -----");
+
     setTab(selectedTab);
-   
+  };
+
+  // 알림 상세보기 페이지 이동
+  const onClickAlarmDetail = (payCode) => {
+    console.log("------ onClickAlarmDetail 호출 -----");
+
+    navigate(`/main/ApprovalDetail`, { state: { payCode }}, {replace:true});
+    window.location.reload();
   };
 
   // 알림함 API 요청
   const onClickAlarm = () => {
-    console.log('------ onClickAlarm 호출 -----');
+    console.log("------ onClickAlarm 호출 -----");
 
     if (token !== null) {
       dispatch(
@@ -149,7 +152,6 @@ function Header() {
       );
     }
     if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      
       if (perAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(true);
         // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
@@ -165,9 +167,8 @@ function Header() {
 
   // 공지사항 클릭 시 작동하는 함수
   const onClickNotice = () => {
-    console.log('------ onClickNotice 호출 -----');
+    console.log("------ onClickNotice 호출 -----");
 
-    
     if (allAlarmList !== undefined && allAlarmList.length !== 0) {
       if (allAlarm.data[0].allArmCheck === "N") {
         setNotice(true);
@@ -183,11 +184,10 @@ function Header() {
     }
   };
 
-  const onClicktree = (name) => {
-    console.log('------ onClicktree 호출 -----');
-
-    console.log(name, "클릭");
-  };
+  // const onClickTree = (target) => {
+  //   // 클릭된 요소의 정보를 출력합니다.
+  //   console.log(target);
+  // };
 
   const onClickLogout = () => {
     alert("로그아웃 합니다.");
@@ -200,10 +200,9 @@ function Header() {
     navigate("/main/mp", { replace: true });
   };
 
-
   // 맨처음 실행되는 useEfect
   useEffect(() => {
-    console.log('------ useEffect 호출 -----');
+    console.log("------ useEffect 호출 -----");
 
     dispatch(
       callRecMessageAPI({
@@ -223,32 +222,28 @@ function Header() {
       })
     );
 
-    if (allAlarmList !== undefined  && allAlarmList.length !== 0) {
+    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
       if (allAlarm.data[0].allArmCheck === "N") {
         setNotice(false);
       }
     }
 
-    if (perAlarmList !== undefined  && perAlarmList.length !== 0) {
+    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
       if (perAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(false);
       }
     }
 
-    if (recMessageList !== undefined  && recMessageList.length !== 0) {
-  
+    if (recMessageList !== undefined && recMessageList.length !== 0) {
       if (recMessage.data[0].recMsgCheckStatus === "N") {
         setCheck(false);
-        
       }
     }
   }, []);
 
-
-
   // 메신저 리듀서 update 시 작동하는 useEffect
   useEffect(() => {
-    console.log('------ deleteStatus useEffect 호출 -----');
+    console.log("------ deleteStatus useEffect 호출 -----");
 
     // 메신저 삭제하거나 check update 시 리렌더링 할 수 있게
     dispatch(
@@ -261,13 +256,13 @@ function Header() {
         memCode: token.memCode,
       })
     );
-
   }, [deleteStatus]);
 
+  
 
   // 부서 트리 출력 useEffect
   useEffect(() => {
-    console.log('------ departmentList useEffect 호출 -----');
+    console.log("------ departmentList useEffect 호출 -----");
 
     if (departmentList && departmentList.children) {
       const options = {
@@ -281,6 +276,8 @@ function Header() {
                   ? dep.memberList.map((mem) => ({
                       text: mem.memName + " " + mem.posName,
                       nodeValue: mem.memCode,
+                      data: mem.memCode,
+                      id: mem.memCode,
                     }))
                   : dep.children.map((chi) => ({
                       text: chi.depName,
@@ -288,6 +285,8 @@ function Header() {
                       children: chi.memberList.map((mem) => ({
                         text: mem.memName + " " + mem.posName,
                         nodeValue: mem.memCode,
+                        data: mem.memCode,
+                        id: mem.memCode,
                       })),
                     })),
             })),
@@ -302,18 +301,25 @@ function Header() {
       };
 
       const tree = new Tree("#tree", options);
+
+
+  // 클릭 이벤트 핸들러를 추가합니다.
+  tree.on('click', (event) => {
+    const node = event.node;
+    // nodeValue가 있는지 확인하고 있으면 콘솔에 출력합니다.
+    if (node.nodeValue) {
+      console.log("Node Value:", node.nodeValue);
+    }
+  });
+
     }
   }, [departmentList]);
 
-
-  
-
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
-    console.log('------ recMessage useEffect 호출 -----');
+    console.log("------ recMessage useEffect 호출 -----");
 
     if (recMessageList !== undefined && recMessageList.length !== 0) {
-
       if (recMessage.data[0].recMsgCheckStatus === "N") {
         setCheck(false);
       }
@@ -325,10 +331,9 @@ function Header() {
 
   // perAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
-    console.log('------ perAlarm useEffect 호출 -----');
+    console.log("------ perAlarm useEffect 호출 -----");
 
     if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-   
       if (perAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(false);
       }
@@ -340,10 +345,9 @@ function Header() {
 
   // allAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
-    console.log('------ allAlarm useEffect 호출 -----');
+    console.log("------ allAlarm useEffect 호출 -----");
 
     if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-   
       if (allAlarm.data[0].allArmCheck === "N") {
         setNotice(false);
       }
@@ -352,6 +356,25 @@ function Header() {
       }
     }
   }, [allAlarm]);
+
+  const onClickTree = (event) => {
+    const clickedElement = event.target;
+  
+    // 클릭된 요소가 트리 노드인지 확인합니다.
+    const treeNode = clickedElement.closest('.tui-tree-node');
+    if (treeNode) {
+      // 트리 노드인 경우에만 처리합니다.
+      const nodeValue = treeNode.getAttribute('nodeValue');
+      // const nodeValue = treeNode.dataset;
+      const nodeId = treeNode.id;
+      const nodeText = treeNode.textContent.trim(); // 텍스트 내용을 가져옵니다.
+  
+      console.log("Node Value:", nodeValue);
+      console.log("Node ID:", nodeId);
+      console.log("Node Text:", nodeText);
+    }
+  };
+  
 
   return (
     <>
@@ -468,8 +491,10 @@ function Header() {
               }`}
               style={notice ? { color: "#697a8d" } : { color: "red" }}
             >
-              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} 
-              onClick={onClickNotice}
+              <i
+                className="bx bxs-megaphone"
+                style={{ fontSize: 27 }}
+                onClick={onClickNotice}
               />
             </li>
 
@@ -483,8 +508,10 @@ function Header() {
               onClick={() => handleTabChange("sended")}
               style={alarm ? { color: "#697a8d" } : { color: "red" }}
             >
-              <i className="bx bxs-bell" style={{ fontSize: 27 }} 
-              onClick={onClickAlarm}
+              <i
+                className="bx bxs-bell"
+                style={{ fontSize: 27 }}
+                onClick={onClickAlarm}
               />
             </li>
 
@@ -612,6 +639,7 @@ function Header() {
                         style={{
                           textAlign: "left",
                         }}
+                        onClick={() => onClickAlarmDetail(perAlarm.payCode)}
                       >
                         <div>{perAlarm.appDate}</div>
                         <div>
@@ -900,13 +928,14 @@ function Header() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body"
-            >
-            <div
+            <div className="modal-body">
+              {/* 조직도 화면 */}
+              <div
                 id="tree"
-                class="tui-tree-wrap"
-                onClick={(e) => onClicktree(e.target.innerText)}
+                className="tui-tree-wrap"
+                onClick={onClickTree}
               ></div>
+              {/* 조직도 화면 끝 */}
             </div>
             <div className="modal-footer">
               <button
@@ -916,7 +945,11 @@ function Header() {
               >
                 닫기
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
                 선택
               </button>
             </div>
