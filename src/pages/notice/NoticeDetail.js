@@ -68,9 +68,9 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
         memCode: token.memCode,
         comDeleteState: 'N',
         notCode: notCode,
+        posCode: token.posCode
     });
-    console.log(form);
-    console.log("comments.comMember",comments);
+   
     
     
 
@@ -84,9 +84,17 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
             comMember: { memCode: form.memCode }, // 객체 형태로 memCode 지정
             comDeleteState: form.comDeleteState,
             notCode: { notCode: form.notCode }, // 객체 형태로 notCode 지정
+            posCode: { posCode: form.posCode}
         };
         
         dispatch(callNoticeCommentInsertAPI({form: commentData}))
+        .then(() => {
+            console.log('댓글 등록 성공');
+            window.location.reload(); // API 호출 성공 후 페이지 새로고침
+        })
+        .catch(error => {
+            console.error('댓글 등록 실패', error);
+        });
             
     };
     
@@ -105,6 +113,10 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
         }));
         console.log(form);
     };
+    console.log("form",form);
+    console.log("comments.",comments);
+    console.log('comment.comMember', comment.comMember);
+console.log('posCode', comment.comMember?.posCode);
 
     return (
         <>
@@ -205,7 +217,8 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
                                                                     style={{ display: 'flex', marginBottom: '10px' }}
                                                                 >
                                                                     <div style={{ padding: 3, fontSize: 'small' }}>
-                                                                        {comment.comMember.posCode.posName}{' '}
+                                                                        {comment.comMember.posCode?.posName}
+                                                                        {' '}
                                                                         {comment.comMember.memName}
                                                                     </div>
                                                                     <div style={{ width: '2%' }} />

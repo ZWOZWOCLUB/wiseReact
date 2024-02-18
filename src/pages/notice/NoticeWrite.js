@@ -71,6 +71,7 @@ function NoticeWrite() {
         memCode: token.memCode,
         notDeleteStatus: 'N',
         notAllArmCheck: 'N',
+        
     });
     console.log('form', form);
 
@@ -87,6 +88,7 @@ function NoticeWrite() {
         formData.append('memCode', form.memCode);
         formData.append('notDeleteStatus', form.notDeleteStatus);
         formData.append('notAllArmCheck', form.notAllArmCheck);
+        
 
         formData.append('noticeFiles', noticeFiles);
         dispatch(callNoticeInsertAPI({ form: formData }));
