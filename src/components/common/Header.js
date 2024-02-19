@@ -27,9 +27,12 @@ import { callSendDeleteStatusUpdateAPI } from "../../apis/AAMAPICalls.js";
 import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
 import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
@@ -48,11 +51,73 @@ function Header() {
   const deleteStatus = useSelector((state) => state.aamPutReducer);
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
-
+  const sendNewMsgReducer = useSelector((state) => state.aamSendNewMsgReducer);
+  
   const perAlarmList = perAlarm.data;
   const sendMessageList = sendMessage.data;
   const recMessageList = recMessage.data;
   const allAlarmList = allAlarm.data;
+  const sendNewMsgReducerDetail = sendNewMsgReducer.data;
+
+  const [checked, setChecked] = useState([]);
+  const [names, setNames] = useState('');
+  const [codes, setCodes] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expanded, setExpanded] = useState(["동물원병원"]);
+  const [inputValue, setInputValue] = useState('');
+
+  const [form, setForm] = useState({
+    msgContents: '',
+    memCode: token.memCode,
+    msgDate: new Date(),
+    msgDeleteStatus: 'N',
+  });
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    if (value.length <= 200) {
+      setInputValue(value);
+    }
+    else {
+      alert('최대 200자까지만 입력이 가능합니다.')
+    }
+  };
+
+  const onClickGetMemCode = (e) => {
+    console.log(e);
+  };
+
+  const nodes =
+    departmentList && departmentList.children
+      ? [
+          {
+            value: departmentList.depName,
+            label: departmentList.depName,
+            expandDisabled: true,
+            children: departmentList.children.map((dep) => ({
+              value: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              label: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      value: mem.memCode + " " + mem.memName,
+                      label: mem.memName + " " + mem.posName,
+                    }))
+                  : dep.children.map((chi) => ({
+                      value: chi.depCode,
+                      label: chi.depName,
+                      children: chi.memberList.map((mem) => ({
+                        value: mem.memCode + " " + mem.memName,
+                        label: mem.memName + " " + mem.posName,
+                      })),
+                    })),
+            })),
+          },
+        ]
+      : [];
+
+  const searchMethod = (node, searchQuery) =>
+    node.label.toLowerCase().includes(searchQuery.toLowerCase());
 
   // if(recMessageList !== undefined){
   //   console.log('recMessage[0].recMsgCheckStatus--->',recMessage.data[0].recMsgCheckStatus);
@@ -61,6 +126,63 @@ function Header() {
   //     // setCheck(false);
   //   }
   // }
+
+  
+  const onClickSendNewMsg = () => {
+
+    if(inputValue === ''){
+      alert('메세지를 입력해주세요');
+    }
+    else {
+      console.log('inputValue--->',inputValue);
+      console.log('보낼 codes---->',codes);
+      console.log('보낼 names---->',names);
+
+    const formData = new FormData();
+
+    formData.append("msgContents", inputValue);
+    formData.append("memCode", token.memCode);
+    formData.append("msgDate", new Date().toLocaleDateString('en-CA'));
+    formData.append("msgDeleteStatus", 'N');
+
+    console.log('dispatch 직전 formdata', formData);
+   
+    // sendMessage에 넣는거까지 성공
+    dispatch(
+      callSendNewMsgAPI({
+        form: formData,
+      })
+    );
+
+    // 이제 recMessage에 msgCode랑 memCode 넣으면 됨
+
+    // sendNewMsgReducerDetail --> msgCode
+
+
+    
+
+    }
+    
+
+  };
+
+
+  const onClickCheckMember = () => {
+    console.log('onClickCheckMember 최종 check --- >',checked);
+
+    // 숫자와 이름으로만 되어있는 배열 2개로 분리
+  const splitArray = checked.map(item => {
+    const [number, name] = item.split(' ');
+    return { number, name };
+  });
+
+  // 분리된 배열 출력
+  console.log(splitArray);
+
+  setNames(splitArray.map(item => " "+item.name));
+  setCodes(splitArray.map(item => " "+item.number));
+
+  };
 
   const handleColorChange = () => {
     console.log("------ handleColorChange 호출 -----");
@@ -245,7 +367,7 @@ function Header() {
   useEffect(() => {
     console.log("------ deleteStatus useEffect 호출 -----");
 
-    // 메신저 삭제하거나 check update 시 리렌더링 할 수 있게
+    // 메신저 삭제 시 리렌더링 할 수 있게
     dispatch(
       callSendMessageAPI({
         memCode: token.memCode,
@@ -261,59 +383,59 @@ function Header() {
   
 
   // 부서 트리 출력 useEffect
-  useEffect(() => {
-    console.log("------ departmentList useEffect 호출 -----");
+  // useEffect(() => {
+  //   console.log("------ departmentList useEffect 호출 -----");
 
-    if (departmentList && departmentList.children) {
-      const options = {
-        data: [
-          {
-            text: departmentList.depName,
-            children: departmentList.children.map((dep) => ({
-              text: dep.depName === "인사팀" ? dep.depName : dep.depName,
-              children:
-                dep.depName === "인사팀"
-                  ? dep.memberList.map((mem) => ({
-                      text: mem.memName + " " + mem.posName,
-                      nodeValue: mem.memCode,
-                      data: mem.memCode,
-                      id: mem.memCode,
-                    }))
-                  : dep.children.map((chi) => ({
-                      text: chi.depName,
-                      state: "closed",
-                      children: chi.memberList.map((mem) => ({
-                        text: mem.memName + " " + mem.posName,
-                        nodeValue: mem.memCode,
-                        data: mem.memCode,
-                        id: mem.memCode,
-                      })),
-                    })),
-            })),
-          },
-        ],
-        nodeIdPrefix: "tui-tree-node-",
-        nodeDefaultState: "opened",
-        stateLabels: {
-          opened: "-",
-          closed: "+",
-        },
-      };
+  //   if (departmentList && departmentList.children) {
+  //     const options = {
+  //       data: [
+  //         {
+  //           text: departmentList.depName,
+  //           children: departmentList.children.map((dep) => ({
+  //             text: dep.depName === "인사팀" ? dep.depName : dep.depName,
+  //             children:
+  //               dep.depName === "인사팀"
+  //                 ? dep.memberList.map((mem) => ({
+  //                     text: mem.memName + " " + mem.posName,
+  //                     nodeValue: mem.memCode,
+  //                     data: mem.memCode,
+  //                     id: mem.memCode,
+  //                   }))
+  //                 : dep.children.map((chi) => ({
+  //                     text: chi.depName,
+  //                     state: "closed",
+  //                     children: chi.memberList.map((mem) => ({
+  //                       text: mem.memName + " " + mem.posName,
+  //                       nodeValue: mem.memCode,
+  //                       data: mem.memCode,
+  //                       id: mem.memCode,
+  //                     })),
+  //                   })),
+  //           })),
+  //         },
+  //       ],
+  //       nodeIdPrefix: "tui-tree-node-",
+  //       nodeDefaultState: "opened",
+  //       stateLabels: {
+  //         opened: "-",
+  //         closed: "+",
+  //       },
+  //     };
 
-      const tree = new Tree("#tree", options);
+  //     const tree = new Tree("#tree", options);
 
 
-  // 클릭 이벤트 핸들러를 추가합니다.
-  tree.on('click', (event) => {
-    const node = event.node;
-    // nodeValue가 있는지 확인하고 있으면 콘솔에 출력합니다.
-    if (node.nodeValue) {
-      console.log("Node Value:", node.nodeValue);
-    }
-  });
+  // // 클릭 이벤트 핸들러를 추가합니다.
+  // tree.on('click', (event) => {
+  //   const node = event.node;
+  //   // nodeValue가 있는지 확인하고 있으면 콘솔에 출력합니다.
+  //   if (node.nodeValue) {
+  //     console.log("Node Value:", node.nodeValue);
+  //   }
+  // });
 
-    }
-  }, [departmentList]);
+  //   }
+  // }, [departmentList]);
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
@@ -878,6 +1000,7 @@ function Header() {
                     type="button"
                     data-bs-toggle="modal"
                     data-bs-target="#modalCenter"
+                    value={names}
                   />
                   <div className="col-lg-4 col-md-6">
                     <div className="mt-3"></div>
@@ -885,7 +1008,18 @@ function Header() {
                 </div>
                 <div>
                   <div>내용</div>
-                  <input id="content" type="text" />
+                  <textarea 
+                  id="content" 
+                  type="text" 
+                  onChange={handleChange}
+                  placeholder="최대 200자"
+                  maxLength={200}
+                  value={inputValue}
+                  style={{ 
+                  whiteSpace: 'pre-wrap', 
+                  width: '300px', 
+                  height: '200px' }}
+                  />
                 </div>
                 <button
                   className="btn btn-primary"
@@ -898,6 +1032,8 @@ function Header() {
                     color: "beige",
                     width: "100px",
                   }}
+
+                  onClick={onClickSendNewMsg}
                 >
                   보내기
                 </button>
@@ -921,6 +1057,9 @@ function Header() {
               <h5 className="modal-title" id="modalCenterTitle">
                 수신자 선택
               </h5>
+              <div>
+                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 수신할 사람을 체크해주세요</small>
+              </div>
               <button
                 type="button"
                 className="btn-close"
@@ -930,11 +1069,35 @@ function Header() {
             </div>
             <div className="modal-body">
               {/* 조직도 화면 */}
-              <div
-                id="tree"
-                className="tui-tree-wrap"
-                onClick={onClickTree}
-              ></div>
+              <div>
+                <CheckboxTree
+                nodes={nodes}
+                checked={checked}
+                expanded={expanded}
+                onCheck={(checked) => setChecked(checked)}
+                onExpand={setExpanded}
+                onClick={(e) => onClickGetMemCode(e)}
+                icons={{
+                  check: <span className="bx bx-checkbox-checked" />,
+                  uncheck: <span className="bx bx-checkbox" />,
+                  halfCheck: <span className="bx bx-checkbox-square" />,
+                  expandClose: <span className="bx bx-chevron-right" />,
+                  expandOpen: <span className="bx bx-chevron-down" />,
+                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
+                  collapseAll: <span className="bx folder-open" />,
+                  parentClose: <span className="bx bx-folder" />,
+                  parentOpen: (
+                    <span
+                      className="bx bx-folder-open"
+                      style={{ color: "#696cff" }}
+                    />
+                  ),
+                  leaf: <span className="bx bx-user" />,
+                }}
+                searchQuery={searchQuery}
+                searchMethod={searchMethod}
+              />
+              </div>
               {/* 조직도 화면 끝 */}
             </div>
             <div className="modal-footer">
@@ -949,6 +1112,7 @@ function Header() {
                 type="button"
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
+                onClick={onClickCheckMember}
               >
                 선택
               </button>
