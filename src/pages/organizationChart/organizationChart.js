@@ -173,22 +173,37 @@ import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
       };
 
 
-      const [currentTeamLeader, setCurrentTeamLeader] = useState('');
+    //   const [currentTeamLeader, setCurrentTeamLeader] = useState('');
 
-      const teamLeaderChange = (memCode, depCode) => {
-        const isConfirmed = window.confirm("이 사원을 관리자로 지정하시겠습니까?");
+    //   const teamLeaderChange = (memCode, depCode) => {
+    //     const isConfirmed = window.confirm("이 사원을 관리자로 지정하시겠습니까?");
         
-        if (isConfirmed) {
-            dispatch(callUpdateRoleAPI({ memCode, depCode }))
-                .then(() => {
-                    alert("관리자로 지정되었습니다.");
-                    setCurrentTeamLeader(memCode); // 관리자 지정한 사람 체크
-                })
-                .catch(error => {
-                    console.error("관리자 지정 실패:", error);
-                });
-        }
-    };
+    //     if (isConfirmed) {
+    //         dispatch(callUpdateRoleAPI({ memCode, depCode }))
+    //             .then(() => {
+    //                 alert("관리자로 지정되었습니다.");
+    //                 setCurrentTeamLeader(memCode); // 관리자 지정한 사람 체크
+    //             })
+    //             .catch(error => {
+    //                 console.error("관리자 지정 실패:", error);
+    //             });
+    //     }
+    // };
+
+    //멤버 권한 변경
+    const [memberRoles, setMemberRoles] = useState({});
+
+    const roleChange = (memCode, memRole) => {
+      if(window.confirm(`이 멤버의 권한을 ${memRole}로 변경하시겠습니까?`)){
+        setMemberRoles(prev => ({...prev, [memCode]: memRole}));
+
+        dispatch(callUpdateRoleAPI({memCode, memRole}));
+
+        alert(`멤버의 권한이 ${memRole}로 변경되었습니다.`);
+
+      }
+    }
+
 
       return(
         <>
@@ -351,13 +366,29 @@ import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
                 <div className={`${organizationCSS['member-grid']}`}>
                 {Array.isArray(memberList) && memberList.map(member => (
                   <div key={member.memCode} className={`${organizationCSS['member-item']}`}>
-                    <input
+                    {/* <input
                     type="radio"
                     name="teamLeader"
                     value={member.memCode}
                     checked={currentTeamLeader === member.memCode}
                     onChange={() => teamLeaderChange(member.memCode, depCode)}
-                    />
+                    /> */}
+                    <div className="dropdown">
+                      <button type="button" className="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style={{ marginBottom: '0' }}>
+                        <i className="bx bx-dots-vertical-rounded"></i>
+                      </button>
+                      <div className="dropdown-menu">
+                        <span className="dropdown-item" onClick={()=> roleChange(member.memCode, 'USER')}
+                          ><i className="bx bx-user-check me-1"></i> USER</span
+                        >
+                        <span className="dropdown-item" onClick={()=> roleChange(member.memCode, 'ADMIN')}
+                          ><i className="bx bx-user-plus me-1"></i> ADMIN</span
+                        >
+                        <span className="dropdown-item" onClick={()=> roleChange(member.memCode, 'SUPERADMIN')}
+                          ><i className="bx bx-crown me-1"></i> SUPERADMIN</span
+                        >
+                      </div>
+                    </div>
                     <span style={{ cursor: "pointer" }} onClick={() => modalMemberClick(member)}>
                     {/* <button
                     type="button"
@@ -406,6 +437,10 @@ import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
                 <div className="mb-3">
                   <label htmlFor="contactBasic" className="form-label">연락처</label>
                   <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memPhone}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="contactBasic" className="form-label">권한</label>
+                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memRole}</span>
                 </div>
               </div>
               <div className="modal-footer">
