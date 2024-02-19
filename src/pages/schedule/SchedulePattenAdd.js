@@ -22,9 +22,7 @@ function SchedulePattenAdd() {
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
-  const handleAddRowButtonClick = () => {
-    scheduleRef.current.handleAddRow();
-  };
+  const [selectedColor, setSelectedColor] = useState();
 
   const scheduleRef = useRef();
 
@@ -101,6 +99,16 @@ function SchedulePattenAdd() {
     scheduleRef.current.handleAddRow();
   };
 
+  const onClickMonToSun = (index, dayIndex) => {
+    console.log('444444444444444:', index, dayIndex);
+    scheduleRef.current.onClickMonToSun(index, dayIndex);
+  };
+
+  const getSelectedColor = (selectedColor) => {
+    console.log("선택한 색상 부모컴포넌트에 전달:", selectedColor);
+    setSelectedColor(selectedColor)
+  };
+
   return (
     <div className={`${payCSS["allWrapper"]}`}>
       <div className={`${payCSS["schedule_head"]}`}>
@@ -119,12 +127,12 @@ function SchedulePattenAdd() {
       </div>
       <div className={`${payCSS["schedule_content"]}`}>
         <div className={`${payCSS["side_schedule"]}`} id="side_schedule">
-          <SchedulePattenAddPattern />
+        <SchedulePattenAddPattern getSelectedColor={getSelectedColor} selectedColor={selectedColor}/>
         </div>
         <div className={`${payCSS["main_content"]}`}>
           <div className={`${payCSS["border_card"]}`}>
-            <SchedulePattenAddInsertSchedule ref={scheduleRef} />
-            <SchedulePattenAddSchedule />
+            <SchedulePattenAddInsertSchedule ref={scheduleRef} selectedColor={selectedColor} />
+            <SchedulePattenAddSchedule selectedColor={selectedColor}/>
           </div>
         </div>
       </div>

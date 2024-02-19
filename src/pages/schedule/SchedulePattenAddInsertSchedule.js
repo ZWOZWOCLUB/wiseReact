@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState,  useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { forwardRef, useImperativeHandle } from "react";
 import "../../assets/vendor/libs/jquery/jquery.js";
@@ -21,31 +21,67 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
-  const depList = departmentList.children;
-
-  const onClickColorBox = (event) => {
-    const backgroundColor = event.target.style.backgroundColor;
-    setSelectedColor(backgroundColor);
-    if (selectedDayIndex !== null) {
-      const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-        selectedDayIndex
-      ];
-      selectedDay.style.background = backgroundColor;
-      console.log(backgroundColor);
-    }
-  };
-
+  const selectedColor = props.selectedColor;
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [selectedDayIndices, setSelectedDayIndices] = useState(Array(7).fill(null));
+  const [selectedRowIndex, setSelectedRowIndex] = useState('')
   const [selectedDayIndex, setSelectedDayIndex] = useState(null);
+  const [sendColor, setSendColor] = useState("");
 
-  const onClickMonToSun = (index) => {
-    setSelectedDayIndex(index);
-    const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-      index
-    ];
-    selectedDay.style.background = selectedColor;
-    console.log("$$$$$$$$$$$$$$$", index, selectedDayIndex);
+  const scheduleRef = useRef();
+  useEffect(() => {
+    console.log("Selected Color in Insert Schedule:", selectedColor);
+  }, [selectedColor]);
+
+  
+  console.log("$$$$$$$$$$$$$$$sendColor", selectedColor);
+  
+  useImperativeHandle(ref, () => ({
+    onClickMonToSun: (index, dayIndex) => {
+      setSelectedIndices(prevIndices => [...prevIndices, index]);
+      setSelectedDayIndices(prevDayIndices => {
+        const newDayIndices = [...prevDayIndices];
+        newDayIndices[dayIndex] = index;
+        return newDayIndices;
+      });
+    }
+  }));
+
+  const onClickMonToSun = (index, dayIndex) => {
+    setSelectedIndices(prevIndices => {
+      // 이미 선택된 요일이 있는지 확인
+      const isIndexSelected = prevIndices.includes(index);
+  
+      if (!isIndexSelected) {
+        // 선택되지 않은 경우, 인덱스를 추가
+        return [...prevIndices, index];
+      } else {
+        // 이미 선택된 경우, 해당 인덱스를 제거
+        return prevIndices.filter(idx => idx !== index);
+      }
+    });
+  
+    setSelectedDayIndices(prevDayIndices => {
+      const newDayIndices = [...prevDayIndices];
+  
+      // 선택된 요일에 대해서만 작업을 수행
+      if (!prevDayIndices[dayIndex] && prevDayIndices[dayIndex] !== 0) {
+        newDayIndices[dayIndex] = index; // 선택된 요일에 인덱스 할당
+      } else {
+        // 이미 선택된 경우, 해당 요일의 배경색을 없애고 인덱스를 제거
+        newDayIndices[dayIndex] = null;
+      }
+  
+      return newDayIndices;
+    });
   };
+  
+  
+  
+  
+  console.log('selcsdfsdf', selectedIndices)
+  console.log('setSelectedDayIndices', selectedDayIndices)
+  
 
   const [scheduleForm, setScheduleForm] = useState([
     {
@@ -62,8 +98,11 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
+      if (insertRows.length === 0) {
+
       setInsertRows((prevRows) => [...prevRows, {}]);
-      setScheduleForm([
+      setScheduleForm((prevScheduleForm) => [
+        ...prevScheduleForm,
         {
           schCode: "",
           schType: "",
@@ -75,8 +114,13 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
           dayCode: "",
         },
       ]);
-    },
+    }else{
+      alert('추가된 그룹 먼저 등록 후 진행해주세요')
+    }}
   }));
+  
+  console.log('//////////////', insertRows.length)
+  
 
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
@@ -138,6 +182,10 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   };
   console.log("setChecked +++++++++++++++++++++", checked);
 
+  const onClickIndex = (index) => {
+    console.log('ddddddddddddd',index);
+
+  }
   return (
     <>
       {insertRows.map((row, index) => (
@@ -153,6 +201,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                 />
               </div>
             </div>
+            
             <div className={`${payCSS["top_right"]}`}>
               <div className={`${payCSS["schedule_date"]}`}>
                 <input
@@ -160,7 +209,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   className={`${payCSS["period"]}`}
                   name="schStartDate"
                   onChange={(e) => insertSchedule(e, index)}
-                />
+                /> &nbsp; ~
                 <input
                   type="Date"
                   className={`${payCSS["period"]}`}
@@ -170,7 +219,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               </div>
               <button className={`${payCSS["check"]}`}>
                 <i className={"bx bx-check"} style={{ marginRight: 1 }} />
-                <div className={`${payCSS["commit"]}`} style={{ marginTop: 3 }}>
+                <div style={{ marginTop: 3 }}>
                   &nbsp; 적용
                 </div>
               </button>
@@ -183,122 +232,28 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
             </div>
           </div>
           <div className={`${payCSS["middle"]}`}>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
+          {['월', '화', '수', '목', '금', '토', '일'].map((dayIndex, idx) => (
+        <div
+          key={idx}
+          className={`${payCSS["monToSun"]}`}
+          onClick={() => {
+            onClickMonToSun(index, idx ); 
+          }}
+          style={{ background: selectedDayIndices[idx] !== null && selectedIndices.includes(index) ? selectedColor : 'transparent' }}
+
+        >
+                        <div className={`${payCSS["forColor"]}`} >
                 <div className={`${payCSS["first"]}`}>
-                  <strong>월</strong>
+                  <strong>{dayIndex}</strong>
                 </div>
                 <div className={`${payCSS["second"]}`}>데이</div>
                 <div className={`${payCSS["third"]}`}>
                   <small>07:00-15:00</small>
                 </div>
               </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>화</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>수</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>목</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>금</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>토</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>일</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
+          </div>
+          ))}
+
           </div>
           <div className={`${payCSS["bottom"]}`}>
             <div>
@@ -306,6 +261,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                 className={`${payCSS["plus-icon"]}`}
                 data-bs-toggle="modal"
                 data-bs-target="#modalCenter2"
+                onClick={() => onClickIndex(index)}
               >
                 <i
                   className={"bx bx-plus"}
@@ -315,12 +271,9 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
             </div>
             <div className={`${payCSS["wrapperName"]}`}>
               {checked.map((memName, idx) => {
-                // memName에 '/'가 포함되어 있는지 확인합니다.
                 const indexOfSlash = memName.indexOf("/");
-                // '/'가 포함되어 있으면 분할하여 뒷 부분을 가져오고, 없으면 null을 반환합니다.
                 const extractedName =
                   indexOfSlash !== -1 ? memName.split("/")[1] : null;
-                // extractedName이 null이 아닌 경우에만 해당 문자열을 출력합니다.
                 if (extractedName !== null) {
                   return (
                     <div className={`${payCSS["name"]}`} key={idx}>
@@ -328,7 +281,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                     </div>
                   );
                 }
-                // '/'가 포함되지 않은 경우는 아무 작업도 수행하지 않습니다.
                 return null;
               })}
             </div>
