@@ -9,6 +9,7 @@ import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import "tui-calendar/dist/tui-calendar.css";
+import ScheduleDetails from './ScheduleDetails';
 
 function Schedule() {
   const navigate = useNavigate();
@@ -25,7 +26,8 @@ function Schedule() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const [events, setEvents] = useState([]);
-  const [clickedData, setClickedData] = useState({ state: false })
+  const [currentTime1, setCurrentTime1] = useState(new Date());
+
 
 
 const updateEvents = (date) => {
@@ -69,11 +71,11 @@ const updateEvents = (date) => {
   setEvents(updatedEvents);
 };
 
+const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
 
 
 const getDayName = (dayCode) => {
-  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
   return dayNames[dayCode];
 };
 
@@ -92,7 +94,7 @@ const getDayName = (dayCode) => {
   useEffect(() => {
     const options = {
       month: {
-        dayNames: ["일", "월", "화", "수", "목", "금", "토"],
+        dayNames: dayNames,
         gridSelection: {
           enableDblClick: false,
           enableClick: false,
@@ -209,9 +211,40 @@ const getDayName = (dayCode) => {
   const searchMethod = (node, searchQuery) =>
     node.label.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+    const [form, setForm] = useState({
+      searchDate: '',
+  });
+
+  useEffect(() => {
+    const calendar = calendarRef.current.getInstance();
+    console.log('------>y ', calendarRef.current);
+
+    const handleSelectDateTime = async (eventInfo) => {
+        const year = new Date(eventInfo.start).getFullYear();
+        const month = (new Date(eventInfo.start).getMonth() + 1).toString().padStart(2, '0');
+        const day = new Date(eventInfo.start).getDate().toString().padStart(2, '0');
+        const dayOfWeek = dayNames[new Date(eventInfo.start).getDay()];
+
+
+        console.log('------>y ', year);
+        console.log('------>m ', month);
+        console.log('------>d ', day);
+
+        calendar.clearGridSelections();
+        
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+
+        const windowWidth = 1600; 
+        const windowHeight = 800; 
+        const left = (screenWidth - windowWidth) / 2;
+        const top = (screenHeight - windowHeight) / 2;
+        window.open(`/ScheduleDetails?date=${year}-${month}-${day}-${dayOfWeek}`, '_blank', `width=${windowWidth},height=${windowHeight},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes`);
+                    };
+
+    calendar?.on('selectDateTime', handleSelectDateTime);
+
+}, [currentTime1]);
 
   const nodes =
     departmentList && departmentList.children
@@ -241,14 +274,12 @@ const getDayName = (dayCode) => {
           },
         ]
       : [];
-const handleDayClick = (event) => {
-  console.log("Clicked date:");
-};
-useEffect(() => {
-  if (clickedData.state) {
-      console.log('이벤트 클릭함!', clickedData)
-  }
-}, [clickedData])
+
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        console.log(searchQuery)
+      };
+
     
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
@@ -329,9 +360,9 @@ useEffect(() => {
               view="month"
               calendars={calendarRef.current && calendarTheme}
               events={events}
-        isReadOnly= {true}
         />
         </div>
+
         </div>
       </div>
     </div>
