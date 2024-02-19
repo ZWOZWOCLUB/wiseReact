@@ -1,0 +1,51 @@
+#flexCard {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+}
+
+.cardStyle {
+    text-align: center;
+    font-size: 20px;
+    margin: 6%;
+    margin-top: 10%;
+}
+
+.marginTopMain {
+    margin-top: 50%;
+}
+
+#calendarDiv {
+    background-color: white;
+    max-width: 1350px;
+    max-height: 900px;
+    height: 100%;
+    width: 100%;
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#calendarTool {
+    width: 20%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#calendarSize2 {
+    width: 66%;
+    margin-bottom: 5%;
+}
+
+#workman {
+    display: flex;
+}
+
+#calendarTool td {
+    flex: auto;
+}
+
+.mainAline {
+    text-align: center;
+    margin-bottom: 5%;
+}

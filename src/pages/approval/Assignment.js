@@ -10,13 +10,29 @@ import '../../@core/css/tui-tree.css';
 import '../../@core/css/payment-annual.css';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { useNavigate } from 'react-router-dom';
-import Calendar from '@toast-ui/calendar';
+import Calendar from '@toast-ui/react-calendar';
 import { useEffect, useRef, useState } from 'react';
+import { decodeJwt } from '../../utils/tokenUtils.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { callApprovalMemberInfoAPI } from '../../apis/ApprovalInfoAPICalls.js';
+import { callRoleUpdateAPI } from '../../apis/ApprovalAPICalls.js';
 
 function Assignment() {
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
-    const calendarRef = useRef(null);
+    const calendarRef = useRef();
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [calendar, setCalendar] = useState(null);
+    let [yearMonth, setYearMonth] = useState(null);
+    const [calendarTheme, setCalendarTheme] = useState(null);
+    const dispatch = useDispatch();
+    const [form, setForm] = useState({
+        proStartDate: '',
+        proEndDate: '',
+        proMemRole: token.memRole,
+        roleMember: token.memCode,
+        proMember: '',
+    });
     // const dipatch = useDispatch();
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
@@ -24,75 +40,119 @@ function Assignment() {
     // console.log('approvalList ', approvalList);
 
     useEffect(() => {
+        const options = {
+            month: {
+                dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                gridSelection: {
+                    enableDblClick: false,
+                    enableClick: true,
+                },
+            },
+        };
+
         if (calendarRef.current) {
-            const container = calendarRef.current;
-
-            const options = {
-                defaultView: 'month',
-                month: {
-                    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-                },
-                timezone: {
-                    zones: [
-                        {
-                            timezoneName: 'Asia/Seoul',
-                            displayLabel: 'Seoul',
-                        },
-                        {
-                            timezoneName: 'Europe/London',
-                            displayLabel: 'London',
-                        },
-                    ],
-                },
-            };
-            const calendar = new Calendar(container, options);
-
-            calendar.setTheme({
-                month: {
-                    weekend: {
-                        backgroundColor: 'aliceblue',
-                    },
-                },
-            });
+            const calendar = calendarRef.current.getInstance();
+            calendar.setOptions(options);
             setCurrentDate(new Date());
-
-            const todayButton = document.getElementById('today');
-            todayButton.addEventListener('click', function () {
-                calendar.today();
-                displayMonth();
-                console.log(calendar.getOptions);
-            });
-
-            const prevButton = document.getElementById('prev');
-            prevButton.addEventListener('click', function () {
-                calendar.prev();
-                displayMonth();
-            });
-
-            const nextButton = document.getElementById('next');
-            nextButton.addEventListener('click', function () {
-                calendar.next();
-                displayMonth();
-            });
-
-            const range = document.querySelector('.range');
-
-            function displayMonth() {
-                var currentDate = calendar.getDate();
-                var year = currentDate.getFullYear();
-                var month = currentDate.getMonth() + 1;
-                if (month < 10) {
-                    month = '0' + month;
-                }
-
-                range.textContent = year + '년 ' + month + '월';
-            }
-
-            displayMonth();
         }
     }, []);
 
-    console.log('cl', calendarRef);
+    let memberList = useSelector((state) => state.approvalInfoReducer);
+
+    const onChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+        console.log('foooorm', form);
+    };
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${year}년${month}월`;
+    }
+
+    function formatDate2(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    useEffect(() => {
+        const formattedDate = formatDate(currentDate);
+
+        setYearMonth(formattedDate);
+    }, [currentDate]);
+
+    useEffect(() => {
+        const calendar = calendarRef.current.getInstance();
+
+        if (calendar) {
+            calendar?.on('selectDateTime', (eventInfo) => {
+                const proStartDate = formatDate2(eventInfo.start);
+                const proEndDate = formatDate2(eventInfo.end);
+
+                console.log('proStartDate---->', proStartDate);
+                console.log('proEndDate---->', proEndDate);
+
+                calendar.clearGridSelections();
+
+                form.proEndDate = proEndDate;
+                form.proStartDate = proStartDate;
+
+                dispatch(
+                    callApprovalMemberInfoAPI({
+                        form: form,
+                    })
+                );
+            });
+        }
+    }, []);
+
+    function assignmentComplete() {
+        console.log('comForm', form);
+
+        dispatch(
+            callRoleUpdateAPI({
+                form: form,
+            })
+        );
+        window.location.replace(`/main/Approval`);
+    }
+
+    console.log('dates', form.proStartDate);
+    console.log('datee', form.proEndDate);
+
+    useEffect(() => {
+        setCalendar(calendarRef.current.getInstance());
+    }, []);
+
+    function setYearMonthFunction(calendar) {
+        const Date = calendar.getDate();
+        const Year = Date.getFullYear();
+        const Month = (Date.getMonth() + 1).toString().padStart(2, '0');
+        console.log(Year, Month);
+        setYearMonth(Year + '년' + Month + '월');
+        console.log(yearMonth);
+    }
+
+    const onClickToday = () => {
+        calendar.today();
+        setYearMonthFunction(calendar);
+        console.log('c', form);
+    };
+    const onClickPrev = () => {
+        calendar.prev();
+        setYearMonthFunction(calendar);
+        console.log(yearMonth);
+    };
+    const onClickNext = () => {
+        calendar.next();
+        setYearMonthFunction(calendar);
+        console.log(yearMonth);
+    };
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -108,6 +168,10 @@ function Assignment() {
         console.log('ReceiveApproval click');
         navigate(`/main/Approval`, { replace: false });
     };
+
+    function clearClick() {
+        window.location.replace('/main/Assignment');
+    }
 
     return (
         <>
@@ -146,39 +210,56 @@ function Assignment() {
                                     <div className='card mb-4'>
                                         <div className='pay-top-wrapper'>
                                             <div className='container1'>
-                                                <div>
+                                                <div id='calendarSize'>
                                                     <div id='assignmentArea'>
-                                                        <button className='prev' id='prev'>
-                                                            {'<'}
-                                                        </button>
-                                                        <span className='range' id='range'></span>
-                                                        <button className='next' id='next'>
-                                                            {'>'}
-                                                        </button>
-                                                        <button className='today1' id='today'>
+                                                        <div>
+                                                            <button className='prev1' id='prev' onClick={onClickPrev}>
+                                                                {'<'}
+                                                            </button>
+                                                            <span className='range1' id='range'>
+                                                                {yearMonth}
+                                                            </span>
+                                                            <button className='next1' id='next' onClick={onClickNext}>
+                                                                {'>'}
+                                                            </button>
+                                                        </div>
+                                                        <button className='today1' id='today' onClick={onClickToday}>
                                                             Today
                                                         </button>
                                                     </div>
-                                                    <div
+                                                    <Calendar
                                                         className='payment-calendar'
                                                         id='calendar'
                                                         ref={calendarRef}
-                                                    ></div>
+                                                        view='month'
+                                                        calendars={calendarRef.current && calendarTheme}
+                                                        height={'350px'}
+                                                        style={{ paddingRight: '20px' }}
+                                                    />
                                                 </div>
                                                 <div className='payment-table'>
                                                     <h5>결재선정보</h5>
                                                     <hr />
                                                     <div className='assign-name'>
-                                                        위탁할 결재선
-                                                        <select
-                                                            name='payment-assignment'
+                                                        선택한 날짜
+                                                        <input
+                                                            type='date'
+                                                            name='proStartDate'
                                                             id='select-assign'
-                                                            className='select-assign'
-                                                        >
-                                                            <option value='0'>--선택--</option>
-                                                            <option value='1'>전권</option>
-                                                            <option value='2'>휴가</option>
-                                                        </select>
+                                                            className='select-assign1'
+                                                            onChange={onChange}
+                                                            readOnly
+                                                            value={form.proStartDate}
+                                                        />
+                                                        <span id='spanMargind'>~</span>
+                                                        <input
+                                                            type='date'
+                                                            name='proEndDate'
+                                                            className='select-assign2'
+                                                            onChange={onChange}
+                                                            readOnly
+                                                            value={form.proEndDate}
+                                                        />
                                                     </div>
                                                     <table className='table table-hover'>
                                                         <thead>
@@ -192,49 +273,52 @@ function Assignment() {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <td>
-                                                                <input
-                                                                    type='radio'
-                                                                    value='0'
-                                                                    style={{ width: '40px', alignItems: 'center' }}
-                                                                ></input>
-                                                            </td>
-                                                            <td>이동락</td>
-                                                            <td>과장</td>
-                                                            <td>외과 1팀</td>
-                                                        </tbody>
-                                                        <tbody>
-                                                            <td>
-                                                                <input
-                                                                    type='radio'
-                                                                    value='0'
-                                                                    style={{ width: '40px', alignItems: 'center' }}
-                                                                ></input>
-                                                            </td>
-                                                            <td>이동락</td>
-                                                            <td>과장</td>
-                                                            <td>외과 1팀</td>
+                                                            {Array.isArray(memberList) && memberList.length > 0 ? (
+                                                                memberList.map((a) => (
+                                                                    <tr key={a?.memCode}>
+                                                                        <td>
+                                                                            <input
+                                                                                type='radio'
+                                                                                value={a.memCode}
+                                                                                onChange={onChange}
+                                                                                name='proMember'
+                                                                            />
+                                                                        </td>
+                                                                        <td>{a.memName}</td>
+                                                                        <td>{a.position?.posName}</td>
+                                                                        <td>{a.department?.depName}</td>
+                                                                    </tr>
+                                                                ))
+                                                            ) : (
+                                                                <tr>
+                                                                    <td colSpan={4}>
+                                                                        근무일정이 있는 인원이 없습니다.
+                                                                    </td>
+                                                                </tr>
+                                                            )}
                                                         </tbody>
                                                     </table>
                                                     <div id='last-thing2'>
                                                         <div
                                                             className='btn btn-danger'
-                                                            id='clean-btn'
+                                                            id='clean-btn1'
                                                             style={{
                                                                 width: '20%',
                                                                 boxShadow: '0px 0px 10px #bbbdfc',
                                                                 backgroundColor: '#bbbdfc',
                                                                 borderColor: '#bbbdfc',
                                                             }}
+                                                            onClick={clearClick}
                                                         >
                                                             <b>초기화</b>
                                                         </div>
                                                         <button
                                                             type='button'
                                                             className='btn btn-primary'
-                                                            id='complete-payment'
+                                                            id='complete-payment1'
+                                                            onClick={assignmentComplete}
                                                         >
-                                                            저장
+                                                            지정 완료
                                                         </button>
                                                     </div>
                                                 </div>
