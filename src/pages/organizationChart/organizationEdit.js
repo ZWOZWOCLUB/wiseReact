@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { callOrganizationMemberAPI } from "../../apis/OrganizationMemberAPICalls";
-import { callOrganizationEditAPI, callOrganizationUpdateAPI } from "../../apis/OrganizationEditAPICalls";
+import { callOrganizationEditAPI, callOrganizationUpdateAPI, callOrgSearchNameAPI } from "../../apis/OrganizationEditAPICalls";
 import { useParams } from "react-router-dom";
 
 //부서편집
@@ -27,6 +27,15 @@ function OrganizationEdit(){
   const [depName, setDepName] = useState('');
   const [members, setMembers] = useState([]);
 
+  
+  //부서명과 멤버 목록 업데이트
+  useEffect(()=>{
+    if(listData){
+      setDepName(listData.depName);
+      setMembers(listData.memberList || []);
+    }
+  },[listData]);
+
   const [start, setStart] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
@@ -41,6 +50,28 @@ function OrganizationEdit(){
       pageNumber.push(i);
     }
   }
+
+  useEffect(() => {
+    console.log(currentPage);
+    setStart((currentPage - 1) * 5);
+    dispatch(
+      callOrganizationMemberAPI({
+        currentPage: currentPage,
+      })
+    );
+  }, [currentPage]
+  );
+
+
+    //페이지 이동 때 가져온 부서코드를 전달하여 부서개별조회 API 호출
+
+    useEffect(() => {
+      if (depCode) {
+        console.log("API 호출 전 부서코드 잘 받아오는지 depCode:", depCode);
+        dispatch(callOrganizationEditAPI(depCode));
+      }
+    }, [depCode, dispatch])
+
 
   //사원 추가 함수
   const addMember = (memCode, memName)=>{
@@ -60,56 +91,46 @@ function OrganizationEdit(){
   }
 
 
-  //페이지 이동 때 가져온 부서코드를 전달하여 부서개별조회 API 호출
-
-  useEffect(() => {
-    if (depCode) {
-      console.log("API 호출 전 부서코드 잘 받아오는지 depCode:", depCode);
-      dispatch(callOrganizationEditAPI(depCode));
-    }
-  }, [depCode, dispatch])
-
-
-    //수정하기 버튼 핸들러 함수
-    const updateMembersSubmit = (e) => {
-      e.preventDefault();
-      console.log("수정하기 버튼 클릭 확인");
-      //현재 멤버 상태에서 멤버 코드들만 뽑기
-      const memCodes = members.map(member => member.memCode);
-      console.log("전달되는 코드들 확인", memCodes);
-      
-      //멤버 코드 배열과 부서 코드를 API 에 전달
-      dispatch(callOrganizationUpdateAPI({depCode, memCodes}))
-      .then(()=>{
-        alert("부서 멤버 업데이트 성공!");
-      })
-      .catch((error)=>{
-        console.error("부서멤버 업데이트 실패", error);
-      });
-    };
+  //수정하기 버튼 핸들러 함수
+  const updateMembersSubmit = (e) => {
+    e.preventDefault();
+    console.log("수정하기 버튼 클릭 확인");
+    //현재 멤버 상태에서 멤버 코드들만 뽑기
+    const memCodes = members.map(member => member.memCode);
+    console.log("전달되는 코드들 확인", memCodes);
+    
+    //멤버 코드 배열과 부서 코드를 API 에 전달
+    dispatch(callOrganizationUpdateAPI({depCode, memCodes}))
+    .then(()=>{
+      alert("부서 멤버 업데이트 성공!");
+    })
+    .catch((error)=>{
+      console.error("부서멤버 업데이트 실패", error);
+    });
+  };
   
 
-  //부서명과 멤버 목록 업데이트
-  useEffect(()=>{
-    if(listData){
-      setDepName(listData.depName);
-      setMembers(listData.memberList || []);
-    }
-  },[listData]);
 
 
-  
-  useEffect(() => {
-    console.log(currentPage);
-    setStart((currentPage - 1) * 5);
-    dispatch(
-      callOrganizationMemberAPI({
-        currentPage: currentPage,
-      })
-    );
-  }, [currentPage]
-  );
+  //검색어 상태값
+  const [searchType, setSearchType] = useState('');
 
+  //검색어 핸들러 함수
+  const onSearchTypeChange = (e) => {
+    console.log(e.target.value);
+    setSearchType(e.target.value);
+
+  }
+
+
+  //검색 결과 상태 값 저장
+  const [searchResults, setSearchResults] = useState([]); 
+
+  //검색 결과에 대한 API 호출
+  const submitResult = () => {
+    
+    dispatch(callOrgSearchNameAPI(searchType));
+  }
 
     return(
 
@@ -118,7 +139,7 @@ function OrganizationEdit(){
 
 <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
 
-<div className="container-xxl flex-grow-1 container-p-y">
+<div className={`${coreCSS['col-md']} ${coreCSS['mb-4']} ${coreCSS['mb-md-0']}`}>
   <div className="text-light fw-semibold">부서 편집</div>
   <form onSubmit={updateMembersSubmit}>
     <div className="card mb-4">
@@ -127,6 +148,8 @@ function OrganizationEdit(){
           <button type="submit" className="btn btn-primary ml-2">
             수정하기
           </button>
+          <div>*리스트에서 추가 버튼을 눌러 사원을 구성하세요.</div>
+          <br/>
         </div>
 
         {/* 부서명 */}
@@ -149,7 +172,7 @@ function OrganizationEdit(){
               <div className="col-md-4 mb-3" key={index}>
                 <label htmlFor={`memName-${index}`} className="form-label"></label>
                 <input
-                  type="text" //일단보이게하고 추후에 히든으로 변경
+                  type="hidden" //일단보이게하고 추후에 히든으로 변경
                   name={`memCode-${index}`}
                   value={member.memCode}
                 />
@@ -185,6 +208,7 @@ function OrganizationEdit(){
           placeholder="사원 검색"
           aria-label="Search"
           style={{ width: "50%" }}
+          onChange={onSearchTypeChange}
         />
         <button className="btn btn-outline-primary" type="submit">
           검색
@@ -306,53 +330,3 @@ function OrganizationEdit(){
 }
 
 export default OrganizationEdit;
-
-
-          {/* <div className="col-md-3">
-            <label htmlFor="defaultFormControlInput" className="form-label">
-              이름
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="defaultFormControlInput"
-              placeholder=""
-              aria-describedby="defaultFormControlHelp"
-            />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="defaultFormControlInput" className="form-label">
-              이름
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="defaultFormControlInput"
-              placeholder=""
-              aria-describedby="defaultFormControlHelp"
-            />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="defaultFormControlInput" className="form-label">
-              이름
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="defaultFormControlInput"
-              placeholder=""
-              aria-describedby="defaultFormControlHelp"
-            />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="defaultFormControlInput" className="form-label">
-              이름
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="defaultFormControlInput"
-              placeholder=""
-              aria-describedby="defaultFormControlHelp"
-            />
-          </div> */}

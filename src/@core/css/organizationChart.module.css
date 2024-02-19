@@ -49,4 +49,16 @@
     max-width: 23.5%;
 }
 
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
 
+.member-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
