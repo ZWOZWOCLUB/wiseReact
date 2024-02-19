@@ -25,13 +25,26 @@ import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
-import approvalTypeReducer from './ApprovalTypeModule';
-import approvalCompleteReducer from './ApprovalCompleteInfoModule';
-import approvalInfoReducer from './ApprovalInfoModule';
+import approvalTypeReducer from "./ApprovalTypeModule";
+import approvalCompleteReducer from "./ApprovalCompleteInfoModule";
+import approvalInfoReducer from "./ApprovalInfoModule";
 // import notCommentReducer from "./NotCommentModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import organizationItemReducer from "./OrganizationRefListModule";
+import organizationMemberReducer from "./OrganizationMemberModule";
+import organizationCreateReducer from "./OrganizationCreateModule";
+import organizationListReducer from "./OrganizationListModule";
+import organizationModifyReducer from "./OrganizationModifyModule";
+import organizationDeleteReducer from "./OrganizationDeleteModule";
+import organizationEditReducer from "./OrganizationEditModule";
+import schedulePatternUpdateReducer from "./SchedulePatternUpdateModule";
+import schedulePatternInsertReducer from "./SchedulePatternInsertModule";
+import schedulePatternDeleteReducer from "./SchedulePatternDeleteModule";
+import aamPutReducer from "./AAMModule";
+import aamPutAlarmReducer from "./AAMPutAlarmModule";
+import mpSalReducer from "./MPSalaryModule";
 
 const { combineReducers } = require("redux");
 
@@ -64,6 +77,7 @@ const rootReducer = combineReducers({
   settingDocumentReducer,
   noticeReducer,
   // notCommentReducer,
+  // notCommentReducer,
   scheduleReducer,
   mpUpdateReducer,
   approvalInfoReducer,
@@ -72,6 +86,19 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+  organizationItemReducer,
+  organizationMemberReducer,
+  organizationCreateReducer,
+  organizationListReducer,
+  organizationModifyReducer,
+  organizationDeleteReducer,
+  organizationEditReducer,
+  schedulePatternUpdateReducer,
+  schedulePatternInsertReducer,
+  schedulePatternDeleteReducer,
+  aamPutReducer,
+  aamPutAlarmReducer,
+  mpSalReducer,
 });
 
 export default rootReducer;

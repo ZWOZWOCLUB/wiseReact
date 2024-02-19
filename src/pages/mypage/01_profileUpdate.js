@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { decodeJwt } from "../../utils/tokenUtils.js";
+import { callProfileAPI } from "../../apis/MyPageAPICalls.js";
 import PersonnelInfo from "./02_personnelInfo.js";
 // import {
 //   callMemberDetailAPI
@@ -16,7 +17,9 @@ function MyPageUpdate() {
   const params = useParams();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const member = useSelector((state) => state.mypageReducer);
+  const profile = useSelector((state) => state.mpProReducer);
   const memberDetail = member.data;
+  const profileDetail = profile.data;
 
   const [form, setForm] = useState({
     memCode: memberDetail.memCode,
@@ -25,6 +28,7 @@ function MyPageUpdate() {
     memPhone: memberDetail.memPhone,
     memAddress: memberDetail.memAddress,
   });
+  
 
   // form 데이터 세팅
   const onChangeHandler = (e) => {
@@ -71,6 +75,11 @@ function MyPageUpdate() {
     if (token !== null) {
       dispatch(
         callMemberDetailAPI({
+          memCode: token.memCode,
+        })
+      );
+      dispatch(
+        callProfileAPI({
           memCode: token.memCode,
         })
       );
@@ -188,14 +197,16 @@ function MyPageUpdate() {
                   <h5 className="card-header">프로필 정보</h5>
                   <div className="card-body">
                     <div className="d-flex align-items-start align-items-sm-center gap-4">
+                    { profileDetail && (
                       <img
-                        src="../../assets/img/avatars/1.png"
+                        src={ profileDetail.docAtcPath }
                         alt="user-avatar"
                         className="d-block rounded"
                         height="100"
                         width="100"
                         id="uploadedAvatar"
                       />
+                      ) }
                     </div>
                   </div>
                   <hr className="my-0" />

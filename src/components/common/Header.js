@@ -21,25 +21,49 @@ import { useDispatch } from "react-redux";
 import { callPerAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callSendMessageAPI } from "../../apis/AAMAPICalls.js";
 import { callRecMessageAPI } from "../../apis/AAMAPICalls.js";
+import { callMsgCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callRecDeleteStatusUpdateAPI } from "../../apis/AAMAPICalls.js";
+import { callSendDeleteStatusUpdateAPI } from "../../apis/AAMAPICalls.js";
+import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import Tree from "tui-tree";
+import "tui-tree/dist/tui-tree.css";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [tab, setTab] = useState("sended");
+  const [check, setCheck] = useState(true);
+  const [alarm, setAlarm] = useState(true);
+  const [notice, setNotice] = useState(true);
+  // const color = check ? 'blue' : 'red';
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const perAlarm = useSelector((state) => state.aamPerAlarmReducer);
+  const allAlarm = useSelector((state) => state.aamAllAlarmReducer);
   const sendMessage = useSelector((state) => state.aamSendMessageReducer);
   const recMessage = useSelector((state) => state.aamRecMessageReducer);
+  const deleteStatus = useSelector((state) => state.aamPutReducer);
+  const departmentList = useSelector((state) => state.organizationChartReducer);
+  const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
 
   const perAlarmList = perAlarm.data;
   const sendMessageList = sendMessage.data;
   const recMessageList = recMessage.data;
+  const allAlarmList = allAlarm.data;
 
+  // if(recMessageList !== undefined){
+  //   console.log('recMessage[0].recMsgCheckStatus--->',recMessage.data[0].recMsgCheckStatus);
+  //   if(recMessage.data[0].recMsgCheckStatus === 'N'){
+  //     console.log('setCheck false로 상태 변경');
+  //     // setCheck(false);
+  //   }
+  // }
 
-  // 메신저 API 요청
-  const handleTabChange = (selectedTab) => {
-    setTab(selectedTab);
+  const handleColorChange = () => {
+    console.log("------ handleColorChange 호출 -----");
     if (token !== null) {
       dispatch(
         callSendMessageAPI({
@@ -51,12 +75,75 @@ function Header() {
           memCode: token.memCode,
         })
       );
+      dispatch(callOrganizationTreeAPI());
+
+      if (recMessageList !== undefined && recMessageList.length !== 0) {
+        if (recMessage.data[0].recMsgCheckStatus === "N") {
+          setCheck(true);
+          // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
+
+          dispatch(
+            callMsgCheckStatusChangeAPI({
+              memCode: recMessage.data[0].msgCode,
+            })
+          );
+        }
+      }
     }
   };
 
-  // 알림함 API 요청
-  const handleTabChange1 = (selectedTab) => {
+  // 메신저 탭 처리
+  const handleTabChange = (selectedTab) => {
+    console.log("------ handleTabChange 호출 -----");
     setTab(selectedTab);
+  };
+  // 받은 메신저 삭제 API 요청
+  const onClickRecMsgDelete = (msgCode) => {
+    console.log("------ onClickRecMsgDelete 호출 -----");
+
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      dispatch(
+        callRecDeleteStatusUpdateAPI({
+          msgCode: msgCode,
+        })
+      );
+    }
+  };
+
+  // 보낸 메신저 삭제 API 요청
+  const onClickSendMsgDelete = (msgCode) => {
+    console.log("------ onClickSendMsgDelete 호출 -----");
+
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      dispatch(
+        callSendDeleteStatusUpdateAPI({
+          msgCode: msgCode,
+        })
+      );
+    }
+  };
+
+
+
+  // 알림함 탭 처리
+  const handleTabChange1 = (selectedTab) => {
+    console.log("------ handleTabChange1 호출 -----");
+
+    setTab(selectedTab);
+  };
+
+  // 알림 상세보기 페이지 이동
+  const onClickAlarmDetail = (payCode) => {
+    console.log("------ onClickAlarmDetail 호출 -----");
+
+    navigate(`/main/ApprovalDetail`, { state: { payCode }}, {replace:true});
+    window.location.reload();
+  };
+
+  // 알림함 API 요청
+  const onClickAlarm = () => {
+    console.log("------ onClickAlarm 호출 -----");
+
     if (token !== null) {
       dispatch(
         callPerAlarmDetailAPI({
@@ -64,28 +151,230 @@ function Header() {
         })
       );
     }
+    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
+      if (perAlarm.data[0].perArmCheckStatus === "N") {
+        setAlarm(true);
+        // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
+
+        dispatch(
+          callAlarmCheckStatusChangeAPI({
+            perArmCode: perAlarm.data[0].perArmCode,
+          })
+        );
+      }
+    }
   };
 
-  const onClickLogout = () => {
-     alert('로그아웃 합니다.');
-     window.localStorage.removeItem('accessToken');
-      navigate('/login', {replace: true});
-      window.location.reload();
-     
-  }
+  // 공지사항 클릭 시 작동하는 함수
+  const onClickNotice = () => {
+    console.log("------ onClickNotice 호출 -----");
 
-  console.log('sendMessageList-->',sendMessageList);
-  console.log('recMessageList-->',recMessageList);
+    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
+      if (allAlarm.data[0].allArmCheck === "N") {
+        setNotice(true);
+
+        // 상태 N을 Y로 업데이트 하는 API 호출
+
+        dispatch(
+          callNoticeCheckStatusChangeAPI({
+            allArmCode: allAlarm.data[0].allArmCode,
+          })
+        );
+      }
+    }
+  };
+
+  // const onClickTree = (target) => {
+  //   // 클릭된 요소의 정보를 출력합니다.
+  //   console.log(target);
+  // };
+
+  const onClickLogout = () => {
+    alert("로그아웃 합니다.");
+    window.localStorage.removeItem("accessToken");
+    navigate("/login", { replace: true });
+    window.location.reload();
+  };
 
   const onClickMyPage = () => {
     navigate("/main/mp", { replace: true });
   };
+
+  // 맨처음 실행되는 useEfect
+  useEffect(() => {
+    console.log("------ useEffect 호출 -----");
+
+    dispatch(
+      callRecMessageAPI({
+        memCode: token.memCode,
+      })
+    );
+
+    dispatch(
+      callPerAlarmDetailAPI({
+        memCode: token.memCode,
+      })
+    );
+
+    dispatch(
+      callAllAlarmDetailAPI({
+        memCode: token.memCode,
+      })
+    );
+
+    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
+      if (allAlarm.data[0].allArmCheck === "N") {
+        setNotice(false);
+      }
+    }
+
+    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
+      if (perAlarm.data[0].perArmCheckStatus === "N") {
+        setAlarm(false);
+      }
+    }
+
+    if (recMessageList !== undefined && recMessageList.length !== 0) {
+      if (recMessage.data[0].recMsgCheckStatus === "N") {
+        setCheck(false);
+      }
+    }
+  }, []);
+
+  // 메신저 리듀서 update 시 작동하는 useEffect
+  useEffect(() => {
+    console.log("------ deleteStatus useEffect 호출 -----");
+
+    // 메신저 삭제하거나 check update 시 리렌더링 할 수 있게
+    dispatch(
+      callSendMessageAPI({
+        memCode: token.memCode,
+      })
+    );
+    dispatch(
+      callRecMessageAPI({
+        memCode: token.memCode,
+      })
+    );
+  }, [deleteStatus]);
+
   
 
+  // 부서 트리 출력 useEffect
   useEffect(() => {
-    console.log("useEffect의 token---->", token);
-    // console.log("useEffect의 token.memCode--->", token.memCode);
-  }, []);
+    console.log("------ departmentList useEffect 호출 -----");
+
+    if (departmentList && departmentList.children) {
+      const options = {
+        data: [
+          {
+            text: departmentList.depName,
+            children: departmentList.children.map((dep) => ({
+              text: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      text: mem.memName + " " + mem.posName,
+                      nodeValue: mem.memCode,
+                      data: mem.memCode,
+                      id: mem.memCode,
+                    }))
+                  : dep.children.map((chi) => ({
+                      text: chi.depName,
+                      state: "closed",
+                      children: chi.memberList.map((mem) => ({
+                        text: mem.memName + " " + mem.posName,
+                        nodeValue: mem.memCode,
+                        data: mem.memCode,
+                        id: mem.memCode,
+                      })),
+                    })),
+            })),
+          },
+        ],
+        nodeIdPrefix: "tui-tree-node-",
+        nodeDefaultState: "opened",
+        stateLabels: {
+          opened: "-",
+          closed: "+",
+        },
+      };
+
+      const tree = new Tree("#tree", options);
+
+
+  // 클릭 이벤트 핸들러를 추가합니다.
+  tree.on('click', (event) => {
+    const node = event.node;
+    // nodeValue가 있는지 확인하고 있으면 콘솔에 출력합니다.
+    if (node.nodeValue) {
+      console.log("Node Value:", node.nodeValue);
+    }
+  });
+
+    }
+  }, [departmentList]);
+
+  // recMessage 리듀서의 변화를 감지하는 useEffect
+  useEffect(() => {
+    console.log("------ recMessage useEffect 호출 -----");
+
+    if (recMessageList !== undefined && recMessageList.length !== 0) {
+      if (recMessage.data[0].recMsgCheckStatus === "N") {
+        setCheck(false);
+      }
+      if (recMessage.data[0].recMsgCheckStatus === "Y") {
+        setCheck(true);
+      }
+    }
+  }, [recMessage]);
+
+  // perAlarm 리듀서의 변화를 감지하는 useEffect
+  useEffect(() => {
+    console.log("------ perAlarm useEffect 호출 -----");
+
+    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
+      if (perAlarm.data[0].perArmCheckStatus === "N") {
+        setAlarm(false);
+      }
+      if (perAlarm.data[0].perArmCheckStatus === "Y") {
+        setAlarm(true);
+      }
+    }
+  }, [perAlarm]);
+
+  // allAlarm 리듀서의 변화를 감지하는 useEffect
+  useEffect(() => {
+    console.log("------ allAlarm useEffect 호출 -----");
+
+    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
+      if (allAlarm.data[0].allArmCheck === "N") {
+        setNotice(false);
+      }
+      if (allAlarm.data[0].allArmCheck === "Y") {
+        setNotice(true);
+      }
+    }
+  }, [allAlarm]);
+
+  const onClickTree = (event) => {
+    const clickedElement = event.target;
+  
+    // 클릭된 요소가 트리 노드인지 확인합니다.
+    const treeNode = clickedElement.closest('.tui-tree-node');
+    if (treeNode) {
+      // 트리 노드인 경우에만 처리합니다.
+      const nodeValue = treeNode.getAttribute('nodeValue');
+      // const nodeValue = treeNode.dataset;
+      const nodeId = treeNode.id;
+      const nodeText = treeNode.textContent.trim(); // 텍스트 내용을 가져옵니다.
+  
+      console.log("Node Value:", nodeValue);
+      console.log("Node ID:", nodeId);
+      console.log("Node Text:", nodeText);
+    }
+  };
+  
 
   return (
     <>
@@ -200,20 +489,13 @@ function Header() {
               className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
                 coreCSS[`me-3`]
               }`}
+              style={notice ? { color: "#697a8d" } : { color: "red" }}
             >
-              <i className="bx bxs-megaphone" style={{ fontSize: 27 }} />
-            </li>
-
-            {/* 쪽지함 */}
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
-                coreCSS[`me-3`]
-              }`}
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasEnd"
-              onClick={() => handleTabChange("sended")}
-            >
-              <i className="bx bxs-bell" style={{ fontSize: 27 }} />
+              <i
+                className="bx bxs-megaphone"
+                style={{ fontSize: 27 }}
+                onClick={onClickNotice}
+              />
             </li>
 
             {/* 알림함 */}
@@ -223,9 +505,31 @@ function Header() {
               }`}
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasEnd1"
-              onClick={() => handleTabChange1("sended")}
+              onClick={() => handleTabChange("sended")}
+              style={alarm ? { color: "#697a8d" } : { color: "red" }}
             >
-              <i className="bx bxs-envelope" style={{ fontSize: 27 }} />
+              <i
+                className="bx bxs-bell"
+                style={{ fontSize: 27 }}
+                onClick={onClickAlarm}
+              />
+            </li>
+
+            {/* 쪽지함 */}
+            <li
+              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
+                coreCSS[`me-3`]
+              }`}
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasEnd"
+              onClick={() => handleTabChange1("sended")}
+              style={check ? { color: "#697a8d" } : { color: "red" }}
+            >
+              <i
+                className="bx bxs-envelope"
+                style={{ fontSize: 27 }}
+                onClick={handleColorChange}
+              />
             </li>
 
             <li
@@ -251,7 +555,11 @@ function Header() {
               />
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
-              <i className="bx bx-log-out" style={{ fontSize: 28 }} onClick={onClickLogout}/>
+              <i
+                className="bx bx-log-out"
+                style={{ fontSize: 28 }}
+                onClick={onClickLogout}
+              />
             </li>
           </ul>
         </div>
@@ -331,6 +639,7 @@ function Header() {
                         style={{
                           textAlign: "left",
                         }}
+                        onClick={() => onClickAlarmDetail(perAlarm.payCode)}
                       >
                         <div>{perAlarm.appDate}</div>
                         <div>
@@ -351,8 +660,6 @@ function Header() {
                 </div>
               </div>
             )}
-
-            
           </div>
         </div>
         {/* 알림함 끝 */}
@@ -436,36 +743,42 @@ function Header() {
                   height: "25px",
                 }}
               >
-
-                { recMessageList && recMessageList.map(
-                  (recMessage) => (
+                {recMessageList &&
+                  recMessageList.map((recMessage) => (
                     <div
-                  className="messageBox"
-                  style={{
-                    textAlign: "left",
-                  }}
-                >
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>{ recMessage.aamSendMessenger.msgDate }</div>
-                    <div>
-                      <button
+                      className="messageBox"
+                      style={{
+                        textAlign: "left",
+                      }}
+                    >
+                      <div
                         style={{
-                          border: "solid 0px",
-                          backgroundColor: "#fff",
-                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        X
-                      </button>
+                        <div>{recMessage.aamSendMessenger.msgDate}</div>
+                        <div>
+                          <button
+                            style={{
+                              border: "solid 0px",
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              onClickRecMsgDelete(recMessage.msgCode)
+                            }
+                          >
+                            X
+                          </button>
+                        </div>
+                      </div>
+                      <div>{recMessage.aamSendMessenger.msgContents}</div>
+                      <div>
+                        발신자 : {recMessage.aamSendMessenger.aamMember.memName}
+                      </div>
                     </div>
-                  </div>
-                  <div>{ recMessage.aamSendMessenger.msgContents }</div>
-                  <div>발신자 : { recMessage.aamSendMessenger.aamMember.memName }</div>
-                </div>
-                  )
-                )}
+                  ))}
                 {/* <div
                   className="messageBox"
                   style={{
@@ -491,9 +804,6 @@ function Header() {
                   <div>결재 서류 확인 부탁드립니다.</div>
                   <div>발신자 : 기린</div>
                 </div> */}
-                
-
-
               </div>
             )}
 
@@ -505,20 +815,43 @@ function Header() {
                 }}
               >
                 {/* Content for sending tab */}
-                { sendMessageList && sendMessageList.map(
-                  (sendMessage) => (
-                  <div
-                  className="messageBox"
-                  style={{
-                    textAlign: "left",
-                  }}
-                >
-                  <div>{ sendMessage.msgDate }</div>
-                  <div>수신자 : { sendMessage.aamRecMessenger.aamMember.memName }</div>
-                  <div>{ sendMessage.msgContents }</div>
-                </div>
-                  )
-                )}
+
+                {sendMessageList &&
+                  sendMessageList.map((sendMessage) => (
+                    <div
+                      className="messageBox"
+                      style={{
+                        textAlign: "left",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>{sendMessage.msgDate}</div>
+                        <div>
+                          <button
+                            style={{
+                              border: "solid 0px",
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              onClickSendMsgDelete(sendMessage.msgCode)
+                            }
+                          >
+                            X
+                          </button>
+                        </div>
+                      </div>
+                      <div>{sendMessage.msgContents}</div>
+                      <div>
+                        수신자 : {sendMessage.aamRecMessenger.aamMember.memName}
+                      </div>
+                    </div>
+                  ))}
                 {/* <div
                   className="messageBox"
                   style={{
@@ -596,42 +929,13 @@ function Header() {
               ></button>
             </div>
             <div className="modal-body">
-              <div className="row">
-                <div className="col mb-3">
-                  <label htmlFor="nameWithTitle" className="form-label">
-                    조직도가 보여질 화면
-                  </label>
-                  <input
-                    type="text"
-                    id="nameWithTitle"
-                    className="form-control"
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col mb-3">
-                  <label htmlFor="nameWithTitle" className="form-label">
-                    변경할 비밀번호
-                  </label>
-                  <input
-                    type="text"
-                    id="nameWithTitle"
-                    className="form-control"
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col mb-3">
-                  <label htmlFor="nameWithTitle" className="form-label">
-                    변경할 비밀번호 재입력
-                  </label>
-                  <input
-                    type="text"
-                    id="nameWithTitle"
-                    className="form-control"
-                  />
-                </div>
-              </div>
+              {/* 조직도 화면 */}
+              <div
+                id="tree"
+                className="tui-tree-wrap"
+                onClick={onClickTree}
+              ></div>
+              {/* 조직도 화면 끝 */}
             </div>
             <div className="modal-footer">
               <button
@@ -641,7 +945,11 @@ function Header() {
               >
                 닫기
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
                 선택
               </button>
             </div>

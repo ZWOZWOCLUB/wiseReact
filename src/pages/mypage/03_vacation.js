@@ -26,7 +26,7 @@ function MPVacation(){
         if(token !== null) {
   
           dispatch(callVacAPI({	
-              memCode: 2,
+              memCode: 3,
 
               // memCode: token.memCode
               // 마찬가지로 사번 1의 샘플데이터가 없어서 2번과 3번으로 대체
@@ -34,7 +34,7 @@ function MPVacation(){
           }));   
           dispatch(callVacHisAPI({	
             memCode: 3,
-            year: 2024
+            year: 2024 // 이건 나중에 원하는 년도를 넘겨주면 그 해당 날짜 데이터를 받을 수 있음
    
         }));      
       }        
@@ -159,7 +159,7 @@ function MPVacation(){
                           aria-haspopup="true"
                           aria-expanded="false"
                         >
-                          <i class="bx bx-dots-vertical-rounded"></i>
+                          {/* <i class="bx bx-dots-vertical-rounded"></i> */}
                         </button>
                         <div className="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
                           <span className="dropdown-item" href="javascript:void(0);">Last 28 Days</span>
@@ -217,7 +217,7 @@ function MPVacation(){
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            <i className="bx bx-dots-vertical-rounded"></i>
+                            {/* <i className="bx bx-dots-vertical-rounded"></i> */}
                           </button>
                           <div className="dropdown-menu" aria-labelledby="cardOpt1">
                             <span className="dropdown-item" href="javascript:void(0);">View More</span>
@@ -245,7 +245,7 @@ function MPVacation(){
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            <i className="bx bx-dots-vertical-rounded"></i>
+                            {/* <i className="bx bx-dots-vertical-rounded"></i> */}
                           </button>
                           <div className="dropdown-menu" aria-labelledby="cardOpt1">
                             <span className="dropdown-item" href="javascript:void(0);">View More</span>
@@ -255,7 +255,7 @@ function MPVacation(){
                       </div>
                       <span className="fw-semibold d-block mb-1">소멸 예정 연차</span>
                       <h3 className="card-title mb-2">{vacDetail.vctDeadline}회</h3>
-                      <small className="text-success fw-semibold">2025.01.01 소멸 예정</small>
+                      {/* <small className="text-success fw-semibold">2025.01.01 소멸 예정</small> */}
                     </div>
                   </div>
                   <div className="card" id="thirdItem">
@@ -273,7 +273,7 @@ function MPVacation(){
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
-                            <i className="bx bx-dots-vertical-rounded"></i>
+                            {/* <i className="bx bx-dots-vertical-rounded"></i> */}
                           </button>
                           <div className="dropdown-menu" aria-labelledby="cardOpt1">
                             <span className="dropdown-item" href="javascript:void(0);">View More</span>
@@ -282,8 +282,8 @@ function MPVacation(){
                         </div>
                       </div>
                       <span className="fw-semibold d-block mb-1">누적 사용 연차</span>
-                      <h3 className="card-title mb-2">{vacHisList.length}회</h3>
-                      <small className="text-success fw-semibold">이번년도 기준</small>
+                      <h3 className="card-title mb-2">{vacDetail.vctAmountSpendVacation}회</h3>
+                      {/* <small className="text-success fw-semibold">이번년도 기준</small> */}
                     </div>
                   </div>
                 </div>

@@ -3,13 +3,13 @@ import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/pay.module.css";
-import Tree from "tui-tree";
-import "tui-tree/dist/tui-tree.css";
 import Calendar from "@toast-ui/react-calendar";
 import "tui-calendar/dist/tui-calendar.css";
 import { options } from "@fullcalendar/core/preact";
 import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import CheckboxTree from "react-checkbox-tree";
 
 function Schedule() {
   const navigate = useNavigate();
@@ -57,43 +57,6 @@ function Schedule() {
   }, []);
 
   console.log(departmentList);
-
-  useEffect(() => {
-    if (departmentList && departmentList.children) {
-      const options = {
-        data: [
-          {
-            text: departmentList.depName,
-            children: departmentList.children.map((dep) => ({
-              text: dep.depName === "인사팀" ? dep.depName : dep.depName,
-              children:
-                dep.depName === "인사팀"
-                  ? dep.memberList.map((mem) => ({
-                      text: mem.memName + " " + mem.posName,
-                      nodeValue: mem.memCode,
-                    }))
-                  : dep.children.map((chi) => ({
-                      text: chi.depName,
-                      state: "closed",
-                      children: chi.memberList.map((mem) => ({
-                        text: mem.memName + " " + mem.posName,
-                        nodeValue: mem.memCode,
-                      })),
-                    })),
-            })),
-          },
-        ],
-        nodeIdPrefix: "tui-tree-node-",
-        nodeDefaultState: "opened",
-        stateLabels: {
-          opened: "-",
-          closed: "+",
-        },
-      };
-
-      const tree = new Tree("#tree", options);
-    }
-  }, [departmentList]);
 
   useEffect(() => {
     const options = {
@@ -214,6 +177,54 @@ function Schedule() {
     console.log(yearMonth);
   };
 
+  const [checked, setChecked] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [expanded, setExpanded] = useState(["동물원병원"]);
+
+  console.log("setChecked +++++++++++++++++++++", checked);
+  const nodes =
+    departmentList && departmentList.children
+      ? [
+          {
+            value: departmentList.depName,
+            label: departmentList.depName,
+            expandDisabled: true,
+            children: departmentList.children.map((dep) => ({
+              value: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              label: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      value: mem.memCode,
+                      label: mem.memName + " " + mem.posName,
+                    }))
+                  : dep.children.map((chi) => ({
+                      value: chi.depCode,
+                      label: chi.depName,
+                      children: chi.memberList.map((mem) => ({
+                        value: mem.memCode,
+                        label: mem.memName + " " + mem.posName,
+                      })),
+                    })),
+            })),
+          },
+        ]
+      : [];
+
+  const onClickGetMemCode = (e) => {
+    console.log(e);
+  };
+
+  const searchMethod = (node, searchQuery) =>
+    node.label.toLowerCase().includes(searchQuery.toLowerCase());
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  console.log("111111111111", searchMethod);
+
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
       <div className={`${coreCSS["card"]} ${coreCSS["mb-4"]}`}>
@@ -223,11 +234,34 @@ function Schedule() {
               <div className={`${payCSS["input-group-text5"]}`}>
                 전체 조직도
               </div>
-              <div
-                id="tree"
-                class="tui-tree-wrap"
-                onClick={(e) => onClicktree(e)}
-              ></div>
+
+              <CheckboxTree
+                nodes={nodes}
+                checked={checked}
+                expanded={expanded}
+                onCheck={(checked) => setChecked(checked)}
+                onExpand={setExpanded}
+                onClick={(e) => onClickGetMemCode(e)}
+                icons={{
+                  check: null,
+                  uncheck: null,
+                  halfCheck: null,
+                  expandClose: <span className="bx bx-chevron-right" />,
+                  expandOpen: <span className="bx bx-chevron-down" />,
+                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
+                  collapseAll: <span className="bx folder-open" />,
+                  parentClose: <span className="bx bx-folder" />,
+                  parentOpen: (
+                    <span
+                      className="bx bx-folder-open"
+                      style={{ color: "#696cff" }}
+                    />
+                  ),
+                  leaf: <span className="bx bx-user" />,
+                }}
+                searchQuery={searchQuery}
+                searchMethod={searchMethod}
+              />
             </div>
           </div>
           <div className={`${payCSS["Wrapper"]}`} style={{ flex: 3 }}>
@@ -237,6 +271,8 @@ function Schedule() {
                 className={`${payCSS["form-control4"]}`}
                 placeholder="검색어를 입력하세요"
                 aria-describedby="basic-addon11"
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
               <span
                 className={`${payCSS["input-group-text4"]}`}
