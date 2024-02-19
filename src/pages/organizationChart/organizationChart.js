@@ -5,81 +5,14 @@ import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { callOrganizationCardAPI, callOrgCreateAPI } from "../../apis/OrganizationChartAPICalls";
+import { callOrganizationCardAPI, callOrgCreateAPI, callOrgDeleteAPI, callOrgModifyAPI, callUpdateRoleAPI } from "../../apis/OrganizationChartAPICalls";
 import { callOrganizationRefListAPI } from "../../apis/OrganizationRefListAPICalls";
 import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
 // import { callOrgCreateAPI } from "../../apis/OrganizationCreateAPICalls";
-import { callOrgModifyAPI } from "../../apis/OrganizationModifyAPICalls";
-import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
-  // <div className="container-xxl flex-grow-1 container-p-y">
-    {/* Modal */}
-    // <div
-    //   className="modal fade"
-    //   id="basicModal"
-    //   tabIndex={-1}
-    //   aria-hidden="true"
-    // >
-    //   <div className="modal-dialog" role="document">
-    //     <div className="modal-content">
-    //       <div className="modal-header">
-    //         <h5 className="modal-title" id="exampleModalLabel1">
-    //           상세보기
-    //         </h5>
-    //         <button
-    //           type="button"
-    //           className="btn-close"
-    //           data-bs-dismiss="modal"
-    //           aria-label="Close"
-    //         />
-    //       </div>
-    //       <div className="modal-body">
-    //         <div className="row">
-    //           <div className="col mb-3">
-    //             <label htmlFor="nameBasic" className="form-label">
-    //               사원 이름
-    //             </label>
-    //             <span
-    //               id="nameBasic"
-    //               className="form-control-plaintext"
-    //               style={{ fontWeight: "bold" }}
-    //             />
-    //           </div>
-    //         </div>
-    //         <div className="row g-2">
-    //           <div className="col mb-0">
-    //             <label htmlFor="emailBasic" className="form-label">
-    //               사원 이메일
-    //             </label>
-    //             <span
-    //               id="emailBasic"
-    //               className="form-control-plaintext"
-    //               style={{ fontWeight: "bold" }}
-    //             />
-    //           </div>
-    //           <div className="col mb-0">
-    //             <label htmlFor="dobBasic" className="form-label">
-    //               연락처
-    //             </label>
-    //             <span
-    //               id="dobBasic"
-    //               className="form-control-plaintext"
-    //               style={{ fontWeight: "bold" }}
-    //             />
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div className="modal-footer">
-    //         <button
-    //           type="button"
-    //           className="btn btn-outline-secondary"
-    //           data-bs-dismiss="modal"
-    //         >
-    //           닫기
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
+// import { callOrgModifyAPI } from "../../apis/OrganizationModifyAPICalls";
+// import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
+
+
     function Organization(){
 
       const dispatch = useDispatch();
@@ -142,15 +75,17 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
         e.preventDefault();
 
         const formData = {
-        depCode: selectOrgList,
+        depCode: selectedDep,
         depName: departmentName,
+        refDepCode: selectedRefDep || null,
         };
 
         dispatch(callOrgModifyAPI(formData));
 
         alert(`"${departmentName}" 으로 부서명 수정 완료!"`)
         setDepartmentName('');
-        setSelectOrgList('1');
+        setSelectOrgList('');
+        setSelectedRefDep('');
       }
 
       //부서 삭제
@@ -160,12 +95,6 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
           alert("부서가 삭제되었습니다.");
         }
       };
-
-      // const [organizationData, setOrganizationData] = useState([]);
-
-      // useEffect(() => {
-      //   setOrganizationData(cardData);
-      // }, [cardData]);
 
       useEffect(()=>{
         dispatch(callOrganizationCardAPI());
@@ -190,12 +119,76 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
         setShowModifyForm(!showModifyForm);
       }
 
-
-
       //편집버튼에 연결(부서 편집 페이지)
       const goEditDepartmentPage = (depCode) => {
         navigate(`/main/organizationEdit/${depCode}`);
       }
+
+      const [showMembers, setShowMembers] = useState({}); // 각 부서별 멤버 목록 표시 상태 관리
+
+      // 부서명 클릭 시 멤버 목록 표시
+      const membersDisplay = (depCode) => {
+        setShowMembers(prevState => ({
+          ...prevState,
+          [depCode]: !prevState[depCode] // 현재 상태를 반전시킴
+        }));
+      };
+
+      //모달
+      const [selectedMember, setSelectedMember] = useState(null);
+      const [showModal, setShowModal] = useState(false);
+    
+      const modalMemberClick = (member) => {
+        setSelectedMember(member);
+        setShowModal(true);
+      };
+    
+      const closeModal = () => {
+        setShowModal(false);
+      };
+
+      const [selectedDep, setSelectedDep] = useState(''); // 현재 선택된 부서 코드
+      const [selectedRefDep, setSelectedRefDep] = useState(''); // 현재 선택된 부서의 상위부서 코드
+
+      // 선택한 부서의 상위부서 표시
+      const modifyDepChange = (e) => {
+        const deptCode = e.target.value;
+        setSelectedDep(deptCode);
+
+        const deptInfo = orgListData.find(dep => dep.depCode.toString() === deptCode);
+        if (deptInfo) {
+          if (deptInfo.refDepCode !== null) {
+            setSelectedRefDep(deptInfo.refDepCode.toString());
+          } else {
+            setSelectedRefDep('null');
+          }
+        } else {
+          setSelectedRefDep('null');
+        }
+      };
+
+      // 상위부서 변경
+      const modifyRefDepChange = (e) => {
+        setSelectedRefDep(e.target.value);
+      };
+
+
+      const [currentTeamLeader, setCurrentTeamLeader] = useState('');
+
+      const teamLeaderChange = (memCode, depCode) => {
+        const isConfirmed = window.confirm("이 사원을 관리자로 지정하시겠습니까?");
+        
+        if (isConfirmed) {
+            dispatch(callUpdateRoleAPI({ memCode, depCode }))
+                .then(() => {
+                    alert("관리자로 지정되었습니다.");
+                    setCurrentTeamLeader(memCode); // 관리자 지정한 사람 체크
+                })
+                .catch(error => {
+                    console.error("관리자 지정 실패:", error);
+                });
+        }
+    };
 
       return(
         <>
@@ -212,7 +205,7 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
           <br/>
 
           <button className="btn btn-primary mt-2" onClick={enterCreateForm}>부서 생성</button>
-          <button className="btn btn-primary mt-2" onClick={enterModifyForm}>부서 수정</button>
+          <button className="btn btn-primary mt-2" style={{ marginLeft: '20px' }} onClick={enterModifyForm}>부서 수정</button>
 
 
           {showCreateForm && (
@@ -259,117 +252,169 @@ import { callOrgDeleteAPI } from "../../apis/OrganizationDeleteAPICalls";
       )}
 
         {showModifyForm && (
-        <div className="container-xxl flex-grow-1 container-p-y">
-          <div>부서 수정</div>
-          <form onSubmit={submitModifyForm}>
+          <div className="container-xxl flex-grow-1 container-p-y">
+            <div>부서 수정</div>
+            <form onSubmit={submitModifyForm}>
             <div className="card mb-4">
               <div className="card-body">
-                <div className="d-flex justify-content-between">
-                  <div className="form-floating flex-fill me-2">
-                    <select
-                      className="form-select"
-                      id="parentDepartment"
-                      value={selectOrgList}
-                      onChange={orgListChange}
-                      required
-                    >
-                      {orgListData
-                      .filter(dep=>dep.depCode !== 2) //인사팀은 수정불가
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-floating mb-3">
+                      <select
+                        className="form-select"
+                        id="refDepartment"
+                        value={selectedRefDep || 'null'}
+                        onChange={modifyRefDepChange}
+                        required
+                      >
+                      <option value="null">상위 부서 없음</option>
+                      {refData
+                      .filter(dep=>dep.depCode !== 2)
                       .map((dep) => (
                         <option key={dep.depCode} value={dep.depCode}>{dep.depName}</option>
                       ))}
-                    </select>
-                    <label htmlFor="parentDepartment">수정 전 부서명</label>
-                  </div>
-                  <div className="form-floating flex-fill">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="departmentName"
-                      value={departmentName}
-                      onChange={depNameCreateChange}
-                      placeholder="부서명"
-                      required
-                    />
-                    <label htmlFor="departmentName">수정 후 부서명</label>
+                      </select>
+                      <label htmlFor="refDepartment">상위부서</label>
+                    </div>
                   </div>
                 </div>
-                <button type="submit" className="btn btn-primary mt-2">수정하기</button>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-floating mb-3">
+                      <select
+                        className="form-select"
+                        id="parentDepartment"
+                        value={selectedDep}
+                        onChange={modifyDepChange}
+                        required
+                      >
+                        {orgListData.map((dep) => (
+                          <option key={dep.depCode} value={dep.depCode}>{dep.depName}</option>
+                        ))}
+                      </select>
+                      <label htmlFor="parentDepartment">수정 전 부서명</label>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-floating mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="departmentName"
+                        value={departmentName}
+                        onChange={(e) => setDepartmentName(e.target.value)}
+                        placeholder="부서명"
+                        required
+                      />
+                      <label htmlFor="departmentName">수정 후 부서명</label>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" className="btn btn-primary mt-3">수정하기</button>
               </div>
             </div>
-          </form>
-        </div>
-      )}
-
-
-          <div className={`${coreCSS['col-md']} ${coreCSS['mb-4']} ${coreCSS['mb-md-0']}`}>
-            <div className={`${coreCSS['accordion']} ${coreCSS['mt-3']}`} id="accordionExample">
-              {cardData.map(({ depCode, depName, memberList }) => (
-                <div key={depCode} className={`${coreCSS['card']} ${coreCSS['accordion-item']} ${coreCSS['active']}`}>
-                  <h2 className={`${organizationCSS['accordion-header']}`} id={`heading${depCode}`}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <button
-                        type="button"
-                        className={`${coreCSS['accordion-button']}`}
-                        data-bs-toggle="collapse"
-                        data-bs-target={`#accordion${depCode}`}
-                        aria-expanded="false"
-                        aria-controls={`accordion${depCode}`}
-                      >
-                        {depName}
-                      </button>
-                      <div className="ms-auto me-3 mt-3">
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-primary me-3"
-                          onClick={() => goEditDepartmentPage(depCode)}
-                        >
-                          편집
-                        </button>
-                        
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-danger"
-                          disabled={depName === "인사팀"}
-                          onClick={()=>deleteDep(depCode)}
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    </div>
-                  </h2>
-                  <div
-                    id={`accordion${depCode}`}
-                    className={`${coreCSS['accordion-collapse']} ${coreCSS['collapse']} ${coreCSS[`show`]}`}
-                    aria-labelledby={`heading${depCode}`}
-                  >
-                    <div className={`${coreCSS['accordion-body']} ${organizationCSS['profile-container']} ${organizationCSS['acc-body']}`}>
-                      {
-                        memberList.map(({ memCode, memName, orgPosition, email, contact }) => (
-                          <div key={memCode} className={`${organizationCSS['profile-card']}`}>
-                            <button
-                              type="button"
-                              className={`${coreCSS['btn']} ${coreCSS['rounded-pill']} ${coreCSS['btn-outline-primary']}`}
-                              data-bs-toggle="modal"
-                              data-bs-target="#basicModal"
-                              data-name={memName}
-                              data-email={email}
-                              data-contact={contact}
-                            >
-                              {memName} {orgPosition?.posName?? "팀원"}
-                            </button>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
+            </form>
           </div>
 
+      )}
 
+      <div className={`${coreCSS['col-md']} ${coreCSS['mb-4']} ${coreCSS['mb-md-0']}`}>
+      {Array.isArray(cardData) && cardData.map(({ depCode, depName, memberList, refDepCode }) => (
+          <div key={depCode} className="card mb-4">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <h5 style={{ cursor: "pointer" }} onClick={() => membersDisplay(depCode)}>
+              {depName} 
+              <span style={{ fontSize: 'small' }}>({orgListData.find(dep => dep.depCode === refDepCode)?.depName || '상위 부서 없음'})
+              </span>
+              </h5>
+                <div className="ms-auto me-3 mt-3">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-primary me-3"
+                    onClick={() => goEditDepartmentPage(depCode)}
+                  >
+                    편집
+                  </button>
+                  
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger"
+                    disabled={depName === "인사팀"}
+                    onClick={()=>deleteDep(depCode)}
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            {showMembers[depCode] && (
+              <div className="card-body">
+                <div className={`${organizationCSS['member-grid']}`}>
+                {Array.isArray(memberList) && memberList.map(member => (
+                  <div key={member.memCode} className={`${organizationCSS['member-item']}`}>
+                    <input
+                    type="radio"
+                    name="teamLeader"
+                    value={member.memCode}
+                    checked={currentTeamLeader === member.memCode}
+                    onChange={() => teamLeaderChange(member.memCode, depCode)}
+                    />
+                    <span style={{ cursor: "pointer" }} onClick={() => modalMemberClick(member)}>
+                    {/* <button
+                    type="button"
+                    className="btn btn-outline-primary rounded-pill"
+                    data-bs-toggle="modal"
+                    data-bs-target="#basicModal"
+                    data-name={memName}
+                    data-email={email}
+                    data-contact={contact}
+                  > */}
+                      {member.memName} {member.orgPosition?.posName ?? "팀원"}
+                    </span>
+                  {/* </button> */}
+                </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+
+        {/*모달*/}
+        {showModal && (
+          <div className="modal fade show d-block" aria-modal="true" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title" id="exampleModalLabel1">사원 정보</h4>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeModal}></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="nameBasic" className="form-label">사원 번호</label>
+                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memCode}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="nameBasic" className="form-label">사원 이름</label>
+                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memName}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="emailBasic" className="form-label">이메일</label>
+                  <span id="emailBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memEmail}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="contactBasic" className="form-label">연락처</label>
+                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memPhone}</span>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={closeModal}>닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
 
 
           

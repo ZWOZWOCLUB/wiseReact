@@ -3,6 +3,9 @@ import {
     GET_ORGANIZATION_CARD,
     // GET_ORGANIZATION_EDIT,
     POST_ORGANIZATION_CREATE,
+    PUT_ORGANIZATION_DELETE,
+    PUT_ORGANIZATION_MODIFY,
+    PUT_ORGANIZATION_UPDATEROLE,
 
 } from '../modules/OrganizationChartModule';
 
@@ -97,8 +100,88 @@ export const callOrgCreateAPI = ({ depName, refDepCode }) => {
         }).then((response)=>response.json());
 
         console.log('[callOrgCreateAPI] callOrgCreateAPI result:', result);
-        // dispatch(callOrganizationCardAPI());
-        dispatch({ type: POST_ORGANIZATION_CREATE, payload: result.data });
+        dispatch(callOrganizationCardAPI());
+        // dispatch({ type: POST_ORGANIZATION_CREATE, payload: result.data });
+        console.log({result});
+    };
+};
+
+export const callOrgDeleteAPI = ( depCode ) => {
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/deleteOrgDep`;
+
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "*/*",
+                Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+              },
+
+        body: JSON.stringify({
+            depCode: depCode,
+        }),
+        }).then((response)=>response.json());
+
+        console.log('[callOrgDeleteAPI] callOrgDeleteAPI result:', result);
+
+        dispatch(callOrganizationCardAPI());
+        // dispatch({ type: PUT_ORGANIZATION_DELETE, payload: result.data });
+        console.log({result});
+    };
+};
+
+export const callOrgModifyAPI = ({ depName, depCode, refDepCode }) => {
+    console.log('[callOrgModifyAPI] callOrgModifyAPI 값 전달 확인:',depName, depCode, refDepCode)
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/modifyOrgDep`;
+
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "*/*",
+                Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+              },
+
+        body: JSON.stringify({
+            depName: depName,
+            depCode: depCode,
+            refDepCode: refDepCode,
+        }),
+        }).then((response)=>response.json());
+
+        console.log('[callOrgModifyAPI] callOrgModifyAPI result:', result);
+
+        dispatch(callOrganizationCardAPI());
+        // dispatch({ type: PUT_ORGANIZATION_MODIFY, payload: result.data });
+        console.log({result});
+    };
+};
+
+export const callUpdateRoleAPI = ({ memCode, depCode }) => {
+    console.log('[callUpdateRoleAPI] callUpdateRoleAPI 값 전달 확인:',memCode, depCode)
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/updateRole/`;
+
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "*/*",
+                Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+              },
+
+        body: JSON.stringify({
+            memCode: memCode,
+            depCode: depCode,
+        }),
+        }).then((response)=>response.json());
+
+        console.log('[callUpdateRoleAPI] callUpdateRoleAPI result:', result);
+
+        dispatch(callOrganizationCardAPI());
+        // dispatch({ type: PUT_ORGANIZATION_UPDATEROLE, payload: result.data });
         console.log({result});
     };
 };
