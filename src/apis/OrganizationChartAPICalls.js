@@ -159,8 +159,8 @@ export const callOrgModifyAPI = ({ depName, depCode, refDepCode }) => {
     };
 };
 
-export const callUpdateRoleAPI = ({ memCode, depCode }) => {
-    console.log('[callUpdateRoleAPI] callUpdateRoleAPI 값 전달 확인:',memCode, depCode)
+export const callUpdateRoleAPI = ({ memCode, memRole }) => {
+    console.log('[callUpdateRoleAPI] callUpdateRoleAPI 값 전달 확인:',memCode, memRole)
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/updateRole/`;
 
     return async (dispatch, getState) => {
@@ -174,14 +174,14 @@ export const callUpdateRoleAPI = ({ memCode, depCode }) => {
 
         body: JSON.stringify({
             memCode: memCode,
-            depCode: depCode,
+            memRole: memRole,
         }),
         }).then((response)=>response.json());
 
         console.log('[callUpdateRoleAPI] callUpdateRoleAPI result:', result);
 
         dispatch(callOrganizationCardAPI());
-        // dispatch({ type: PUT_ORGANIZATION_UPDATEROLE, payload: result.data });
-        console.log({result});
+
+
     };
 };
