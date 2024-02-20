@@ -52,6 +52,7 @@ import scheduleSearchETCReducer from "./ScheduleSearchETCModule";
 import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
 import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
+import settingSerchPositionReducer from "./SettingSerchPositionModule";
 
 const { combineReducers } = require("redux");
 
@@ -72,6 +73,7 @@ const rootReducer = combineReducers({
   aamSendMessageReducer,
   aamRecMessageReducer,
   otherReducer,
+  settingSerchPositionReducer,
   settingMemberReducer,
   mpDocReducer,
   mpATTReducer,

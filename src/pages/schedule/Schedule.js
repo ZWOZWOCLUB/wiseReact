@@ -31,52 +31,58 @@ function Schedule() {
   const [currentTime1, setCurrentTime1] = useState(new Date());
 
   console.log("ETCList", ETCList);
+
   const updateEvents = (date) => {
     const days = getMonthDays(date.getFullYear(), date.getMonth());
     const firstDayOfWeek = days[0].getDay();
     const weeks = getWeekDays(days, firstDayOfWeek);
     const updatedEvents = [];
 
-    // scheduleList가 배열인 경우에만 filter 함수를 호출하도록 조건문 추가
-    if (Array.isArray(scheduleList)) {
-      weeks.forEach((week) => {
-        week.forEach((day) => {
-          const matchingSchedules = scheduleList.filter((schedule) => {
-            const startDate = new Date(schedule.schStartDate);
-            const endDate = new Date(schedule.schEndDate);
-            return day >= startDate && day <= endDate;
-          });
+    weeks.forEach((week) => {
+      week.forEach((day) => {
+        const matchingSchedules = scheduleList.filter((schedule) => {
+          const startDate = new Date(schedule.schStartDate);
+          const endDate = new Date(schedule.schEndDate);
+          return day >= startDate && day <= endDate;
+        });
 
-          matchingSchedules.forEach((schedule) => {
-            let shouldDisplayEvent = false;
+        matchingSchedules.forEach((schedule) => {
+          let shouldDisplayEvent = false;
 
-            schedule.patternDayList.forEach((pattern) => {
-              if (pattern.weekDay.dayName === getDayName(day.getDay())) {
-                shouldDisplayEvent = true;
-              }
-            });
-
-            if (shouldDisplayEvent) {
-              updatedEvents.push({
-                id: `event_${day.getDate()}_${schedule.schCode}`,
-                calendarId: "cal1",
-                title:
-                  schedule.schType + " " + schedule.allowanceList.length + "명",
-                start: day,
-                end: day,
-                category: "allday",
-                backgroundColor: schedule.schColor,
-              });
+          schedule.patternDayList.forEach((pattern) => {
+            if (pattern.weekDay.dayName === getDayName(day.getDay())) {
+              shouldDisplayEvent = true;
             }
           });
+
+          if (shouldDisplayEvent) {
+            updatedEvents.push({
+              id: `event_${day.getDate()}_${schedule.schCode}`,
+              calendarId: "cal1",
+              title:
+                schedule.schType + " " + schedule.allowanceList.length + "명",
+              start: day,
+              end: day,
+              category: "allday",
+              backgroundColor: schedule.schColor,
+            });
+          }
         });
       });
-    } else {
-      console.error("scheduleList is not an array:", scheduleList);
-    }
+    });
 
     setEvents(updatedEvents);
   };
+
+  useEffect(() => {
+    const calendarInstance = calendarRef.current.getInstance();
+
+    return () => {
+      if (calendarInstance) {
+        calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
+      }
+    };
+  }, []);
 
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -128,7 +134,7 @@ function Schedule() {
     setYearMonth(formattedDate);
     dispatch(callScheduleSearchAPI({ yearMonth: formattedDate }));
     updateEvents(currentDate);
-  }, [currentDate]);
+  }, []);
 
   function scheduleAdd() {
     navigate(`/main/scheduleAdd`, { replace: true });
@@ -183,21 +189,18 @@ function Schedule() {
     calendar.today();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
-    setCurrentDate(calendar.getDate());
   };
 
   const onClickPrev = () => {
     calendar.prev();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
-    setCurrentDate(calendar.getDate());
   };
 
   const onClickNext = () => {
     calendar.next();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
-    setCurrentDate(calendar.getDate());
   };
 
   const onClickGetMemCode = (e) => {
