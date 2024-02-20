@@ -54,6 +54,7 @@ export const callAttendanceTodayInfoAPI = ({ form }) => {
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
+        console.log('result today', result);
 
         if (result.status === 200) {
             dispatch({ type: GET_ATTENDANCE_TODAY_INFO, payload: result.data });

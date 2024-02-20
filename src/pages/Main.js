@@ -37,6 +37,7 @@ function Main() {
         attendanceMember: {
             memCode: token.memCode,
         },
+        attValue: '0',
     });
 
     const attendance = useSelector((state) => state.approvalInfoReducer);
@@ -53,7 +54,7 @@ function Main() {
                 form,
             })
         );
-    // }, [currentTime]);
+        // }, [currentTime]);
     }, []);
 
     useEffect(() => {
@@ -185,7 +186,7 @@ function Main() {
         return () => {
             calendar?.off('selectDateTime', handleSelectDateTime);
         };
-    // }, [currentTime]);
+        // }, [currentTime]);
     }, []);
 
     const attendanceList = useSelector((state) => state.attendanceInfoReducer);
@@ -206,7 +207,7 @@ function Main() {
                 start,
             })
         );
-        setCheck(!check);
+        window.location.reload();
     }
 
     function clickEnd() {
@@ -215,13 +216,15 @@ function Main() {
         const seconds = new Date().getSeconds().toString().padStart(2, '0');
 
         start.attEndTime = `${hours}:${minutes}:${seconds}`;
+        start.attValue = 1;
 
         dispatch(
             attendanceEndAPICalls({
                 start,
             })
         );
-        setCheck(!check);
+
+        window.location.reload();
     }
     return (
         <>
@@ -262,22 +265,81 @@ function Main() {
                                 </div>
                                 <div className='card-body main-flex main-between' style={{ marginTop: '4%' }}>
                                     <div className='main-att-btn'>
-                                        <button className='btn btn-primary btn-lg' onClick={clickStart}>
+                                        <button
+                                            className='btn btn-primary btn-lg'
+                                            onClick={clickStart}
+                                            disabled={attendance?.attValue === 1 || attendance?.attValue === 2}
+                                            style={
+                                                attendance?.attValue === 1 || attendance?.attValue === 2
+                                                    ? {
+                                                          color: '#fff',
+                                                          backgroundColor: '#8592a3',
+                                                          borderColor: '#8592a3',
+                                                          boxShadow: '0 0.125rem 0.25rem 0 rgba(133, 146, 163, 0.4)',
+                                                      }
+                                                    : {
+                                                          color: '#fff',
+                                                          backgroundColor: '#5f61e6',
+                                                          borderColor: '#5f61e6',
+                                                          boxShadow:
+                                                              'rgba(133, 146, 163, 0.4) 0px 0.125rem 0.25rem 0px',
+                                                      }
+                                            }
+                                        >
                                             출근
                                         </button>
-                                        <p className='card-text main-att-time'>
-                                            {attendance?.startTime || '  일정이 없습니다.'}
+                                        <p
+                                            className='card-text main-att-time'
+                                            style={
+                                                attendance?.attValue === 1 || attendance?.attValue === 2
+                                                    ? {
+                                                          color: 'rgb(211, 211, 211)',
+                                                      }
+                                                    : {
+                                                          color: 'black',
+                                                      }
+                                            }
+                                        >
+                                            {attendance?.attStartTime || attendance?.startTime || '  일정이 없습니다.'}
                                         </p>
                                     </div>
                                     <div className='main-att-btn'>
-                                        <button className='btn btn-secondary btn-lg' onClick={clickEnd}>
+                                        <button
+                                            className='btn btn-secondary btn-lg'
+                                            onClick={clickEnd}
+                                            disabled={attendance?.attValue === 0 || attendance?.attValue === 2}
+                                            style={
+                                                attendance?.attValue === 0 || attendance?.attValue === 2
+                                                    ? {
+                                                          color: '#fff',
+                                                          backgroundColor: '#8592a3',
+                                                          borderColor: '#8592a3',
+                                                          boxShadow: '0 0.125rem 0.25rem 0 rgba(133, 146, 163, 0.4)',
+                                                      }
+                                                    : {
+                                                          color: '#fff',
+                                                          backgroundColor: '#5f61e6',
+                                                          borderColor: '#5f61e6',
+                                                          boxShadow:
+                                                              'rgba(133, 146, 163, 0.4) 0px 0.125rem 0.25rem 0px',
+                                                      }
+                                            }
+                                        >
                                             퇴근
                                         </button>
                                         <p
                                             className='card-text main-att-time'
-                                            style={{ color: '#d3d3d3', paddingRight: '5%' }}
+                                            style={
+                                                attendance?.attValue === 0 || attendance?.attValue === 2
+                                                    ? {
+                                                          color: 'rgb(211, 211, 211)',
+                                                      }
+                                                    : {
+                                                          color: 'black',
+                                                      }
+                                            }
                                         >
-                                            {attendance?.endTime}
+                                            {attendance?.attEndTime || attendance?.endTime}
                                         </p>
                                     </div>
                                 </div>
@@ -320,18 +382,6 @@ function Main() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* {Array.isArray(attendanceList) && attendanceList.length > 0 ? {(
-                                        <tr>
-                                        <td style={{ backgroundColor: '#DCDCFF' }}>출근시간</td>
-                                        <td>{attendanceList[0]?.startTime}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ backgroundColor: '#DCDCFF' }}>퇴근시간</td>
-                                        <td>{attendanceList[0]?.endTime}</td>
-                                    </tr>
-                                    )} : ({}
-
-                                    )} */}
                                     {Array.isArray(attendanceList) && attendanceList.length > 0 ? (
                                         <>
                                             <tr>
@@ -357,6 +407,7 @@ function Main() {
                                             <thead>
                                                 <tr style={{ backgroundColor: '#DCDCFF' }}>
                                                     <td>이름</td>
+                                                    <td>부서</td>
                                                     <td>직위</td>
                                                 </tr>
                                             </thead>
@@ -364,6 +415,7 @@ function Main() {
                                                 {attendanceList.map((b) => (
                                                     <tr key={b?.memName}>
                                                         <td>{b?.memName}</td>
+                                                        <td>{b?.depName}</td>
                                                         <td>{b?.posName}</td>
                                                     </tr>
                                                 ))}
