@@ -121,16 +121,14 @@ const SchedulePattenAddPattern = (props) => {
     setUpdateState(false);
   };
 
+  const onClickColorBox = (event, index) => {
+    const selectedPattern = patternList[index];
+    setPattern(selectedPattern);
 
-  const onClickColorBox = (event) => {
-    const backgroundColor = event.target.style.backgroundColor;
-    setSelectedColor(backgroundColor);
-    console.log("$$$$$$$$$$$$$$$", backgroundColor, selectedColor);
-    props.getSelectedColor(selectedColor);
+    console.log("Selected Pattern:", selectedPattern);
+
+    props.getSelectedPattern(selectedPattern);
   };
-
-
-
 
   const onClickDeletePattern = (index) => {
     console.log("index.........................", index);
@@ -181,10 +179,13 @@ const SchedulePattenAddPattern = (props) => {
       </div>
       {Array.isArray(patternList) && patternList.length > 0
         ? patternList.map((p, index) => (
-            <div className={`${payCSS["work"]}`} id="work" key={index}>
-              <div className={`${payCSS["content_left"]}`}
-                  onClick={onClickColorBox}
-                  >
+            <div
+              className={`${payCSS["work"]}`}
+              id="work"
+              key={index}
+              onClick={(event) => onClickColorBox(event, index)}
+            >
+              <div className={`${payCSS["content_left"]}`}>
                 <div
                   className={`${payCSS["color_box"]}`}
                   style={{ backgroundColor: p.wokColor }}
@@ -381,6 +382,6 @@ const SchedulePattenAddPattern = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default SchedulePattenAddPattern;

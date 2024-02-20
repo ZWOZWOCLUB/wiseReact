@@ -8,8 +8,8 @@ import { callATTAPI } from "../../apis/MyPageAPICalls.js";
 import { callATTListAPI } from "../../apis/MyPageAPICalls.js";
 // import Calendar from "@toast-ui/react-calendar";
 // import "tui-calendar/dist/tui-calendar.css";
-import Calendar, { OnClickFunc } from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import Calendar, { OnClickFunc } from "@toast-ui/react-calendar";
+import "tui-calendar/dist/tui-calendar.css";
 import moment from "moment";
 
 function MPAttendance() {
@@ -53,9 +53,18 @@ function MPAttendance() {
 
   // 일기 작성 날짜 리스트
   const dayList = ["2024-02-10", "2024-02-02", "2024-02-14"];
+  const dayList = ["2024-02-10", "2024-02-02", "2024-02-14"];
 
   // 공휴일 목록
   const holidayList = [
+    "01-01",
+    "02-05",
+    "02-06",
+    "02-07",
+    "02-08",
+    "05-01",
+    "06-06",
+    "08-15",
     "01-01",
     "02-05",
     "02-06",
@@ -285,6 +294,11 @@ function MPAttendance() {
                             {/* 캘린더 시작 */}
                             {/* https://velog.io/@hhjj0513/TIL-React-캘린더-react-calendar-라이브러리-TypeScript-적용- */}
                             <div>
+                              <Calendar
+                                onChange={onChange}
+                                value={value}
+                                onClickDay={onClickDayHandler}
+                                tileContent={({ date }) => addContent(date)}
                               <Calendar
                                 onChange={onChange}
                                 value={value}

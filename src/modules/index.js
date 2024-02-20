@@ -32,7 +32,7 @@ import approvalInfoReducer from "./ApprovalInfoModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
-import attendanceInfoReducer from './AttendanceMoudle';
+import attendanceInfoReducer from "./AttendanceMoudle";
 import organizationItemReducer from "./OrganizationRefListModule";
 import organizationMemberReducer from "./OrganizationMemberModule";
 import organizationCreateReducer from "./OrganizationCreateModule";
@@ -46,6 +46,9 @@ import schedulePatternDeleteReducer from "./SchedulePatternDeleteModule";
 import aamPutReducer from "./AAMModule";
 import aamPutAlarmReducer from "./AAMPutAlarmModule";
 import mpSalReducer from "./MPSalaryModule";
+import scheduleSearchValueReducer from "./ScheduleSearchValueModule";
+import scheduleSearchValueNotReducer from "./ScheduleSearchValueNotModule";
+import scheduleSearchETCReducer from "./ScheduleSearchETCModule";
 import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
 import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
@@ -90,7 +93,7 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
-    attendanceInfoReducer,
+  attendanceInfoReducer,
   organizationItemReducer,
   organizationMemberReducer,
   organizationCreateReducer,
@@ -104,6 +107,9 @@ const rootReducer = combineReducers({
   aamPutReducer,
   aamPutAlarmReducer,
   mpSalReducer,
+  scheduleSearchValueReducer,
+  scheduleSearchValueNotReducer,
+  scheduleSearchETCReducer,
   aamSendNewMsgReducer,
   aamRecNewMsgReducer,
   mpATTListReducer,

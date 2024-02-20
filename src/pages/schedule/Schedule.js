@@ -7,8 +7,10 @@ import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/pay.module.css";
 import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import { callScheduleSearETCAPI } from "../../apis/ScheduleSearchETCAPICalls";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import "tui-calendar/dist/tui-calendar.css";
+import ScheduleDetails from "./ScheduleDetails";
 
 function Schedule() {
   const navigate = useNavigate();
@@ -20,91 +22,95 @@ function Schedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [yearMonth, setYearMonth] = useState(null);
   const scheduleList = useSelector((state) => state.scheduleReducer);
+  const ETCList = useSelector((state) => state.scheduleSearchETCReducer);
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const [checked, setChecked] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const [events, setEvents] = useState([]);
-  const [clickedData, setClickedData] = useState({ state: false })
+  const [currentTime1, setCurrentTime1] = useState(new Date());
 
+  console.log("ETCList", ETCList);
+  const updateEvents = (date) => {
+    const days = getMonthDays(date.getFullYear(), date.getMonth());
+    const firstDayOfWeek = days[0].getDay();
+    const weeks = getWeekDays(days, firstDayOfWeek);
+    const updatedEvents = [];
 
-const updateEvents = (date) => {
-  const days = getMonthDays(date.getFullYear(), date.getMonth());
-  const firstDayOfWeek = days[0].getDay();
-  const weeks = getWeekDays(days, firstDayOfWeek);
-  const updatedEvents = [];
+    // scheduleList가 배열인 경우에만 filter 함수를 호출하도록 조건문 추가
+    if (Array.isArray(scheduleList)) {
+      weeks.forEach((week) => {
+        week.forEach((day) => {
+          const matchingSchedules = scheduleList.filter((schedule) => {
+            const startDate = new Date(schedule.schStartDate);
+            const endDate = new Date(schedule.schEndDate);
+            return day >= startDate && day <= endDate;
+          });
 
-  weeks.forEach((week) => {
-    week.forEach((day) => {
-      const matchingSchedules = scheduleList.filter((schedule) => {
-        const startDate = new Date(schedule.schStartDate);
-        const endDate = new Date(schedule.schEndDate);
-        return day >= startDate && day <= endDate;
-      });
+          matchingSchedules.forEach((schedule) => {
+            let shouldDisplayEvent = false;
 
-      matchingSchedules.forEach((schedule) => {
-        let shouldDisplayEvent = false;
+            schedule.patternDayList.forEach((pattern) => {
+              if (pattern.weekDay.dayName === getDayName(day.getDay())) {
+                shouldDisplayEvent = true;
+              }
+            });
 
-        schedule.patternDayList.forEach((pattern) => {
-            if (pattern.weekDay.dayName === getDayName(day.getDay())) {
-              shouldDisplayEvent = true;
+            if (shouldDisplayEvent) {
+              updatedEvents.push({
+                id: `event_${day.getDate()}_${schedule.schCode}`,
+                calendarId: "cal1",
+                title:
+                  schedule.schType + " " + schedule.allowanceList.length + "명",
+                start: day,
+                end: day,
+                category: "allday",
+                backgroundColor: schedule.schColor,
+              });
             }
           });
-
-        if (shouldDisplayEvent) {
-          updatedEvents.push({
-            id: `event_${day.getDate()}_${schedule.schCode}`,
-            calendarId: "cal1",
-            title: schedule.schType,
-            start: day,
-            end: day,
-            category: "allday",
-            backgroundColor: schedule.schColor,
-          });
-        }
+        });
       });
-    });
-  });
+    } else {
+      console.error("scheduleList is not an array:", scheduleList);
+    }
 
-  setEvents(updatedEvents);
-};
+    setEvents(updatedEvents);
+  };
 
-
-
-
-const getDayName = (dayCode) => {
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
-  return dayNames[dayCode];
-};
 
+  const getDayName = (dayCode) => {
+    return dayNames[dayCode];
+  };
 
   useEffect(() => {
     dispatch(callOrganizationTreeAPI());
   }, [dispatch]);
 
-  
+  useEffect(() => {
+    dispatch(callScheduleSearETCAPI());
+  }, [dispatch]);
+
   useEffect(() => {
     updateEvents(currentDate);
   }, [scheduleList, currentDate]);
-  
-
 
   useEffect(() => {
     const options = {
       month: {
-        dayNames: ["일", "월", "화", "수", "목", "금", "토"],
+        dayNames: dayNames,
         gridSelection: {
           enableDblClick: false,
           enableClick: false,
         },
-        isAlways6Weeks: false
+        isAlways6Weeks: false,
       },
     };
 
     if (calendarRef.current) {
       const calendar = calendarRef.current.getInstance();
       calendar.setOptions(options);
-
     }
   }, []);
 
@@ -116,19 +122,13 @@ const getDayName = (dayCode) => {
       setRootElement(rootElement);
     }
   }, [calendarRef.current]);
-  
-  
 
   useEffect(() => {
-
     const formattedDate = formatDate(currentDate);
     setYearMonth(formattedDate);
     dispatch(callScheduleSearchAPI({ yearMonth: formattedDate }));
     updateEvents(currentDate);
-
-  }, []);
-
-
+  }, [currentDate]);
 
   function scheduleAdd() {
     navigate(`/main/scheduleAdd`, { replace: true });
@@ -167,9 +167,6 @@ const getDayName = (dayCode) => {
     }
     return weeks;
   }
-  
-
-
 
   const onClicktree = (name) => {
     console.log(name, "클릭");
@@ -186,20 +183,21 @@ const getDayName = (dayCode) => {
     calendar.today();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
-
+    setCurrentDate(calendar.getDate());
   };
 
   const onClickPrev = () => {
     calendar.prev();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
+    setCurrentDate(calendar.getDate());
   };
 
   const onClickNext = () => {
     calendar.next();
     setYearMonthFunction(calendar);
     updateEvents(calendar.getDate());
-
+    setCurrentDate(calendar.getDate());
   };
 
   const onClickGetMemCode = (e) => {
@@ -209,9 +207,47 @@ const getDayName = (dayCode) => {
   const searchMethod = (node, searchQuery) =>
     node.label.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+  const [form, setForm] = useState({
+    searchDate: "",
+  });
+
+  useEffect(() => {
+    const calendar = calendarRef.current.getInstance();
+    console.log("------>y ", calendarRef.current);
+
+    const handleSelectDateTime = async (eventInfo) => {
+      const year = new Date(eventInfo.start).getFullYear();
+      const month = (new Date(eventInfo.start).getMonth() + 1)
+        .toString()
+        .padStart(2, "0");
+      const day = new Date(eventInfo.start)
+        .getDate()
+        .toString()
+        .padStart(2, "0");
+      const dayOfWeek = dayNames[new Date(eventInfo.start).getDay()];
+
+      console.log("------>y ", year);
+      console.log("------>m ", month);
+      console.log("------>d ", day);
+
+      calendar.clearGridSelections();
+
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+
+      const windowWidth = 1600;
+      const windowHeight = 800;
+      const left = (screenWidth - windowWidth) / 2;
+      const top = (screenHeight - windowHeight) / 2;
+      window.open(
+        `/ScheduleDetails?date=${year}-${month}-${day}-${dayOfWeek}`,
+        "_blank",
+        `width=${windowWidth},height=${windowHeight},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes`
+      );
+    };
+
+    calendar?.on("selectDateTime", handleSelectDateTime);
+  }, [currentTime1]);
 
   const nodes =
     departmentList && departmentList.children
@@ -241,15 +277,12 @@ const getDayName = (dayCode) => {
           },
         ]
       : [];
-const handleDayClick = (event) => {
-  console.log("Clicked date:");
-};
-useEffect(() => {
-  if (clickedData.state) {
-      console.log('이벤트 클릭함!', clickedData)
-  }
-}, [clickedData])
-    
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    console.log(searchQuery);
+  };
+
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
       <div className={`${coreCSS["card"]} ${coreCSS["mb-4"]}`}>
@@ -305,21 +338,39 @@ useEffect(() => {
                 <i className="bx bx-search" />
               </span>
               <button className={`${payCSS["prev"]}`} onClick={onClickPrev}>
-                <i className="bx bx-chevron-left" style={{ fontSize: "2rem" }} />
+                <i
+                  className="bx bx-chevron-left"
+                  style={{ fontSize: "2rem" }}
+                />
               </button>
               <div className={`${payCSS["range"]}`}>{yearMonth}</div>
               <button className={`${payCSS["next"]}`} onClick={onClickNext}>
-                <i className="bx bx-chevron-right" style={{ fontSize: "2rem" }} />
+                <i
+                  className="bx bx-chevron-right"
+                  style={{ fontSize: "2rem" }}
+                />
               </button>
               <button className={`${payCSS["today"]}`} onClick={onClickToday}>
                 Today
               </button>
-              <button className={`${payCSS["patternInscription"]}`} onClick={schedulePattenAdd}>
-                <span className="bx bx-calendar-edit" style={{ paddingBottom: 3 }} />
+              <button
+                className={`${payCSS["patternInscription"]}`}
+                onClick={schedulePattenAdd}
+              >
+                <span
+                  className="bx bx-calendar-edit"
+                  style={{ paddingBottom: 3 }}
+                />
                 근무패턴등록
               </button>
-              <button className={`${payCSS["scheduleAdd"]}`} onClick={scheduleAdd}>
-                <span className="bx bx-calendar-plus" style={{ paddingBottom: 3 }} />
+              <button
+                className={`${payCSS["scheduleAdd"]}`}
+                onClick={scheduleAdd}
+              >
+                <span
+                  className="bx bx-calendar-plus"
+                  style={{ paddingBottom: 3 }}
+                />
                 근무일정추가
               </button>
             </div>
@@ -329,9 +380,8 @@ useEffect(() => {
               view="month"
               calendars={calendarRef.current && calendarTheme}
               events={events}
-        isReadOnly= {true}
-        />
-        </div>
+            />
+          </div>
         </div>
       </div>
     </div>
