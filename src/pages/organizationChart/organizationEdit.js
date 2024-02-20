@@ -113,34 +113,50 @@ function OrganizationEdit(){
 
 
   //검색어 상태값
-  const [searchType, setSearchType] = useState('');
+  const [search, setSearch] = useState('');
+
+  //검색 결과 담아줄 상태값
+  const [searchName, setSearchName] = useState([]);
 
   //검색어 핸들러 함수
-  const onSearchTypeChange = (e) => {
+  const searchChange = (e) => {
     console.log(e.target.value);
-    setSearchType(e.target.value);
+    setSearch(e.target.value);
 
   }
 
 
-  //검색 결과 상태 값 저장
-  const [searchResults, setSearchResults] = useState([]); 
+  const onEnterKeyHandler = (e) => {
+    if(e.key === 'Enter' || e.type === 'click') {
+      // 엔터키 누르거나 검색 아이콘 클릭시
+      let searchResult = orgMemberList.filter((member) => 
+        member.memName.includes(search)
+      );
+  
+      setSearchName(searchResult);
+    }
+  };
 
-  //검색 결과에 대한 API 호출
-  const submitResult = () => {
-    
-    dispatch(callOrgSearchNameAPI(searchType));
-  }
+const handleFormSubmit = (e) => {
+  e.preventDefault(); // 폼 동작 방지
+  onEnterKeyHandler(e); // 검색 실행
+};
+  
+
+
 
     return(
 
         
         <>
 
-<div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
+{/* <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div> */}
+  <h4 className='fw-bold py-3 mb-4'>
+    <span className='text-muted fw-light'>부서 {'>'}</span> 부서 편집
+  </h4>
 
 <div className={`${coreCSS['col-md']} ${coreCSS['mb-4']} ${coreCSS['mb-md-0']}`}>
-  <div className="text-light fw-semibold">부서 편집</div>
+  {/* <div className="text-light fw-semibold">부서 편집</div> */}
   <form onSubmit={updateMembersSubmit}>
     <div className="card mb-4">
       <div className="card-body">
@@ -199,7 +215,7 @@ function OrganizationEdit(){
     <div className="card-body">
       <form
         className="d-flex justify-content-center"
-        onsubmit="return false"
+        onSubmit={handleFormSubmit}
         style={{ marginBottom: 20 }}
       >
         <input
@@ -208,15 +224,17 @@ function OrganizationEdit(){
           placeholder="사원 검색"
           aria-label="Search"
           style={{ width: "50%" }}
-          onChange={onSearchTypeChange}
+          onChange={searchChange}
+          onKeyUp={(e) => e.key === 'Enter' && onEnterKeyHandler(e)}
+          value={search}
         />
-        <button className="btn btn-outline-primary" type="submit">
+        <button className="btn btn-outline-primary" onClick={onEnterKeyHandler} style={{marginBottom : 0}}>
           검색
         </button>
       </form>
       <div className="table-responsive text-nowrap">
         <table className="table table-bordered">
-          <thead id="org-tb-head">
+          <thead id={`${organizationCSS["org-tb-head"]}`}>
             <tr>
               <th>사원 번호</th>
               <th>사원 이름</th>
@@ -225,24 +243,41 @@ function OrganizationEdit(){
               <th />
             </tr>
           </thead>
-          <tbody>
-          { Array.isArray(orgMemberList)&&(
-            orgMemberList.map((member, index)=>(
-              <tr key={index}>
-                <td>{member.memCode}</td>
-                <td>{member.memName}</td>
-                <td>{member.orgPosition?.posName || '직급없음'}</td>
-                <td>
-                  <span className="badge bg-label-primary me-1">{member.orgDepartment?.depName || '부서없음'} </span>
-                </td>
-                <td>
-                <button type="button" className="btn btn-warning" onClick={()=> addMember(member.memCode, member.memName)}>
-                  추가
-                </button>
-              </td>
-              </tr>
-            ))
-          )}
+            <tbody>
+            { Array.isArray(searchName) && searchName.length > 0 ? (
+                searchName.map((member, index) => (
+                  <tr key={index}>
+                    <td>{member.memCode}</td>
+                    <td>{member.memName}</td>
+                    <td>{member.orgPosition?.posName || '직급없음'}</td>
+                    <td>
+                      <span className="badge bg-label-primary me-1">{member.orgDepartment?.depName || '부서없음'} </span>
+                    </td>
+                    <td>
+                      <button type="button" className="btn btn-warning" onClick={() => addMember(member.memCode, member.memName)}>
+                        추가
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                Array.isArray(orgMemberList) && orgMemberList.map((member, index) => (
+                  <tr key={index}>
+                    <td>{member.memCode}</td>
+                    <td>{member.memName}</td>
+                    <td>{member.orgPosition?.posName || '직급없음'}</td>
+                    <td>
+                      <span className="badge bg-label-primary me-1">{member.orgDepartment?.depName || '부서없음'} </span>
+                    </td>
+                    <td>
+                      <button type="button" className="btn btn-warning" onClick={() => addMember(member.memCode, member.memName)}>
+                        추가
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )
+            }
           </tbody>
         </table>
       </div>
