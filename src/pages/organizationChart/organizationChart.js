@@ -207,18 +207,10 @@ import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
 
       return(
         <>
-          <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div>
-
-          <NavLink to="/organizationTree" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
-          트리로 이동
-          </NavLink>
-          
-
-          <NavLink to="/organizationEdit" className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>
-          부서 편집
-          </NavLink>
-          <br/>
-
+          {/* <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div> */}
+          <h4 className='fw-bold py-3 mb-4'>
+            <span className='text-muted fw-light'>부서 {'>'}</span> 부서 조회
+          </h4>
           <button className="btn btn-primary mt-2" onClick={enterCreateForm}>부서 생성</button>
           <button className="btn btn-primary mt-2" style={{ marginLeft: '20px' }} onClick={enterModifyForm}>부서 수정</button>
 
@@ -384,9 +376,12 @@ import { callOrganizationListAPI } from "../../apis/OrganizationListAPICalls";
                         <span className="dropdown-item" onClick={()=> roleChange(member.memCode, 'ADMIN')}
                           ><i className="bx bx-user-plus me-1"></i> ADMIN</span
                         >
+                        {/* depCode가 2인 경우(인사팀)에만 SUPERADMIN 옵션 표시 */}
+                        {depCode === 2 && (
                         <span className="dropdown-item" onClick={()=> roleChange(member.memCode, 'SUPERADMIN')}
                           ><i className="bx bx-crown me-1"></i> SUPERADMIN</span
                         >
+                        )}
                       </div>
                     </div>
                     <span style={{ cursor: "pointer" }} onClick={() => modalMemberClick(member)}>

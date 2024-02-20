@@ -53,9 +53,9 @@ export const callOrganizationUpdateAPI = ({depCode, memCodes}) =>{
     };
 }
 
-export const callOrgSearchNameAPI = (memName) => {
+export const callOrgSearchNameAPI = ({ form }) => {
 
-    console.log("callOrgSearchNameAPI ==> 값 넘오는 것 확인", memName);
+    console.log("callOrgSearchNameAPI ==> 값 넘오는 것 확인", form);
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/nameSearch`;
     
     return async(dispatch) => {
