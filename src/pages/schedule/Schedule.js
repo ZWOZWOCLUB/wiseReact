@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import CheckboxTree from "react-checkbox-tree";
-import Calendar from "@toast-ui/react-calendar";
+import Calendars from "@toast-ui/react-calendar";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/pay.module.css";
 import { callScheduleSearchAPI } from "../../apis/ScheduleAPICalls";
@@ -58,7 +58,7 @@ function Schedule() {
           if (shouldDisplayEvent) {
             updatedEvents.push({
               id: `event_${day.getDate()}_${schedule.schCode}`,
-              calendarId: "cal1",
+              calendarId: "cal2",
               title:
                 schedule.schType + " " + schedule.allowanceList.length + "명",
               start: day,
@@ -73,16 +73,6 @@ function Schedule() {
 
     setEvents(updatedEvents);
   };
-
-  useEffect(() => {
-    const calendarInstance = calendarRef.current.getInstance();
-
-    return () => {
-      if (calendarInstance) {
-        calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
-      }
-    };
-  }, []);
 
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -286,6 +276,18 @@ function Schedule() {
     console.log(searchQuery);
   };
 
+  useEffect(() => {
+    const calendarInstance = calendarRef.current?.getInstance();
+
+    const handleUnmount = () => {
+      if (calendarInstance) {
+        calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
+      }
+    };
+
+    return handleUnmount;
+  }, [calendarRef.current]);
+
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
       <div className={`${coreCSS["card"]} ${coreCSS["mb-4"]}`}>
@@ -377,7 +379,7 @@ function Schedule() {
                 근무일정추가
               </button>
             </div>
-            <Calendar
+            <Calendars
               height="70vh"
               ref={calendarRef}
               view="month"

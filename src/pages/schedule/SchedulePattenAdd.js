@@ -8,7 +8,7 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
-import { callSchedulePatternAndDaySearchAPI } from "../../apis/ScheduleAPICalls";
+import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
 import { callSchedulePatternSearchAPI } from "../../apis/SchedulePatternAPICalls";
 import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
 import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
@@ -19,7 +19,7 @@ import SchedulePattenAddInsertSchedule from "./SchedulePattenAddInsertSchedule.j
 
 function SchedulePattenAdd() {
   const dispatch = useDispatch();
-  const allList = useSelector((state) => state.scheduleReducer);
+  const allList = useSelector((state) => state.schedulePatternDayReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
   const [selectedColor, setSelectedColor] = useState();
