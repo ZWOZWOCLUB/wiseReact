@@ -69,13 +69,6 @@ function NoticeMain() {
         setSearch(e.target.value);
     };
 
-    // const onEnterKeyHandler = (e) => {
-    //   console.log('Enter key', search);
-    //   const searchResult = noticeList.filter(notice => notice.notMember.memName?.includes(search));
-    //   setSearchNotice(searchResult);
-    //   console.log(searchNotice);
-    // }
-
     // 선택한 검색 조건을 저장할 상태 (기본값은 'title'로 설정)
     const [searchType, setSearchType] = useState('title');
 

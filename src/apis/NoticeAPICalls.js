@@ -105,7 +105,6 @@ export const callDetailNoticeAPI = ({ notCode }) => {
     console.log('notCode', notCode);
 
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/detail?nc=${notCode}`;
-    
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
@@ -125,14 +124,42 @@ export const callDetailNoticeAPI = ({ notCode }) => {
     };
 };
 
-export const callNoticeInsertAPI = ({ form }) => { 
+//공지 등록
+export const callNoticeInsertAPI = ({ form }) => {
     console.log('callNoticeInsertAPI Call');
+    console.log('callNoticeInsertAPI Call', form);
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/notice`;
     console.log('formData', form);
+return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+        method: 'POST',
+        headers: {
+            Accept: '*/*',
+            Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+        },
+        body: form,
+    }).then((response) => response.json());
 
+    console.log('callNoticeInsertAPI RESULT : ', result);
+    console.log('callNoticeInsertAPI form', form);
+    dispatch({ type: POST_INSERT_NOTICE, payload: result.data });
+    console.log({ result });
+    console.log(result);
+    
+    console.log({FormData});
+}
+
+};
+
+export const callNoticeUpdateAPI = ({ form }) => {
+    console.log('callNoticeUpdateAPI Call');
+    console.log('callNoticeUpdateAPI', form);
+    
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/updateNotice`;
+    
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
@@ -140,10 +167,8 @@ export const callNoticeInsertAPI = ({ form }) => {
             body: form,
         }).then((response) => response.json());
 
-        console.log('callNoticeInsertAPI RESULT : ', result);
+        console.log('callNoticeUpdateAPI : ', result);
 
-        dispatch({ type: POST_INSERT_NOTICE, payload: result.data });
-        console.log({result});   
-    }
+        dispatch({ type: PUT_UPDATE_NOTICE, payload: result });
+    };
 }
-
