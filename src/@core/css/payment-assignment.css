@@ -58,5 +58,30 @@
 #last-thing2 {
     display: flex;
     justify-content: space-between;
-    margin-top: 280px;
+    bottom: 0;
+}
+
+.select-assign1 {
+    margin-left: 50px;
+    width: 130px;
+    height: 30px;
+}
+
+.select-assign2 {
+    width: 130px;
+    height: 30px;
+}
+
+#spanMargind {
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+#clean-btn1 {
+    width: 20%;
+    height: 10%;
+    box-shadow: rgb(187, 189, 252) 0px 0px 10px;
+    background-color: rgb(187, 189, 252);
+    border-color: rgb(187, 189, 252);
+    margin-top: 30px;
 }

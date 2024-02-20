@@ -22,7 +22,7 @@ function Approval() {
     useEffect(() => {
         dispatch(
             callReceiveApprovalAPI({
-                memCode: token.memCode,
+                memCode: token?.memCode,
             })
         );
     }, []);
@@ -30,7 +30,7 @@ function Approval() {
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
 
-    // console.log('approvalList ', approvalList);
+    console.log('approvalList ', approvalList);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');

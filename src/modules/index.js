@@ -32,6 +32,7 @@ import approvalInfoReducer from "./ApprovalInfoModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import attendanceInfoReducer from './AttendanceMoudle';
 import organizationItemReducer from "./OrganizationRefListModule";
 import organizationMemberReducer from "./OrganizationMemberModule";
 import organizationCreateReducer from "./OrganizationCreateModule";
@@ -89,6 +90,7 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+    attendanceInfoReducer,
   organizationItemReducer,
   organizationMemberReducer,
   organizationCreateReducer,

@@ -94,3 +94,53 @@
     display: flex;
     justify-content: center;
 }
+
+#calendarSize {
+    height: 500px;
+    width: 60%;
+}
+
+.payment-calendar {
+    height: 100%;
+    width: 100%;
+}
+
+#clearBtn {
+    color: #696cff;
+    background-color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    margin-right: 10px;
+    border: none;
+}
+
+.range1 {
+    color: #696cff;
+    background-color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.next1 {
+    color: #696cff;
+    background-color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+    border: #fff 1px solid;
+    width: 1rem;
+    border-radius: 1rem;
+}
+
+.prev1 {
+    color: #696cff;
+    background-color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 10px;
+    border: #fff 1px solid;
+    width: 1rem;
+    border-radius: 1rem;
+}
