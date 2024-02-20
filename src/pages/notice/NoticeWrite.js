@@ -12,6 +12,7 @@ import { callNoticeInsertAPI } from '../../apis/NoticeAPICalls';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 function NoticeWrite() {
+    const [fileName, setFileName] = useState('');
     const dispatch = useDispatch();
     const [noticeFiles, setNoticeFiles] = useState(null);
     const [noticefileUrl, setNoticefileUrl] = useState();
@@ -39,9 +40,10 @@ function NoticeWrite() {
     }, [noticeFiles]);
 
     const onChangeImageUpload = (e) => {
-        const profile = e.target.files[0];
-        setNoticeFiles(profile);
-        console.log(profile);
+        const file = e.target.files[0];
+        setNoticeFiles(file);
+        setFileName(file.name);
+        console.log(file);
     };
 
     const onClickImageUpload = () => {
@@ -71,50 +73,40 @@ function NoticeWrite() {
         memCode: token.memCode,
         notDeleteStatus: 'N',
         notAllArmCheck: 'N',
-        
     });
     console.log('form', form);
 
     const onClickNoticeInsertHandler = () => {
         console.log('onClickNoticeInsertHandler', onClickNoticeInsertHandler);
-
+        if (!form.notName || !form.notComment) {
+            alert('제목과 내용을 입력해주세요.');
+            return; // 작성이 완료되지 않도록 함수 종료
+        }
         const formData = new FormData();
+
+        if (noticeFiles && noticeFiles.length > 0) {
+            formData.append('noticeFiles', noticeFiles[0]);
+        }
 
         // formData.append("notCode", form.notCode)
         formData.append('notName', form.notName);
         formData.append('notComment', form.notComment);
         formData.append('notView', form.notView);
         formData.append('notCreateDate', form.notCreateDate);
-        formData.append('memCode', form.memCode);
+        formData.append('memCode', form.memCode ? form.memCode : '기본값 또는 처리 로직');
         formData.append('notDeleteStatus', form.notDeleteStatus);
         formData.append('notAllArmCheck', form.notAllArmCheck);
+
+        if (form.memCode) {
+            dispatch(callNoticeInsertAPI({ form: formData }));
+        } else {
+            console.log('memCode 값이 유효하지 않습니다.');
+            // memCode 값이 유효하지 않을 때의 처리 로직 
+        }
         
-
-        formData.append('noticeFiles', noticeFiles);
-        dispatch(callNoticeInsertAPI({ form: formData }));
     };
 
-    const onClickNoticeUpdateHandler = () => {
-        console.log('onClickNoticeUpdateHandler');
 
-        const formData = new FormData();
-
-        // 필요한 경우, 공지사항의 고유 ID를 formData에 추가
-        // 이 예제에서는 'notId'를 공지사항의 고유 식별자로 가정
-        formData.append('notCode', form.notCode); // 수정 대상 공지사항의 ID
-        formData.append('notCodeNumber', form.notCodeNumber);
-        formData.append('notName', form.notName);
-        formData.append('notComment', form.notComment);
-        formData.append('notView', form.notView);
-        formData.append('notCreateDate', form.notCreateDate);
-        formData.append('memCode', form.memCode);
-        formData.append('notDeleteStatus', form.notDeleteStatus);
-        formData.append('notAllArmCheck', form.notAllArmCheck);
-
-        // 수정 API 호출
-        // API 호출 함수와 엔드포인트는 프로젝트에 따라 다를 수 있습니다.
-        // 예: dispatch(callNoticeUpdateAPI(formData));
-    };
 
     return (
         <>
@@ -182,6 +174,7 @@ function NoticeWrite() {
                                                                 파일 첨부
                                                             </label>
                                                             <div className='input-group'>
+                                                                <div>{fileName && <p>{fileName}</p>}</div>
                                                                 <input
                                                                     type='file'
                                                                     className='form-control'
@@ -191,6 +184,7 @@ function NoticeWrite() {
                                                                     onClick={onClickImageUpload}
                                                                     ref={noticInput}
                                                                 />
+
                                                                 <label
                                                                     className='input-group-text'
                                                                     htmlFor='inputGroupFile02'

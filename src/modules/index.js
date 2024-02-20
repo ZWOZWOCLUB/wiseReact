@@ -42,7 +42,7 @@ import organizationEditReducer from './OrganizationEditModule';
 import schedulePatternUpdateReducer from './SchedulePatternUpdateModule';
 import schedulePatternInsertReducer from './SchedulePatternInsertModule';
 import schedulePatternDeleteReducer from './SchedulePatternDeleteModule';
-
+import dataFormatReducer from './DataFormatModule';
 const { combineReducers } = require('redux');
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
@@ -92,6 +92,7 @@ const rootReducer = combineReducers({
     schedulePatternUpdateReducer,
     schedulePatternInsertReducer,
     schedulePatternDeleteReducer,
+    dataFormatReducer,
 });
 
 export default rootReducer;
