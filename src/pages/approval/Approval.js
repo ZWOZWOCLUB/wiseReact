@@ -22,7 +22,7 @@ function Approval() {
     useEffect(() => {
         dispatch(
             callReceiveApprovalAPI({
-                memCode: token.memCode,
+                memCode: token?.memCode,
             })
         );
     }, []);
