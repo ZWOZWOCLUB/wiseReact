@@ -1,3 +1,4 @@
+import { GET_ATT_LIST } from "../modules/MPATTListModule";
 import { GET_ATT } from "../modules/MPATTModule";
 import { GET_CAREER } from "../modules/MPCareerModule";
 import { GET_CER } from "../modules/MPCerModule";
@@ -142,10 +143,8 @@ export const callATTAPI = ({ memCode, date }) => {
     }).then((response) => response.json());
 
     console.log("[callATTAPI] callATTAPI RESULT : ", result);
-    if (result.status === 200) {
       console.log("[callATTAPI] callATTAPI SUCCESS");
       dispatch({ type: GET_ATT, payload: result });
-    }
   };
 };
 
@@ -191,10 +190,8 @@ export const callVacHisAPI = ({ memCode, year }) => {
     }).then((response) => response.json());
 
     console.log("[callVacHisAPI] callVacHisAPI RESULT : ", result);
-    if (result.status === 200) {
       console.log("[callVacHisAPI] callVacHisAPI SUCCESS");
       dispatch({ type: GET_VAC_HIS, payload: result });
-    }
   };
 };
 
@@ -378,6 +375,29 @@ export const callSalAPI = ({ memCode }) => {
     if (result.status === 200) {
       console.log("[callSalAPI] callSalAPI SUCCESS");
       dispatch({ type: GET_SAL, payload: result });
+    }
+  };
+};
+
+// 출퇴근 리스트 상세조회
+export const callATTListAPI = ({ memCode }) => {
+
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/myPage/attList/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callATTListAPI] callATTListAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callATTListAPI] callATTListAPI SUCCESS");
+      dispatch({ type: GET_ATT_LIST, payload: result });
     }
   };
 };

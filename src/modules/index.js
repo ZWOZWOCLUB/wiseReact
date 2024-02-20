@@ -46,6 +46,8 @@ import aamPutReducer from "./AAMModule";
 import aamPutAlarmReducer from "./AAMPutAlarmModule";
 import mpSalReducer from "./MPSalaryModule";
 import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
+import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
+import mpATTListReducer from "./MPATTListModule";
 
 const { combineReducers } = require("redux");
 
@@ -101,6 +103,8 @@ const rootReducer = combineReducers({
   aamPutAlarmReducer,
   mpSalReducer,
   aamSendNewMsgReducer,
+  aamRecNewMsgReducer,
+  mpATTListReducer,
 });
 
 export default rootReducer;

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { decodeJwt } from "../../utils/tokenUtils.js";
 import { callATTAPI } from "../../apis/MyPageAPICalls.js";
+import { callATTListAPI } from "../../apis/MyPageAPICalls.js";
 // import Calendar from "@toast-ui/react-calendar";
 // import "tui-calendar/dist/tui-calendar.css";
 import Calendar, { OnClickFunc } from "react-calendar";
@@ -12,126 +13,166 @@ import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 
 function MPAttendance() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const formattedDate1 = `${year}-${month}-${day}`;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const att = useSelector((state) => state.mpATTReducer);
+  const attList = useSelector((state) => state.mpATTListReducer);
   const attDetail = att.data;
 
   const [value, onChange] = useState(new Date()); // 초기값은 현재 날짜
-  const activeDate = moment(value).format("YYYY-MM-DD"); // 클릭한 날짜 (년-월-일))
-  console.log('activeDate-->',activeDate);
+  const [checkDate, setCheckDate] = useState(formattedDate1); // 초기값은 현재 날짜
 
-
-  // 출근 날짜 목록. 예시로 임의로 설정합니다.
-  const workDays = ["2024-02-01", "2024-02-05", "2024-02-10"];
-
-  // 날짜 셀의 클래스 이름을 지정하는 함수
-  const tileClassName = ({ date }) => {
-    // 날짜를 문자열로 변환하여 출근 날짜 목록에 포함되는지 확인합니다.
-    const dateString = date.toISOString().split("T")[0];
-    if (workDays.includes(dateString)) {
-      // 출근 날짜인 경우 'work-day' 클래스를 반환하여 파란색 배경으로 설정합니다.
-      return "work-day";
-    }
-    // 출근 날짜가 아닌 경우 'non-work-day' 클래스를 반환하여 빨간색 배경으로 설정합니다.
-    return "non-work-day";
-  };
-
+  // 가장 처음 실행되는 useEffect
   useEffect(() => {
     if (token !== null) {
       dispatch(
         callATTAPI({
           memCode: 2,
-          date: "2024-01-01",
-          // date: today,
+          date: checkDate,
+
           // memCode: token.memCode
-          // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
-          // 마찬가지로 date도 useState로 캘린더에서 클릭한 값을 넘겨줘야함(기본값은 오늘 날짜로)
+          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
+        })
+      );
+      dispatch(
+        callATTListAPI({
+          memCode: 2,
+          // memCode: token.memCode
+          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
         })
       );
     }
   }, []);
 
   // 일기 작성 날짜 리스트
-  const dayList = [
-    "2024-02-10",
-    "2024-02-02",
-    "2024-02-14",
-  ];
+  const dayList = ["2024-02-10", "2024-02-02", "2024-02-14"];
 
+  // 공휴일 목록
   const holidayList = [
-    '01-01', 
-    '02-05', 
-    '02-06', 
-    '02-07', 
-    '02-08', 
-    '05-01', 
-    '06-06', 
-    '08-15',
+    "01-01",
+    "02-05",
+    "02-06",
+    "02-07",
+    "02-08",
+    "05-01",
+    "06-06",
+    "08-15",
   ];
+  // const squaredNumbers = attList.map((number) => {
+  //   return number.attWorkDate;
+  // });
+  // console.log('squaredNumbers',squaredNumbers);
 
+  // 날짜 리스트를 보고 해당 날짜에 css를 추가하는 함수
+  const addContent = (date) => {
+    const dayOfWeek = moment(date).format("dddd");
 
-// 각 날짜 타일에 컨텐츠 추가
-const addContent = (date) => {
-  // 해당 날짜(하루)에 추가할 컨텐츠의 배열
-  const contents = [];
-  const today = moment(); // 현재 날짜를 가져옴
-  const yesterday = moment().subtract(1, 'days');
-  const dateString = moment(date).format('YYYY-MM-DD');
+    // 해당 날짜(하루)에 추가할 컨텐츠의 배열
+    // const contents = [];
+    // const today = moment(); // 현재 날짜를 가져옴
+    const yesterday = moment().subtract(1, "days");
+    // const dateString = moment(date).format("YYYY-MM-DD");
 
-  // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
-  if(holidayList.find((day) => day === moment(date).format('MM-DD'))){
-    return <div className="diaryContent" style={{ backgroundColor: 'yellow' }}>공휴일</div>;
-  }
-  else {
-      if (dayList.find((day) => day === moment(date).format('YYYY-MM-DD'))) {
-    // 현재 날짜보다 작은 경우 '출근', 큰 경우 '결근' 표시
-    return <div className="diaryContent" style={{ backgroundColor: 'blue' }}>출근</div>;
-  
-  }
-  if (moment(date) < yesterday) {
-    return <div className="diaryContent" style={{ backgroundColor: 'red' }}>결근</div>;
-  } else {
-    return <div className="diaryContent"></div>;
-  }
-  }
+    const attListDetail = attList.data;
+    let arr = [];
+    let arr2 = [];
+    let arr3 = [];
+    let arr4 = [];
 
-  
-};
+    if (attListDetail !== undefined) {
+      {
+        attListDetail.map((item) => {
+          if (item.attStatus === "출근") {
+            arr.push(item.attWorkDate);
+          }
+          if (item.attStatus === "결근") {
+            arr2.push(item.attWorkDate);
+          }
+          if (item.attStatus === "지각") {
+            arr3.push(item.attWorkDate);
+          }
+          if (item.attStatus === "조퇴") {
+            arr4.push(item.attWorkDate);
+          }
+        });
+      }
+    }
 
+    // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
+    if (holidayList.find((day) => day === moment(date).format("MM-DD"))) {
+      return (
+        <div className="diaryContent" style={{ backgroundColor: "yellow" }}>
+          공휴일
+        </div>
+      );
+    } 
+    // else if(dayOfWeek === "Saturday" || dayOfWeek === "Sunday"){
+    //   return <div className="diaryContent"></div>;
+    // }
+    else {
+      if (arr.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
+        return (
+          <div className="diaryContent" style={{ backgroundColor: "blue" }}>
+            출근
+          </div>
+        );
+      }
+      if (arr2.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
+        return (
+          <div className="diaryContent" style={{ backgroundColor: "red" }}>
+            결근
+          </div>
+        );
+      }
+      if (arr3.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
+        return (
+          <div className="diaryContent" style={{ backgroundColor: "purple" }}>
+            지각
+          </div>
+        );
+      }
+      if (arr4.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
+        return (
+          <div className="diaryContent" style={{ backgroundColor: "green" }}>
+            조퇴
+          </div>
+        );
+      }
+    }
+  };
+
+  // 날짜를 클릭하면 checkDate statue를 변경하는 onClick
   const onClickDayHandler = (value, event) => {
+    console.log("선택한 날짜의 년도:", value.getFullYear());
+    console.log("선택한 날짜의 월:", value.getMonth() + 1);
+
     const year = value.getFullYear();
     const month = ("0" + (value.getMonth() + 1)).slice(-2);
     const day = ("0" + value.getDate()).slice(-2);
     const formattedDate = `${year}-${month}-${day}`;
     console.log("Clicked day:", formattedDate);
 
+    setCheckDate(formattedDate);
+  };
+
+  // 날짜를 클릭할때마다 실행되는 useEffect
+  useEffect(() => {
     dispatch(
       callATTAPI({
         memCode: 2,
-        date: formattedDate,
+        date: checkDate,
         // memCode: token.memCode
         // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
-        // 마찬가지로 date도 useState로 캘린더에서 클릭한 값을 넘겨줘야함(기본값은 오늘 날짜로)
       })
     );
-  };
-
-  useEffect(() => {
-    if (token !== null) {
-    }
-  }, [att]);
-
-  // useState 훅의 초기값으로 현재 날짜를 넣어줌
-  const [today, setToday] = useState(new Date());
-
-  // onChange 이벤트에 넣어줘서 날짜가 지날 때마다 today값이 업데이트 되도록 구현
-  const onChangeToday = () => {
-    setToday(today);
-  };
-
-  console.log();
+  }, [checkDate]);
 
   const [activeTab, setActiveTab] = useState("프로필 정보");
 
@@ -238,16 +279,17 @@ const addContent = (date) => {
                         <div className="card h-100">
                           <div className="card-header d-flex align-items-center justify-content-between">
                             <h5 className="card-title m-0 me-2">기록</h5>
+                            <small>*최근 3개월 정보까지 가져옵니다.</small>
                           </div>
                           <div className="card-body">
                             {/* 캘린더 시작 */}
                             {/* https://velog.io/@hhjj0513/TIL-React-캘린더-react-calendar-라이브러리-TypeScript-적용- */}
                             <div>
-                              <Calendar 
-                              onChange={onChange} 
-                              value={value}
-                              onClickDay={onClickDayHandler}
-                              tileContent={({ date }) => addContent(date)}
+                              <Calendar
+                                onChange={onChange}
+                                value={value}
+                                onClickDay={onClickDayHandler}
+                                tileContent={({ date }) => addContent(date)}
                               />
                             </div>
                             {/* 캘린더 끝 */}
@@ -325,7 +367,7 @@ const addContent = (date) => {
                             </div>
                           </div>
                         ) : (
-                          "로딩중"
+                          "샘플데이터 없음"
                         )}
                       </div>
                     </div>

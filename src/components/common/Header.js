@@ -28,6 +28,7 @@ import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
+import { callRecNewMsgAPI } from "../../apis/AAMAPICalls.js";
 import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
@@ -52,7 +53,7 @@ function Header() {
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
   const sendNewMsgReducer = useSelector((state) => state.aamSendNewMsgReducer);
-  
+
   const perAlarmList = perAlarm.data;
   const sendMessageList = sendMessage.data;
   const recMessageList = recMessage.data;
@@ -60,26 +61,25 @@ function Header() {
   const sendNewMsgReducerDetail = sendNewMsgReducer.data;
 
   const [checked, setChecked] = useState([]);
-  const [names, setNames] = useState('');
-  const [codes, setCodes] = useState('');
+  const [names, setNames] = useState("");
+  const [codes, setCodes] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [expanded, setExpanded] = useState(["동물원병원"]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const [form, setForm] = useState({
-    msgContents: '',
+    msgContents: "",
     memCode: token.memCode,
     msgDate: new Date(),
-    msgDeleteStatus: 'N',
+    msgDeleteStatus: "N",
   });
 
   const handleChange = (event) => {
     const { value } = event.target;
     if (value.length <= 200) {
       setInputValue(value);
-    }
-    else {
-      alert('최대 200자까지만 입력이 가능합니다.')
+    } else {
+      alert("최대 200자까지만 입력이 가능합니다.");
     }
   };
 
@@ -119,69 +119,63 @@ function Header() {
   const searchMethod = (node, searchQuery) =>
     node.label.toLowerCase().includes(searchQuery.toLowerCase());
 
-  // if(recMessageList !== undefined){
-  //   console.log('recMessage[0].recMsgCheckStatus--->',recMessage.data[0].recMsgCheckStatus);
-  //   if(recMessage.data[0].recMsgCheckStatus === 'N'){
-  //     console.log('setCheck false로 상태 변경');
-  //     // setCheck(false);
-  //   }
-  // }
-
-  
   const onClickSendNewMsg = () => {
+    if (names === "") {
+      alert("수신자를 선택해주세요");
+    } else if (inputValue === "") {
+      alert("메세지를 입력해주세요");
+    } else {
+      console.log("inputValue--->", inputValue);
+      console.log("보낼 codes---->", codes);
+      console.log("보낼 names---->", names);
 
-    if(inputValue === ''){
-      alert('메세지를 입력해주세요');
+      const formData = new FormData();
+      const date = new Date();
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+      console.log(formattedDate);
+
+      formData.append("msgContents", inputValue);
+      formData.append("memCode", token.memCode);
+      formData.append("msgDate", formattedDate);
+      formData.append("msgDeleteStatus", "N");
+      formData.append("codes", codes);
+
+      console.log("dispatch 직전 formdata", formData);
+
+      // sendMessage에 넣는거까지 성공
+      dispatch(
+        callSendNewMsgAPI({
+          form: formData,
+        })
+      );
+
+      // 이제 recMessage에 msgCode랑 memCode 넣으면 됨
+      // sendNewMsgReducerDetail --> msgCode
     }
-    else {
-      console.log('inputValue--->',inputValue);
-      console.log('보낼 codes---->',codes);
-      console.log('보낼 names---->',names);
-
-    const formData = new FormData();
-
-    formData.append("msgContents", inputValue);
-    formData.append("memCode", token.memCode);
-    formData.append("msgDate", new Date().toLocaleDateString('en-CA'));
-    formData.append("msgDeleteStatus", 'N');
-
-    console.log('dispatch 직전 formdata', formData);
-   
-    // sendMessage에 넣는거까지 성공
-    dispatch(
-      callSendNewMsgAPI({
-        form: formData,
-      })
-    );
-
-    // 이제 recMessage에 msgCode랑 memCode 넣으면 됨
-
-    // sendNewMsgReducerDetail --> msgCode
-
-
-    
-
-    }
-    
-
   };
 
-
   const onClickCheckMember = () => {
-    console.log('onClickCheckMember 최종 check --- >',checked);
+    console.log("onClickCheckMember 최종 check --- >", checked);
 
     // 숫자와 이름으로만 되어있는 배열 2개로 분리
-  const splitArray = checked.map(item => {
-    const [number, name] = item.split(' ');
-    return { number, name };
-  });
+    const splitArray = checked.map((item) => {
+      const [number, name] = item.split(" ");
+      return { number, name };
+    });
 
-  // 분리된 배열 출력
-  console.log(splitArray);
+    // 분리된 배열 출력
+    console.log(splitArray);
 
-  setNames(splitArray.map(item => " "+item.name));
-  setCodes(splitArray.map(item => " "+item.number));
-
+    setNames(splitArray.map((item) => " " + item.name));
+    setCodes(splitArray.map((item) => " " + item.number));
   };
 
   const handleColorChange = () => {
@@ -206,7 +200,8 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              memCode: recMessage.data[0].msgCode,
+              msgCode: recMessage.data[0].msgCode,
+              memCode: token.memCode,
             })
           );
         }
@@ -227,6 +222,7 @@ function Header() {
       dispatch(
         callRecDeleteStatusUpdateAPI({
           msgCode: msgCode,
+          memCode: token.memCode,
         })
       );
     }
@@ -245,8 +241,6 @@ function Header() {
     }
   };
 
-
-
   // 알림함 탭 처리
   const handleTabChange1 = (selectedTab) => {
     console.log("------ handleTabChange1 호출 -----");
@@ -258,7 +252,7 @@ function Header() {
   const onClickAlarmDetail = (payCode) => {
     console.log("------ onClickAlarmDetail 호출 -----");
 
-    navigate(`/main/ApprovalDetail`, { state: { payCode }}, {replace:true});
+    navigate(`/main/ApprovalDetail`, { state: { payCode } }, { replace: true });
     window.location.reload();
   };
 
@@ -378,64 +372,29 @@ function Header() {
         memCode: token.memCode,
       })
     );
-  }, [deleteStatus]);
+  }, [deleteStatus, sendNewMsgReducer]);
 
-  
-
-  // 부서 트리 출력 useEffect
+  // // 수신 메세지를 만드는 useEffect
   // useEffect(() => {
-  //   console.log("------ departmentList useEffect 호출 -----");
+  //   console.log('sendNewMsgReducer 감지 useEffect 실행');
 
-  //   if (departmentList && departmentList.children) {
-  //     const options = {
-  //       data: [
-  //         {
-  //           text: departmentList.depName,
-  //           children: departmentList.children.map((dep) => ({
-  //             text: dep.depName === "인사팀" ? dep.depName : dep.depName,
-  //             children:
-  //               dep.depName === "인사팀"
-  //                 ? dep.memberList.map((mem) => ({
-  //                     text: mem.memName + " " + mem.posName,
-  //                     nodeValue: mem.memCode,
-  //                     data: mem.memCode,
-  //                     id: mem.memCode,
-  //                   }))
-  //                 : dep.children.map((chi) => ({
-  //                     text: chi.depName,
-  //                     state: "closed",
-  //                     children: chi.memberList.map((mem) => ({
-  //                       text: mem.memName + " " + mem.posName,
-  //                       nodeValue: mem.memCode,
-  //                       data: mem.memCode,
-  //                       id: mem.memCode,
-  //                     })),
-  //                   })),
-  //           })),
-  //         },
-  //       ],
-  //       nodeIdPrefix: "tui-tree-node-",
-  //       nodeDefaultState: "opened",
-  //       stateLabels: {
-  //         opened: "-",
-  //         closed: "+",
-  //       },
-  //     };
+  //   if (sendNewMsgReducerDetail !== undefined) {
+  //     codes.map((code) => {
+  //       console.log('sendNewMsgReducerDetail',sendNewMsgReducerDetail);
+  //       console.log('code',code);
+  //       const formData2 = new FormData();
+  //       formData2.append("msgCode", sendNewMsgReducerDetail);
+  //       formData2.append("memCode", code);
 
-  //     const tree = new Tree("#tree", options);
-
-
-  // // 클릭 이벤트 핸들러를 추가합니다.
-  // tree.on('click', (event) => {
-  //   const node = event.node;
-  //   // nodeValue가 있는지 확인하고 있으면 콘솔에 출력합니다.
-  //   if (node.nodeValue) {
-  //     console.log("Node Value:", node.nodeValue);
+  //       dispatch(
+  //         callRecNewMsgAPI({
+  //           form: formData2,
+  //           codes: codes
+  //         })
+  //       );
+  //     });
   //   }
-  // });
-
-  //   }
-  // }, [departmentList]);
+  // }, [sendNewMsgReducer]);
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
@@ -481,22 +440,21 @@ function Header() {
 
   const onClickTree = (event) => {
     const clickedElement = event.target;
-  
+
     // 클릭된 요소가 트리 노드인지 확인합니다.
-    const treeNode = clickedElement.closest('.tui-tree-node');
+    const treeNode = clickedElement.closest(".tui-tree-node");
     if (treeNode) {
       // 트리 노드인 경우에만 처리합니다.
-      const nodeValue = treeNode.getAttribute('nodeValue');
+      const nodeValue = treeNode.getAttribute("nodeValue");
       // const nodeValue = treeNode.dataset;
       const nodeId = treeNode.id;
       const nodeText = treeNode.textContent.trim(); // 텍스트 내용을 가져옵니다.
-  
+
       console.log("Node Value:", nodeValue);
       console.log("Node ID:", nodeId);
       console.log("Node Text:", nodeText);
     }
   };
-  
 
   return (
     <>
@@ -709,43 +667,6 @@ function Header() {
             className="offcanvas-body my-auto mx-0 flex-grow-0"
             style={{ overflowY: "auto", height: "95%" }}
           >
-            {/* <div className="tabs">
-  <ul>
-    <div style={{
-      marginBottom:'10px',
-      height:'25px',
-        }}>
-    <li>
-      <span
-        onClick={() => handleTabChange('sended')}
-        style={{
-          cursor: 'pointer',
-          color: tab === 'sended' ? 'blue' : 'black', // Example color change
-          fontWeight: tab === 'sended' ? 'bold' : 'normal', // Example font weight change
-          margin:'0px 0px 0px 50px',
-        }}
-      >
-        전체 알람
-      </span>
-    </li>
-    <li>
-      <span
-        onClick={() => handleTabChange('sending')}
-        style={{
-          cursor: 'pointer',
-          color: tab === 'sending' ? 'blue' : 'black', // Example color change
-          fontWeight: tab === 'sending' ? 'bold' : 'normal', // Example font weight change
-          margin:'0px 0px 0px 65px',
-        }}
-      >
-        개인 알람
-      </span>
-    </li>
-
-    </div>
-  </ul>
-</div> */}
-
             {tab === "sended" && (
               <div>
                 <div
@@ -770,15 +691,6 @@ function Header() {
                         </div>
                       </div>
                     ))}
-
-                  {/* <div  className="btn btn-outline-secondary d-grid w-100"
-                                            style={{
-                                            textAlign:'left',
-                                            }}
-                                            >
-                                        <div>2024-01-01</div>
-                                        <div>홍길동님의 연차 결재 서류에 참고인으로 설정되었습니다.</div>
-                                      </div> */}
                 </div>
               </div>
             )}
@@ -862,7 +774,8 @@ function Header() {
               <div
                 style={{
                   marginTop: "10px",
-                  height: "25px",
+                  height: "1000px",
+                  overflowY: "auto",
                 }}
               >
                 {recMessageList &&
@@ -871,6 +784,7 @@ function Header() {
                       className="messageBox"
                       style={{
                         textAlign: "left",
+                        
                       }}
                     >
                       <div
@@ -901,31 +815,6 @@ function Header() {
                       </div>
                     </div>
                   ))}
-                {/* <div
-                  className="messageBox"
-                  style={{
-                    textAlign: "left",
-                  }}
-                >
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>2023.03.12 &nbsp;&nbsp;&nbsp; 14:01</div>
-                    <div>
-                      <button
-                        style={{
-                          border: "solid 0px",
-                          backgroundColor: "#fff",
-                          cursor: "pointer",
-                        }}
-                      >
-                        X
-                      </button>
-                    </div>
-                  </div>
-                  <div>결재 서류 확인 부탁드립니다.</div>
-                  <div>발신자 : 기린</div>
-                </div> */}
               </div>
             )}
 
@@ -933,7 +822,8 @@ function Header() {
               <div
                 style={{
                   marginTop: "10px",
-                  height: "25px",
+                  height: "1000px",
+                  overflowY: "auto",
                 }}
               >
                 {/* Content for sending tab */}
@@ -970,20 +860,13 @@ function Header() {
                       </div>
                       <div>{sendMessage.msgContents}</div>
                       <div>
-                        수신자 : {sendMessage.aamRecMessenger.aamMember.memName}
+                        수신자 :{" "}
+                        {sendMessage.aamRecMessenger !== null
+                          ? sendMessage.aamRecMessenger.aamMember.memName
+                          : ""}
                       </div>
                     </div>
                   ))}
-                {/* <div
-                  className="messageBox"
-                  style={{
-                    textAlign: "left",
-                  }}
-                >
-                  <div>2023.01.17 &nbsp;&nbsp;&nbsp; 09:30</div>
-                  <div>수신자 : 간호 1팀 얼룩말</div>
-                  <div>오늘 나 병원가야해서 반차쓸거야</div>
-                </div> */}
               </div>
             )}
             {tab === "newWrite" && (
@@ -995,30 +878,44 @@ function Header() {
               >
                 <div>
                   <div>수신자</div>
-                  <input
+                  <button
                     id="receiver"
                     type="button"
                     data-bs-toggle="modal"
                     data-bs-target="#modalCenter"
+                  >
+                    조직도에서 수신자 선택하기
+                  </button>
+                  <textarea
                     value={names}
-                  />
+                    readOnly={true}
+                    style={{
+                      width: "350px",
+                      height: "auto",
+                      minHeight: "100px",
+                    }}
+                  >
+                    수신자
+                  </textarea>
                   <div className="col-lg-4 col-md-6">
                     <div className="mt-3"></div>
                   </div>
                 </div>
                 <div>
                   <div>내용</div>
-                  <textarea 
-                  id="content" 
-                  type="text" 
-                  onChange={handleChange}
-                  placeholder="최대 200자"
-                  maxLength={200}
-                  value={inputValue}
-                  style={{ 
-                  whiteSpace: 'pre-wrap', 
-                  width: '300px', 
-                  height: '200px' }}
+                  <textarea
+                    id="content"
+                    type="text"
+                    onChange={handleChange}
+                    placeholder="최대 200자"
+                    maxLength={200}
+                    value={inputValue}
+                    style={{
+                      whiteSpace: "pre-wrap",
+                      width: "350px",
+                      minHeight: "200px",
+                      height: "auto",
+                    }}
                   />
                 </div>
                 <button
@@ -1032,7 +929,6 @@ function Header() {
                     color: "beige",
                     width: "100px",
                   }}
-
                   onClick={onClickSendNewMsg}
                 >
                   보내기
@@ -1058,7 +954,11 @@ function Header() {
                 수신자 선택
               </h5>
               <div>
-                <small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 수신할 사람을 체크해주세요</small>
+                <small>
+                  {" "}
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 수신할 사람을
+                  체크해주세요
+                </small>
               </div>
               <button
                 type="button"
@@ -1071,32 +971,38 @@ function Header() {
               {/* 조직도 화면 */}
               <div>
                 <CheckboxTree
-                nodes={nodes}
-                checked={checked}
-                expanded={expanded}
-                onCheck={(checked) => setChecked(checked)}
-                onExpand={setExpanded}
-                onClick={(e) => onClickGetMemCode(e)}
-                icons={{
-                  check: <span className="bx bx-checkbox-checked" />,
-                  uncheck: <span className="bx bx-checkbox" />,
-                  halfCheck: <span className="bx bx-checkbox-square" />,
-                  expandClose: <span className="bx bx-chevron-right" />,
-                  expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
-                  parentClose: <span className="bx bx-folder" />,
-                  parentOpen: (
-                    <span
-                      className="bx bx-folder-open"
-                      style={{ color: "#696cff" }}
-                    />
-                  ),
-                  leaf: <span className="bx bx-user" />,
-                }}
-                searchQuery={searchQuery}
-                searchMethod={searchMethod}
-              />
+                  nodes={nodes}
+                  checked={checked}
+                  expanded={expanded}
+                  onCheck={
+                    checked !== undefined
+                      ? (checked) => setChecked(checked)
+                      : ""
+                  }
+                  onExpand={setExpanded}
+                  onClick={(e) => onClickGetMemCode(e)}
+                  icons={{
+                    check: <span className="bx bx-checkbox-checked" />,
+                    uncheck: <span className="bx bx-checkbox" />,
+                    halfCheck: <span className="bx bx-checkbox-square" />,
+                    expandClose: <span className="bx bx-chevron-right" />,
+                    expandOpen: <span className="bx bx-chevron-down" />,
+                    expandAll: (
+                      <span className="rct-icon rct-icon-expand-all" />
+                    ),
+                    collapseAll: <span className="bx folder-open" />,
+                    parentClose: <span className="bx bx-folder" />,
+                    parentOpen: (
+                      <span
+                        className="bx bx-folder-open"
+                        style={{ color: "#696cff" }}
+                      />
+                    ),
+                    leaf: <span className="bx bx-user" />,
+                  }}
+                  searchQuery={searchQuery}
+                  searchMethod={searchMethod}
+                />
               </div>
               {/* 조직도 화면 끝 */}
             </div>
