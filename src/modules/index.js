@@ -47,6 +47,7 @@ import aamPutAlarmReducer from "./AAMPutAlarmModule";
 import mpSalReducer from "./MPSalaryModule";
 import scheduleSearchValueReducer from "./ScheduleSearchValueModule";
 import scheduleSearchValueNotReducer from "./ScheduleSearchValueNotModule";
+import scheduleSearchETCReducer from "./ScheduleSearchETCModule";
 
 const { combineReducers } = require("redux");
 
@@ -103,6 +104,7 @@ const rootReducer = combineReducers({
   mpSalReducer,
   scheduleSearchValueReducer,
   scheduleSearchValueNotReducer,
+  scheduleSearchETCReducer,
 });
 
 export default rootReducer;

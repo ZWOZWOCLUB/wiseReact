@@ -30,10 +30,10 @@ export const callScheduleSearchAPI = ({ yearMonth }) => {
 //패턴 조회
 export const callSchedulePatternAndDaySearchAPI = () => {
   console.log("callSchedulePatternSearchAPI Call");
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/patternAndDaySearch`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/schedule`;
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "*/*",

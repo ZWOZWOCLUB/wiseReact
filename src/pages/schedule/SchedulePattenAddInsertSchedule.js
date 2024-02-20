@@ -1,4 +1,4 @@
-import { useEffect, useState,  useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { forwardRef, useImperativeHandle } from "react";
 import "../../assets/vendor/libs/jquery/jquery.js";
@@ -10,6 +10,7 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import { callScheduleInsertAPI } from "../../apis/SchedulePatternInsertAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree from "react-checkbox-tree";
 
@@ -23,125 +24,114 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const [expanded, setExpanded] = useState([]);
   const selectedColor = props.selectedColor;
   const [selectedIndices, setSelectedIndices] = useState([]);
-  const [selectedDayIndices, setSelectedDayIndices] = useState(Array(7).fill(null));
-  const [selectedRowIndex, setSelectedRowIndex] = useState('')
-  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
-  const [sendColor, setSendColor] = useState("");
-
+  const [selectedDayIndices, setSelectedDayIndices] = useState(
+    Array(7).fill(false)
+  );
+  const [selectedRowIndex, setSelectedRowIndex] = useState("");
   const scheduleRef = useRef();
   useEffect(() => {
     console.log("Selected Color in Insert Schedule:", selectedColor);
   }, [selectedColor]);
 
-  
   console.log("$$$$$$$$$$$$$$$sendColor", selectedColor);
-  
+
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
-      setSelectedIndices(prevIndices => [...prevIndices, index]);
-      setSelectedDayIndices(prevDayIndices => {
+      setSelectedIndices((prevIndices) => [...prevIndices, index]);
+      setSelectedDayIndices((prevDayIndices) => {
         const newDayIndices = [...prevDayIndices];
         newDayIndices[dayIndex] = index;
         return newDayIndices;
       });
-    }
+    },
   }));
 
   const onClickMonToSun = (index, dayIndex) => {
-    setSelectedIndices(prevIndices => {
-      // 이미 선택된 요일이 있는지 확인
-      const isIndexSelected = prevIndices.includes(index);
-  
-      if (!isIndexSelected) {
-        // 선택되지 않은 경우, 인덱스를 추가
-        return [...prevIndices, index];
-      } else {
-        // 이미 선택된 경우, 해당 인덱스를 제거
-        return prevIndices.filter(idx => idx !== index);
-      }
-    });
-  
-    setSelectedDayIndices(prevDayIndices => {
-      const newDayIndices = [...prevDayIndices];
-  
-      // 선택된 요일에 대해서만 작업을 수행
-      if (!prevDayIndices[dayIndex] && prevDayIndices[dayIndex] !== 0) {
-        newDayIndices[dayIndex] = index; // 선택된 요일에 인덱스 할당
-      } else {
-        // 이미 선택된 경우, 해당 요일의 배경색을 없애고 인덱스를 제거
-        newDayIndices[dayIndex] = null;
-      }
-  
-      return newDayIndices;
+    setSelectedRowIndex(index);
+    setSelectedDayIndices((prevState) => {
+      const newSelectedDayIndices = [...prevState];
+      newSelectedDayIndices[dayIndex] = !prevState[dayIndex];
+      return newSelectedDayIndices;
     });
   };
-  
-  
-  
-  
-  console.log('selcsdfsdf', selectedIndices)
-  console.log('setSelectedDayIndices', selectedDayIndices)
-  
 
-  const [scheduleForm, setScheduleForm] = useState([
-    {
-      schCode: "",
-      schType: "",
-      schStartDate: "",
-      schEndDate: "",
-      schColor: "N",
-      schDeleteStatus: "",
-      wokCode: "",
-      dayCode: "",
-    },
-  ]);
+  const getDayStyle = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return { background: selectedColor ? selectedColor.wokColor : "" };
+    }
+    return {};
+  };
+
+  const getType = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return selectedColor ? selectedColor.wokType : "";
+    }
+    return "";
+  };
+
+  const getTime = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return selectedColor
+        ? selectedColor.wokStartTime.slice(0, -3) +
+            " ~ " +
+            selectedColor.wokEndTime.slice(0, -3)
+        : "";
+    }
+
+    return "";
+  };
+
+  console.log("selcsdfsdf", selectedIndices);
+  console.log("setSelectedDayIndices", selectedDayIndices);
+  const [scheduleForm, setScheduleForm] = useState({
+    schType: "",
+    schStartDate: "",
+    schEndDate: "",
+    schColor: "",
+    schDeleteStatus: "N",
+    dayCode: "",
+    wokCode: selectedColor ? selectedColor.wokCode : "",
+  });
 
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
       if (insertRows.length === 0) {
-
-      setInsertRows((prevRows) => [...prevRows, {}]);
-      setScheduleForm((prevScheduleForm) => [
-        ...prevScheduleForm,
-        {
-          schCode: "",
-          schType: "",
-          schStartDate: "",
-          schEndDate: "",
-          schColor: "N",
-          schDeleteStatus: "",
-          wokCode: "",
-          dayCode: "",
-        },
-      ]);
-    }else{
-      alert('추가된 그룹 먼저 등록 후 진행해주세요')
-    }}
+        setInsertRows((prevRows) => [...prevRows, {}]);
+      } else {
+        alert("추가된 그룹 먼저 등록 후 진행해주세요");
+      }
+    },
   }));
-  
-  console.log('//////////////', insertRows.length)
-  
+
+  console.log("//////////////", insertRows.length);
 
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
 
-    setScheduleForm((prevScheduleForm) => {
-      return prevScheduleForm.map((form, idx) => {
-        if (idx === index) {
-          return {
-            ...form,
-            [name]: value,
-          };
-        }
-        return form;
-      });
-    });
+    setScheduleForm((prevScheduleForm) => ({
+      ...prevScheduleForm,
+      [name]: value,
+      wokCode: selectedColor.wokCode,
+      schColor: selectedColor.wokColor,
+      dayCode: selectedDayIndices
+        .map((isSelected, index) => (isSelected ? index : null))
+        .filter((index) => index !== null),
+    }));
   };
-  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
 
-  const onClicktree = (name) => {
-    console.log(name, "클릭");
-  };
+  useEffect(() => {
+    if (selectedColor) {
+      setScheduleForm((prevScheduleForm) => ({
+        ...prevScheduleForm,
+        wokCode: selectedColor.wokCode,
+        schColor: selectedColor.wokColor,
+        dayCode: selectedDayIndices
+          .map((isSelected, index) => (isSelected ? index : null))
+          .filter((index) => index !== null),
+      }));
+    }
+  }, [selectedColor, selectedDayIndices]);
+  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
 
   useEffect(() => {
     dispatch(callOrganizationTreeAPI());
@@ -182,10 +172,27 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   };
   console.log("setChecked +++++++++++++++++++++", checked);
 
-  const onClickIndex = (index) => {
-    console.log('ddddddddddddd',index);
+  const onClickScheduleInsert = () => {
+    console.log("onClickScheduleInsert", scheduleForm);
 
-  }
+    const formData = new FormData();
+    formData.append("wokCode", scheduleForm.wokCode);
+    formData.append("schType", scheduleForm.schType);
+    formData.append("schStartDate", scheduleForm.schStartDate);
+    formData.append("schEndDate", scheduleForm.schEndDate);
+    formData.append("schColor", scheduleForm.schColor);
+    formData.append("schDeleteStatus", scheduleForm.schDeleteStatus);
+    formData.append("dayCode", scheduleForm.dayCode);
+    dispatch(
+      callScheduleInsertAPI({
+        scheduleForm: formData,
+      })
+    );
+  };
+
+  const onClickIndex = (index) => {
+    console.log("ddddddddddddd", index);
+  };
   return (
     <>
       {insertRows.map((row, index) => (
@@ -201,7 +208,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                 />
               </div>
             </div>
-            
             <div className={`${payCSS["top_right"]}`}>
               <div className={`${payCSS["schedule_date"]}`}>
                 <input
@@ -209,7 +215,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   className={`${payCSS["period"]}`}
                   name="schStartDate"
                   onChange={(e) => insertSchedule(e, index)}
-                /> &nbsp; ~
+                />{" "}
+                &nbsp; ~
                 <input
                   type="Date"
                   className={`${payCSS["period"]}`}
@@ -217,11 +224,12 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   onChange={(e) => insertSchedule(e, index)}
                 />
               </div>
-              <button className={`${payCSS["check"]}`}>
+              <button
+                className={`${payCSS["check"]}`}
+                onClick={onClickScheduleInsert}
+              >
                 <i className={"bx bx-check"} style={{ marginRight: 1 }} />
-                <div style={{ marginTop: 3 }}>
-                  &nbsp; 적용
-                </div>
+                <div style={{ marginTop: 3 }}>&nbsp; 적용</div>
               </button>
               <button className={`${payCSS["threeDot"]}`}>
                 <i
@@ -232,28 +240,26 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
             </div>
           </div>
           <div className={`${payCSS["middle"]}`}>
-          {['월', '화', '수', '목', '금', '토', '일'].map((dayIndex, idx) => (
-        <div
-          key={idx}
-          className={`${payCSS["monToSun"]}`}
-          onClick={() => {
-            onClickMonToSun(index, idx ); 
-          }}
-          style={{ background: selectedDayIndices[idx] !== null && selectedIndices.includes(index) ? selectedColor : 'transparent' }}
-
-        >
-                        <div className={`${payCSS["forColor"]}`} >
-                <div className={`${payCSS["first"]}`}>
-                  <strong>{dayIndex}</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
+            {["월", "화", "수", "목", "금", "토", "일"].map((dayIndex, idx) => (
+              <div
+                key={idx}
+                className={`${payCSS["monToSun"]}`}
+                onClick={() => {
+                  onClickMonToSun(index, idx);
+                }}
+                style={getDayStyle(idx)}
+              >
+                <div className={`${payCSS["forColor"]}`}>
+                  <div className={`${payCSS["first"]}`}>
+                    <strong>{dayIndex}</strong>
+                  </div>
+                  <div className={`${payCSS["second"]}`}>{getType(idx)}</div>
+                  <div className={`${payCSS["third"]}`}>
+                    <small>{getTime(idx)}</small>
+                  </div>
                 </div>
               </div>
-          </div>
-          ))}
-
+            ))}
           </div>
           <div className={`${payCSS["bottom"]}`}>
             <div>

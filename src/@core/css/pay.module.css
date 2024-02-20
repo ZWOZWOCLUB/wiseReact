@@ -384,6 +384,11 @@ input[type="file"] {
 .scheduleDetailsTopWrapper{
 background-color: #fff;
 border-bottom: #a9b2bd 1px solid;
+font-size: x-large;
+padding-left: 10px;
+font-weight: 500;
+color: #696cff;
+
 }
 
 .scheduleDetailsMiddleWrapper{
@@ -459,7 +464,6 @@ flex-wrap: wrap;}
 
 .detailWrapper{
     margin-bottom: 10px;
-    padding: 5px 5px 0 5px;
     background-color: #fff;
     
 }
@@ -481,7 +485,9 @@ flex-wrap: wrap;}
 
 .wrapperName{
     background-color: #fff;
-    padding: 20px 20px 0px 20px;
+    padding: 20px 20px 20px 20px;
+    justify-content: space-around
+
 
 }
 
@@ -489,4 +495,9 @@ flex-wrap: wrap;}
     display: flex;
     padding-bottom: 20px;
     padding-top: 10px;
+}
+
+.scheduleDetailsTotalWrapper{
+    padding: 10px 10px 10px 10px;
+
 }

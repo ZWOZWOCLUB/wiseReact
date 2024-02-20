@@ -100,13 +100,13 @@ function SchedulePattenAdd() {
   };
 
   const onClickMonToSun = (index, dayIndex) => {
-    console.log('444444444444444:', index, dayIndex);
+    console.log("444444444444444:", index, dayIndex);
     scheduleRef.current.onClickMonToSun(index, dayIndex);
   };
 
-  const getSelectedColor = (selectedColor) => {
-    console.log("선택한 색상 부모컴포넌트에 전달:", selectedColor);
-    setSelectedColor(selectedColor)
+  const getSelectedPattern = (selectedPattern) => {
+    console.log("선택한 색상 부모컴포넌트에 전달:", selectedPattern);
+    setSelectedColor(selectedPattern);
   };
 
   return (
@@ -127,12 +127,18 @@ function SchedulePattenAdd() {
       </div>
       <div className={`${payCSS["schedule_content"]}`}>
         <div className={`${payCSS["side_schedule"]}`} id="side_schedule">
-        <SchedulePattenAddPattern getSelectedColor={getSelectedColor} selectedColor={selectedColor}/>
+          <SchedulePattenAddPattern
+            getSelectedPattern={getSelectedPattern}
+            selectedColor={selectedColor}
+          />
         </div>
         <div className={`${payCSS["main_content"]}`}>
           <div className={`${payCSS["border_card"]}`}>
-            <SchedulePattenAddInsertSchedule ref={scheduleRef} selectedColor={selectedColor} />
-            <SchedulePattenAddSchedule selectedColor={selectedColor}/>
+            <SchedulePattenAddInsertSchedule
+              ref={scheduleRef}
+              selectedColor={selectedColor}
+            />
+            <SchedulePattenAddSchedule selectedColor={selectedColor} />
           </div>
         </div>
       </div>
