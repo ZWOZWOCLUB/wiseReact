@@ -1,8 +1,5 @@
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css";
-import newCoreCss from "../../@core/vendor/css/newCore.module.css";
-import profile from "../../@core/img/avatars/1.png";
-import { NavLink } from "react-router-dom";
 import "../../pages/alarmAndMessage/message.css";
 import "../../assets/vendor/libs/jquery/jquery.js";
 import "../../assets/vendor/libs/popper/popper.js";
@@ -10,10 +7,8 @@ import "../../assets/vendor/js/bootstrap.js";
 import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
 import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
-import Modal from "./Modal";
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { replace } from "stylis";
+import { useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../utils/tokenUtils.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -28,12 +23,11 @@ import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
-import { callRecNewMsgAPI } from "../../apis/AAMAPICalls.js";
-import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import CheckboxTree from "react-checkbox-tree";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
@@ -200,7 +194,7 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              msgCode: recMessage.data[0].msgCode,
+              
               memCode: token.memCode,
             })
           );
@@ -300,10 +294,6 @@ function Header() {
     }
   };
 
-  // const onClickTree = (target) => {
-  //   // 클릭된 요소의 정보를 출력합니다.
-  //   console.log(target);
-  // };
 
   const onClickLogout = () => {
     alert("로그아웃 합니다.");
@@ -374,27 +364,6 @@ function Header() {
     );
   }, [deleteStatus, sendNewMsgReducer]);
 
-  // // 수신 메세지를 만드는 useEffect
-  // useEffect(() => {
-  //   console.log('sendNewMsgReducer 감지 useEffect 실행');
-
-  //   if (sendNewMsgReducerDetail !== undefined) {
-  //     codes.map((code) => {
-  //       console.log('sendNewMsgReducerDetail',sendNewMsgReducerDetail);
-  //       console.log('code',code);
-  //       const formData2 = new FormData();
-  //       formData2.append("msgCode", sendNewMsgReducerDetail);
-  //       formData2.append("memCode", code);
-
-  //       dispatch(
-  //         callRecNewMsgAPI({
-  //           form: formData2,
-  //           codes: codes
-  //         })
-  //       );
-  //     });
-  //   }
-  // }, [sendNewMsgReducer]);
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
@@ -456,6 +425,26 @@ function Header() {
     }
   };
 
+  //yj: 헤더에 멤버 이름 출력
+  const memberDetail = useSelector(state => state.mypageReducer);
+  console.log("memberDetail",memberDetail);
+  
+
+  useEffect(()=>{
+
+    console.log("헤더 토큰 검사---->", token);
+    console.log("헤더 토큰 token.memCode--->", token.memCode);
+
+    if(token !== null){
+      dispatch(
+        callMemberDetailAPI({
+          memCode: token.memCode,
+        })
+      )
+    }
+  }, []);
+
+
   return (
     <>
       {/* 파비콘 */}
@@ -502,7 +491,7 @@ function Header() {
         } ${themDefaultCSS[`bg-navbar-theme`]}`}
         id="layout-navbar"
       >
-        <div
+        {/* <div
           className={`${coreCSS[`layout-menu-toggle`]} ${
             coreCSS[`navbar-nav`]
           } ${coreCSS[`align-items-xl-center`]} ${coreCSS[`me-3`]} ${
@@ -517,7 +506,7 @@ function Header() {
           >
             <i className="bx bx-menu bx-sm"></i>
           </a>
-        </div>
+        </div> */}
 
         <div
           className={`${coreCSS[`navbar-nav-right`]} ${coreCSS[`d-flex`]} ${
@@ -525,7 +514,7 @@ function Header() {
           }`}
           id="navbar-collapse"
         >
-          <div
+          {/* <div
             className={`${coreCSS[`navbar-nav`]} ${
               coreCSS[`align-items-center`]
             }`}
@@ -548,8 +537,10 @@ function Header() {
                 aria-label="Search..."
               />
             </div>
-          </div>
-
+          </div> */}
+          <div>
+          <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token.memName} ({token.memCode})</span>님</div>
+          </div>  
           <ul
             className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
               coreCSS[`align-items-center`]
@@ -626,13 +617,16 @@ function Header() {
               }`}
               onClick={onClickMyPage}
             >
-              <img
+              <i class='bx bxs-user-rectangle'
+              style={{ fontSize: 29, color : "#696cff" }}
+              />
+              {/* <img
                 src={profile}
                 alt=""
                 className={`${coreCSS[`w-px-30`]} ${coreCSS[`h-auto`]} ${
                   coreCSS[`rounded-circle`]
                 }`}
-              />
+              /> */}
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
               <i
@@ -793,7 +787,7 @@ function Header() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div>{recMessage.aamSendMessenger.msgDate}</div>
+                        <div>{recMessage.aamSendMessenger?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -802,16 +796,16 @@ function Header() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              onClickRecMsgDelete(recMessage.msgCode)
+                              onClickRecMsgDelete(recMessage?.msgCode)
                             }
                           >
                             X
                           </button>
                         </div>
                       </div>
-                      <div>{recMessage.aamSendMessenger.msgContents}</div>
+                      <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
-                        발신자 : {recMessage.aamSendMessenger.aamMember.memName}
+                        발신자 : {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>
                     </div>
                   ))}
@@ -842,7 +836,7 @@ function Header() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div>{sendMessage.msgDate}</div>
+                        <div>{sendMessage?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -851,19 +845,22 @@ function Header() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              onClickSendMsgDelete(sendMessage.msgCode)
+                              onClickSendMsgDelete(sendMessage?.msgCode)
                             }
                           >
                             X
                           </button>
                         </div>
                       </div>
-                      <div>{sendMessage.msgContents}</div>
+                      <div>{sendMessage?.msgContents}</div>
                       <div>
                         수신자 :{" "}
                         {sendMessage.aamRecMessenger !== null
                           ? sendMessage.aamRecMessenger.aamMember.memName
                           : ""}
+                      </div>
+                      <div>
+                        { sendMessage.aamRecMessenger.recMsgCheckStatus === 'N' ? '안읽음' : '읽음' }
                       </div>
                     </div>
                   ))}

@@ -53,8 +53,10 @@ import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
 import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
-
+import notCommentReducer from './NotCommentModule';
+import dataFormatReducer from './DataFormatModule';
 const { combineReducers } = require("redux");
+
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
 
