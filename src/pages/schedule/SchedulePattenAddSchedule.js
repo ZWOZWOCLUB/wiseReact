@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { forwardRef, useImperativeHandle } from "react";
+
 import "../../assets/vendor/libs/jquery/jquery.js";
 import "../../assets/vendor/libs/popper/popper.js";
 import "../../assets/vendor/js/bootstrap.js";
@@ -9,73 +11,227 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
-import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
-import SchedulePattenAddPattern from "./SchedulePattenAddPattern.js";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import CheckboxTree2 from "react-checkbox-tree";
 
-function SchedulePattenAddSchedule() {
+const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.schedulePatternDayReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
-  const [insertRows, serInsertRows] = useState([]);
+  const department = useSelector((state) => state.organizationChartReducer);
+  const [checkeds, setCheckeds] = useState([]);
+  const [expanded, setExpanded] = useState(["동물원병원"]);
+  const selectedColor = props.selectedColor;
+  const [modalIndex, setModalIndex] = useState(null);
+  const [memCode, setMemCode] = useState([]);
+  const [updateState, setUpdateState] = useState([]);
+  const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
 
-  const [sendIndex, setSendIndex] = useState(null);
-  const [updateState, setUpdateState] = useState(false);
+  useEffect(() => {
+    dispatch(callOrganizationTreeAPI());
+  }, []);
 
-  const [showModal, setShowModal] = useState(false);
-  const [sendWokCode, setSendWokCode] = useState(0);
+  useEffect(() => {
+    console.log("selectedColor", selectedColor);
+  }, [selectedColor]);
+
+  useImperativeHandle(ref, () => ({
+    onClickMonToSun: (index, dayIndex) => {
+      setUpdateSelectedDayIndices((prevDayIndices) => {
+        const newDayIndices = [...prevDayIndices];
+        newDayIndices[dayIndex] = index;
+        return newDayIndices;
+      });
+    },
+  }));
+
+  const onClickMonToSun = (index, dayIndex) => {
+    if (updateState.includes(index)) {
+      setUpdateSelectedDayIndices([Array(7).fill(false)]);
+      if (!updateSelectedDayIndices[index]) {
+        const newDayIndices = Array(7).fill(false);
+        const updatedDayIndices = [...updateSelectedDayIndices];
+        updatedDayIndices[index] = newDayIndices;
+        updatedDayIndices[index][dayIndex] = !newDayIndices[dayIndex];
+        setUpdateSelectedDayIndices(updatedDayIndices);
+      } else {
+        const updatedDayIndices = [...updateSelectedDayIndices];
+        updatedDayIndices[index][dayIndex] =
+          !updatedDayIndices[index][dayIndex];
+        setUpdateSelectedDayIndices(updatedDayIndices);
+      }
+    }
+  };
+
+  console.log(
+    "$$$$$$$$$$$$$$$updateSelectedDayIndices",
+    updateSelectedDayIndices
+  );
+
+  const getDayStyle = (index, idx) => {
+    if (
+      updateSelectedDayIndices[index] &&
+      Array.isArray(updateSelectedDayIndices[index])
+    ) {
+      if (updateSelectedDayIndices[index][idx]) {
+        return { background: selectedColor ? selectedColor.wokColor : "" };
+      }
+    } else if (
+      allList[index].patternDayList.some(
+        (day) => day.patternDayID.dayCode === idx + 1
+      )
+    ) {
+      return { background: allList[index].patternList.wokColor };
+    }
+  };
+
+  const getType = (index, idx) => {
+    if (
+      updateSelectedDayIndices[index] &&
+      Array.isArray(updateSelectedDayIndices[index])
+    ) {
+      if (updateSelectedDayIndices[index][idx]) {
+        return selectedColor ? selectedColor.wokType : "-";
+      }
+    } else if (
+      allList[index].patternDayList.some(
+        (day) => day.patternDayID.dayCode === idx + 1
+      )
+    ) {
+      return allList[index].patternList.wokType;
+    }
+  };
+
+  const getTime = (index, idx) => {
+    if (
+      updateSelectedDayIndices[index] &&
+      Array.isArray(updateSelectedDayIndices[index])
+    ) {
+      if (updateSelectedDayIndices[index][idx]) {
+        return selectedColor
+          ? selectedColor.wokStartTime.slice(0, -3) +
+              " ~ " +
+              selectedColor.wokEndTime.slice(0, -3)
+          : "-";
+      }
+    } else if (
+      allList[index].patternDayList.some(
+        (day) => day.patternDayID.dayCode === idx + 1
+      )
+    ) {
+      return (
+        allList[index].patternList.wokStartTime.slice(0, -3) +
+        " ~ " +
+        allList[index].patternList.wokEndTime.slice(0, -3)
+      );
+    }
+  };
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
   }, []);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
-  const [selectedColor, setSelectedColor] = useState("");
-
   const [selectedDayIndex, setSelectedDayIndex] = useState(null);
 
-  const onClickMonToSun = (index) => {
-    setSelectedDayIndex(index);
-    const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-      index
-    ];
-    selectedDay.style.background = selectedColor;
-    console.log("$$$$$$$$$$$$$$$", index, selectedDayIndex);
+  const [scheduleForm, setScheduleForm] = useState([]);
+  const changeState = (index) => {
+    if (Array.isArray(allList)) {
+      const selectedSchedule = allList[index];
+      const updatedForm = [...scheduleForm];
+      updatedForm[index] = selectedSchedule;
+      setScheduleForm(updatedForm);
+      const updatedUpdateState = [...updateState, index];
+      setUpdateState(updatedUpdateState);
+    }
   };
 
-  const [scheduleForm, setScheduleForm] = useState([
-    {
-      schCode: "",
-      schType: 0,
-      schStartDate: "",
-      schEndDate: "",
-      schColor: "N",
-      schDeleteStatus: "",
-      wokCode: "",
-      dayCode: "",
-    },
-  ]);
+  console.log("updateState", updateState);
 
-  const handleAddRow = () => {
-    serInsertRows((prevRows) => [...prevRows, {}]);
-    setScheduleForm((prevForms) => ({
-      ...prevForms,
-
-      schCode: "",
-      schType: 0,
-      schStartDate: "",
-      schEndDate: "",
-      schColor: "N",
-      schDeleteStatus: "",
-      wokCode: "",
-      dayCode: "",
-    }));
-  };
-
-  const insertSchedule = (e) => {
+  const onChangeHandler = (e, index) => {
     const { name, value } = e.target;
+
+    setScheduleForm((prevForms) => {
+      return prevForms.map((form, idx) => {
+        if (idx === index) {
+          return {
+            ...form,
+            [name]: value,
+          };
+        }
+        return form;
+      });
+    });
   };
   console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
+
+  const nodes =
+    department && department.children
+      ? [
+          {
+            value: department.depName,
+            label: department.depName,
+            expandDisabled: true,
+            children: department.children.map((dep) => ({
+              value: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              label: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      value: mem.memCode + "/" + mem.memName,
+                      label: mem.memName + " " + mem.posName,
+                    }))
+                  : dep.children.map((chi) => ({
+                      value: chi.depCode,
+                      label: chi.depName,
+                      children: chi.memberList.map((mem) => ({
+                        value: mem.memCode + "/" + mem.memName,
+                        label: mem.memName + " " + mem.posName,
+                      })),
+                    })),
+            })),
+          },
+        ]
+      : [];
+
+  console.log("setChecked +++++++++++++++++++++", checkeds);
+
+  const onClickIndex = (index) => {
+    console.log("ddddddddddddd", index);
+    setModalIndex(index);
+  };
+
+  // useEffect(() => {
+  //   if (modalIndex) {
+  //     scheduleForm[modalIndex].memberList = checked
+  //       .filter((memName) => memName.includes("/"))
+  //       .map((memName) => memName.split("/")[0]);
+  //   }
+  // }, [checked]);
+
+  const onCancel = (index) => {
+    setUpdateSelectedDayIndices((prevIndices) => {
+      const newIndices = [...prevIndices];
+      newIndices.splice(index, 1);
+
+      return newIndices;
+    });
+    console.log("ddddddddddddd", updateSelectedDayIndices);
+
+    setUpdateState((prevUpdateState) => {
+      const newUpdateState = prevUpdateState.filter((item) => item !== index);
+      return newUpdateState;
+    });
+
+    setScheduleForm((prevScheduleForm) => {
+      const newScheduleForm = [...prevScheduleForm];
+      newScheduleForm.splice(index, 1);
+      return newScheduleForm;
+    });
+    console.log("ddddddddddddd", scheduleForm);
+  };
 
   return (
     <>
@@ -88,7 +244,14 @@ function SchedulePattenAddSchedule() {
                     <input
                       type="text"
                       className={`${payCSS["nickname2"]}`}
-                      placeholder={p.schType}
+                      value={
+                        updateState.includes(index) && scheduleForm[index]
+                          ? scheduleForm[index].schType
+                          : p.schType
+                      }
+                      disabled={updateState.includes(index) ? false : true}
+                      onChange={(e) => onChangeHandler(e, index)}
+                      name="schType"
                     />
                   </div>
                   <div className={`${payCSS["hours"]}`}>
@@ -101,211 +264,205 @@ function SchedulePattenAddSchedule() {
                     <input
                       type="Date"
                       className={`${payCSS["period"]}`}
-                      value={p.schStartDate}
+                      onChange={(e) => onChangeHandler(e, index)}
+                      name="schStartDate"
+                      value={
+                        updateState.includes(index) && scheduleForm[index]
+                          ? scheduleForm[index].schStartDate
+                          : p.schStartDate
+                      }
+                      disabled={updateState.includes(index) ? false : true}
                     />
                     <input
                       type="Date"
                       className={`${payCSS["period"]}`}
-                      value={p.schEndDate}
+                      onChange={(e) => onChangeHandler(e, index)}
+                      name="schEndDate"
+                      value={
+                        updateState.includes(index) && scheduleForm[index]
+                          ? scheduleForm[index].schEndDate
+                          : p.schEndDate
+                      }
+                      disabled={updateState.includes(index) ? false : true}
                     />
                   </div>
-                  <button className={`${payCSS["check"]}`}>
-                    <i className={"bx bx-check"} style={{ marginRight: 1 }} />
-                    <div style={{ marginTop: 3 }}>&nbsp; 적용</div>
-                  </button>
-                  <button className={`${payCSS["threeDot"]}`}>
-                    <i
-                      className={`${payCSS["bx"]} ${payCSS["bx-dots-vertical-rounded"]}`}
-                      style={{ marginTop: 5 }}
-                    />
-                  </button>
+                  {updateState.includes(index) ? (
+                    <button
+                      className={`${payCSS["check"]}`}
+                      style={{ background: "#696CFF", color: "white" }}
+                      // onClick={() => changeState(index)}
+                    >
+                      <i className={"bx bx-check"} style={{ marginRight: 1 }} />
+                      <div style={{ marginTop: 3, color: "white" }}>
+                        &nbsp; 적용
+                      </div>
+                    </button>
+                  ) : (
+                    <button
+                      className={`${payCSS["check"]}`}
+                      style={{ background: "#696CFF", color: "white" }}
+                      onClick={() => changeState(index)}
+                    >
+                      <i className={"bx bx-check"} style={{ marginRight: 1 }} />
+                      <div style={{ marginTop: 3, color: "white" }}>
+                        &nbsp; 수정
+                      </div>
+                    </button>
+                  )}
+                  {updateState.includes(index) ? (
+                    <button
+                      className={`${payCSS["check"]}`}
+                      style={{ background: "#EB5757", color: "white" }}
+                      onClick={() => onCancel(index)}
+                    >
+                      <i className={"bx bx-check"} style={{ marginRight: 1 }} />
+                      <div style={{ marginTop: 3, color: "white" }}>
+                        &nbsp; 취소
+                      </div>
+                    </button>
+                  ) : (
+                    <button
+                      className={`${payCSS["check"]}`}
+                      style={{ background: "#EB5757", color: "white" }}
+                    >
+                      <i className={"bx bx-check"} style={{ marginRight: 1 }} />
+                      <div style={{ marginTop: 3, color: "white" }}>
+                        &nbsp; 삭제
+                      </div>
+                    </button>
+                  )}
                 </div>
               </div>
               <div className={`${payCSS["middle"]}`}>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 1
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>월</strong>
+                {["월", "화", "수", "목", "금", "토", "일"].map(
+                  (dayIndex, idx) => (
+                    <div
+                      key={idx}
+                      className={`${payCSS["monToSun"]}`}
+                      onClick={() => {
+                        onClickMonToSun(index, idx);
+                      }}
+                      style={getDayStyle(index, idx)}
+                    >
+                      <div className={`${payCSS["forColor"]}`}>
+                        <div className={`${payCSS["first"]}`}>
+                          <strong>{dayIndex}</strong>
+                        </div>
+                        <div className={`${payCSS["second"]}`}>
+                          {getType(index, idx)}
+                        </div>
+
+                        <div className={`${payCSS["third"]}`}>
+                          <small>{getTime(index, idx)}</small>
+                        </div>
+                      </div>
                     </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 2
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>화</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 3
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>수</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 4
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  {" "}
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>목</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 5
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  {" "}
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>금</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 6
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  {" "}
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>토</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${payCSS["monToSun"]}`}
-                  onClick={() => {
-                    onClickMonToSun(index);
-                  }}
-                  style={{
-                    background: p.patternDayList.some(
-                      (day) => day.patternDayID.dayCode === 7
-                    )
-                      ? p.patternList.wokColor
-                      : "",
-                  }}
-                >
-                  {" "}
-                  <div className={`${payCSS["forColor"]}`}>
-                    <div className={`${payCSS["first"]}`}>
-                      <strong>일</strong>
-                    </div>
-                    <div className={`${payCSS["second"]}`}>데이</div>
-                    <div className={`${payCSS["third"]}`}>
-                      <small>07:00-15:00</small>
-                    </div>
-                  </div>
-                </div>
+                  )
+                )}
               </div>
               <div className={`${payCSS["bottom"]}`}>
-                <button className={`${payCSS["plus-icon"]}`}>
+                <button
+                  className={`${payCSS["plus-icon"]}`}
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalCenter2"
+                  onClick={() => onClickIndex(index)}
+                  disabled={updateState.includes(index) ? false : true}
+                  style={{
+                    background: updateState.includes(index) ? "" : "#e5e5e5",
+                  }}
+                >
+                  {" "}
                   <i
                     className={"bx bx-plus"}
                     style={{ fontSize: "1.5rem", color: "#fff" }}
                   />
                 </button>
-                {/* {p.allowanceList.map((allowance, idx) => (
+                <div className={`${payCSS["wrapperName"]}`}>
+                  {updateState.includes(index) && scheduleForm[index]
+                    ? scheduleForm[index].allowanceList.map(
+                        (allowance, idx) => (
+                          <div className={`${payCSS["name"]}`}>
+                            <span key={idx}>
+                              {allowance.memberList.memName}
+                            </span>
+                          </div>
+                        )
+                      )
+                    : p.allowanceList.map((allowance, idx) => (
                         <div className={`${payCSS["name"]}`}>
                           <span key={idx}>{allowance.memberList.memName}</span>
                         </div>
-                      ))} */}
+                      ))}
+                </div>
               </div>
             </div>
           ))
         : ""}
+      <div
+        className="modal fade"
+        id="modalCenter3"
+        tabIndex="-1"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className={`${payCSS["modalTotalWrapper"]}`}>
+              <h5 className={`${payCSS["modalTopText"]}`}>
+                <i
+                  className="bx bxs-briefcase"
+                  style={{ fontSize: "2rem", marginRight: "1rem" }}
+                ></i>
+                새 근무편성
+              </h5>
+              <hr />
+              <CheckboxTree2
+                showExpandAll={true}
+                nodes={nodes}
+                checked={checkeds}
+                expanded={expanded}
+                onExpand={(expanded) => setExpanded(expanded)}
+                onCheck={(checked) => setCheckeds(checked)}
+                icons={{
+                  check: <span className="bx bx-checkbox-checked" />,
+                  uncheck: <span className="bx bx-checkbox" />,
+                  halfCheck: <span className="bx bx-checkbox-square" />,
+                  expandClose: <span className="bx bx-chevron-right" />,
+                  expandOpen: <span className="bx bx-chevron-down" />,
+                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
+                  collapseAll: <span className="bx folder-open" />,
+                  parentClose: <span className="bx bx-folder" />,
+                  parentOpen: (
+                    <span
+                      className="bx bx-folder-open"
+                      style={{ color: "#696cff" }}
+                    />
+                  ),
+                  leaf: <span className="bx bx-user" />,
+                }}
+              />
+              <hr />
+              <div className={`${payCSS["modalBtnWrapper"]}`}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  style={{ marginRight: "1rem" }}
+                >
+                  선택
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
-}
-
+});
 export default SchedulePattenAddSchedule;

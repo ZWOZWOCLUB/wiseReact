@@ -187,9 +187,9 @@ function Main() {
 
     calendar?.on("selectDateTime", handleSelectDateTime);
 
-    return () => {
-      calendar?.off("selectDateTime", handleSelectDateTime);
-    };
+    // return () => {
+    //   calendar?.off("selectDateTime", handleSelectDateTime);
+    // };
     // }, [currentTime]);
   }, []);
 

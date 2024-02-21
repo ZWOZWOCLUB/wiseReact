@@ -99,11 +99,6 @@ function SchedulePattenAdd() {
     scheduleRef.current.handleAddRow();
   };
 
-  const onClickMonToSun = (index, dayIndex) => {
-    console.log("444444444444444:", index, dayIndex);
-    scheduleRef.current.onClickMonToSun(index, dayIndex);
-  };
-
   const getSelectedPattern = (selectedPattern) => {
     console.log("선택한 색상 부모컴포넌트에 전달:", selectedPattern);
     setSelectedColor(selectedPattern);

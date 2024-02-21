@@ -21,7 +21,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const [insertRows, setInsertRows] = useState([]);
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const [checked, setChecked] = useState([]);
-  const [expanded, setExpanded] = useState([]);
+  const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [selectedDayIndices, setSelectedDayIndices] = useState(
@@ -29,11 +29,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   );
   const [selectedRowIndex, setSelectedRowIndex] = useState("");
   const scheduleRef = useRef();
-  useEffect(() => {
-    console.log("Selected Color in Insert Schedule:", selectedColor);
-  }, [selectedColor]);
-
-  console.log("$$$$$$$$$$$$$$$sendColor", selectedColor);
+  useEffect(() => {}, [selectedColor]);
 
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
@@ -81,8 +77,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     return "";
   };
 
-  console.log("selcsdfsdf", selectedIndices);
-  console.log("setSelectedDayIndices", selectedDayIndices);
   const [scheduleForm, setScheduleForm] = useState({
     schType: "",
     schStartDate: "",
@@ -91,6 +85,9 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     schDeleteStatus: "N",
     dayCode: "",
     wokCode: selectedColor ? selectedColor.wokCode : "",
+    memCode: checked
+      .filter((memName) => memName.includes("/"))
+      .map((memName) => memName.split("/")[0]),
   });
 
   useImperativeHandle(ref, () => ({
@@ -103,20 +100,22 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     },
   }));
 
-  console.log("//////////////", insertRows.length);
-
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
-
-    setScheduleForm((prevScheduleForm) => ({
-      ...prevScheduleForm,
-      [name]: value,
-      wokCode: selectedColor.wokCode,
-      schColor: selectedColor.wokColor,
-      dayCode: selectedDayIndices
-        .map((isSelected, index) => (isSelected ? index : null))
-        .filter((index) => index !== null),
-    }));
+    if (selectedColor) {
+      setScheduleForm((prevScheduleForm) => ({
+        ...prevScheduleForm,
+        [name]: value,
+        wokCode: selectedColor.wokCode,
+        schColor: selectedColor.wokColor,
+        dayCode: selectedDayIndices
+          .map((isSelected, index) => (isSelected ? index : null))
+          .filter((index) => index !== null),
+        memCode: checked
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[0]),
+      }));
+    }
   };
 
   useEffect(() => {
@@ -128,16 +127,17 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
         dayCode: selectedDayIndices
           .map((isSelected, index) => (isSelected ? index : null))
           .filter((index) => index !== null),
+        memCode: checked
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[0]),
       }));
     }
-  }, [selectedColor, selectedDayIndices]);
-  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
+  }, [selectedColor, selectedDayIndices, checked]);
 
   useEffect(() => {
     dispatch(callOrganizationTreeAPI());
   }, []);
 
-  console.log(departmentList);
   const nodes =
     departmentList && departmentList.children
       ? [
@@ -170,11 +170,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const onClickGetMemCode = (e) => {
     console.log(e.value);
   };
-  console.log("setChecked +++++++++++++++++++++", checked);
 
   const onClickScheduleInsert = () => {
-    console.log("onClickScheduleInsert", scheduleForm);
-
     const formData = new FormData();
     formData.append("wokCode", scheduleForm.wokCode);
     formData.append("schType", scheduleForm.schType);
@@ -183,11 +180,27 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     formData.append("schColor", scheduleForm.schColor);
     formData.append("schDeleteStatus", scheduleForm.schDeleteStatus);
     formData.append("dayCode", scheduleForm.dayCode);
+    formData.append(
+      "memCode",
+      checked
+        .map((memName, idx) => {
+          const indexOfSlash = memName.indexOf("/");
+          const extractedName =
+            indexOfSlash !== -1 ? memName.split("/")[0] : memName;
+          return extractedName;
+        })
+        .filter((extractedName) => extractedName !== "")
+    );
     dispatch(
       callScheduleInsertAPI({
         scheduleForm: formData,
       })
     );
+  };
+
+  const onChecks = (value) => {
+    setChecked(value);
+    console.log("ddddddddddddd", checked);
   };
 
   const onClickIndex = (index) => {
@@ -226,6 +239,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               </div>
               <button
                 className={`${payCSS["check"]}`}
+                style={{ background: "#696CFF", color: "white", width: "30%" }}
                 onClick={onClickScheduleInsert}
               >
                 <i className={"bx bx-check"} style={{ marginRight: 1 }} />

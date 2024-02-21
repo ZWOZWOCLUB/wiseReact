@@ -54,6 +54,7 @@ import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
 import schedulePatternDayReducer from "./SchedulePatternDayModule";
+import scheduleInsetMemReducer from "./ScheduleInsertMemModule";
 
 const { combineReducers } = require("redux");
 
@@ -117,6 +118,7 @@ const rootReducer = combineReducers({
   aamRecNewMsgReducer,
   mpATTListReducer,
   schedulePatternDayReducer,
+  scheduleInsetMemReducer,
 });
 
 export default rootReducer;

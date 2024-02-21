@@ -90,7 +90,7 @@ function Schedule() {
 
   useEffect(() => {
     updateEvents(currentDate);
-  }, [scheduleList, currentDate]);
+  }, [scheduleList, currentDate, checked]);
 
   useEffect(() => {
     const options = {
@@ -122,9 +122,11 @@ function Schedule() {
   useEffect(() => {
     const formattedDate = formatDate(currentDate);
     setYearMonth(formattedDate);
-    dispatch(callScheduleSearchAPI({ yearMonth: formattedDate }));
+    dispatch(
+      callScheduleSearchAPI({ yearMonth: formattedDate, memberCode: checked })
+    );
     updateEvents(currentDate);
-  }, []);
+  }, [checked]);
 
   function scheduleAdd() {
     navigate(`/main/scheduleAdd`, { replace: true });
@@ -275,18 +277,7 @@ function Schedule() {
     setSearchQuery(e.target.value);
     console.log(searchQuery);
   };
-
-  useEffect(() => {
-    const calendarInstance = calendarRef.current?.getInstance();
-
-    const handleUnmount = () => {
-      if (calendarInstance) {
-        calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
-      }
-    };
-
-    return handleUnmount;
-  }, [calendarRef.current]);
+  console.log("checked", checked);
 
   return (
     <div className={`${coreCSS["col-xxl"]}`}>
