@@ -34,6 +34,7 @@ import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import CheckboxTree from "react-checkbox-tree";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
@@ -431,6 +432,26 @@ function Header() {
     }
   };
 
+  //yj: 헤더에 멤버 이름 출력
+  const memberDetail = useSelector(state => state.mypageReducer);
+  console.log("memberDetail",memberDetail);
+  
+
+  useEffect(()=>{
+
+    console.log("헤더 토큰 검사---->", token);
+    console.log("헤더 토큰 token.memCode--->", token.memCode);
+
+    if(token !== null){
+      dispatch(
+        callMemberDetailAPI({
+          memCode: token.memCode,
+        })
+      )
+    }
+  }, []);
+
+
   return (
     <>
       {/* 파비콘 */}
@@ -477,7 +498,7 @@ function Header() {
         } ${themDefaultCSS[`bg-navbar-theme`]}`}
         id="layout-navbar"
       >
-        <div
+        {/* <div
           className={`${coreCSS[`layout-menu-toggle`]} ${
             coreCSS[`navbar-nav`]
           } ${coreCSS[`align-items-xl-center`]} ${coreCSS[`me-3`]} ${
@@ -492,7 +513,7 @@ function Header() {
           >
             <i className="bx bx-menu bx-sm"></i>
           </a>
-        </div>
+        </div> */}
 
         <div
           className={`${coreCSS[`navbar-nav-right`]} ${coreCSS[`d-flex`]} ${
@@ -500,7 +521,7 @@ function Header() {
           }`}
           id="navbar-collapse"
         >
-          <div
+          {/* <div
             className={`${coreCSS[`navbar-nav`]} ${
               coreCSS[`align-items-center`]
             }`}
@@ -523,8 +544,10 @@ function Header() {
                 aria-label="Search..."
               />
             </div>
-          </div>
-
+          </div> */}
+          <div>
+          <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token.memName} ({token.memCode})</span>님</div>
+          </div>  
           <ul
             className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
               coreCSS[`align-items-center`]
@@ -601,13 +624,16 @@ function Header() {
               }`}
               onClick={onClickMyPage}
             >
-              <img
+              <i class='bx bxs-user-rectangle'
+              style={{ fontSize: 29, color : "#696cff" }}
+              />
+              {/* <img
                 src={profile}
                 alt=""
                 className={`${coreCSS[`w-px-30`]} ${coreCSS[`h-auto`]} ${
                   coreCSS[`rounded-circle`]
                 }`}
-              />
+              /> */}
             </li>
             <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
               <i
