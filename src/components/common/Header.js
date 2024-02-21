@@ -200,7 +200,7 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              msgCode: recMessage.data[0].msgCode,
+              
               memCode: token.memCode,
             })
           );
@@ -300,10 +300,6 @@ function Header() {
     }
   };
 
-  // const onClickTree = (target) => {
-  //   // 클릭된 요소의 정보를 출력합니다.
-  //   console.log(target);
-  // };
 
   const onClickLogout = () => {
     alert("로그아웃 합니다.");
@@ -374,27 +370,6 @@ function Header() {
     );
   }, [deleteStatus, sendNewMsgReducer]);
 
-  // // 수신 메세지를 만드는 useEffect
-  // useEffect(() => {
-  //   console.log('sendNewMsgReducer 감지 useEffect 실행');
-
-  //   if (sendNewMsgReducerDetail !== undefined) {
-  //     codes.map((code) => {
-  //       console.log('sendNewMsgReducerDetail',sendNewMsgReducerDetail);
-  //       console.log('code',code);
-  //       const formData2 = new FormData();
-  //       formData2.append("msgCode", sendNewMsgReducerDetail);
-  //       formData2.append("memCode", code);
-
-  //       dispatch(
-  //         callRecNewMsgAPI({
-  //           form: formData2,
-  //           codes: codes
-  //         })
-  //       );
-  //     });
-  //   }
-  // }, [sendNewMsgReducer]);
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
@@ -864,6 +839,9 @@ function Header() {
                         {sendMessage.aamRecMessenger !== null
                           ? sendMessage.aamRecMessenger.aamMember.memName
                           : ""}
+                      </div>
+                      <div>
+                        { sendMessage.aamRecMessenger.recMsgCheckStatus === 'N' ? '안읽음' : '읽음' }
                       </div>
                     </div>
                   ))}

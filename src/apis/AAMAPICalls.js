@@ -102,10 +102,10 @@ export const callRecMessageAPI = ({ memCode }) => {
 };
 
 // 받은 메세지 확인 상태 업데이트
-export const callMsgCheckStatusChangeAPI = ({ msgCode, memCode }) => {
+export const callMsgCheckStatusChangeAPI = ({ memCode }) => {
   console.log("[callMsgCheckStatusChangeAPI] callMsgCheckStatusChangeAPI Call");
 
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/recUpdateCheck/${msgCode}/${memCode}`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/recUpdateCheck/${memCode}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
