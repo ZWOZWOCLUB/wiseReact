@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import './Main.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import '../@core/css/customMain.css';
 import Calendar from '@toast-ui/react-calendar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,9 @@ import { searchAttendanceDateInfoAPICalls } from '../apis/SearchAttendanceDateIn
 import { decodeJwt } from '../utils/tokenUtils';
 import { callAttendanceTodayInfoAPI } from '../apis/ApprovalInfoAPICalls';
 import { attendanceEndAPICalls, attendanceStartAPICalls } from '../apis/AttendanceAPICalls';
+import { callScheduleSearchAPI } from '../apis/ScheduleAPICalls';
+import { callScheduleSearETCAPI } from '../apis/ScheduleSearchETCAPICalls';
+import { callScheduleMainSearchAPI } from '../apis/ApprovalTypeInfo';
 
 function Main() {
     const navigate = useNavigate();
@@ -21,9 +24,12 @@ function Main() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentTime1, setCurrentTime1] = useState(new Date());
-    const [check, setCheck] = useState(true);
+    const [check, setCheck] = useState({ id: '' });
     const dispatch = useDispatch();
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const [events, setEvents] = useState([]);
+    const ETCList = useSelector((state) => state.scheduleSearchETCReducer);
+    const scheduleList = useSelector((state) => state.approvalTypeReducer);
 
     const [form, setForm] = useState({
         memCode: token.memCode,
@@ -56,6 +62,79 @@ function Main() {
         );
         // }, [currentTime]);
     }, []);
+
+    function getMonthDays(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const days = [];
+        for (let i = 1; i <= daysInMonth; i++) {
+            days.push(new Date(year, month, i));
+        }
+        return days;
+    }
+
+    function getWeekDays(daysInMonth, firstDayOfWeek) {
+        const weeks = [];
+        let currentWeek = [];
+        daysInMonth.forEach((day) => {
+            if (day.getDay() === firstDayOfWeek && currentWeek.length > 0) {
+                weeks.push(currentWeek);
+                currentWeek = [];
+            }
+            currentWeek.push(day);
+        });
+        if (currentWeek.length > 0) {
+            weeks.push(currentWeek);
+        }
+        return weeks;
+    }
+
+    const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+    const getDayName = (dayCode) => {
+        return dayNames[dayCode];
+    };
+
+    const updateEvents = (date) => {
+        const days = getMonthDays(date.getFullYear(), date.getMonth());
+        const firstDayOfWeek = days[0].getDay();
+        const weeks = getWeekDays(days, firstDayOfWeek);
+        const updatedEvents = [];
+
+        weeks.forEach((week) => {
+            week.forEach((day) => {
+                const matchingSchedules = scheduleList.filter((schedule) => {
+                    const startDate = new Date(schedule.schStartDate);
+                    const endDate = new Date(schedule.schEndDate);
+                    return day >= startDate && day <= endDate;
+                });
+
+                matchingSchedules.forEach((schedule) => {
+                    let shouldDisplayEvent = false;
+
+                    schedule.patternDayList.forEach((pattern) => {
+                        if (pattern.weekDay.dayName === getDayName(day.getDay())) {
+                            shouldDisplayEvent = true;
+                        }
+                    });
+
+                    if (shouldDisplayEvent) {
+                        updatedEvents.push({
+                            id: `event_${day.getDate()}_${schedule.schCode}`,
+                            calendarId: 'cal1',
+                            title: schedule.schType + ' ',
+                            start: day,
+                            end: day,
+                            category: 'allday',
+                            backgroundColor: schedule.schColor,
+                        });
+                    }
+                });
+            });
+        });
+        console.log('업데이트 이벤트 ');
+
+        setEvents(updatedEvents);
+    };
 
     useEffect(() => {
         setCalendar(calendarRef?.current?.getInstance());
@@ -95,17 +174,44 @@ function Main() {
     const onClickToday = () => {
         calendar.today();
         setYearMonthFunction(calendar);
+        updateEvents(calendar.getDate());
     };
     const onClickPrev = () => {
         calendar.prev();
         setYearMonthFunction(calendar);
-        console.log(yearMonth);
+        updateEvents(calendar.getDate());
+        console.log('3월', calendar.getDate());
     };
+
     const onClickNext = () => {
         calendar.next();
         setYearMonthFunction(calendar);
-        console.log(yearMonth);
+        updateEvents(calendar.getDate());
     };
+
+    useEffect(() => {
+        dispatch(callScheduleSearETCAPI());
+    }, [dispatch]);
+
+    useEffect(() => {
+        updateEvents(currentDate);
+    }, [scheduleList, currentDate]);
+
+    useEffect(() => {
+        const formattedDate = formatDatee(currentDate);
+        setYearMonth(formattedDate);
+        form.searchDate = formattedDate;
+        dispatch(callScheduleMainSearchAPI({ yearMonth: form }));
+        console.log('yearMonth : ', yearMonth);
+        console.log('formattedDate : ', formattedDate);
+
+        updateEvents(currentDate);
+    }, []);
+
+    function formatDatee(date) {
+        const month2 = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${date.getFullYear()}-${month2}`;
+    }
 
     function formatDate(date) {
         const year = date.getFullYear();
@@ -158,7 +264,6 @@ function Main() {
             })
         );
     }, []);
-    // }, [currentTime]);
 
     useEffect(() => {
         const calendar = calendarRef?.current?.getInstance();
@@ -182,11 +287,6 @@ function Main() {
         };
 
         calendar?.on('selectDateTime', handleSelectDateTime);
-
-        return () => {
-            calendar?.off('selectDateTime', handleSelectDateTime);
-        };
-        // }, [currentTime]);
     }, []);
 
     const attendanceList = useSelector((state) => state.attendanceInfoReducer);
@@ -270,7 +370,9 @@ function Main() {
                                             onClick={clickStart}
                                             disabled={attendance?.attValue === 1 || attendance?.attValue === 2}
                                             style={
-                                                attendance?.attValue === 1 || attendance?.attValue === 2
+                                                attendance?.attValue === 1 ||
+                                                attendance?.attValue === 2 ||
+                                                attendance?.startTime === null
                                                     ? {
                                                           color: '#fff',
                                                           backgroundColor: '#8592a3',
@@ -291,7 +393,9 @@ function Main() {
                                         <p
                                             className='card-text main-att-time'
                                             style={
-                                                attendance?.attValue === 1 || attendance?.attValue === 2
+                                                attendance?.attValue === 1 ||
+                                                attendance?.attValue === 2 ||
+                                                attendance?.startTime === null
                                                     ? {
                                                           color: 'rgb(211, 211, 211)',
                                                       }
@@ -372,6 +476,7 @@ function Main() {
                                 calendars={calendarRef?.current && calendarTheme}
                                 height={'700px'}
                                 style={{ paddingRight: '20px' }}
+                                events={events}
                             />
                         </div>
                         <div id='calendarTool'>
