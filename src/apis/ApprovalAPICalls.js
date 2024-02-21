@@ -26,6 +26,8 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
             },
         }).then((response) => response.json());
 
+        console.log('받은 결재 result ', result);
+
         if (result.status === 200) {
             dispatch({ type: GET_RECIEVE_APPROVAL, payload: result.data });
         }
@@ -44,6 +46,8 @@ export const callSendApprovalAPI = ({ memCode }) => {
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         }).then((response) => response.json());
+
+        console.log('보낸 결재 result ', result);
 
         if (result.status === 200) {
             dispatch({ type: GET_SEND_APPROVAL, payload: result.data });
@@ -187,19 +191,26 @@ export const callAprovalCompleteAPI = ({ form }) => {
 };
 
 export const callRoleUpdateAPI = ({ form }) => {
+    console.log('????');
+    console.log('ccccomform', form);
+
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/roleupdate`;
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
             headers: {
+                'Content-Type': 'application/json',
                 Accept: '*/*',
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
-            body: form,
+            body: JSON.stringify(form),
         }).then((response) => response.json());
 
+        console.log('result', result);
+
         dispatch({ type: PUT_APPROVAL_ROLE_UPDATE, payload: result });
+        console.log('result', result);
     };
 };
 

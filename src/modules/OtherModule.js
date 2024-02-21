@@ -1,27 +1,20 @@
-import { createActions, handleActions } from 'redux-actions';
+import { createActions, handleActions } from "redux-actions";
 
 const intitialState = [];
 
-export const GET_YEAR                   = 'pay/GET_YEAR';
-export const GET_POSITION               = 'setting/GET_POSITION';
-
+export const GET_YEAR = "pay/GET_YEAR";
 
 const actions = createActions({
-    [GET_YEAR]: () => {},
-    [GET_POSITION]: () => {},
+  [GET_YEAR]: () => {},
 });
 
 const otherReducer = handleActions(
-    {
-        [GET_YEAR]: (state, { payload }) => {
-            return payload;
-        },
-        [GET_POSITION]: (state, { payload }) => {
-            return payload;
-        }
-
+  {
+    [GET_YEAR]: (state, { payload }) => {
+      return payload;
     },
-    intitialState
+  },
+  intitialState
 );
 
 export default otherReducer;

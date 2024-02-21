@@ -14,11 +14,13 @@ import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpda
 import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
 import { callScheduleWorkPatterDeleteAPI } from "../../apis/SchedulePatternDeleteAPICalls";
 
-function SchedulePattenAddPattern() {
+const SchedulePattenAddPattern = (props) => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
 
   const updateReducer = useSelector(
     (state) => state.schedulePatternUpdateReducer
@@ -119,31 +121,13 @@ function SchedulePattenAddPattern() {
     setUpdateState(false);
   };
 
-  const [selectedColor, setSelectedColor] = useState("");
+  const onClickColorBox = (event, index) => {
+    const selectedPattern = patternList[index];
+    setPattern(selectedPattern);
 
-  const onClickColorBox = (event) => {
-    const backgroundColor = event.target.style.backgroundColor;
-    console.log(backgroundColor);
+    console.log("Selected Pattern:", selectedPattern);
 
-    setSelectedColor(backgroundColor);
-    if (selectedDayIndex !== null) {
-      const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-        selectedDayIndex
-      ];
-      selectedDay.style.background = backgroundColor;
-      console.log(backgroundColor);
-    }
-  };
-
-  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
-
-  const onClickMonToSun = (index) => {
-    setSelectedDayIndex(index);
-    const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-      index
-    ];
-    selectedDay.style.background = selectedColor;
-    console.log("$$$$$$$$$$$$$$$", index, selectedDayIndex);
+    props.getSelectedPattern(selectedPattern);
   };
 
   const onClickDeletePattern = (index) => {
@@ -195,12 +179,16 @@ function SchedulePattenAddPattern() {
       </div>
       {Array.isArray(patternList) && patternList.length > 0
         ? patternList.map((p, index) => (
-            <div className={`${payCSS["work"]}`} id="work" key={index}>
+            <div
+              className={`${payCSS["work"]}`}
+              id="work"
+              key={index}
+              onClick={(event) => onClickColorBox(event, index)}
+            >
               <div className={`${payCSS["content_left"]}`}>
                 <div
                   className={`${payCSS["color_box"]}`}
                   style={{ backgroundColor: p.wokColor }}
-                  onClick={onClickColorBox}
                 ></div>
               </div>
               <div className={`${payCSS["content_right"]}`}>
@@ -394,6 +382,6 @@ function SchedulePattenAddPattern() {
       </div>
     </div>
   );
-}
+};
 
 export default SchedulePattenAddPattern;

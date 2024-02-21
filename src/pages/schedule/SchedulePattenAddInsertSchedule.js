@@ -10,6 +10,7 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import { callScheduleInsertAPI } from "../../apis/SchedulePatternInsertAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree from "react-checkbox-tree";
 
@@ -21,83 +22,116 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
-  const depList = departmentList.children;
+  const selectedColor = props.selectedColor;
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [selectedDayIndices, setSelectedDayIndices] = useState(
+    Array(7).fill(false)
+  );
+  const [selectedRowIndex, setSelectedRowIndex] = useState("");
+  const scheduleRef = useRef();
+  useEffect(() => {
+    console.log("Selected Color in Insert Schedule:", selectedColor);
+  }, [selectedColor]);
 
-  const onClickColorBox = (event) => {
-    const backgroundColor = event.target.style.backgroundColor;
-    setSelectedColor(backgroundColor);
-    if (selectedDayIndex !== null) {
-      const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-        selectedDayIndex
-      ];
-      selectedDay.style.background = backgroundColor;
-      console.log(backgroundColor);
-    }
-  };
+  console.log("$$$$$$$$$$$$$$$sendColor", selectedColor);
 
-  const [selectedDayIndex, setSelectedDayIndex] = useState(null);
-
-  const onClickMonToSun = (index) => {
-    setSelectedDayIndex(index);
-    const selectedDay = document.getElementsByClassName(payCSS["monToSun"])[
-      index
-    ];
-    selectedDay.style.background = selectedColor;
-    console.log("$$$$$$$$$$$$$$$", index, selectedDayIndex);
-  };
-
-  const [scheduleForm, setScheduleForm] = useState([
-    {
-      schCode: "",
-      schType: "",
-      schStartDate: "",
-      schEndDate: "",
-      schColor: "N",
-      schDeleteStatus: "",
-      wokCode: "",
-      dayCode: "",
+  useImperativeHandle(ref, () => ({
+    onClickMonToSun: (index, dayIndex) => {
+      setSelectedIndices((prevIndices) => [...prevIndices, index]);
+      setSelectedDayIndices((prevDayIndices) => {
+        const newDayIndices = [...prevDayIndices];
+        newDayIndices[dayIndex] = index;
+        return newDayIndices;
+      });
     },
-  ]);
+  }));
+
+  const onClickMonToSun = (index, dayIndex) => {
+    setSelectedRowIndex(index);
+    setSelectedDayIndices((prevState) => {
+      const newSelectedDayIndices = [...prevState];
+      newSelectedDayIndices[dayIndex] = !prevState[dayIndex];
+      return newSelectedDayIndices;
+    });
+  };
+
+  const getDayStyle = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return { background: selectedColor ? selectedColor.wokColor : "" };
+    }
+    return {};
+  };
+
+  const getType = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return selectedColor ? selectedColor.wokType : "";
+    }
+    return "";
+  };
+
+  const getTime = (dayIndex) => {
+    if (selectedDayIndices[dayIndex]) {
+      return selectedColor
+        ? selectedColor.wokStartTime.slice(0, -3) +
+            " ~ " +
+            selectedColor.wokEndTime.slice(0, -3)
+        : "";
+    }
+
+    return "";
+  };
+
+  console.log("selcsdfsdf", selectedIndices);
+  console.log("setSelectedDayIndices", selectedDayIndices);
+  const [scheduleForm, setScheduleForm] = useState({
+    schType: "",
+    schStartDate: "",
+    schEndDate: "",
+    schColor: "",
+    schDeleteStatus: "N",
+    dayCode: "",
+    wokCode: selectedColor ? selectedColor.wokCode : "",
+  });
 
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
-      setInsertRows((prevRows) => [...prevRows, {}]);
-      setScheduleForm([
-        {
-          schCode: "",
-          schType: "",
-          schStartDate: "",
-          schEndDate: "",
-          schColor: "N",
-          schDeleteStatus: "",
-          wokCode: "",
-          dayCode: "",
-        },
-      ]);
+      if (insertRows.length === 0) {
+        setInsertRows((prevRows) => [...prevRows, {}]);
+      } else {
+        alert("추가된 그룹 먼저 등록 후 진행해주세요");
+      }
     },
   }));
+
+  console.log("//////////////", insertRows.length);
 
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
 
-    setScheduleForm((prevScheduleForm) => {
-      return prevScheduleForm.map((form, idx) => {
-        if (idx === index) {
-          return {
-            ...form,
-            [name]: value,
-          };
-        }
-        return form;
-      });
-    });
+    setScheduleForm((prevScheduleForm) => ({
+      ...prevScheduleForm,
+      [name]: value,
+      wokCode: selectedColor.wokCode,
+      schColor: selectedColor.wokColor,
+      dayCode: selectedDayIndices
+        .map((isSelected, index) => (isSelected ? index : null))
+        .filter((index) => index !== null),
+    }));
   };
-  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
 
-  const onClicktree = (name) => {
-    console.log(name, "클릭");
-  };
+  useEffect(() => {
+    if (selectedColor) {
+      setScheduleForm((prevScheduleForm) => ({
+        ...prevScheduleForm,
+        wokCode: selectedColor.wokCode,
+        schColor: selectedColor.wokColor,
+        dayCode: selectedDayIndices
+          .map((isSelected, index) => (isSelected ? index : null))
+          .filter((index) => index !== null),
+      }));
+    }
+  }, [selectedColor, selectedDayIndices]);
+  console.log("scheduleForm+++++++++++++++++++++++", scheduleForm);
 
   useEffect(() => {
     dispatch(callOrganizationTreeAPI());
@@ -138,6 +172,27 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   };
   console.log("setChecked +++++++++++++++++++++", checked);
 
+  const onClickScheduleInsert = () => {
+    console.log("onClickScheduleInsert", scheduleForm);
+
+    const formData = new FormData();
+    formData.append("wokCode", scheduleForm.wokCode);
+    formData.append("schType", scheduleForm.schType);
+    formData.append("schStartDate", scheduleForm.schStartDate);
+    formData.append("schEndDate", scheduleForm.schEndDate);
+    formData.append("schColor", scheduleForm.schColor);
+    formData.append("schDeleteStatus", scheduleForm.schDeleteStatus);
+    formData.append("dayCode", scheduleForm.dayCode);
+    dispatch(
+      callScheduleInsertAPI({
+        scheduleForm: formData,
+      })
+    );
+  };
+
+  const onClickIndex = (index) => {
+    console.log("ddddddddddddd", index);
+  };
   return (
     <>
       {insertRows.map((row, index) => (
@@ -160,7 +215,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   className={`${payCSS["period"]}`}
                   name="schStartDate"
                   onChange={(e) => insertSchedule(e, index)}
-                />
+                />{" "}
+                &nbsp; ~
                 <input
                   type="Date"
                   className={`${payCSS["period"]}`}
@@ -168,11 +224,12 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   onChange={(e) => insertSchedule(e, index)}
                 />
               </div>
-              <button className={`${payCSS["check"]}`}>
+              <button
+                className={`${payCSS["check"]}`}
+                onClick={onClickScheduleInsert}
+              >
                 <i className={"bx bx-check"} style={{ marginRight: 1 }} />
-                <div className={`${payCSS["commit"]}`} style={{ marginTop: 3 }}>
-                  &nbsp; 적용
-                </div>
+                <div style={{ marginTop: 3 }}>&nbsp; 적용</div>
               </button>
               <button className={`${payCSS["threeDot"]}`}>
                 <i
@@ -183,122 +240,26 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
             </div>
           </div>
           <div className={`${payCSS["middle"]}`}>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>월</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>화</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
+            {["월", "화", "수", "목", "금", "토", "일"].map((dayIndex, idx) => (
+              <div
+                key={idx}
+                className={`${payCSS["monToSun"]}`}
+                onClick={() => {
+                  onClickMonToSun(index, idx);
+                }}
+                style={getDayStyle(idx)}
+              >
+                <div className={`${payCSS["forColor"]}`}>
+                  <div className={`${payCSS["first"]}`}>
+                    <strong>{dayIndex}</strong>
+                  </div>
+                  <div className={`${payCSS["second"]}`}>{getType(idx)}</div>
+                  <div className={`${payCSS["third"]}`}>
+                    <small>{getTime(idx)}</small>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>수</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>목</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>금</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>토</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className={`${payCSS["monToSun"]}`}
-              onClick={() => {
-                onClickMonToSun(index);
-              }}
-            >
-              {" "}
-              <div className={`${payCSS["forColor"]}`}>
-                <div className={`${payCSS["first"]}`}>
-                  <strong>일</strong>
-                </div>
-                <div className={`${payCSS["second"]}`}>데이</div>
-                <div className={`${payCSS["third"]}`}>
-                  <small>07:00-15:00</small>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
           <div className={`${payCSS["bottom"]}`}>
             <div>
@@ -306,6 +267,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                 className={`${payCSS["plus-icon"]}`}
                 data-bs-toggle="modal"
                 data-bs-target="#modalCenter2"
+                onClick={() => onClickIndex(index)}
               >
                 <i
                   className={"bx bx-plus"}
@@ -315,12 +277,9 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
             </div>
             <div className={`${payCSS["wrapperName"]}`}>
               {checked.map((memName, idx) => {
-                // memName에 '/'가 포함되어 있는지 확인합니다.
                 const indexOfSlash = memName.indexOf("/");
-                // '/'가 포함되어 있으면 분할하여 뒷 부분을 가져오고, 없으면 null을 반환합니다.
                 const extractedName =
                   indexOfSlash !== -1 ? memName.split("/")[1] : null;
-                // extractedName이 null이 아닌 경우에만 해당 문자열을 출력합니다.
                 if (extractedName !== null) {
                   return (
                     <div className={`${payCSS["name"]}`} key={idx}>
@@ -328,7 +287,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                     </div>
                   );
                 }
-                // '/'가 포함되지 않은 경우는 아무 작업도 수행하지 않습니다.
                 return null;
               })}
             </div>

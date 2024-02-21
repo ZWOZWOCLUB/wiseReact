@@ -3,7 +3,9 @@ import { PUT_MSG_CHECK } from "../modules/AAMModule";
 import { GET_PERALARM } from "../modules/AAMPerAlarmModule";
 import { PUT_ALARM_CHECK } from "../modules/AAMPutAlarmModule";
 import { GET_REC_MESSAGE } from "../modules/AAMRecMessageModule";
+import { POST_REC_MESSAGE } from "../modules/AAMRecNewMsgModule";
 import { GET_SEND_MESSAGE } from "../modules/AAMSendMessageModule";
+import { POST_MESSAGE } from "../modules/AAMSendNewMsgModule";
 
 
 // 개인 알람 조회
@@ -125,10 +127,10 @@ export const callMsgCheckStatusChangeAPI = ({ memCode }) => {
 };
 
 // 받은 메세지 삭제 상태 업데이트
-export const callRecDeleteStatusUpdateAPI = ({ msgCode }) => {
+export const callRecDeleteStatusUpdateAPI = ({ msgCode, memCode }) => {
     console.log("[callRecDeleteStatusUpdateAPI] callRecDeleteStatusUpdateAPI Call");
   
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/deleteRecMsg/${msgCode}`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/deleteRecMsg/${msgCode}/${memCode}`;
   
     return async (dispatch, getState) => {
       const result = await fetch(requestURL, {
@@ -218,5 +220,51 @@ export const callAlarmCheckStatusChangeAPI = ({ perArmCode }) => {
       );
   
       dispatch({ type: PUT_ALARM_CHECK, payload: result });
+    };
+  };
+
+  // 새 메신저 작성
+  export const callSendNewMsgAPI = ({ form }) => {
+    console.log("[callSendNewMsgAPI] callSendNewMsgAPI Call");
+    console.log("form--->",form);
+  
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/messenger`;
+  
+    return async (dispatch, getState) => {
+      const result = await fetch(requestURL, {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+        body: form
+      }).then((response) => response.json());
+  
+      console.log("[callSendNewMsgAPI] callSendNewMsgAPI RESULT : ", result);
+  
+      dispatch({ type: POST_MESSAGE, payload: result });
+    };
+  };
+
+  // 받는 새 메신저 작성
+  export const callRecNewMsgAPI = ({ form , codes}) => {
+    console.log("[callRecNewMsgAPI] callRecNewMsgAPI Call");
+    console.log("form--->",form);
+  
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/recmessenger`;
+  
+    return async (dispatch, getState) => {
+      const result = await fetch(requestURL, {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+        body: form,
+      }).then((response) => response.json());
+  
+      console.log("[callRecNewMsgAPI] callRecNewMsgAPI RESULT : ", result);
+  
+      dispatch({ type: POST_REC_MESSAGE, payload: result });
     };
   };

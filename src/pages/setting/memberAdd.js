@@ -6,7 +6,7 @@ import {
   callMemberAddAPI,
   callMemberUpdateAPI,
 } from "../../apis/SettingMemberAPICalls";
-import { callSearchPosAPI } from "../../apis/OtherAPICalls";
+import { callSearchPosAPI } from "../../apis/SettingSearchPosition";
 import imageSample from "../../@core/img/icons/unicons/image.png";
 import { callMemberDetailAPI } from "../../apis/MyPageAPICalls";
 
@@ -23,7 +23,7 @@ function MemberAdd() {
   const [profileUrl, setProfileUrl] = useState();
   const profileInput = useRef();
   const depList = useSelector((state) => state.settingReducer);
-  const posList = useSelector((state) => state.otherReducer);
+  const posList = useSelector((state) => state.settingSerchPositionReducer);
   const memList = useSelector((state) => state.settingMemberReducer);
   const memDetailList = useSelector((state) => state.mypageReducer);
   const resutlList = memDetailList.data;

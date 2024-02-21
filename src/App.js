@@ -37,6 +37,7 @@ import ApprovalDetail from "./pages/approval/ApprovalDetail";
 import ImageDownloader from "./pages/mypage/test";
 import ScheduleAdd from "./pages/schedule/ScheduleAdd";
 import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
+import ScheduleDetails from "./pages/schedule/ScheduleDetails";
 
 function App() {
   return (
@@ -94,6 +95,8 @@ function App() {
           <Route path="ScheduleAdd" element={<ScheduleAdd />} />
           <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
         </Route>
+        <Route path="/ScheduleDetails" element={<ScheduleDetails  />} />
+
       </Routes>
     </BrowserRouter>
   );

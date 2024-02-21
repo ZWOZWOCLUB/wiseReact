@@ -16,6 +16,7 @@ function SendApproval() {
     const dispatch = useDispatch();
     const approvalList = useSelector((state) => state.approvalReducer);
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    
 
     useEffect(() => {
         dispatch(
@@ -46,6 +47,8 @@ function SendApproval() {
     const ondblclickapproval = (payCode) => {
         navigate(`/main/ApprovalDetail`, { state: { payCode } });
     };
+
+    
 
     return (
         <>

@@ -32,6 +32,7 @@ import approvalInfoReducer from "./ApprovalInfoModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
+import attendanceInfoReducer from "./AttendanceMoudle";
 import organizationItemReducer from "./OrganizationRefListModule";
 import organizationMemberReducer from "./OrganizationMemberModule";
 import organizationCreateReducer from "./OrganizationCreateModule";
@@ -45,8 +46,17 @@ import schedulePatternDeleteReducer from "./SchedulePatternDeleteModule";
 import aamPutReducer from "./AAMModule";
 import aamPutAlarmReducer from "./AAMPutAlarmModule";
 import mpSalReducer from "./MPSalaryModule";
-
+import scheduleSearchValueReducer from "./ScheduleSearchValueModule";
+import scheduleSearchValueNotReducer from "./ScheduleSearchValueNotModule";
+import scheduleSearchETCReducer from "./ScheduleSearchETCModule";
+import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
+import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
+import mpATTListReducer from "./MPATTListModule";
+import settingSerchPositionReducer from "./SettingSerchPositionModule";
+import notCommentReducer from './NotCommentModule';
+import dataFormatReducer from './DataFormatModule';
 const { combineReducers } = require("redux");
+
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
 
@@ -65,6 +75,7 @@ const rootReducer = combineReducers({
   aamSendMessageReducer,
   aamRecMessageReducer,
   otherReducer,
+  settingSerchPositionReducer,
   settingMemberReducer,
   mpDocReducer,
   mpATTReducer,
@@ -86,6 +97,7 @@ const rootReducer = combineReducers({
   mpProReducer,
   mpSignReducer,
   schedulePatternReducer,
+  attendanceInfoReducer,
   organizationItemReducer,
   organizationMemberReducer,
   organizationCreateReducer,
@@ -99,6 +111,12 @@ const rootReducer = combineReducers({
   aamPutReducer,
   aamPutAlarmReducer,
   mpSalReducer,
+  scheduleSearchValueReducer,
+  scheduleSearchValueNotReducer,
+  scheduleSearchETCReducer,
+  aamSendNewMsgReducer,
+  aamRecNewMsgReducer,
+  mpATTListReducer,
 });
 
 export default rootReducer;
