@@ -222,7 +222,8 @@
   }
   .top_right{
     display: flex;
-    width: 50%;
+    width: 60%;
+    align-items: center;
   }
   .monToSun{
     width: 15%;
