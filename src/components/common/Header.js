@@ -1,8 +1,5 @@
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css";
-import newCoreCss from "../../@core/vendor/css/newCore.module.css";
-import profile from "../../@core/img/avatars/1.png";
-import { NavLink } from "react-router-dom";
 import "../../pages/alarmAndMessage/message.css";
 import "../../assets/vendor/libs/jquery/jquery.js";
 import "../../assets/vendor/libs/popper/popper.js";
@@ -10,10 +7,8 @@ import "../../assets/vendor/js/bootstrap.js";
 import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
 import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
-import Modal from "./Modal";
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { replace } from "stylis";
+import { useNavigate } from "react-router-dom";
 import { decodeJwt } from "../../utils/tokenUtils.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -28,8 +23,6 @@ import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
-import { callRecNewMsgAPI } from "../../apis/AAMAPICalls.js";
-import Tree from "tui-tree";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import CheckboxTree from "react-checkbox-tree";
@@ -794,7 +787,7 @@ function Header() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div>{recMessage.aamSendMessenger.msgDate}</div>
+                        <div>{recMessage.aamSendMessenger?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -803,16 +796,16 @@ function Header() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              onClickRecMsgDelete(recMessage.msgCode)
+                              onClickRecMsgDelete(recMessage?.msgCode)
                             }
                           >
                             X
                           </button>
                         </div>
                       </div>
-                      <div>{recMessage.aamSendMessenger.msgContents}</div>
+                      <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
-                        발신자 : {recMessage.aamSendMessenger.aamMember.memName}
+                        발신자 : {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>
                     </div>
                   ))}
@@ -843,7 +836,7 @@ function Header() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div>{sendMessage.msgDate}</div>
+                        <div>{sendMessage?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -852,14 +845,14 @@ function Header() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              onClickSendMsgDelete(sendMessage.msgCode)
+                              onClickSendMsgDelete(sendMessage?.msgCode)
                             }
                           >
                             X
                           </button>
                         </div>
                       </div>
-                      <div>{sendMessage.msgContents}</div>
+                      <div>{sendMessage?.msgContents}</div>
                       <div>
                         수신자 :{" "}
                         {sendMessage.aamRecMessenger !== null

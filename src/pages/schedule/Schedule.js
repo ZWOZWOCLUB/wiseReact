@@ -74,15 +74,15 @@ function Schedule() {
     setEvents(updatedEvents);
   };
 
-  useEffect(() => {
-    const calendarInstance = calendarRef.current.getInstance();
+  // useEffect(() => {
+  //   const calendarInstance = calendarRef.current.getInstance();
 
-    return () => {
-      if (calendarInstance) {
-        calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (calendarInstance) {
+  //       calendarInstance.off(); // 컴포넌트가 언마운트될 때 호출되도록 설정
+  //     }
+  //   };
+  // }, []);
 
   const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
