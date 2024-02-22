@@ -16,6 +16,7 @@ function SettingDocument() {
   const [rows, setRows] = useState([0]);
   const [etcFile, setEtcFile] = useState(null);
   const etcFileInput = useRef();
+  const result = useSelector((state) => state.settingDocumentReducer);
 
   const [activeTab, setActiveTab] = useState();
 
@@ -23,7 +24,7 @@ function SettingDocument() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberdetails?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
       navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });
@@ -99,7 +100,6 @@ function SettingDocument() {
     console.log(formData, "formData555555555555555");
 
     dispatch(callDocumentFileInsertAPI({ formData }));
-    window.location.reload();
   };
 
   return (
@@ -189,7 +189,7 @@ function SettingDocument() {
                       <td>-</td>
                       <td>-</td>
                       <td>
-                        <i className="bx bx-down-arrow-alt" />
+                        <i className="bx bx-image-alt" />
                       </td>
                       <td>
                         <label

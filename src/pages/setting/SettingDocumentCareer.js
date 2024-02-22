@@ -16,14 +16,18 @@ function SettingDocumentCareer() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const result = useSelector((state) => state.settingCareerReducer);
 
-  useEffect((memCode) => {
-    dispatch(
-      callInfoSearchAPI({
-        memCode: memberCode,
-      })
-    );
-  }, []);
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [result]
+  );
 
   //파일 다운하는 함수
   const onClickCrrFileDown = async (index) => {
@@ -129,13 +133,13 @@ function SettingDocumentCareer() {
               prevList.careerFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-down-arrow-alt"
+                    className="bx bx-image-alt"
                     onClick={() => onClickCrrFileDown(index)}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-down-arrow-alt" />
+                  <i className="bx bx-image-alt" />
                 </td>
               )}
               {Array.isArray(prevList.careerFileDTO) &&

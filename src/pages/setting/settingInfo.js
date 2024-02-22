@@ -52,7 +52,7 @@ function SettingInfo() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberdetails?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
       navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });

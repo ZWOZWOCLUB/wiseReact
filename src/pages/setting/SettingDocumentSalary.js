@@ -16,14 +16,18 @@ function SettingDocumentSalary() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const result = useSelector((state) => state.settingSalaryReducer);
 
-  useEffect((memCode) => {
-    dispatch(
-      callInfoSearchAPI({
-        memCode: memberCode,
-      })
-    );
-  }, []);
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [result]
+  );
 
   //파일 다운하는 함수
   const onClickSalFileDown = async () => {
@@ -112,7 +116,7 @@ function SettingDocumentSalary() {
           </td>
           <td>
             <i
-              className="bx bx-down-arrow-alt"
+              className="bx bx-image-alt"
               style={{ paddingRight: 10 }}
               onClick={onClickSalFileDown}
             />
