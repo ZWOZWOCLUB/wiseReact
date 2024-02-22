@@ -60,6 +60,11 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
         console.log('NoticeMain click');
         navigate(`/main/notice`, { replace: false });
     };
+    const onClickNoticeUpdate = () => { 
+        console.log('NoticeUpdate click');
+       navigate(`/main/NoticeUpdate/${notCode}`, { state: { detail: detail[0] } });
+        
+    }
     
     const [form, setForm] = useState({
         comCode: '',
@@ -217,8 +222,7 @@ console.log('posCode', comment.comMember?.posCode);
                                                                     style={{ display: 'flex', marginBottom: '10px' }}
                                                                 >
                                                                     <div style={{ padding: 3, fontSize: 'small' }}>
-                                                                        {comment.comMember.posCode?.posName}
-                                                                        {' '}
+                                                                        {comment.comMember.posCode?.posName}{' '}
                                                                         {comment.comMember.memName}
                                                                     </div>
                                                                     <div style={{ width: '2%' }} />
@@ -266,7 +270,7 @@ console.log('posCode', comment.comMember?.posCode);
                                                                 </div>
                                                             ))}
                                                     </div>
-                                                                        
+
                                                     <form>
                                                         <label className='form-label' htmlFor='basic-default-message'>
                                                             <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAg5JREFUSEu11cvLTlEUBvDfJ7diQohMpEgp/gFEch0g90syMXDJwMTAX+CbKdcSCUXIRCRJGZAywMCAJBMUQim5FM6qvevY3s8576tv19tbe6+9nrWevZ7n9Bnk1TfI+TUBjMNiLMVsTMEvvMQj3MBNfBio0IEAZuIQFrToMABvYReel/GdADbiLIbiKy7gcqr0R0owLHW2HhswAt+wBtfqICVAUBEBQ3ARu/G+oYsJOIEViALmVZTez3fqAKPxDJNwHDtb0JNDoqDoejOeYha+x2EdYB/6q9bvYS5+dgEQoSPxsKJ0BrbiXAnwOCHPrx73Ti35kfSARxNlcdRpL/bXJWpjupaVAJ8RNI3ClxpATElJaae9iJmIN1Uh7xBv8wdFb6vKxqeDCMirmw7GJE18xNgSIGZ5Yfrd7pL/HL48TeHdShtzSoAdOJZEs6gHgNDGg6T4PThcAgzHi2qmJ2MvDnYBEmN6BlvwGtPyO5ZCC5EEVVFNWMWBdOFfWFk3WWircL2T0PLeWpxPVhFauFoZW1yqr7CGJZWoNmE1ovtXyTaC/7/GrqxwauogHi1TGQZ4BdOL4FDsyUq5+/GpTNRk13netydxReWRMOz6SaLzUpr7jjS2BciXwwC3JZdtNQNtAULZ4aynW2Vt8QY5JCgKd1yZ/rvN3/jJPJWMLj48Pa0minpK2mZM/ztxTvAbP2loGSXw8dEAAAAASUVORK5CYII=' />{' '}
@@ -281,19 +285,19 @@ console.log('posCode', comment.comMember?.posCode);
                                                                 onChange={onChangeHandler}
                                                                 value={form.comContents}
                                                             />
-                                                            </div>
-                                                            </form>
-                                                            
-                                                            <div style={{ width: '3%' }} />
-                                                            <button
-                                                                type='submit'
-                                                                className='btn btn-primary'
-                                                                style={{ width: '11%' }}
-                                                                onClick={onClickNoticeCommentInsertHandler}
-                                                                >
-                                                                등록하기
-                                                            </button>
-                                                            <div style={{ width: '1%' }} />
+                                                        </div>
+                                                    </form>
+
+                                                    <div style={{ width: '3%' }} />
+                                                    <button
+                                                        type='submit'
+                                                        className='btn btn-primary'
+                                                        style={{ width: '11%' }}
+                                                        onClick={onClickNoticeCommentInsertHandler}
+                                                    >
+                                                        등록하기
+                                                    </button>
+                                                    <div style={{ width: '1%' }} />
                                                 </div>
                                                 <br />
                                             </div>
@@ -314,7 +318,12 @@ console.log('posCode', comment.comMember?.posCode);
                                                 <b>삭제</b>
                                             </div>
                                             <div style={{ width: '2%' }} />
-                                            <button type='submit' className='btn btn-primary' style={{ width: '10%' }}>
+                                            <button
+                                                type='submit'
+                                                className='btn btn-primary'
+                                                style={{ width: '10%' }}
+                                                onClick={onClickNoticeUpdate}
+                                            >
                                                 수정
                                             </button>
                                         </div>

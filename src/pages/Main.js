@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { searchAttendanceDateInfoAPICalls } from '../apis/SearchAttendanceDateInfoAPICalls';
 import { decodeJwt } from '../utils/tokenUtils';
 import { callAttendanceTodayInfoAPI } from '../apis/ApprovalInfoAPICalls';
-import { attendanceEndAPICalls, attendanceStartAPICalls } from '../apis/AttendanceAPICalls';
+// import { attendanceEndAPICalls, attendanceStartAPICalls } from '../apis/AttendanceAPICalls';
 
 function Main() {
     const navigate = useNavigate();
@@ -202,12 +202,12 @@ function Main() {
         start.attWorkDate = `${year}-${month}-${day}`;
         start.attStartTime = `${hours}:${minutes}:${seconds}`;
 
-        dispatch(
-            attendanceStartAPICalls({
-                start,
-            })
-        );
-        window.location.reload();
+        // dispatch(
+        //     attendanceStartAPICalls({
+        //         start,
+        //     })
+        // );
+        // window.location.reload();
     }
 
     function clickEnd() {
@@ -218,11 +218,11 @@ function Main() {
         start.attEndTime = `${hours}:${minutes}:${seconds}`;
         start.attValue = 1;
 
-        dispatch(
-            attendanceEndAPICalls({
-                start,
-            })
-        );
+        // dispatch(
+        //     attendanceEndAPICalls({
+        //         start,
+        //     })
+        // );
 
         window.location.reload();
     }
