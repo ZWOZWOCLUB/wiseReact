@@ -151,12 +151,16 @@ return async (dispatch, getState) => {
 
 };
 
+//공지 수정
 export const callNoticeUpdateAPI = ({ form }) => {
     console.log('callNoticeUpdateAPI Call');
     console.log('callNoticeUpdateAPI', form);
     
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/updateNotice`;
-    
+     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/updateNotice`;
+
+
+
+   
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
