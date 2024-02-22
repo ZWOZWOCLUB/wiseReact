@@ -7,24 +7,42 @@ import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { callSendApprovalAPI } from '../../apis/ApprovalAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
 
 function SendApproval() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const approvalList = useSelector((state) => state.approvalReducer);
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
-    
+    const approval = useSelector((state) => state.approvalReducer);
+    const approvalList = approval?.data?.content;
+    const [start, setStart] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [form, setForm] = useState({
+        memCode: token.memCode,
+        currentPage: 1,
+    });
+    const pageInfo = approval.pageInfo || {};
+
+    console.log('pageInfo', pageInfo);
+
+    const pageNumber = [];
+    if (pageInfo) {
+        for (let i = 1; i <= pageInfo.pageEnd; i++) {
+            pageNumber.push(i);
+        }
+    }
 
     useEffect(() => {
+        setStart((currentPage - 1) * 5);
+        form.currentPage = currentPage;
         dispatch(
             callSendApprovalAPI({
-                memCode: token.memCode,
+                form,
             })
         );
-    }, []);
+    }, [currentPage]);
 
     const onClickSendApproval = () => {
         console.log('onClickSendApproval click');
@@ -47,8 +65,6 @@ function SendApproval() {
     const ondblclickapproval = (payCode) => {
         navigate(`/main/ApprovalDetail`, { state: { payCode } });
     };
-
-    
 
     return (
         <>
@@ -156,6 +172,29 @@ function SendApproval() {
                                                 )}
                                             </tbody>
                                         </table>
+                                        <ul className='pagination pagination-sm' id='pageBtn1'>
+                                            <li className='page-item' onClick={() => setCurrentPage(1)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-left'></i>
+                                                </a>
+                                            </li>
+                                            {pageNumber.map((num) => (
+                                                <li
+                                                    key={num}
+                                                    className={`page-item ${currentPage === num ? 'active' : ''}`}
+                                                    onClick={() => setCurrentPage(num)}
+                                                >
+                                                    <a className='page-link' href='javascript:void(0);'>
+                                                        {num}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                            <li className='page-item' onClick={() => setCurrentPage(pageNumber.length)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-right'></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

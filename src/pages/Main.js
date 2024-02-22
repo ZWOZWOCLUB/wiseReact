@@ -105,6 +105,7 @@ function Main() {
                 const matchingSchedules = scheduleList.filter((schedule) => {
                     const startDate = new Date(schedule.schStartDate);
                     const endDate = new Date(schedule.schEndDate);
+
                     return day >= startDate && day <= endDate;
                 });
 
@@ -131,7 +132,7 @@ function Main() {
                 });
             });
         });
-        console.log('업데이트 이벤트 ');
+        console.log('업데이트 이벤트 ', updatedEvents);
 
         setEvents(updatedEvents);
     };
@@ -175,12 +176,23 @@ function Main() {
         calendar.today();
         setYearMonthFunction(calendar);
         updateEvents(calendar.getDate());
+        const year = new Date().getFullYear();
+        const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        const day = new Date().getDate().toString().padStart(2, '0');
+
+        form.searchDate = `${year}-${month}-${day}`;
+        setCurrentTime1(new Date());
+
+        dispatch(
+            searchAttendanceDateInfoAPICalls({
+                form,
+            })
+        );
     };
     const onClickPrev = () => {
         calendar.prev();
         setYearMonthFunction(calendar);
         updateEvents(calendar.getDate());
-        console.log('3월', calendar.getDate());
     };
 
     const onClickNext = () => {
@@ -290,6 +302,7 @@ function Main() {
     }, []);
 
     const attendanceList = useSelector((state) => state.attendanceInfoReducer);
+    console.log('aattt', attendance);
 
     function clickStart() {
         const year = new Date().getFullYear();
@@ -368,7 +381,11 @@ function Main() {
                                         <button
                                             className='btn btn-primary btn-lg'
                                             onClick={clickStart}
-                                            disabled={attendance?.attValue === 1 || attendance?.attValue === 2}
+                                            disabled={
+                                                attendance?.attValue === 1 ||
+                                                attendance?.attValue === 2 ||
+                                                attendance?.startTime === null
+                                            }
                                             style={
                                                 attendance?.attValue === 1 ||
                                                 attendance?.attValue === 2 ||
@@ -518,7 +535,7 @@ function Main() {
                                             </thead>
                                             <tbody>
                                                 {attendanceList.map((b) => (
-                                                    <tr key={b?.memName}>
+                                                    <tr key={b?.memCode}>
                                                         <td>{b?.memName}</td>
                                                         <td>{b?.depName}</td>
                                                         <td>{b?.posName}</td>
