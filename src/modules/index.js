@@ -54,9 +54,6 @@ import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
 import dataFormatReducer from './DataFormatModule';
-
-const { combineReducers } = require("redux");
-
 // import settingDegreeReducer from './SettingDegreeModule';
 // import settingCertificateReducer from './SettingCertificateModule';
 // import settingInfoSearchReducer from './SettingInfoSearchModuel';
@@ -85,8 +82,8 @@ const { combineReducers } = require("redux");
 import schedulePatternDayReducer from "./SchedulePatternDayModule";
 import scheduleInsetMemReducer from "./ScheduleInsertMemModule";
 
-import notCommentReducer from "./NotCommentModule";
-import dataFormatReducer from "./DataFormatModule";
+// import notCommentReducer from "./NotCommentModule";
+// import dataFormatReducer from "./DataFormatModule";
 const { combineReducers } = require("redux");
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
