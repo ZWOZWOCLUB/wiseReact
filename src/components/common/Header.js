@@ -78,7 +78,9 @@ function Header() {
   };
 
   const onClickGetMemCode = (e) => {
-    console.log(e);
+    // (checked) => setChecked(checked)
+    console.log(e.value);
+    // setChecked(e.value);
   };
 
   const nodes =
@@ -150,9 +152,6 @@ function Header() {
           form: formData,
         })
       );
-
-      // 이제 recMessage에 msgCode랑 memCode 넣으면 됨
-      // sendNewMsgReducerDetail --> msgCode
     }
   };
 
@@ -194,7 +193,6 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              
               memCode: token.memCode,
             })
           );
@@ -294,7 +292,6 @@ function Header() {
     }
   };
 
-
   const onClickLogout = () => {
     alert("로그아웃 합니다.");
     window.localStorage.removeItem("accessToken");
@@ -362,8 +359,21 @@ function Header() {
         memCode: token.memCode,
       })
     );
-  }, [deleteStatus, sendNewMsgReducer]);
+  }, [deleteStatus]);
 
+  useEffect(() => {
+    console.log("------ sendNewMsgReducer useEffect 호출 -----");
+
+    if(sendNewMsgReducer.status === 200){
+      alert('메세지가 성공적으로 등록되었습니다.');
+
+      setChecked([]);
+      setNames("");
+      setCodes("");
+      setInputValue("");
+
+    }
+  }, [sendNewMsgReducer]);
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
@@ -426,24 +436,21 @@ function Header() {
   };
 
   //yj: 헤더에 멤버 이름 출력
-  const memberDetail = useSelector(state => state.mypageReducer);
-  console.log("memberDetail",memberDetail);
-  
+  const memberDetail = useSelector((state) => state.mypageReducer);
+  console.log("memberDetail", memberDetail);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     console.log("헤더 토큰 검사---->", token);
     console.log("헤더 토큰 token.memCode--->", token.memCode);
 
-    if(token !== null){
+    if (token !== null) {
       dispatch(
         callMemberDetailAPI({
           memCode: token.memCode,
         })
-      )
+      );
     }
   }, []);
-
 
   return (
     <>
@@ -491,56 +498,21 @@ function Header() {
         } ${themDefaultCSS[`bg-navbar-theme`]}`}
         id="layout-navbar"
       >
-        {/* <div
-          className={`${coreCSS[`layout-menu-toggle`]} ${
-            coreCSS[`navbar-nav`]
-          } ${coreCSS[`align-items-xl-center`]} ${coreCSS[`me-3`]} ${
-            coreCSS[`me-xl-0`]
-          } ${coreCSS[`d-xl-none`]}`}
-        >
-          <a
-            className={`${coreCSS[`nav-item`]} ${coreCSS[`nav-link`]} ${
-              coreCSS[`px-0`]
-            } ${coreCSS[`me-xl-4`]}`}
-            href="javascript:void(0)"
-          >
-            <i className="bx bx-menu bx-sm"></i>
-          </a>
-        </div> */}
-
         <div
           className={`${coreCSS[`navbar-nav-right`]} ${coreCSS[`d-flex`]} ${
             coreCSS[`align-items-center`]
           }`}
           id="navbar-collapse"
         >
-          {/* <div
-            className={`${coreCSS[`navbar-nav`]} ${
-              coreCSS[`align-items-center`]
-            }`}
-          >
-            <div
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`d-flex`]} ${
-                coreCSS[`align-items-center`]
-              }`}
-            >
-              <i
-                className="bx bx-search fs-4 lh-0"
-                style={{ fontSize: 26 }}
-              ></i>
-              <input
-                type="text"
-                className={`${coreCSS[`form-control`]} ${coreCSS[`border-0`]} ${
-                  coreCSS[`shadow-none`]
-                }`}
-                placeholder="Search..."
-                aria-label="Search..."
-              />
-            </div>
-          </div> */}
           <div>
-          <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token.memName} ({token.memCode})</span>님</div>
-          </div>  
+            <div>
+              안녕하세요,{" "}
+              <span style={{ color: "#696cff", fontWeight: "bold" }}>
+                {token.memName} ({token.memCode})
+              </span>
+              님
+            </div>
+          </div>
           <ul
             className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
               coreCSS[`align-items-center`]
@@ -617,8 +589,9 @@ function Header() {
               }`}
               onClick={onClickMyPage}
             >
-              <i class='bx bxs-user-rectangle'
-              style={{ fontSize: 29, color : "#696cff" }}
+              <i
+                class="bx bxs-user-rectangle"
+                style={{ fontSize: 29, color: "#696cff" }}
               />
               {/* <img
                 src={profile}
@@ -778,7 +751,6 @@ function Header() {
                       className="messageBox"
                       style={{
                         textAlign: "left",
-                        
                       }}
                     >
                       <div
@@ -805,7 +777,8 @@ function Header() {
                       </div>
                       <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
-                        발신자 : {recMessage.aamSendMessenger?.aamMember.memName}
+                        발신자 :{" "}
+                        {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>
                     </div>
                   ))}
@@ -853,15 +826,21 @@ function Header() {
                         </div>
                       </div>
                       <div>{sendMessage?.msgContents}</div>
-                      <div>
-                        수신자 :{" "}
+                      <div>수신자 :
+
+                      {sendMessage.aamRecMessenger &&
+                  sendMessage.aamRecMessenger.map((aamRecMessenger) => ( 
+                    <span>
                         {sendMessage.aamRecMessenger !== null
-                          ? sendMessage.aamRecMessenger.aamMember.memName
+                          ? ' '+aamRecMessenger.aamMember.memName
                           : ""}
-                      </div>
-                      <div>
-                        { sendMessage.aamRecMessenger.recMsgCheckStatus === 'N' ? '안읽음' : '읽음' }
-                      </div>
+                          {aamRecMessenger.recMsgCheckStatus === "N"
+                          ? "(안읽음)"
+                          : "(읽음)"}
+                      </span>
+                   ))}
+                        </div>
+               
                     </div>
                   ))}
               </div>
@@ -957,11 +936,16 @@ function Header() {
                   체크해주세요
                 </small>
               </div>
+              <div></div>
               <button
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                style={{
+                  marginTop: '20px',
+                  marginRight: '20px',
+                }}
               ></button>
             </div>
             <div className="modal-body">
