@@ -13,14 +13,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { useLocation } from 'react-router';
 function NoticeUpdate() {
-
-    const location = useLocation()
+    const navigate = useNavigate;
+    const location = useLocation();
+    const file = location.state.file;
     const detail = location.state.detail;
     const { notCode } = useParams();
     console.log('useParams notCode: ', notCode);
-    console.log('detail',detail);
+    console.log('detail', detail);
     const date = new Date();
     const notCreateDate = date.toISOString();
     const noticeList = useSelector((state) => state.noticeReducer);
@@ -28,6 +30,11 @@ function NoticeUpdate() {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const createDate = new Date();
     const formattedDate = createDate.toISOString().slice(0, 10);
+    const [noticeFiles, setNoticeFiles] = useState(null);
+    const [fileName, setFileName] = useState('');
+    const [noticefileUrl, setNoticefileUrl] = useState();
+    const noticInput = useRef();
+    const [updateState, setUpdateState] = useState(false);
     const [currentDate, setCurrentDate] = useState(formattedDate);
 
     const [form, setForm] = useState({
@@ -42,42 +49,7 @@ function NoticeUpdate() {
         notModifyDate: notCreateDate,
         notAttachedFile: detail.notAttachedFile || [],
     });
-
     console.log('form', form);
-    // console.log('noticeList', noticeList);
-
-    // useEffect(() => {
-    //     //해당 공지사항 찾는
-    //     if (noticeList ) {
-    //         const notice = noticeList?.find((notice) => notice?.notCode === notCode);
-    //         if (notice) {
-    //             setForm((prevForm) => ({
-    //                 ...prevForm,
-    //                 notCode: notice.notCode,
-    //                 notName: notice.notName,
-    //                 notComment: notice.notComment,
-    //                 notAttachedFile: notice.notAttachedFile || [],
-    //             }));
-    //         }
-    //     }
- 
-    // }, [notCode, noticeList]);
-
-    // console.log('notCode: ', notCode);
-    // console.log('noticeList', noticeList);
-    // console.log('noticeList[0]', noticeList[0]);
-
-    // console.log('noticeList[0].notCode', noticeList[0].notCode);
-
-    // const detail = location.state.detail;
-    // const location = useLocation();
-
-    const [fileName, setFileName] = useState('');
-    const [noticeFiles, setNoticeFiles] = useState(null);
-    const [noticefileUrl, setNoticefileUrl] = useState();
-    const noticInput = useRef();
-
-    const [updateState, setUpdateState] = useState(false);
 
     useEffect(() => {
         if (noticeFiles) {
@@ -96,6 +68,13 @@ function NoticeUpdate() {
         const file = e.target.files[0];
         setNoticeFiles(file);
         setFileName(file.name);
+        // console.log("file",file);
+
+        // setForm((prevForm) => ({
+        // ...prevForm,
+        // notAttachedFile: [file],
+        // }));
+
         console.log('파일', file);
     };
 
@@ -124,30 +103,30 @@ function NoticeUpdate() {
             alert('제목과 내용을 입력해주세요.');
             return; // 작성이 완료되지 않도록 함수 종료
         }
+
+        console.log('노티스파일 : ', noticeFiles);
+        form.notAttachedFile = noticeFiles;
+
+        console.log('노티스 폼파일 : ', form.notAttachedFile);
+
         const formData = new FormData();
 
-        if (noticeFiles && noticeFiles.length > 0) {
-            formData.append('noticeFiles', noticeFiles);
+        if (noticeFiles) {
+            formData.append('noticeFile', form.notAttachedFile);
         }
 
         formData.append('notCode', notCode);
         formData.append('notName', form.notName);
         formData.append('notComment', form.notComment);
         formData.append('notView', form.notView);
-        // formData.append('notCreateDate', form.notCreateDate);
-        formData.append('notDeleteStatus', form.notDe);
-        formData.append('memCode', form.notMember);
         formData.append('notDeleteStatus', form.notDeleteStatus);
         formData.append('notAllArmCheck', form.notAllArmCheck);
 
-        // if (form.notMember) {
-            dispatch(callNoticeUpdateAPI({ form: formData }));
-        // } else {
-            console.log(Error.message);
-            // memCode 값이 유효하지 않을 때의 처리 로직
-        // }
-    }
-    // };
+        console.log('폼데이터 ', formData.get('noticeFile'));
+
+        dispatch(callNoticeUpdateAPI({ form: formData }));
+        console.log('update 완료');
+    };
 
     return (
         <>
@@ -214,11 +193,12 @@ function NoticeUpdate() {
                                                                 파일 첨부
                                                             </label>
                                                             <div className='input-group'>
-                                                                <div>
+                                                                {/* <div>
                                                                     {form?.notAttachedFile?.map((file, index) => (
                                                                         <p key={index}>{file.notAtcName}</p>
                                                                     ))}
-                                                                </div>
+                                                                </div> */}
+                                                                <div>{fileName && <p>{fileName}</p>}</div>
                                                                 <input
                                                                     type='file'
                                                                     className='form-control'

@@ -53,9 +53,11 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const comments = useSelector((state) => state.notCommentReducer);
     console.log('commentscomments', comments);
     console.log('file', detail[0]?.notAttachedFile);
+    console.log('file', detail[0]?.notAttachedFile);
     console.log('cm', comments);
 
     const onClickNoticeMain = () => {
+        
         // 목록
         console.log('NoticeMain click');
         navigate(`/main/notice`, { replace: false });
