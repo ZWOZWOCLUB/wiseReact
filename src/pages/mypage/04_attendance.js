@@ -8,8 +8,10 @@ import { callATTAPI } from "../../apis/MyPageAPICalls.js";
 import { callATTListAPI } from "../../apis/MyPageAPICalls.js";
 // import Calendar from "@toast-ui/react-calendar";
 // import "tui-calendar/dist/tui-calendar.css";
-import Calendar, { OnClickFunc } from "@toast-ui/react-calendar";
-import "tui-calendar/dist/tui-calendar.css";
+// import Calendar, { OnClickFunc } from "@toast-ui/react-calendar";
+import Calendar from 'react-calendar';
+// import "tui-calendar/dist/tui-calendar.css";
+import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 
 function MPAttendance() {
@@ -298,6 +300,7 @@ function MPAttendance() {
                                 value={value}
                                 onClickDay={onClickDayHandler}
                                 tileContent={({ date }) => addContent(date)}
+                                view="month"
                               />
                             </div>
                             {/* 캘린더 끝 */}

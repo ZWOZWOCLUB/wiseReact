@@ -137,34 +137,7 @@ function PersonnelInfo(){
                                     </tr>
                                   )
                                 )}
-
-                                {/* <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>컴퓨터 활용능력 1급</strong></td>
-                                  <td>2023-03-01</td>
-                                  <td>100-044-0033</td>
-                                  <td>대한상공회의소</td>
-                                </tr> */}
-                                {/* <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>전기기능사</strong></td>
-                                  <td>2023-05-03</td>
-                                  <td>1002-0956-2345</td>
-                                  <td>한국산업인력공단</td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
-                                      <strong>한국사능력검정시험 2급</strong></td>
-                                  <td>2023-06-31</td>
-                                  <td>5673-1246-345</td>
-                                  <td>국사편찬위원회</td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>정보처리기능사</strong></td>
-                                  <td>2023-08-17</td>
-                                  <td>2022-032-0333</td>
-                                  <td>한국산업인력공단</td>
-                                </tr> */}
+                             
                               </tbody>
                             </table>
                           </div>
@@ -196,42 +169,7 @@ function PersonnelInfo(){
                                     </tr>
                                   )
                                 ) }
-                                {/* <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
-                                      <strong>(주)씨아이에스엠텍</strong></td>
-                                  <td>2020-10-01</td>
-                                  <td>
-                                    2021-10-05
-                                  </td>
-                                  <td>소프트웨어 개발</td>
-                                  <td>
-                                    팀원
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
-                                      <strong>(주)경수제철건설</strong></td>
-                                  <td>2021-11-14</td>
-                                  <td>
-                                    2022-02-13
-                                  </td>
-                                  <td>건축/철강구조물</td>
-                                  <td>
-                                    사원
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i>
-                                      <strong>(주)우아한형제들</strong></td>
-                                  <td>2022-03-04</td>
-                                  <td>
-                                    2023-10-06
-                                  </td>
-                                  <td>사무업무</td>
-                                  <td>
-                                    사원
-                                  </td>
-                                </tr> */}
+                              
                               </tbody>
                             </table>
                           </div>
@@ -265,56 +203,7 @@ function PersonnelInfo(){
                                     </tr>
                                   )
                                 )}
-                                {/* <tr>
-                                  <td><i class="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>자운고등학교</strong></td>
-                                  <td>2019-03-04</td>
-                                  <td>2022-02-01</td>
-                                  <td></td>
-                                  <td>
-                                    졸업
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>바리스타 2급 과정</strong></td>
-                                  <td>2019-03-04</td>
-                                  <td>2022-02-01</td>
-                                  <td></td>
-                                  <td>
-                                    수료
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>방송통신대학교</strong></td>
-                                  <td>2019-03-04</td>
-                                  <td>2022-02-01</td>
-                                  <td>전기</td>
-                                  <td>
-                                    재학
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>숭실대학교</strong></td>
-                                  <td>2019-03-04</td>
-                                  <td>2022-02-01</td>
-                                  <td>생물</td>
-                                  <td>
-                                    휴학
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><i className="fab fa-angular fa-lg text-danger me-3"></i> 
-                                    <strong>인제대학교</strong></td>
-                                  <td>2019-03-04</td>
-                                  <td>2022-02-01</td>
-                                  <td>철학</td>
-                                  <td>
-                                    중퇴
-                                  </td>
-                                </tr> */}
+                          
                               </tbody>
                             </table>
                           </div>

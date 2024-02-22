@@ -379,8 +379,8 @@ function MyPage() {
                             >
                               서명 등록/수정
                             </button>
-                            
                           </div>
+                          <small>*등록한 서명이 표시될 때까지 시간이 소요될 수 있습니다.</small>
                         </div>
                       </div>
                     )}
