@@ -13,9 +13,16 @@ import {
     GET_APPROVAL_ATTACHMENT_INFO,
 } from '../modules/ApprovalModule.js';
 
-export const callReceiveApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${memCode}`;
+export const callReceiveApprovalAPI = ({ form }) => {
+    console.log('Rform', form);
 
+    let requestURL;
+
+    if (form.currentPage !== undefined || form.currentPage !== null) {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${form.memCode}?offset=${form.currentPage}`;
+    } else {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${form.memCode}`;
+    }
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'GET',
@@ -34,8 +41,14 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
     };
 };
 
-export const callSendApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${memCode}`;
+export const callSendApprovalAPI = ({ form }) => {
+    let requestURL;
+
+    if (form.currentPage !== undefined || form.currentPage !== null) {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${form.memCode}?offset=${form.currentPage}`;
+    } else {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${form.memCode}`;
+    }
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {

@@ -6,7 +6,7 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { callReceiveApprovalAPI } from '../../apis/ApprovalAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
 
@@ -17,15 +17,34 @@ function Approval() {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const approvalList = useSelector((state) => state.approvalReducer);
+    const [start, setStart] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const approval = useSelector((state) => state.approvalReducer);
+    const approvalList = approval?.data?.content;
+    const [form, setForm] = useState({
+        memCode: token.memCode,
+        currentPage: 1,
+    });
+    const pageInfo = approval.pageInfo || {};
+
+    console.log('pageInfo', pageInfo);
+
+    const pageNumber = [];
+    if (pageInfo) {
+        for (let i = 1; i <= pageInfo.pageEnd; i++) {
+            pageNumber.push(i);
+        }
+    }
 
     useEffect(() => {
+        setStart((currentPage - 1) * 5);
+        form.currentPage = currentPage;
         dispatch(
             callReceiveApprovalAPI({
-                memCode: token?.memCode,
+                form,
             })
         );
-    }, []);
+    }, [currentPage]);
 
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
@@ -95,6 +114,11 @@ function Approval() {
                                             <input className='inputDate' type='date' />
                                             <select name='payment-type1' className='payment-type1' id='payment-type1'>
                                                 <option value='0'>결재유형</option>
+                                                <option value='1'>연차 신청</option>
+                                                <option value='2'>서류 요청</option>
+                                                <option value='3'>퇴직 신청</option>
+                                                <option value='4'>출퇴근 기록 정정</option>
+                                                <option value='5'>스케줄 변경 신청</option>
                                             </select>
                                             <select
                                                 name='payment-status'
@@ -165,6 +189,29 @@ function Approval() {
                                                 )}
                                             </tbody>
                                         </table>
+                                        <ul className='pagination pagination-sm' id='pageBtn1'>
+                                            <li className='page-item' onClick={() => setCurrentPage(1)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-left'></i>
+                                                </a>
+                                            </li>
+                                            {pageNumber.map((num) => (
+                                                <li
+                                                    key={num}
+                                                    className={`page-item ${currentPage === num ? 'active' : ''}`}
+                                                    onClick={() => setCurrentPage(num)}
+                                                >
+                                                    <a className='page-link' href='javascript:void(0);'>
+                                                        {num}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                            <li className='page-item' onClick={() => setCurrentPage(pageNumber.length)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-right'></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
