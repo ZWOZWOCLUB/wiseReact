@@ -54,10 +54,12 @@ import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
 import schedulePatternDayReducer from "./SchedulePatternDayModule";
-import scheduleInsetMemReducer from "./ScheduleInsertMemModule";
-
+import scheduleUpdateReducer from "./ScheduleUpdateModule";
+import settingSearchMemListReducer from "./SettingSearchMemListModule";
 import notCommentReducer from "./NotCommentModule";
 import dataFormatReducer from "./DataFormatModule";
+import scheduleInsertReducer from "./ScheduleInsertModule";
+import settingSalaryReducer from "./SettingSalaryModule";
 const { combineReducers } = require("redux");
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
@@ -120,7 +122,10 @@ const rootReducer = combineReducers({
   aamRecNewMsgReducer,
   mpATTListReducer,
   schedulePatternDayReducer,
-  scheduleInsetMemReducer,
+  scheduleUpdateReducer,
+  scheduleInsertReducer,
+  settingSearchMemListReducer,
+  settingSalaryReducer,
 });
 
 export default rootReducer;

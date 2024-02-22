@@ -10,7 +10,7 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
-import { callScheduleInsertAPI } from "../../apis/SchedulePatternInsertAPICalls.js";
+import { callScheduleInsertAPI } from "../../apis/ScheduleInsertAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree from "react-checkbox-tree";
 
@@ -29,6 +29,9 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   );
   const [selectedRowIndex, setSelectedRowIndex] = useState("");
   const scheduleRef = useRef();
+  const [checkedList, setCheckedList] = useState([]);
+  const result2 = useSelector((state) => state.scheduleInsertReducer);
+
   useEffect(() => {}, [selectedColor]);
 
   useImperativeHandle(ref, () => ({
@@ -44,12 +47,20 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
 
   const onClickMonToSun = (index, dayIndex) => {
     setSelectedRowIndex(index);
+
     setSelectedDayIndices((prevState) => {
       const newSelectedDayIndices = [...prevState];
       newSelectedDayIndices[dayIndex] = !prevState[dayIndex];
       return newSelectedDayIndices;
     });
   };
+
+  useEffect(() => {
+    if (result2) {
+      setSelectedRowIndex("");
+      setScheduleForm("");
+    }
+  }, [result2]);
 
   const getDayStyle = (dayIndex) => {
     if (selectedDayIndices[dayIndex]) {
@@ -102,18 +113,22 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
 
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
+    setScheduleForm((prevScheduleForm) => ({
+      ...prevScheduleForm,
+      [name]: value,
+
+      memCode: checked
+        .filter((memName) => memName.includes("/"))
+        .map((memName) => memName.split("/")[0]),
+    }));
     if (selectedColor) {
       setScheduleForm((prevScheduleForm) => ({
         ...prevScheduleForm,
-        [name]: value,
-        wokCode: selectedColor.wokCode,
         schColor: selectedColor.wokColor,
+        wokCode: selectedColor.wokCode,
         dayCode: selectedDayIndices
           .map((isSelected, index) => (isSelected ? index : null))
           .filter((index) => index !== null),
-        memCode: checked
-          .filter((memName) => memName.includes("/"))
-          .map((memName) => memName.split("/")[0]),
       }));
     }
   };
@@ -178,7 +193,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     formData.append("schStartDate", scheduleForm.schStartDate);
     formData.append("schEndDate", scheduleForm.schEndDate);
     formData.append("schColor", scheduleForm.schColor);
-    formData.append("schDeleteStatus", scheduleForm.schDeleteStatus);
+    formData.append("schDeleteStatus", "N");
     formData.append("dayCode", scheduleForm.dayCode);
     formData.append(
       "memCode",
@@ -196,16 +211,14 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
         scheduleForm: formData,
       })
     );
-  };
-
-  const onChecks = (value) => {
-    setChecked(value);
-    console.log("ddddddddddddd", checked);
+    window.location.reload();
   };
 
   const onClickIndex = (index) => {
     console.log("ddddddddddddd", index);
   };
+  console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^", scheduleForm);
+
   return (
     <>
       {insertRows.map((row, index) => (
@@ -280,7 +293,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               <button
                 className={`${payCSS["plus-icon"]}`}
                 data-bs-toggle="modal"
-                data-bs-target="#modalCenter2"
+                data-bs-target="#modalCenterScheduleInsert"
                 onClick={() => onClickIndex(index)}
               >
                 <i
@@ -309,7 +322,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       ))}
       <div
         className="modal fade"
-        id="modalCenter2"
+        id="modalCenterScheduleInsert"
         tabIndex="-1"
         aria-hidden="true"
       >

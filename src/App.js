@@ -38,6 +38,7 @@ import ImageDownloader from "./pages/mypage/test";
 import ScheduleAdd from "./pages/schedule/ScheduleAdd";
 import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
 import ScheduleDetails from "./pages/schedule/ScheduleDetails";
+import MemberDetails from "./pages/setting/memberDetails";
 
 function App() {
   return (
@@ -73,7 +74,7 @@ function App() {
           <Route path="message3" element={<Message3 />} />
           <Route path="sign" element={<Sign />} />
           <Route path="organizationChart" element={<Organization />} />
-          <Route path='dataformat' element={<DataFormat />} />
+          <Route path="dataformat" element={<DataFormat />} />
           <Route path="notice" element={<NoticeMain />} />
           <Route path="noticeWrite" element={<NoticeWrite />} />
           <Route path="notice/detail/:notCode" element={<NoticeDetail />} />
@@ -86,7 +87,10 @@ function App() {
           <Route path="alarm" element={<Alarm />} />
           <Route path="message" element={<Message />} />
           <Route path="message3" element={<Message3 />} />
-          <Route path="organizationEdit/:depCode" element={<OrganizationEdit />} />
+          <Route
+            path="organizationEdit/:depCode"
+            element={<OrganizationEdit />}
+          />
           <Route path="settingInfo" element={<SettingInfo />} />
           <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />
@@ -94,9 +98,9 @@ function App() {
           <Route path="test" element={<ImageDownloader />} />
           <Route path="ScheduleAdd" element={<ScheduleAdd />} />
           <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
+          <Route path="MemberDetails" element={<MemberDetails />} />
         </Route>
-        <Route path="/ScheduleDetails" element={<ScheduleDetails  />} />
-
+        <Route path="/ScheduleDetails" element={<ScheduleDetails />} />
       </Routes>
     </BrowserRouter>
   );

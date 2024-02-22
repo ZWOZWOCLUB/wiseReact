@@ -26,9 +26,6 @@ export const callMemberAddAPI = ({ form }) => {
     if (result.status === 200) {
       dispatch({ type: POST_MEMBERADD, payload: result.data });
       console.log({ result });
-      alert("직원등록이 완료되었습니다.");
-    } else {
-      alert("직원등록이 실패하였습니다.");
     }
   };
 };

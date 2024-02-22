@@ -16,14 +16,18 @@ function SettingDocumentDegree() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const result = useSelector((state) => state.settingDegreeReducer);
 
-  useEffect((memCode) => {
-    dispatch(
-      callInfoSearchAPI({
-        memCode: memberCode,
-      })
-    );
-  }, []);
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [result]
+  );
 
   const onClickDegFileDown = async (index) => {
     try {
@@ -59,7 +63,6 @@ function SettingDocumentDegree() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callDegreeFileUpdateAPI({ formData }));
-      window.location.reload();
     } else {
       console.log(index, "여기555555555555555");
       console.log(prevList.degreeDTO[index].degCode, "여기555555555555555");
@@ -72,7 +75,6 @@ function SettingDocumentDegree() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callDegreeFileInsertAPI({ formData }));
-      window.location.reload();
     }
   };
 
@@ -101,7 +103,6 @@ function SettingDocumentDegree() {
     const formData = new FormData();
     formData.append("degAtcCode", prevList.degreeFileDTO[index].degAtcCode);
     dispatch(callDegreeFileDeleteAPI({ formData }));
-    window.location.reload();
   };
 
   return (
@@ -132,13 +133,13 @@ function SettingDocumentDegree() {
               prevList.degreeFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-down-arrow-alt"
+                    className="bx bx-image-alt"
                     onClick={() => onClickDegFileDown(index)}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-down-arrow-alt" />
+                  <i className="bx bx-image-alt" />
                 </td>
               )}
               {Array.isArray(prevList.degreeFileDTO) &&

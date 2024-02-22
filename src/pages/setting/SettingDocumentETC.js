@@ -15,6 +15,7 @@ function SettingDocumentETC() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const result = useSelector((state) => state.settingCareerReducer);
   const [updateState, setUpdateState] = useState(false);
   const [updatedForms, setUpdatedForms] = useState([]);
 
@@ -26,13 +27,16 @@ function SettingDocumentETC() {
     },
   ]);
 
-  useEffect((memCode) => {
-    dispatch(
-      callInfoSearchAPI({
-        memCode: memberCode,
-      })
-    );
-  }, []);
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [result]
+  );
 
   const onChangeHandler = (index, e) => {
     setUpdateState(true);
@@ -82,7 +86,6 @@ function SettingDocumentETC() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callDocumentFileUpdateAPI({ formData }));
-      window.location.reload();
     } else {
       const formData = new FormData();
       formData.append("etcFile", file);
@@ -92,7 +95,6 @@ function SettingDocumentETC() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callDocumentFileUpdateAPI({ formData }));
-      window.location.reload();
     }
   };
 
@@ -134,7 +136,6 @@ function SettingDocumentETC() {
     const formData = new FormData();
     formData.append("docAtcCode", prevList.documentFileDTO[index].docAtcCode);
     dispatch(callDocumentFileDeleteAPI({ formData }));
-    window.location.reload();
   };
 
   return (
@@ -157,7 +158,7 @@ function SettingDocumentETC() {
               <td>{doc.docAtcOriginName}</td>
               <td>
                 <i
-                  className="bx bx-down-arrow-alt"
+                  className="bx bx-image-alt"
                   onClick={() => onClickDocFileDown(index)}
                 />
               </td>

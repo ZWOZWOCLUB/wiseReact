@@ -23,6 +23,7 @@ function SchedulePattenAdd() {
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
   const [selectedColor, setSelectedColor] = useState();
+  const result = useSelector((state) => state.scheduleInsertReducer);
 
   const scheduleRef = useRef();
 
@@ -58,7 +59,7 @@ function SchedulePattenAdd() {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
-  }, []);
+  }, [result]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
   useEffect(() => {
