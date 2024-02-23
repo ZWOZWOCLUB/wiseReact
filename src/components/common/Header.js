@@ -514,13 +514,7 @@ function Header() {
           <div>
           <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token?.memName} ({token?.memCode})</span>님</div>
           </div>  
-            <div>
-              안녕하세요,{" "}
-              <span style={{ color: "#696cff", fontWeight: "bold" }}>
-                {token.memName} ({token.memCode})
-              </span>
-              님
-            </div>
+
           </div>
           <ul
             className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
@@ -618,7 +612,6 @@ function Header() {
               />
             </li>
           </ul>
-        </div>
 
         {/* 알림함 시작 */}
         <div
@@ -926,11 +919,11 @@ function Header() {
           </div>
         </div>
         {/* 메신저 끝 */}
-      </nav>
+        </nav>
 
       {/* 모달 화면 시작 */}
       <div
-        className="modal fade"
+        className="modal fade"a
         id="modalCenter"
         tabindex="-1"
         aria-hidden="true"

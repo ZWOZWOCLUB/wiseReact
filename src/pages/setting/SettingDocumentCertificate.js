@@ -60,7 +60,7 @@ function SettingDocumentCertificate() {
     console.log(cerFile, "cerFile555555555555555");
     console.log(index, "index555555555555555");
 
-    if (prevList.certificateFileDTO && prevList.certificateFileDTO[index] > 0) {
+    if (prevList.certificateFileDTO && prevList.certificateFileDTO[index].cerAtcCode === index) {
       console.log(index, "여기44444444444555555555555555");
 
       const formData = new FormData();
@@ -94,9 +94,9 @@ function SettingDocumentCertificate() {
   // 파일 업로드 버튼 클릭 시 호출되는 함수
   const onClickCertificateFileUpload = (index) => {
     console.log("클릭1");
-    cerFileInput.current.click();
+    CertificateFileChange(index, { target: { files: cerFileInput.current.files }});
   };
-
+  
   // 파일 입력 변경 시 호출되는 함수
   const CertificateFileChange = (index, e) => {
     console.log("클릭2");
@@ -174,7 +174,7 @@ function SettingDocumentCertificate() {
                       type="file"
                       id="cerFile"
                       name="cerFile"
-                      onClick={() => onClickCertificateFileUpload(index)}
+                      onClick={() => onClickCertificateFileUpload(prevList.certificateFileDTO.cerAtcCode)}
                       onChange={(e) => CertificateFileChange(index, e)}
                       ref={cerFileInput}
                     />

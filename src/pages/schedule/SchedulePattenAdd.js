@@ -10,9 +10,6 @@ import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
 import { callSchedulePatternSearchAPI } from "../../apis/SchedulePatternAPICalls";
-import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
-import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
-import { callScheduleWorkPatterDeleteAPI } from "../../apis/SchedulePatternDeleteAPICalls";
 import SchedulePattenAddPattern from "./SchedulePattenAddPattern.js";
 import SchedulePattenAddSchedule from "./SchedulePattenAddSchedule.js";
 import SchedulePattenAddInsertSchedule from "./SchedulePattenAddInsertSchedule.js";
@@ -26,7 +23,7 @@ function SchedulePattenAdd() {
   const result = useSelector((state) => state.scheduleInsertReducer);
 
   const scheduleRef = useRef();
-
+  
   const updateReducer = useSelector(
     (state) => state.schedulePatternUpdateReducer
   );

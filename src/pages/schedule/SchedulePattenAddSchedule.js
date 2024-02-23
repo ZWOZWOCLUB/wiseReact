@@ -29,7 +29,8 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const [updateState, setUpdateState] = useState([]);
   const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
-
+  useEffect(() => {
+  }, [result, result2]);
   useEffect(() => {
     dispatch(callOrganizationTreeAPI());
   }, []);
@@ -145,13 +146,17 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
 
   const [scheduleForm, setScheduleForm] = useState([]);
   const changeState = (index) => {
-    if (Array.isArray(allList)) {
-      const selectedSchedule = allList[index];
-      const updatedForm = [...scheduleForm];
-      updatedForm[index] = selectedSchedule;
-      setScheduleForm(updatedForm);
-      const updatedUpdateState = [...updateState, index];
-      setUpdateState(updatedUpdateState);
+    if (scheduleForm.length === 0) {
+      if (Array.isArray(allList)) {
+        const selectedSchedule = allList[index];
+        const updatedForm = [...scheduleForm];
+        updatedForm[index] = selectedSchedule;
+        setScheduleForm(updatedForm);
+        const updatedUpdateState = [...updateState, index];
+        setUpdateState(updatedUpdateState);
+      }
+    }else{
+      alert('수정 중인 스케줄의 변경을 먼저 완료해주세요.')
     }
   };
 
@@ -249,35 +254,39 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const onClick = () => {
     setCheckeds([]);
   };
-
   const updateSchedule = (index) => {
-    const formData = new FormData();
-    formData.append("wokCode", scheduleForm[index].patternList.wokCode);
-    formData.append("schCode", scheduleForm[index].schCode);
-    formData.append("schType", scheduleForm[index].schType);
-    formData.append("schStartDate", scheduleForm[index].schStartDate);
-    formData.append("schEndDate", scheduleForm[index].schEndDate);
-    formData.append("schDeleteStatus", scheduleForm[index].schDeleteStatus);
-    formData.append("schColor", scheduleForm[index].patternList.wokColor);
-    formData.append(
-      "dayCode",
-      scheduleForm[index].etcPatternList
-        ? scheduleForm[index].etcPatternList
-        : ""
-    );
-    formData.append(
-      "memCode",
-      scheduleForm[index].memberList ? scheduleForm[index].memberList : ""
-    );
-    scheduleForm[index].patternDayList.forEach((day, idx) => {
-      formData.append(`prevDayCode[${idx}]`, day.patternDayID.dayCode);
-    });
-    scheduleForm[index].patternDayList.forEach((day, idx) => {
-      formData.append(`prevWokCode[${idx}]`, day.patternDayID.wokCode);
-    });
-
-    console.log("formData@@@@@@@@@@@@@@@@@@@@@", formData);
-    dispatch(callScheduleUpdateAPI({ form: formData }));
+    if (scheduleForm.length === 0) {
+      const formData = new FormData();
+      formData.append("wokCode", scheduleForm[index].patternList.wokCode);
+      formData.append("schCode", scheduleForm[index].schCode);
+      formData.append("schType", scheduleForm[index].schType);
+      formData.append("schStartDate", scheduleForm[index].schStartDate);
+      formData.append("schEndDate", scheduleForm[index].schEndDate);
+      formData.append("schDeleteStatus", scheduleForm[index].schDeleteStatus);
+      formData.append("schColor", scheduleForm[index].patternList.wokColor);
+      formData.append(
+        "dayCode",
+        scheduleForm[index].etcPatternList
+          ? scheduleForm[index].etcPatternList
+          : ""
+      );
+      formData.append(
+        "memCode",
+        scheduleForm[index].memberList ? scheduleForm[index].memberList : ""
+      );
+      scheduleForm[index].patternDayList.forEach((day, idx) => {
+        formData.append(`prevDayCode[${idx}]`, day.patternDayID.dayCode);
+      });
+      scheduleForm[index].patternDayList.forEach((day, idx) => {
+        formData.append(`prevWokCode[${idx}]`, day.patternDayID.wokCode);
+      });
+  
+      console.log("formData@@@@@@@@@@@@@@@@@@@@@", formData);
+      dispatch(callScheduleUpdateAPI({ form: formData }));
+  
+      const updatedUpdateState = [...updateState, index];
+      setUpdateState(updatedUpdateState);
+    }
   };
 
   const deleteSchedule = (index) => {

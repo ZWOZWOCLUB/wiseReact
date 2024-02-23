@@ -32,7 +32,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const [checkedList, setCheckedList] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
 
-  useEffect(() => {}, [selectedColor]);
+
 
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
@@ -54,13 +54,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       return newSelectedDayIndices;
     });
   };
-
-  useEffect(() => {
-    if (result2) {
-      setSelectedRowIndex("");
-      setScheduleForm("");
-    }
-  }, [result2]);
 
   const getDayStyle = (dayIndex) => {
     if (selectedDayIndices[dayIndex]) {
@@ -101,6 +94,20 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       .map((memName) => memName.split("/")[0]),
   });
 
+  useEffect(()=>{
+    setInsertRows([])
+  setScheduleForm([{
+    schType: "",
+    schStartDate: "",
+    schEndDate: "",
+    schColor: "",
+    schDeleteStatus: "N",
+    dayCode: "",
+    wokCode: selectedColor ? selectedColor.wokCode : "",
+    memCode: checked
+      .filter((memName) => memName.includes("/"))
+      .map((memName) => memName.split("/")[0])}
+  ])}, [allList, result2]);
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
       if (insertRows.length === 0) {
@@ -211,7 +218,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
         scheduleForm: formData,
       })
     );
-    window.location.reload();
+    
+
   };
 
   const onClickIndex = (index) => {

@@ -68,7 +68,6 @@ function SettingDocumentCareer() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callCareerFileUpdateAPI({ formData }));
-      window.location.reload();
     } else {
       console.log(index, "여기555555555555555");
       console.log(prevList.careerDTO[index].crrCode, "여기555555555555555");
@@ -81,7 +80,6 @@ function SettingDocumentCareer() {
       console.log(formData, "formData555555555555555");
 
       dispatch(calCareerFileInsertAPI({ formData }));
-      window.location.reload();
     }
   };
 

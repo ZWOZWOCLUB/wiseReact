@@ -81,7 +81,6 @@ function SettingDocumentSalary() {
       formData.append("salCode", prevList.salary.salCode);
       dispatch(callSalaryFileInsertAPI({ formData }));
     }
-    window.location.reload();
   };
 
   // 파일 업로드 버튼 클릭 시 호출되는 함수
