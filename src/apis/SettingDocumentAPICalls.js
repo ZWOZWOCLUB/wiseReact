@@ -1,8 +1,6 @@
-import {
-  POST_DOCUMENT_FILE,
-  PUT_DOCUMENT_FILE,
-  DELETE_DOCUMENT_FILE,
-} from "../modules/SettingDocumentModule";
+import { DELETE_DOCUMENT_FILE } from "../modules/SettingDocumentDeleteModule";
+import { PUT_DOCUMENT_FILE } from "../modules/SettingDocumentUpdateModule";
+import { POST_DOCUMENT_FILE } from "../modules/SettingDocumentInsertModule";
 
 //자격 파일 등록
 export const callDocumentFileInsertAPI = ({ formData }) => {

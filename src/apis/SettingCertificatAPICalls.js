@@ -1,12 +1,15 @@
 import {
-  POST_CERTIFICATE,
-  PUT_CERTIFICATE,  
   DELETE_CERTIFICATE,
-  POST_CERTIFICATE_FILE,
-  PUT_CERTIFICATE_FILE,
   DELETE_CERTIFICATE_FILE,
-} from "../modules/SettingCertificateModule";
-
+} from "../modules/SettingCertificateDeleteModule";
+import {
+  PUT_CERTIFICATE,
+  PUT_CERTIFICATE_FILE,
+} from "../modules/SettingCertificateUpdateModule";
+import {
+  POST_CERTIFICATE,
+  POST_CERTIFICATE_FILE,
+} from "../modules/SettingCertificateInsertModule";
 
 //자격정보 등록
 export const callCertificateInsertAPI = ({ insertCerForm }) => {
@@ -29,9 +32,8 @@ export const callCertificateInsertAPI = ({ insertCerForm }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: POST_CERTIFICATE, payload: result });
-    console.log({ result });
+      dispatch({ type: POST_CERTIFICATE, payload: result });
+      console.log({ result });
     }
   };
 };
@@ -57,9 +59,8 @@ export const callCertificateUpdateAPI = ({ updateCerForm }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: PUT_CERTIFICATE, payload: result });
-    console.log({ result });
+      dispatch({ type: PUT_CERTIFICATE, payload: result });
+      console.log({ result });
     }
   };
 };
@@ -77,7 +78,7 @@ export const callCertificateDeleteAPI = ({ cerCode }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify({cerCode}),
+      body: JSON.stringify({ cerCode }),
     }).then((response) => response.json());
 
     console.log(
@@ -135,9 +136,8 @@ export const callCertificateFileUpdateAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: PUT_CERTIFICATE_FILE, payload: result.data });
-    console.log({ result });
+      dispatch({ type: PUT_CERTIFICATE_FILE, payload: result.data });
+      console.log({ result });
     }
   };
 };
@@ -162,10 +162,8 @@ export const callCertificateFileDELETEAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: DELETE_CERTIFICATE_FILE, payload: result.data });
-    console.log({ result });
+      dispatch({ type: DELETE_CERTIFICATE_FILE, payload: result.data });
+      console.log({ result });
     }
   };
 };
-

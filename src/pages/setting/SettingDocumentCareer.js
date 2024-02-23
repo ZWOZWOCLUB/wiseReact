@@ -16,7 +16,9 @@ function SettingDocumentCareer() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingCareerReducer);
+  const result = useSelector((state) => state.settingCareerInsertReducer);
+  const result2 = useSelector((state) => state.settingCareerUpdateReducer);
+  const result3 = useSelector((state) => state.settingCareerDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -26,7 +28,7 @@ function SettingDocumentCareer() {
         })
       );
     },
-    [result]
+    [result, result2, result3]
   );
 
   //파일 다운하는 함수

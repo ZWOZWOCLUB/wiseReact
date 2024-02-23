@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-function SettingInfoInsertCareer({ onUpdate }) {
+function SettingInfoInsertCareer({ onUpdate, insertEvent }) {
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
   const [careerRows, setCareerRows] = useState([0]);
@@ -66,6 +66,7 @@ function SettingInfoInsertCareer({ onUpdate }) {
   useEffect(() => {
     onUpdate(crrForm);
   }, [crrForm, onUpdate]);
+  console.log("crrForm", crrForm);
 
   return (
     <>

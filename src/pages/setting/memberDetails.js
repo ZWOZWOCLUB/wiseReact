@@ -33,6 +33,7 @@ function MemberAdd() {
   console.log("~~~~~~~~resutlList", resutlList);
   console.log("~~~~~~~~profileResult", profileResult);
 
+  console.log("currentDate", currentDate);
   useEffect(() => {
     dispatch(callSearchDepAPI());
   }, []);
@@ -151,12 +152,29 @@ function MemberAdd() {
     alert("직원수정이 완료되었습니다.");
   };
 
+  const onClickPassReset = () => {
+    const updateData = new FormData();
+    updateData.append("memCode", memberCode);
+    updateData.append("memPassword", "0000");
+    dispatch(callMemberUpdateAPI({ form: updateData }));
+    alert("비밀번호가 초기화되었습니다.");
+  };
+
+  const onClickMemHire = () => {
+    const updateData = new FormData();
+
+    updateData.append("memCode", memberCode);
+    updateData.append("memHireDate", currentDate);
+    updateData.append("memStatus", "Y");
+    dispatch(callMemberUpdateAPI({ form: updateData }));
+    alert("직원 정보를 삭제했습니다");
+    navigate(`/main/setting`);
+  };
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
 
-    if (tab === "프로필 정보") {
-      navigate(`/main/memberAdd`, { replace: true });
-    } else if (tab === "인사 정보") {
+    if (tab === "인사 정보") {
       navigate(`/main/settingInfo?memCode=${memberCode}`, {
         replace: true,
       });
@@ -512,10 +530,28 @@ function MemberAdd() {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={onClickUpdateHandler}
+                    onClick={onClickPassReset}
+                    style={{ marginRight: "20px" }}
                   >
-                    수정
+                    비밀번호 초기화
                   </button>
+                  <div>
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={onClickMemHire}
+                      style={{ marginRight: "20px" }}
+                    >
+                      직원 탈퇴
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={onClickUpdateHandler}
+                    >
+                      수정
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

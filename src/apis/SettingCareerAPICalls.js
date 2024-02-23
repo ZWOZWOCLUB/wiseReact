@@ -1,13 +1,15 @@
 import {
-  POST_CAREEAR,
-  PUT_CAREEAR,
   DELETE_CAREEAR,
-  POST_CAREEAR_FILE,
-  PUT_CAREEAR_FILE,
   DELETE_CAREEAR_FILE,
-} from '../modules/SettingCareearModule';
-
-
+} from "../modules/SettingCareearDeleteModule";
+import {
+  POST_CAREEAR,
+  POST_CAREEAR_FILE,
+} from "../modules/SettingCareearInsertModule";
+import {
+  PUT_CAREEAR,
+  PUT_CAREEAR_FILE,
+} from "../modules/SettingCareearUpdateModule";
 
 //경력정보 등록
 export const callCareerInsertAPI = ({ insertCrrForm }) => {
@@ -25,10 +27,7 @@ export const callCareerInsertAPI = ({ insertCrrForm }) => {
       body: JSON.stringify(insertCrrForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callCareerInsertAPI] callCareerInsertAPI RESULT : ",
-      result
-    );
+    console.log("[callCareerInsertAPI] callCareerInsertAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: POST_CAREEAR, payload: result });
       console.log({ result });
@@ -52,10 +51,7 @@ export const callCareerUpdateAPI = ({ updateCrrForm }) => {
       body: JSON.stringify(updateCrrForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callCareerUpdateAPI] callCareerUpdateAPI RESULT : ",
-      result
-    );
+    console.log("[callCareerUpdateAPI] callCareerUpdateAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: PUT_CAREEAR, payload: result });
       console.log({ result });
@@ -76,13 +72,10 @@ export const callCareerDeleteAPI = ({ crrCode }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify({crrCode}),
+      body: JSON.stringify({ crrCode }),
     }).then((response) => response.json());
 
-    console.log(
-      "[callCareerDeleteAPI] callCareerDeleteAPI RESULT : ",
-      result
-    );
+    console.log("[callCareerDeleteAPI] callCareerDeleteAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: DELETE_CAREEAR, payload: result });
       console.log({ result });
@@ -136,7 +129,6 @@ export const callCareerFileUpdateAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
       dispatch({ type: PUT_CAREEAR_FILE, payload: result.data });
       console.log({ result });
     }
@@ -162,7 +154,6 @@ export const callCareerFileDeleteAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
       dispatch({ type: DELETE_CAREEAR_FILE, payload: result.data });
       console.log({ result });
     }

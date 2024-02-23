@@ -7,23 +7,23 @@ function SettingInfoInsertDegree({ onUpdate }) {
   const memberCode = searchParams.get("memCode");
   const [degreeRows, setDegreeRows] = useState([0]);
 
-  const [degForm, setDegForm] = useState([{
-    memCode: memberCode,
-    degCode: "",
-    degKind: "",
-    degMajor: "",
-    degName: "",
-    degGraduation: "",
-    degState: "",
-    degAdmissions: "",
-  }]);
-
+  const [degForm, setDegForm] = useState([
+    {
+      memCode: memberCode,
+      degCode: "",
+      degKind: "",
+      degMajor: "",
+      degName: "",
+      degGraduation: "",
+      degState: "",
+      degAdmissions: "",
+    },
+  ]);
 
   const onChangeDegHandler = (e, index) => {
-
     const { name, value } = e.target;
 
-    setDegForm(prevForms => {
+    setDegForm((prevForms) => {
       return prevForms.map((form, idx) => {
         if (idx === index) {
           return {
@@ -37,31 +37,30 @@ function SettingInfoInsertDegree({ onUpdate }) {
   };
 
   const handleAddRow = () => {
-      setDegreeRows((prevRows) => [...prevRows, {}]);
-      setDegForm((prevForms) => [
-        ...prevForms,
-        {
-          memCode: memberCode,
-          degCode: "",
-          degKind: "",
-          degMajor: "",
-          degName: "",
-          degGraduation: "",
-          degState: "",
-          degAdmissions: "",
-        },
-      ]);
+    setDegreeRows((prevRows) => [...prevRows, {}]);
+    setDegForm((prevForms) => [
+      ...prevForms,
+      {
+        memCode: memberCode,
+        degCode: "",
+        degKind: "",
+        degMajor: "",
+        degName: "",
+        degGraduation: "",
+        degState: "",
+        degAdmissions: "",
+      },
+    ]);
   };
 
   const handleRemoveRow = (index) => {
-      setDegreeRows((prevRows) => prevRows.filter((row, i) => i !== index));
-      setDegForm((prevForms) => prevForms.filter((form, i) => i !== index));
+    setDegreeRows((prevRows) => prevRows.filter((row, i) => i !== index));
+    setDegForm((prevForms) => prevForms.filter((form, i) => i !== index));
   };
 
   useEffect(() => {
     onUpdate(degForm);
   }, [degForm, onUpdate]);
-
 
   return (
     <>
@@ -102,7 +101,7 @@ function SettingInfoInsertDegree({ onUpdate }) {
               className="form-control3"
               onChange={(e) => onChangeDegHandler(e, index)}
               aria-describedby="basic-addon11"
-              id="degMajor"
+              name="degMajor"
             />
           </div>
           <div className="inputWrapper">
@@ -148,7 +147,6 @@ function SettingInfoInsertDegree({ onUpdate }) {
         +추가
       </div>
       <br />
-
     </>
   );
 }

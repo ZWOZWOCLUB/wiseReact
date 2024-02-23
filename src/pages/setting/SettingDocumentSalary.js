@@ -16,7 +16,9 @@ function SettingDocumentSalary() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingSalaryReducer);
+  const result = useSelector((state) => state.settingSalaryInsertReducer);
+  const result2 = useSelector((state) => state.settingSalaryUpdateReducer);
+  const result3 = useSelector((state) => state.settingSalaryDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -26,7 +28,7 @@ function SettingDocumentSalary() {
         })
       );
     },
-    [result]
+    [result, result2, result3]
   );
 
   //파일 다운하는 함수
