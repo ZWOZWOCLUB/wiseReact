@@ -59,7 +59,13 @@ function SettingDocumentETC() {
 
   const onClickDocFileDown = async (index) => {
     try {
-      const response = await fetch(prevList.documentFileDTO[index].docAtcPath); //파일 경로 지정
+      const urlPath =
+        "http://localhost:8001" +
+        "/etcDocumentFile/" +
+        prevList.documentFileDTO[index].docAtcConvertName;
+      console.log(urlPath);
+
+      const response = await fetch(urlPath); //파일 경로 지정
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
       const link = document.createElement("a"); //a 요소 생성
@@ -158,7 +164,8 @@ function SettingDocumentETC() {
               <td>{doc.docAtcOriginName}</td>
               <td>
                 <i
-                  className="bx bx-image-alt"
+                  className="bx bx-down-arrow-alt"
+                  style={{ cursor: "pointer" }}
                   onClick={() => onClickDocFileDown(index)}
                 />
               </td>
