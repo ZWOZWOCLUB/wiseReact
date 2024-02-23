@@ -30,9 +30,14 @@ function SettingDocumentCertificate() {
 
   const onClickCerFileDown = async (index) => {
     try {
-      const response = await fetch(
-        prevList.certificateFileDTO[index].cerAtcPath
-      ); //파일 경로 지정
+      const urlPath =
+        "http://localhost:8001" +
+        "/certificate/" +
+        prevList.certificateFileDTO[index].cerAtcConvertName;
+      console.log(urlPath);
+
+      const response = await fetch(urlPath); //파일 경로 지정
+
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
       const link = document.createElement("a"); //a 요소 생성
@@ -53,7 +58,7 @@ function SettingDocumentCertificate() {
     console.log(cerFile, "cerFile555555555555555");
     console.log(index, "index555555555555555");
 
-    if (prevList.certificateFileDTO && prevList.certificateFileDTO.length > 0) {
+    if (prevList.certificateFileDTO && prevList.certificateFileDTO[index] > 0) {
       console.log(index, "여기44444444444555555555555555");
 
       const formData = new FormData();
@@ -141,13 +146,17 @@ function SettingDocumentCertificate() {
               prevList.certificateFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-image-alt"
+                    className="bx bx-down-arrow-alt"
                     onClick={() => onClickCerFileDown(index)}
+                    style={{ cursor: "pointer" }}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-image-alt" />
+                  <i
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
+                  />
                 </td>
               )}
               {Array.isArray(prevList.certificateFileDTO) &&

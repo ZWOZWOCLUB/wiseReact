@@ -219,7 +219,9 @@ function MemberAdd() {
             <h5 className="card-header">프로필 사진 수정</h5>
             <div className="card-body">
               <div className="d-flex align-items-start align-items-sm-center gap-4">
-                {profileDetail && profileDetail.docAtcPath ? (
+                {profileDetail &&
+                profileDetail.docAtcPath &&
+                profileDetail.memCode === resutlList.memCode ? (
                   <img
                     src={profileDetail.docAtcPath}
                     alt="사진 등록"

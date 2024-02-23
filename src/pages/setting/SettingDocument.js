@@ -189,7 +189,10 @@ function SettingDocument() {
                       <td>-</td>
                       <td>-</td>
                       <td>
-                        <i className="bx bx-image-alt" />
+                        <i
+                          className="bx bx-down-arrow-alt"
+                          style={{ cursor: "pointer" }}
+                        />
                       </td>
                       <td>
                         <label

@@ -32,7 +32,13 @@ function SettingDocumentCareer() {
   //파일 다운하는 함수
   const onClickCrrFileDown = async (index) => {
     try {
-      const response = await fetch(prevList.careerFileDTO[index].crrAtcPath); //파일 경로 지정
+      const urlPath =
+        "http://localhost:8001" +
+        "/career/" +
+        prevList.careerFileDTO[index].crrAtcConvertName;
+      console.log(urlPath);
+
+      const response = await fetch(urlPath); //파일 경로 지정
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
       const link = document.createElement("a"); //a 요소 생성
@@ -133,13 +139,17 @@ function SettingDocumentCareer() {
               prevList.careerFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-image-alt"
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
                     onClick={() => onClickCrrFileDown(index)}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-image-alt" />
+                  <i
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
+                  />
                 </td>
               )}
               {Array.isArray(prevList.careerFileDTO) &&
