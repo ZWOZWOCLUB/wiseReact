@@ -15,7 +15,9 @@ function SettingDocumentETC() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingCareerReducer);
+  const result = useSelector((state) => state.settingDocumentInsertReducer);
+  const result2 = useSelector((state) => state.settingDocumentUpdateReducer);
+  const result3 = useSelector((state) => state.settingDocumentDeleteReducer);
   const [updateState, setUpdateState] = useState(false);
   const [updatedForms, setUpdatedForms] = useState([]);
 
@@ -35,7 +37,7 @@ function SettingDocumentETC() {
         })
       );
     },
-    [result]
+    [result, result2, result3]
   );
 
   const onChangeHandler = (index, e) => {

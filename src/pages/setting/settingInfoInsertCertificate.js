@@ -22,10 +22,9 @@ function SettingInfoInsertCertificate({ onUpdate }) {
     },
   ]);
 
-
   const onChangeCerHandler = (e, index) => {
     const { name, value } = e.target;
-    setCerForm(prevForms => {
+    setCerForm((prevForms) => {
       return prevForms.map((form, idx) => {
         if (idx === index) {
           return {
@@ -39,39 +38,36 @@ function SettingInfoInsertCertificate({ onUpdate }) {
   };
 
   const handleAddRow = () => {
-      console.log('클릭', certificateRows)
-      setCertificateRows((prevRows) => [...prevRows, {}]);
-      setCerForm((prevForms) => [
-        ...prevForms,
-        {
-          memCode: memberCode,
-          cerCode: "",
-          cerName: "",
-          cerKind: "",
-          cerDay: "",
-          cerEndDate: "",
-          cerDescription: "",
-          cerInstitution: "",
-        },
-      ]);
+    console.log("클릭", certificateRows);
+    setCertificateRows((prevRows) => [...prevRows, {}]);
+    setCerForm((prevForms) => [
+      ...prevForms,
+      {
+        memCode: memberCode,
+        cerCode: "",
+        cerName: "",
+        cerKind: "",
+        cerDay: "",
+        cerEndDate: "",
+        cerDescription: "",
+        cerInstitution: "",
+      },
+    ]);
   };
+
+  const handleRemoveRow = (index) => {
+    console.log("................................", index);
+    certificateRows.splice(index, 1);
+    setCerForm((prevForms) => prevForms.filter((form, i) => i !== index));
+  };
+  console.log("cerForm", cerForm);
 
   useEffect(() => {
     onUpdate(cerForm);
   }, [cerForm, onUpdate]);
 
-
-
-  const handleRemoveRow = (index) => {
-    console.log('................................',index)
-    certificateRows.splice(index, 1)
-    setCerForm((prevForms) => prevForms.filter((form, i) => i !== index));
-  };
-  console.log(cerForm)
-
   return (
     <>
-
       <div>
         {certificateRows.map((row, index) => (
           <div className="input-group3" key={index}>
@@ -157,16 +153,12 @@ function SettingInfoInsertCertificate({ onUpdate }) {
           </div>
         ))}
       </div>
-      <div
-        className="addList"
-        onClick={() => handleAddRow()}
-      >
+      <div className="addList" onClick={() => handleAddRow()}>
         +추가
       </div>
       <br />
       <hr className="m-0" style={{ marginTop: 20, marginBottom: 20 }} />
       <br />
-
     </>
   );
 }

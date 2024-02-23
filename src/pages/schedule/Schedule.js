@@ -11,6 +11,7 @@ import { callScheduleSearETCAPI } from "../../apis/ScheduleSearchETCAPICalls";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import "tui-calendar/dist/tui-calendar.css";
 import ScheduleDetails from "./ScheduleDetails";
+import { decodeJwt } from "../../utils/tokenUtils";
 
 function Schedule() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function Schedule() {
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const [events, setEvents] = useState([]);
   const [currentTime1, setCurrentTime1] = useState(new Date());
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
 
   console.log("ETCList", ETCList);
 
@@ -349,17 +351,23 @@ function Schedule() {
               <button className={`${payCSS["today"]}`} onClick={onClickToday}>
                 Today
               </button>
+              <div></div>
               <button
                 className={`${payCSS["patternInscription"]}`}
                 onClick={schedulePattenAdd}
+                style={{
+                  display: token.memRole === "USER" ? "none" : "",
+                }}
               >
                 <span
                   className="bx bx-calendar-edit"
-                  style={{ paddingBottom: 3 }}
+                  style={{
+                    paddingBottom: 3,
+                  }}
                 />
                 근무패턴등록
               </button>
-              <button
+              {/* <button
                 className={`${payCSS["scheduleAdd"]}`}
                 onClick={scheduleAdd}
               >
@@ -368,7 +376,7 @@ function Schedule() {
                   style={{ paddingBottom: 3 }}
                 />
                 근무일정추가
-              </button>
+              </button> */}
             </div>
             <Calendars
               height="70vh"

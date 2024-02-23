@@ -16,7 +16,9 @@ function SettingDocumentDegree() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingDegreeReducer);
+  const result = useSelector((state) => state.settingDegreeInsertReducer);
+  const result2 = useSelector((state) => state.settingDegreeUpdateReducer);
+  const result3 = useSelector((state) => state.settingDegreeDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -26,7 +28,7 @@ function SettingDocumentDegree() {
         })
       );
     },
-    [result]
+    [result, result2, result3]
   );
 
   const onClickDegFileDown = async (index) => {

@@ -49,7 +49,6 @@ function SettingInfoSalary({ onUpdate }) {
       );
     } else {
       dispatch(callSalaryDeleteAPI({ salCode }));
-      window.location.reload();
     }
   };
 

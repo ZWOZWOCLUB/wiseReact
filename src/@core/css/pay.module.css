@@ -338,7 +338,7 @@
     border-radius: 1rem;
 }
 
-.patternInscription, .scheduleAdd{
+.patternInscription{
     color: #fff;
     background-color: #696cff;
     font-size: 15px;
@@ -391,17 +391,10 @@ color: #696cff;
 
 }
 
-.scheduleDetailsMiddleWrapper{
-    display: flex;
-    flex: 2 1 ;
-    justify-content: space-around
-
-}
 
 .scheduleDetailsMiddleRightWrapper{
     display: flex;
     flex-direction: column;
-    width: 30%
 }
 
 .bottom{
@@ -433,17 +426,21 @@ display: flex;
 flex-wrap: wrap;}
 
 .notContainName{
-    height: 40px;
+    height: 50px;
     background-color: #fff;
-    width: 120px;
+    width: 150px;
     margin-top: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 10px;
+    margin-left: 5px;
     border: 1px solid #E1E1E2;
-    border-radius: 20px;
+    border-radius: 30px;
     box-shadow: 0 0.125rem 0.25rem 0 lightgrey;
+    flex-direction: column;
+    margin-bottom: 10px;
+    
+
 }
 
 .schType{
@@ -486,7 +483,7 @@ flex-wrap: wrap;}
 .wrapperName{
     background-color: #fff;
     padding: 20px 20px 20px 20px;
-    justify-content: space-around
+
 
 
 }
@@ -495,9 +492,17 @@ flex-wrap: wrap;}
     display: flex;
     padding-bottom: 20px;
     padding-top: 10px;
+    padding-right: 10px;
+    flex-wrap: wrap
+
+
 }
 
 .scheduleDetailsTotalWrapper{
     padding: 10px 10px 10px 10px;
 
+}
+
+.depName{
+    font-size:small;
 }

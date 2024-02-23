@@ -15,7 +15,9 @@ function SettingDocumentCertificate() {
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingCertificateReducer);
+  const result = useSelector((state) => state.settingCertificateInsertReducer);
+  const result2 = useSelector((state) => state.settingCertificateUpdateReducer);
+  const result3 = useSelector((state) => state.settingCertificateDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -25,7 +27,7 @@ function SettingDocumentCertificate() {
         })
       );
     },
-    [result]
+    [result, result3, result3]
   );
 
   const onClickCerFileDown = async (index) => {
