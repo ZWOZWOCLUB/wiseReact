@@ -28,6 +28,7 @@ import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import CheckboxTree from "react-checkbox-tree";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
+import { callLogoutAPI } from "../../apis/MemberAPICalls.js";
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
@@ -38,7 +39,7 @@ function Header() {
   const [alarm, setAlarm] = useState(true);
   const [notice, setNotice] = useState(true);
   // const color = check ? 'blue' : 'red';
-  const token = decodeJwt(window.localStorage.getItem("accessToken"));
+
   const perAlarm = useSelector((state) => state.aamPerAlarmReducer);
   const allAlarm = useSelector((state) => state.aamAllAlarmReducer);
   const sendMessage = useSelector((state) => state.aamSendMessageReducer);
@@ -60,10 +61,10 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const [inputValue, setInputValue] = useState("");
-
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const [form, setForm] = useState({
     msgContents: "",
-    memCode: token.memCode,
+    memCode: token?.memCode,
     msgDate: new Date(),
     msgDeleteStatus: "N",
   });
@@ -176,12 +177,12 @@ function Header() {
     if (token !== null) {
       dispatch(
         callSendMessageAPI({
-          memCode: token.memCode,
+          memCode: token?.memCode,
         })
       );
       dispatch(
         callRecMessageAPI({
-          memCode: token.memCode,
+          memCode: token?.memCode,
         })
       );
       dispatch(callOrganizationTreeAPI());
@@ -193,6 +194,8 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
+              
+              memCode: token?.memCode,
               memCode: token.memCode,
             })
           );
@@ -214,7 +217,7 @@ function Header() {
       dispatch(
         callRecDeleteStatusUpdateAPI({
           msgCode: msgCode,
-          memCode: token.memCode,
+          memCode: token?.memCode,
         })
       );
     }
@@ -255,7 +258,7 @@ function Header() {
     if (token !== null) {
       dispatch(
         callPerAlarmDetailAPI({
-          memCode: token.memCode,
+          memCode: token?.memCode,
         })
       );
     }
@@ -293,10 +296,14 @@ function Header() {
   };
 
   const onClickLogout = () => {
-    alert("로그아웃 합니다.");
-    window.localStorage.removeItem("accessToken");
-    navigate("/login", { replace: true });
-    window.location.reload();
+    window.localStorage.removeItem('accessToken');
+    //로그아웃
+    dispatch(callLogoutAPI());
+
+    alert('로그아웃 완료! 메인화면으로 이동');
+
+    navigate('/login', {replace: true})
+
   };
 
   const onClickMyPage = () => {
@@ -309,19 +316,19 @@ function Header() {
 
     dispatch(
       callRecMessageAPI({
-        memCode: token.memCode,
+        memCode: token?.memCode,
       })
     );
 
     dispatch(
       callPerAlarmDetailAPI({
-        memCode: token.memCode,
+        memCode: token?.memCode,
       })
     );
 
     dispatch(
       callAllAlarmDetailAPI({
-        memCode: token.memCode,
+        memCode: token?.memCode,
       })
     );
 
@@ -351,12 +358,12 @@ function Header() {
     // 메신저 삭제 시 리렌더링 할 수 있게
     dispatch(
       callSendMessageAPI({
-        memCode: token.memCode,
+        memCode: token?.memCode,
       })
     );
     dispatch(
       callRecMessageAPI({
-        memCode: token.memCode,
+        memCode: token?.memCode,
       })
     );
   }, [deleteStatus]);
@@ -441,12 +448,12 @@ function Header() {
 
   useEffect(() => {
     console.log("헤더 토큰 검사---->", token);
-    console.log("헤더 토큰 token.memCode--->", token.memCode);
+    console.log("헤더 토큰 token.memCode--->", token?.memCode);
 
     if (token !== null) {
       dispatch(
         callMemberDetailAPI({
-          memCode: token.memCode,
+          memCode: token?.memCode,
         })
       );
     }
@@ -505,6 +512,8 @@ function Header() {
           id="navbar-collapse"
         >
           <div>
+          <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token?.memName} ({token?.memCode})</span>님</div>
+          </div>  
             <div>
               안녕하세요,{" "}
               <span style={{ color: "#696cff", fontWeight: "bold" }}>
@@ -760,6 +769,7 @@ function Header() {
                         }}
                       >
                         <div>{recMessage.aamSendMessenger?.msgDate}</div>
+                        <div>{recMessage.aamSendMessenger?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -776,7 +786,9 @@ function Header() {
                         </div>
                       </div>
                       <div>{recMessage.aamSendMessenger?.msgContents}</div>
+                      <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
+                        발신자 : {recMessage.aamSendMessenger?.aamMember.memName}
                         발신자 :{" "}
                         {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>

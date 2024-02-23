@@ -23,7 +23,7 @@ const HeaderWrapper = styled.nav`
 const ContentWrapper = styled.nav`
 `
 function Layout(){
-    const navigate = useNavigate ();
+    const navigate = useNavigate();
     const token =  decodeJwt(window.localStorage.getItem('accessToken'));
     useEffect(()=>{
      

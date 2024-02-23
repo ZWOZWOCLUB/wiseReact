@@ -7,6 +7,7 @@ import { POST_REC_MESSAGE } from "../modules/AAMRecNewMsgModule";
 import { GET_SEND_MESSAGE } from "../modules/AAMSendMessageModule";
 import { POST_MESSAGE } from "../modules/AAMSendNewMsgModule";
 
+
 // 개인 알람 조회
 export const callPerAlarmDetailAPI = ({ memCode }) => {
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/perAlarm/${memCode}`;
