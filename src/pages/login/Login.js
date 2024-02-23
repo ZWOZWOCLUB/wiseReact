@@ -63,11 +63,11 @@ function Login() {
   const onClickLogoutHandler = () => {
     window.localStorage.removeItem('accessToken');
     //로그아웃
-    // dispatchEvent(callLogoutAPI());
+    dispatch(callLogoutAPI());
 
     alert('로그아웃 완료! 메인화면으로 이동');
-    navigate('/', {replace: true})
-    // window.location.reload();
+
+    navigate('/login', {replace: true})
 
   }
 
@@ -137,11 +137,11 @@ function Login() {
                 </div>
             </div>
         </div>
-
+{/* 
         <div id="loginControl" className="login-control">
             {isLogin == null || isLogin === undefined ? <BeforeLogin /> : <AfterLogin />}
             
-        </div>
+        </div> */}
         </>
     );
 }

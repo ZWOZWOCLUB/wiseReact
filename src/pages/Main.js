@@ -24,10 +24,10 @@ function Main() {
     const [check, setCheck] = useState(true);
     const dispatch = useDispatch();
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
-
     const [form, setForm] = useState({
-        memCode: token.memCode,
+        memCode: token?.memCode,
         searchDate: '',
+        
     });
 
     const [start, setStart] = useState({
@@ -35,7 +35,7 @@ function Main() {
         attEndTime: '',
         attWorkDate: '',
         attendanceMember: {
-            memCode: token.memCode,
+            memCode: token?.memCode,
         },
         attValue: '0',
     });
@@ -183,9 +183,6 @@ function Main() {
 
         calendar?.on('selectDateTime', handleSelectDateTime);
 
-        return () => {
-            calendar?.off('selectDateTime', handleSelectDateTime);
-        };
         // }, [currentTime]);
     }, []);
 

@@ -95,7 +95,7 @@ function App() {
           <Route path="ScheduleAdd" element={<ScheduleAdd />} />
           <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
         </Route>
-        <Route path="/ScheduleDetails" element={<ScheduleDetails  />} />
+          <Route path="/ScheduleDetails" element={<ScheduleDetails  />} />
 
       </Routes>
     </BrowserRouter>

@@ -235,10 +235,5 @@ function Navbar() {
     </div>
   );
 }
-return(
-  <>
-  {isLogin == null || isLogin === undefined ? <BeforeLogin /> : <AfterLogin />}
-  </>
-);
-}
+
 export default Navbar;
