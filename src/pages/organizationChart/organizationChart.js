@@ -93,10 +93,19 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
 
       //부서 삭제
       const deleteDep = (depCode) => {
-        if(window.confirm("이 부서를 삭제하시겠습니까?")){
+
+        const checkSubDep = orgListData.some(dep => dep.refDepCode === depCode);
+
+        if(checkSubDep){
+          alert("이 부서를 삭제하기 전에, 모든 하위 부서를 먼저 삭제해야 합니다");
+        }else if(window.confirm("이 부서를 삭제하시겠습니까?")){
           dispatch(callOrgDeleteAPI(depCode));
           alert("부서가 삭제되었습니다.");
         }
+        // if(window.confirm("이 부서를 삭제하시겠습니까?")){
+        //   dispatch(callOrgDeleteAPI(depCode));
+        //   alert("부서가 삭제되었습니다.");
+        // }
       };
 
       useEffect(()=>{
@@ -152,6 +161,12 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
 
       const [selectedDep, setSelectedDep] = useState(''); // 현재 선택된 부서 코드
       const [selectedRefDep, setSelectedRefDep] = useState(''); // 현재 선택된 부서의 상위부서 코드
+      const [refSelectorDisable, setRefSelectorDisable] = useState(false); //상위부서 변경 비활성화하기 상태값
+
+      // 초기 렌더링 시 상위부서 선택 드롭다운 비활성화
+      useEffect(() => {
+        setRefSelectorDisable(true);
+      }, []);
 
       // 선택한 부서의 상위부서 표시
       const modifyDepChange = (e) => {
@@ -162,6 +177,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
         if (deptInfo) {
           if (deptInfo.refDepCode !== null) {
             setSelectedRefDep(deptInfo.refDepCode.toString());
+            setRefSelectorDisable(deptInfo.refDepCode === 1); //상위부서코드 1인 경우 드롭다운 선택 비활성화 상태값으로 설정
           } else {
             setSelectedRefDep('null');
           }
@@ -222,22 +238,62 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
     console.log("isSuperAdmin", isSuperAdmin)
     
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-      console.log("헤더 토큰 검사---->", token);
-      console.log("헤더 토큰 token.memCode--->", token.memCode);
+    //   console.log("헤더 토큰 검사---->", token);
+    //   console.log("헤더 토큰 token.memCode--->", token.memCode);
 
-      if(token !== null){
-        dispatch(
-          callMemberDetailAPI({
-            memCode: token.memCode,
-          })
-        )
-      }
-    }, []);
+    //   if(token !== null){
+    //     dispatch(
+    //       callMemberDetailAPI({
+    //         memCode: token.memCode,
+    //       })
+    //     )
+    //   }
+    // }, []);
 
       return(
         <>
+
+
+      {/*모달*/}
+      {showModal && (
+        <div className="modal fade show d-block" aria-modal="true" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title" id="exampleModalLabel1" style={{ fontWeight: "bold" }}>사원 정보</h4>
+                {/* <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeModal}></button> */}
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="nameBasic" className="form-label">사원 번호</label>
+                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memCode}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="nameBasic" className="form-label">사원 이름</label>
+                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memName}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="emailBasic" className="form-label">이메일</label>
+                  <span id="emailBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memEmail}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="contactBasic" className="form-label">연락처</label>
+                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memPhone}</span>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="contactBasic" className="form-label">권한</label>
+                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memRole}</span>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={closeModal}>닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
           {/* <div className={`${coreCSS[`text-light`]} ${coreCSS[`fw-semibold`]}`}>부서</div> */}
           <h4 className='fw-bold py-3 mb-4'>
             <span className='text-muted fw-light'>부서 {'>'}</span> 부서 조회
@@ -308,6 +364,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                         value={selectedRefDep || 'null'}
                         onChange={modifyRefDepChange}
                         required
+                        disabled={refSelectorDisable} //조건부로 드롭다운 비활성화
                       >
                       {/* <option value="null">상위 부서 없음</option> */}
                       {refData
@@ -366,7 +423,14 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
       {Array.isArray(cardData) && cardData.map(({ depCode, depName, memberList, refDepCode }) => (
           <div key={depCode} className="card mb-4">
             <div className="card-header d-flex justify-content-between align-items-center">
-              <h5 style={{ cursor: "pointer" }} onClick={() => membersDisplay(depCode)}>
+            <h5 
+              style={{ cursor: (refDepCode === 1 && depName !== "인사팀") ? "default" : "pointer" }} 
+              onClick={() => {
+                if (refDepCode !== 1 || depName === "인사팀") {
+                  membersDisplay(depCode);
+                }
+              }}
+            >
               {depName} 
               <span style={{ fontSize: 'small' }}>({orgListData.find(dep => dep.depCode === refDepCode)?.depName || '상위 부서 없음'})
               </span>
@@ -377,6 +441,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-primary me-3"
+                    disabled={refDepCode === 1 && depName !== "인사팀"}
                     onClick={() => goEditDepartmentPage(depCode)}
                   >
                     편집
@@ -405,8 +470,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                     checked={currentTeamLeader === member.memCode}
                     onChange={() => teamLeaderChange(member.memCode, depCode)}
                     /> */}
-                                  {isSuperAdmin &&(
-
+                {isSuperAdmin &&(
                     <div className="dropdown">
                       <button type="button" className="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" style={{ marginBottom: '0' }}>
                         <i className="bx bx-dots-vertical-rounded"></i>
@@ -426,7 +490,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                         )}
                       </div>
                     </div>
-                    )}
+                )}
 
                     <span style={{ cursor: "pointer" }} onClick={() => modalMemberClick(member)}>
                     {/* <button
@@ -451,44 +515,7 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
       </div>
 
 
-        {/*모달*/}
-        {showModal && (
-          <div className="modal fade show d-block" aria-modal="true" role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title" id="exampleModalLabel1">사원 정보</h4>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeModal}></button>
-              </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label htmlFor="nameBasic" className="form-label">사원 번호</label>
-                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memCode}</span>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="nameBasic" className="form-label">사원 이름</label>
-                  <span id="nameBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memName}</span>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="emailBasic" className="form-label">이메일</label>
-                  <span id="emailBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memEmail}</span>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="contactBasic" className="form-label">연락처</label>
-                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memPhone}</span>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="contactBasic" className="form-label">권한</label>
-                  <span id="contactBasic" className="form-control-plaintext" style={{ fontWeight: "bold" }}>{selectedMember?.memRole}</span>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={closeModal}>닫기</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        )}
+
 
 
           
