@@ -144,6 +144,7 @@ const rootReducer = combineReducers({
   settingSalaryInsertReducer,
   settingSalaryUpdateReducer,
   settingSalaryDeleteReducer,
+    dataFormatReducer,
 });
 
 export default rootReducer;

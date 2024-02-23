@@ -150,6 +150,7 @@ export const callNoticeInsertAPI = ({ form }) => {
     };
 };
 
+//공지수정
 export const callNoticeUpdateAPI = ({ form }) => {
     console.log('callNoticeUpdateAPI Call');
     console.log('callNoticeUpdateAPI', form.get('notDeleteStatus'));
