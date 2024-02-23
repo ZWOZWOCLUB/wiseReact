@@ -63,15 +63,6 @@ function App() {
                   <Route path='organizationTree' element={<OrganizationTree />} />
                   <Route path='requestapproval' element={<RequestApproval />} />
                   <Route path='ApprovalDetail' element={<ApprovalDetail />} />
-                  <Route path='mp' element={<MyPage />} />
-                  <Route path='mpUpdate' element={<MyPageUpdate />} />
-                  <Route path='mppersonnelInfo' element={<PersonnelInfo />} />
-                  <Route path='mpvacation' element={<MPVacation />} />
-                  <Route path='mpattendance' element={<MPAttendance />} />
-                  <Route path='mpdocument' element={<MPDocument />} />
-                  <Route path='alarm' element={<Alarm />} />
-                  <Route path='message' element={<Message />} />
-                  <Route path='message3' element={<Message3 />} />
                   <Route path='sign' element={<Sign />} />
                   <Route path='organizationChart' element={<Organization />} />
                   <Route path='dataformat' element={<DataFormat />} />
@@ -96,6 +87,8 @@ function App() {
                   <Route path='test' element={<ImageDownloader />} />
                   <Route path='ScheduleAdd' element={<ScheduleAdd />} />
                   <Route path='SchedulePattenAdd' element={<SchedulePattenAdd />} />
+                  {/* <Route path="/chat" element={<Chat />} /> */}
+                  {/* <Route path="/join" element={<Join />} /> */}
               </Route>
               <Route path='/ScheduleDetails' element={<ScheduleDetails />} />
           </Routes>
