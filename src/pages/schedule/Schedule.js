@@ -359,7 +359,7 @@ function Schedule() {
                 />
                 근무패턴등록
               </button>
-              <button
+              {/* <button
                 className={`${payCSS["scheduleAdd"]}`}
                 onClick={scheduleAdd}
               >
@@ -368,7 +368,7 @@ function Schedule() {
                   style={{ paddingBottom: 3 }}
                 />
                 근무일정추가
-              </button>
+              </button> */}
             </div>
             <Calendars
               height="70vh"
