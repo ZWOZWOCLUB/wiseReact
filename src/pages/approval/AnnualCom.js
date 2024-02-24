@@ -12,6 +12,11 @@ function AnnualCom(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    console.log('token', token.memCode);
+    console.log('propsCode', props.data?.approvalComplete[0]?.approval.approvalMember.memCode);
+
+    console.log('머여 ', props.data?.approvalComplete[0]?.approval.approvalMember.memCode === token.memCode);
+
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
@@ -46,7 +51,8 @@ function AnnualCom(props) {
 
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -73,7 +79,6 @@ function AnnualCom(props) {
                     </div>
                 </div>
             ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
-                
                 <div></div>
             ) : (
                 <div>

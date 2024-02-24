@@ -36,11 +36,11 @@ function EditCommute({ appCodes, refCodes }) {
         setForm({
             approval: {
                 payDate: formattedDate,
-                payKind: '퇴직 신청',
+                payKind: '출퇴근 정정',
                 approvalMember: {
                     memCode: token.memCode,
                 },
-                payName: '퇴직 신청',
+                payName: '출퇴근 정정',
             },
             cMember: {
                 memCode: memberCode,
@@ -134,7 +134,7 @@ function EditCommute({ appCodes, refCodes }) {
 
         console.log('time', formData.get('ediTime'));
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (

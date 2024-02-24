@@ -37,11 +37,11 @@ function EditSchedule({ appCodes, refCodes }) {
         setForm({
             approval: {
                 payDate: formattedDate,
-                payKind: '퇴직 신청',
+                payKind: '스케줄 정정',
                 approvalMember: {
                     memCode: token.memCode,
                 },
-                payName: '퇴직 신청',
+                payName: '스케줄 정정',
             },
             cMember: {
                 memCode: memberCode,
@@ -137,7 +137,7 @@ function EditSchedule({ appCodes, refCodes }) {
             })
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (

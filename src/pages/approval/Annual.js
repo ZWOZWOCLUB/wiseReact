@@ -137,7 +137,7 @@ function Annual({ appCodes, refCodes }) {
             console.log('dt')
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (
