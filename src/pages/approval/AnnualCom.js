@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function AnnualCom(props) {
     console.log('props', props);
 
     console.log('ss', props.data?.approvalComplete[0]?.appCode);
-
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -15,7 +16,6 @@ function AnnualCom(props) {
     const year = currentDate.getFullYear();
     const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
     const day = ('0' + currentDate.getDate()).slice(-2);
-
 
     const formattedDate = year + '-' + month + '-' + day;
 
@@ -72,6 +72,9 @@ function AnnualCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>

@@ -6,13 +6,13 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalAnnualAPI } from '../../apis/ApprovalAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils.js';
 import { useNavigate } from 'react-router-dom';
 
-function Annual() {
+function Annual({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const [img, setImg] = useState(null);
@@ -24,7 +24,30 @@ function Annual() {
 
     const formattedDate = year + '-' + month + '-' + day;
 
-    const memberCode = 240130003;
+    const memberCode = appCodes;
+    const refCode = refCodes;
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+
+        const formattedDate = year + '-' + month + '-' + day;
+        setForm({
+            approval: {
+                payDate: formattedDate,
+                payKind: '연차 신청',
+                approvalMember: {
+                    memCode: token.memCode,
+                },
+            },
+            cMember: {
+                memCode: memberCode,
+            },
+            rMember: refCode,
+        });
+    }, [memberCode, refCode]);
 
     const [form, setForm] = useState({
         vacKind: '',
@@ -42,6 +65,7 @@ function Annual() {
         cMember: {
             memCode: memberCode,
         },
+        rMember: refCode,
     });
 
     const dispatch = useDispatch();
@@ -80,9 +104,12 @@ function Annual() {
     };
 
     const approvalComplete = () => {
+        console.log('cMember.memCode', form.cMember.memCode);
+
         console.log('Form:', form);
         console.log('form.vac', form.vacKind);
         console.log('formDate', form.approval.payDate);
+        console.log('form.approval.payKind1', form.approval.payKind);
 
         const formData = new FormData();
 
@@ -95,6 +122,9 @@ function Annual() {
         formData.append('approval.payName', form.approval.payName);
         formData.append('approval.payKind', form.approval.payKind);
         formData.append('cMember.memCode', form.cMember.memCode);
+        form.rMember.forEach((memCode, index) => {
+            formData.append(`rMember[${index}]`, memCode);
+        });
 
         if (form.file) {
             formData.append('approvalFile', form.file);
@@ -111,7 +141,7 @@ function Annual() {
             console.log('dt')
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (

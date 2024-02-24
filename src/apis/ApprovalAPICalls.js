@@ -88,8 +88,8 @@ export const callMemberInfoAPI = ({ memCode }) => {
 };
 
 export const callAprovalAnnualAPI = ({ form }) => {
-    console.log('formCode', form.get('cMember.memCode'));
-    console.log('file', form.get('approvalFile'));
+    console.log('언디?', form);
+    console.log('form.approval.payKind', form.get('approval.payDate'));
 
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/annual`;
 

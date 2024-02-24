@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalRetiredAPI } from '../../apis/ApprovalAPICalls';
 
-function Retiredment() {
+function Retiredment({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const [img, setImg] = useState(null);

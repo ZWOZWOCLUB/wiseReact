@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalScheduleAPI } from '../../apis/ApprovalAPICalls';
 
-function EditSchedule() {
+function EditSchedule({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const [img, setImg] = useState(null);
