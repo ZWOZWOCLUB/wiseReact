@@ -8,6 +8,7 @@ function SettingInfoInsertCertificate({ onUpdate }) {
 
   const [stateIndex, setStateIndex] = useState();
   let [certificateRows, setCertificateRows] = useState([0]);
+  const prevList = useSelector((state) => state.settingCertificateInsertReducer);
 
   const [cerForm, setCerForm] = useState([
     {
@@ -37,6 +38,22 @@ function SettingInfoInsertCertificate({ onUpdate }) {
     });
   };
 
+  useEffect(() => {
+    setCerForm([
+      {
+        memCode: memberCode,
+        cerCode: "",
+        cerName: "",
+        cerKind: "",
+        cerDay: "",
+        cerEndDate: "",
+        cerDescription: "",
+        cerInstitution: "",
+      }
+    ]);
+    setCertificateRows([0])
+  }, [prevList]);
+  
   const handleAddRow = () => {
     console.log("클릭", certificateRows);
     setCertificateRows((prevRows) => [...prevRows, {}]);
@@ -82,6 +99,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 id="inputGroup1"
                 onChange={(e) => onChangeCerHandler(e, index)}
                 name="cerDay"
+              value={cerForm[index]? cerForm[index].cerDay : ''}
+
               />
             </div>
             <div className="inputWrapper">
@@ -91,6 +110,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 aria-describedby="basic-addon11"
                 onChange={(e) => onChangeCerHandler(e, index)}
                 name="cerEndDate"
+              value={cerForm[index]? cerForm[index].cerEndDate : ''}
+
               />
             </div>
             <div className="inputWrapper">
@@ -101,6 +122,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 id="inputGroup2"
                 name="cerName"
                 onChange={(e) => onChangeCerHandler(e, index)}
+              value={cerForm[index]? cerForm[index].cerName : ''}
+
               />
             </div>
             <div className="inputWrapper">
@@ -110,6 +133,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 aria-describedby="basic-addon11"
                 onChange={(e) => onChangeCerHandler(e, index)}
                 name="cerKind"
+              value={cerForm[index]? cerForm[index].cerKind : ''}
+
               />
             </div>
             <div className="inputWrapper">
@@ -120,6 +145,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 id="inputGroup3"
                 onChange={(e) => onChangeCerHandler(e, index)}
                 name="cerInstitution"
+              value={cerForm[index]? cerForm[index].cerInstitution : ''}
+
               />
             </div>
             <div className="inputWrapper">
@@ -130,6 +157,8 @@ function SettingInfoInsertCertificate({ onUpdate }) {
                 id="inputGroup4"
                 onChange={(e) => onChangeCerHandler(e, index)}
                 name="cerDescription"
+              value={cerForm[index]? cerForm[index].cerDescription : ''}
+
               />
             </div>
             <div>

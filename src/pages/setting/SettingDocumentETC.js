@@ -122,7 +122,9 @@ function SettingDocumentETC() {
   // 파일 업로드 버튼 클릭 시 호출되는 함수
   const onClickDocumentFileUpload = (index) => {
     console.log("클릭1", index);
-    docFileInput.current.click();
+    DocumentFileChange(index, {
+      target: { files: docFileInput.current.files },
+    });
   };
 
   // 파일 입력 변경 시 호출되는 함수

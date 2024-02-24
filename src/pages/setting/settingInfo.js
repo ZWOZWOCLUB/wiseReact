@@ -34,6 +34,7 @@ function SettingInfo() {
   const scrollRef = useRef();
   const [insertEvent, setInsertEvent] = useState(false);
 
+
   const prevList = useSelector((state) => state.settingCareerInsertReducer);
   const result = useSelector((state) => state.settingCareerUpdateReducer);
   const result2 = useSelector((state) => state.settingCareerDeleteReducer);
@@ -228,7 +229,8 @@ function SettingInfo() {
     console.log("경력정보수정", updateCrrForm);
     console.log("학위정보수정", updateDegForm);
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    setInsertEvent(!insertEvent);
+    setInsertEvent(0);
+
   };
 
   return (

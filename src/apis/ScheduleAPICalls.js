@@ -1,4 +1,5 @@
 import { POST_SCHEDULE } from "../modules/ScheduleModule";
+import { GET_SCHEDUEL_TREE } from "../modules/ScheduleTreeModule";
 
 //전체 스케줄 조회
 export const callScheduleSearchAPI = ({ yearMonth, memberCode }) => {
@@ -23,6 +24,32 @@ export const callScheduleSearchAPI = ({ yearMonth, memberCode }) => {
     if (result.status === 200) {
       dispatch({ type: POST_SCHEDULE, payload: result.data });
       console.log({ result });
+    }
+  };
+};
+
+//전체 스케줄 조회
+export const callSchaduleTreeAPI = () => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/treeView`;
+
+  return async (dispatch) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    if (result.status === 200) {
+      console.log(
+        "[OrganizationChartAPICalls] callOrganizationTreeAPI SUCCESS"
+      );
+
+      dispatch({ type: GET_SCHEDUEL_TREE, payload: result.data });
+
+      console.log(result);
     }
   };
 };
