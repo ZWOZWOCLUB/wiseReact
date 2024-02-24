@@ -31,6 +31,8 @@ function Schedule() {
   const [events, setEvents] = useState([]);
   const [currentTime1, setCurrentTime1] = useState(new Date());
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
+  const [statuse, setStatuse] = useState(false);
+  const [code, setCode] = useState([]);
 
   console.log("ETCList", ETCList);
 
@@ -72,6 +74,27 @@ function Schedule() {
         });
       });
     });
+
+    if (ETCList) {
+      ETCList.map((e, index) => {
+        updatedEvents.push({
+          id: `event_${e.etcCode}`,
+          calendarId: "cal2",
+          title:
+            e.etcKind === "0"
+              ? "ETC_OFF"
+              : e.etcKind === "1"
+              ? "ETC_DAY"
+              : e.etcKind === "2"
+              ? "ETC_EVENING"
+              : "ETC_NIGTH",
+          start: e.etcDate,
+          end: e.etcDate,
+          category: "allday",
+          backgroundColor: "#696CFF",
+        });
+      });
+    }
 
     setEvents(updatedEvents);
   };
@@ -199,6 +222,24 @@ function Schedule() {
 
   const onClickGetMemCode = (e) => {
     console.log(e);
+    console.log("statuse", statuse);
+    const formattedDate = formatDate(currentDate);
+    setYearMonth(formattedDate);
+    const memberCode = [e.value];
+    let code = 0;
+
+    if (!statuse) {
+      dispatch(
+        callScheduleSearchAPI({
+          yearMonth: formattedDate,
+          memberCode: memberCode,
+        })
+      );
+      updateEvents(currentDate);
+      setStatuse(true);
+    } else if (statuse) {
+      setStatuse(false);
+    }
   };
 
   const searchMethod = (node, searchQuery) =>
@@ -293,7 +334,24 @@ function Schedule() {
               <CheckboxTree
                 nodes={nodes}
                 checked={checked}
+                showExpandAll={true}
+                showNodeTitle={true}
                 expanded={expanded}
+                // onCheck={(checked) => {
+                //   const checkedNodesCount = Object.keys(checked).filter(
+                //     (key) => checked[key]
+                //   ).length;
+
+                //   if (checkedNodesCount > 1) {
+                //     const test = checked.filter((item) => item !== checked[0]);
+
+                //     setChecked(test);
+                //     // setCheck(test);
+                //   } else {
+                //     // setCheck(checked);
+                //     setChecked(checked);
+                //   }
+                // }}
                 onCheck={setChecked}
                 onExpand={setExpanded}
                 onClick={onClickGetMemCode}
@@ -303,8 +361,8 @@ function Schedule() {
                   halfCheck: <span className="bx bx-checkbox-square" />,
                   expandClose: <span className="bx bx-chevron-right" />,
                   expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
+                  expandAll: <span className="bx bx-plus" />,
+                  collapseAll: <span className="bx bx-minus" />,
                   parentClose: <span className="bx bx-folder" />,
                   parentOpen: (
                     <span

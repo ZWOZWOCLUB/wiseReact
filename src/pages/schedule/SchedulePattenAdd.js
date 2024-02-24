@@ -20,10 +20,13 @@ function SchedulePattenAdd() {
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
   const [selectedColor, setSelectedColor] = useState();
+  const [selectedColorStatus, setSelectedColorStatus] = useState();
+
   const result = useSelector((state) => state.scheduleInsertReducer);
+  const result1 = useSelector((state) => state.scheduleUpdateReducer);
 
   const scheduleRef = useRef();
-  
+
   const updateReducer = useSelector(
     (state) => state.schedulePatternUpdateReducer
   );
@@ -56,12 +59,12 @@ function SchedulePattenAdd() {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
-  }, [result]);
+  }, [result, result1, insertReducer, updateReducer, deleteReducer]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
   useEffect(() => {
     dispatch(callSchedulePatternSearchAPI());
-  }, [insertReducer, updateReducer, deleteReducer]);
+  }, [insertReducer, updateReducer, deleteReducer, result, result1]);
 
   console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
 
@@ -102,6 +105,11 @@ function SchedulePattenAdd() {
     setSelectedColor(selectedPattern);
   };
 
+  const getSeletedColorStatus = (selectedColorStatus) => {
+    console.log("선택한 색상 부모컴포넌트에 전달:", selectedColorStatus);
+    setSelectedColor(selectedColorStatus);
+  };
+
   return (
     <div className={`${payCSS["allWrapper"]}`}>
       <div className={`${payCSS["schedule_head"]}`}>
@@ -123,6 +131,7 @@ function SchedulePattenAdd() {
           <SchedulePattenAddPattern
             getSelectedPattern={getSelectedPattern}
             selectedColor={selectedColor}
+            selectedColorStatus={selectedColorStatus}
           />
         </div>
         <div className={`${payCSS["main_content"]}`}>
@@ -130,6 +139,8 @@ function SchedulePattenAdd() {
             <SchedulePattenAddInsertSchedule
               ref={scheduleRef}
               selectedColor={selectedColor}
+              getSeletedColorStatus={getSeletedColorStatus}
+              selectedColorStatus={selectedColorStatus}
             />
             <SchedulePattenAddSchedule selectedColor={selectedColor} />
           </div>

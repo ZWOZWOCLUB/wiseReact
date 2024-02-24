@@ -96,13 +96,13 @@ function App() {
           <Route path="settingInfo" element={<SettingInfo />} />
           <Route path="settingDocument" element={<SettingDocument />} />
           <Route path="settingVacation" element={<SettingVacation />} />
-          <Route path="settingAttendance" element={<SettingAttendance />} />
           <Route path="test" element={<ImageDownloader />} />
           <Route path="ScheduleAdd" element={<ScheduleAdd />} />
           <Route path="SchedulePattenAdd" element={<SchedulePattenAdd />} />
           <Route path="MemberDetails" element={<MemberDetails />} />
         </Route>
         <Route path="/ScheduleDetails" element={<ScheduleDetails />} />
+        <Route path="settingAttendance" element={<SettingAttendance />} />
       </Routes>
     </BrowserRouter>
   );

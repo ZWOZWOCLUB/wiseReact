@@ -84,9 +84,9 @@ function SettingDocumentCareer() {
   };
 
   // 파일 업로드 버튼 클릭 시 호출되는 함수
-  const onClickCareerFileUpload = () => {
+  const onClickCareerFileUpload = (index) => {
     console.log("클릭1");
-    crrFileInput.current.click();
+    CareerFileChange(index, { target: { files: crrFileInput.current.files } });
   };
 
   // 파일 입력 변경 시 호출되는 함수
@@ -96,9 +96,9 @@ function SettingDocumentCareer() {
     if (e.target.files.length > 0) {
       console.log("클릭3");
 
-      const file = e.target.files[0]; // 변경된 파일은 배열의 첫 번째 요소입니다.
+      const file = e.target.files[0];
       setCrrFile(file);
-      CareerFileUpload(file, index); // 파일을 업로드합니다.
+      CareerFileUpload(file, index);
     }
   };
 
