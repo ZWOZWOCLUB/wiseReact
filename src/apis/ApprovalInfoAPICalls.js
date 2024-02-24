@@ -1,4 +1,9 @@
-import { GET_APPROVAL_INFO, GET_APPROVAL_MEMBERR_INFO, GET_ATTENDANCE_TODAY_INFO } from '../modules/ApprovalInfoModule';
+import {
+    GET_APPROVAL_INFO,
+    GET_APPROVAL_MEMBERR_INFO,
+    GET_ATTENDANCE_TODAY_INFO,
+    GET_DEP_MEMBER_INFO,
+} from '../modules/ApprovalInfoModule';
 
 export const callApprovalInfoAPI = ({ payCode }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/approval/${payCode}`;
@@ -58,6 +63,28 @@ export const callAttendanceTodayInfoAPI = ({ form }) => {
 
         if (result.status === 200) {
             dispatch({ type: GET_ATTENDANCE_TODAY_INFO, payload: result.data });
+        }
+    };
+};
+
+export const callDepMemberInfoAPI = ({ depCode }) => {
+    console.log('depCode', depCode?.memCode);
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/depmember/${depCode?.memCode}`;
+
+    return async (dispatch) => {
+        const result = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: '*/*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            },
+        }).then((response) => response.json());
+        console.log('result today', result);
+
+        if (result.status === 200) {
+            dispatch({ type: GET_DEP_MEMBER_INFO, payload: result.data });
         }
     };
 };

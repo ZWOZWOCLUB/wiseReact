@@ -10,6 +10,7 @@ import ReqDocumentCom from './ReqDocumentCom';
 import RetiredmentCom from './RetiredmentCom';
 import EditCommuteCom from './EditCommuteCom';
 import EditScheduleCom from './EditScheduleCom';
+import { callApprovalInfoAPI } from '../../apis/ApprovalInfoAPICalls';
 
 function ApprovalDetail(props) {
     const location = useLocation();
@@ -20,6 +21,33 @@ function ApprovalDetail(props) {
     const approvalComplete = useSelector((state) => state.approvalCompleteReducer);
     const approvalAttachment = useSelector((state) => state.approvalReducer);
     const approvalType = useSelector((state) => state.approvalTypeReducer);
+    const refapproval = useSelector((state) => state.approvalInfoReducer);
+    const refapprovalList = refapproval?.data?.content;
+
+    console.log('approvalComplete', approvalComplete);
+    console.log('approvalAttachment', approvalAttachment);
+    console.log('approvalType', approvalType);
+    console.log('refapproval', refapproval);
+
+    let proxy = '';
+
+    const test = refapproval?.refMember;
+    if (refapproval?.refMember) {
+        console.log('-------123>', test[0]?.memName);
+    }
+
+    if (approvalComplete[0]?.approvalMember?.memRole === 'USER') {
+        proxy = approvalComplete[0]?.approvalMember?.memName;
+        console.log('proxy', proxy);
+    }
+
+    useEffect(() => {
+        dispatch(
+            callApprovalInfoAPI({
+                payCode: payCode,
+            })
+        );
+    }, []);
 
     useEffect(() => {
         if (payCode) {
@@ -32,7 +60,6 @@ function ApprovalDetail(props) {
     }, [payCode]);
 
     useEffect(() => {
-        
         dispatch(
             callApprovalCompleteInfoAPI({
                 payCode: payCode,
@@ -47,10 +74,6 @@ function ApprovalDetail(props) {
             })
         );
     }, []);
-
-    console.log('type', approvalType);
-    console.log('file', approvalAttachment);
-    console.log('com', approvalComplete);
 
     const type = approvalType?.approval?.payKind;
 
@@ -103,26 +126,43 @@ function ApprovalDetail(props) {
                                                                 {approvalType?.approval?.approvalMember?.memName}
                                                             </span>
                                                         </div>
-                                                        <div id='manager-btn'>
-                                                            결재자<button id='tree-btn'>조직도</button>
-                                                        </div>
-                                                        <div className='payment-manager1'>
-                                                            <div>
-                                                                <span>
-                                                                    {approvalComplete[0]?.approvalMember?.memName}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div id='manager-btn'>전결자</div>
-                                                        <div id='payment-manager1'>
-                                                            <span>이동락</span>
-                                                        </div>
-                                                        <div id='manager-btn2'>
-                                                            참조자<button id='tree-btn2'>조직도</button>
-                                                        </div>
+                                                        {proxy ? (
+                                                            <>
+                                                                <div id='manager-btn'>결재자</div>
+                                                                <div id='payment-manager1'>
+                                                                    <div className='refSpan'></div>
+                                                                </div>
+                                                                <div id='manager-btn'>전결자</div>
+                                                                <div id='payment-manager1'>
+                                                                    <div className='refSpan'>{proxy}</div>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <div id='manager-btn'>결재자</div>
+                                                                <div id='payment-manager1'>
+                                                                    <div className='refSpan'>
+                                                                        {approvalComplete[0]?.approvalMember?.memName}
+                                                                    </div>
+                                                                </div>
+                                                                <div id='manager-btn'>전결자</div>
+                                                                <div id='payment-manager1'>
+                                                                    <div className='refSpan'></div>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        <div id='manager-btn2'>참조자</div>
                                                         <div id='payment-manager2'>
-                                                            <span>이동건</span>
-                                                            <span>도우제</span>
+                                                            {Array.isArray(test) && test?.length > 0 ? (
+                                                                test?.map((b) => (
+                                                                    <div className='refSpan' key={b?.memCode}>
+                                                                        {b?.memName}
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <span></span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                     <div className='kind'>{renderSelectedPage(type)}</div>

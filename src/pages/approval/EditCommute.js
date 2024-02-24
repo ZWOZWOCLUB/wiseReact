@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalCommuteAPI } from '../../apis/ApprovalAPICalls';
 
-function EditCommute() {
+function EditCommute({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
 

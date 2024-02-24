@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { callAprovalRequestDocumentAPI } from '../../apis/ApprovalAPICalls';
 
-function ReqDocument() {
+function ReqDocument({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const currentDate = new Date();

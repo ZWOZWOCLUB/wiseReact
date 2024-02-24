@@ -152,7 +152,6 @@ function Approval() {
                                                     <th>반려/승인일</th>
                                                     <th>결재 유형</th>
                                                     <th>상태</th>
-                                                    <th>참조자</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -170,7 +169,6 @@ function Approval() {
                                                             <td>{a.appDate}</td>
                                                             <td>{a.approval?.payKind}</td>
                                                             <td>{a.appState}</td>
-                                                            <td>:</td>
                                                         </tr>
                                                     ))
                                                 ) : (

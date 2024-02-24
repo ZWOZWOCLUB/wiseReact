@@ -28,7 +28,7 @@ import mpUpdateReducer from "./MPUpdateModule";
 import approvalTypeReducer from "./ApprovalTypeModule";
 import approvalCompleteReducer from "./ApprovalCompleteInfoModule";
 import approvalInfoReducer from "./ApprovalInfoModule";
-import notCommentReducer from "./NotCommentModule";
+// import notCommentReducer from "./NotCommentModule";
 import mpProReducer from "./MPProfileModule";
 import mpSignReducer from "./MPSignModule";
 import schedulePatternReducer from "./SchedulePatternModule";
@@ -53,9 +53,9 @@ import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
 import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
-import dataFormatReducer from './DataFormatModule';
+// import dataFormatReducer from './DataFormatModule';
 
-const { combineReducers } = require("redux");
+// const { combineReducers } = require("redux");
 
 // import settingDegreeReducer from './SettingDegreeModule';
 // import settingCertificateReducer from './SettingCertificateModule';
