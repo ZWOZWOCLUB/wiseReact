@@ -12,6 +12,7 @@ function ReqDocumentCom(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -48,7 +49,8 @@ function ReqDocumentCom(props) {
     };
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -74,6 +76,8 @@ function ReqDocumentCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>

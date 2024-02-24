@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function EditCommuteCom(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -35,11 +37,12 @@ function EditCommuteCom(props) {
             })
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -65,6 +68,8 @@ function EditCommuteCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>

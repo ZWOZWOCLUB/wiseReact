@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function EditScheduleCom(props) {
     console.log('props', props);
@@ -10,6 +11,7 @@ function EditScheduleCom(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -39,11 +41,12 @@ function EditScheduleCom(props) {
             })
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -69,6 +72,8 @@ function EditScheduleCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>

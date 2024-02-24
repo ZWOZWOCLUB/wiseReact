@@ -1,178 +1,177 @@
-import { useNavigate, useParams } from "react-router-dom";
-import "./Main.css";
-import { useEffect, useRef, useState, useMemo } from "react";
-import "../@core/css/customMain.css";
-import Calendar from "@toast-ui/react-calendar";
-import { useDispatch, useSelector } from "react-redux";
-import { searchAttendanceDateInfoAPICalls } from "../apis/SearchAttendanceDateInfoAPICalls";
-import { decodeJwt } from "../utils/tokenUtils";
-import { callAttendanceTodayInfoAPI } from "../apis/ApprovalInfoAPICalls";
-import {
-  attendanceEndAPICalls,
-  attendanceStartAPICalls,
-} from "../apis/AttendanceAPICalls";
-import { callScheduleSearchAPI } from "../apis/ScheduleAPICalls";
-import { callScheduleSearETCAPI } from "../apis/ScheduleSearchETCAPICalls";
-import { callScheduleMainSearchAPI } from "../apis/ApprovalTypeInfo";
+import { useNavigate, useParams } from 'react-router-dom';
+import './Main.css';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import '../@core/css/customMain.css';
+import Calendar from '@toast-ui/react-calendar';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchAttendanceDateInfoAPICalls } from '../apis/SearchAttendanceDateInfoAPICalls';
+import { decodeJwt } from '../utils/tokenUtils';
+import { callAttendanceTodayInfoAPI } from '../apis/ApprovalInfoAPICalls';
+import { attendanceEndAPICalls, attendanceStartAPICalls } from '../apis/AttendanceAPICalls';
+import { callScheduleSearchAPI } from '../apis/ScheduleAPICalls';
+import { callScheduleSearETCAPI } from '../apis/ScheduleSearchETCAPICalls';
+import { callScheduleMainSearchAPI } from '../apis/ApprovalTypeInfo';
 
 function Main() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  console.log("-------토큰-------", window.localStorage.getItem("accessToken"));
+    console.log('-------토큰-------', window.localStorage.getItem('accessToken'));
 
-  const [calendar, setCalendar] = useState(null);
-  let [yearMonth, setYearMonth] = useState(null);
-  const [calendarTheme, setCalendarTheme] = useState(null);
-  const calendarRef = useRef();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentTime1, setCurrentTime1] = useState(new Date());
-  const [check, setCheck] = useState({ id: "" });
-  const dispatch = useDispatch();
-  const token = decodeJwt(window.localStorage.getItem("accessToken"));
-  const [events, setEvents] = useState([]);
-  const ETCList = useSelector((state) => state.scheduleSearchETCReducer);
-  const scheduleList = useSelector((state) => state.approvalTypeReducer);
+    const [calendar, setCalendar] = useState(null);
+    let [yearMonth, setYearMonth] = useState(null);
+    const [calendarTheme, setCalendarTheme] = useState(null);
+    const calendarRef = useRef();
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [currentTime1, setCurrentTime1] = useState(new Date());
+    const [check, setCheck] = useState({ id: '' });
+    const dispatch = useDispatch();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const [events, setEvents] = useState([]);
+    const ETCList = useSelector((state) => state.scheduleSearchETCReducer);
+    const scheduleList = useSelector((state) => state.approvalTypeReducer);
 
-  const [form, setForm] = useState({
-    memCode: token.memCode,
-    searchDate: "",
-  });
-
-  const [start, setStart] = useState({
-    attStartTime: "",
-    attEndTime: "",
-    attWorkDate: "",
-    attendanceMember: {
-      memCode: token.memCode,
-    },
-    attValue: "0",
-  });
-
-  const attendance = useSelector((state) => state.approvalInfoReducer);
-
-  useEffect(() => {
-    const year = new Date().getFullYear();
-    const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
-    const day = new Date().getDate().toString().padStart(2, "0");
-
-    form.searchDate = `${year}-${month}-${day}`;
-
-    dispatch(
-      callAttendanceTodayInfoAPI({
-        form,
-      })
-    );
-    // }, [currentTime]);
-  }, []);
-
-  function getMonthDays(year, month) {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const days = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(new Date(year, month, i));
-    }
-    return days;
-  }
-
-  function getWeekDays(daysInMonth, firstDayOfWeek) {
-    const weeks = [];
-    let currentWeek = [];
-    daysInMonth.forEach((day) => {
-      if (day.getDay() === firstDayOfWeek && currentWeek.length > 0) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-      currentWeek.push(day);
+    const [form, setForm] = useState({
+        memCode: token.memCode,
+        searchDate: '',
     });
-    if (currentWeek.length > 0) {
-      weeks.push(currentWeek);
-    }
-    return weeks;
-  }
 
-  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
-
-  const getDayName = (dayCode) => {
-    return dayNames[dayCode];
-  };
-
-  const updateEvents = (date) => {
-    const days = getMonthDays(date.getFullYear(), date.getMonth());
-    const firstDayOfWeek = days[0].getDay();
-    const weeks = getWeekDays(days, firstDayOfWeek);
-    const updatedEvents = [];
-
-    weeks.forEach((week) => {
-      week.forEach((day) => {
-        const matchingSchedules = scheduleList.filter((schedule) => {
-          const startDate = new Date(schedule.schStartDate);
-          const endDate = new Date(schedule.schEndDate);
-          return day >= startDate && day <= endDate;
-        });
-
-        matchingSchedules.forEach((schedule) => {
-          let shouldDisplayEvent = false;
-
-          schedule.patternDayList.forEach((pattern) => {
-            if (pattern.weekDay.dayName === getDayName(day.getDay())) {
-              shouldDisplayEvent = true;
-            }
-          });
-
-          if (shouldDisplayEvent) {
-            updatedEvents.push({
-              id: `event_${day.getDate()}_${schedule.schCode}`,
-              calendarId: "cal1",
-              title: schedule.schType + " ",
-              start: day,
-              end: day,
-              category: "allday",
-              backgroundColor: schedule.schColor,
-            });
-          }
-        });
-      });
-    });
-    console.log("업데이트 이벤트 ");
-
-    setEvents(updatedEvents);
-  };
-
-  useEffect(() => {
-    setCalendar(calendarRef?.current?.getInstance());
-  }, []);
-
-  useEffect(() => {
-    const options = {
-      month: {
-        dayNames: ["일", "월", "화", "수", "목", "금", "토"],
-        gridSelection: {
-          enableDblClick: false,
-          enableClick: true,
+    const [start, setStart] = useState({
+        attStartTime: '',
+        attEndTime: '',
+        attWorkDate: '',
+        attendanceMember: {
+            memCode: token.memCode,
         },
-      },
+        attValue: '0',
+    });
+
+    const attendance = useSelector((state) => state.approvalInfoReducer);
+
+    console.log('attendance', attendance);
+
+    useEffect(() => {
+        const year = new Date().getFullYear();
+        const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        const day = new Date().getDate().toString().padStart(2, '0');
+
+        form.searchDate = `${year}-${month}-${day}`;
+
+        dispatch(
+            callAttendanceTodayInfoAPI({
+                form,
+            })
+        );
+        // }, [currentTime]);
+    }, []);
+
+    function getMonthDays(year, month) {
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const days = [];
+        for (let i = 1; i <= daysInMonth; i++) {
+            days.push(new Date(year, month, i));
+        }
+        return days;
+    }
+
+    function getWeekDays(daysInMonth, firstDayOfWeek) {
+        const weeks = [];
+        let currentWeek = [];
+        daysInMonth.forEach((day) => {
+            if (day.getDay() === firstDayOfWeek && currentWeek.length > 0) {
+                weeks.push(currentWeek);
+                currentWeek = [];
+            }
+            currentWeek.push(day);
+        });
+        if (currentWeek.length > 0) {
+            weeks.push(currentWeek);
+        }
+        return weeks;
+    }
+
+    const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+    const getDayName = (dayCode) => {
+        return dayNames[dayCode];
     };
 
-    if (calendarRef?.current) {
-      const calendar = calendarRef.current.getInstance();
-      calendar.setOptions(options);
-      setCurrentDate(new Date());
+    const updateEvents = (date) => {
+        const days = getMonthDays(date.getFullYear(), date.getMonth());
+        const firstDayOfWeek = days[0].getDay();
+        const weeks = getWeekDays(days, firstDayOfWeek);
+        const updatedEvents = [];
+
+        weeks.forEach((week) => {
+            week.forEach((day) => {
+                const matchingSchedules = scheduleList.filter((schedule) => {
+                    const startDate = new Date(schedule.schStartDate);
+                    const endDate = new Date(schedule.schEndDate);
+                    return day >= startDate && day <= endDate;
+                });
+
+                matchingSchedules.forEach((schedule) => {
+                    let shouldDisplayEvent = false;
+
+                    schedule.patternDayList.forEach((pattern) => {
+                        if (pattern.weekDay.dayName === getDayName(day.getDay())) {
+                            shouldDisplayEvent = true;
+                        }
+                    });
+
+                    if (shouldDisplayEvent) {
+                        updatedEvents.push({
+                            id: `event_${day.getDate()}_${schedule.schCode}`,
+                            calendarId: 'cal1',
+                            title: schedule.schType + ' ',
+                            start: day,
+                            end: day,
+                            category: 'allday',
+                            backgroundColor: schedule.schColor,
+                        });
+                    }
+                });
+            });
+        });
+        console.log('업데이트 이벤트 ');
+
+        setEvents(updatedEvents);
+    };
+
+    useEffect(() => {
+        setCalendar(calendarRef?.current?.getInstance());
+    }, []);
+
+    useEffect(() => {
+        const options = {
+            month: {
+                dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                gridSelection: {
+                    enableDblClick: false,
+                    enableClick: true,
+                },
+            },
+        };
+
+        if (calendarRef?.current) {
+            const calendar = calendarRef.current.getInstance();
+            calendar.setOptions(options);
+            setCurrentDate(new Date());
+        }
+    }, []);
+
+    function setYearMonthFunction(calendar) {
+        const Date = calendar.getDate();
+        const Year = Date.getFullYear();
+        const Month = (Date.getMonth() + 1).toString().padStart(2, '0');
+        setYearMonth(Year + '년' + Month + '월');
     }
-  }, []);
 
-  function setYearMonthFunction(calendar) {
-    const Date = calendar.getDate();
-    const Year = Date.getFullYear();
-    const Month = (Date.getMonth() + 1).toString().padStart(2, "0");
-    setYearMonth(Year + "년" + Month + "월");
-  }
+    useEffect(() => {
+        const formattedDate = formatDate2(currentDate);
 
-  useEffect(() => {
-    const formattedDate = formatDate2(currentDate);
-
-    setYearMonth(formattedDate);
-  }, [currentDate]);
+        setYearMonth(formattedDate);
+    }, [currentDate]);
 
     const onClickToday = () => {
         calendar.today();
@@ -197,151 +196,146 @@ function Main() {
         updateEvents(calendar.getDate());
     };
 
-  const onClickNext = () => {
-    calendar.next();
-    setYearMonthFunction(calendar);
-    updateEvents(calendar.getDate());
-  };
-
-  useEffect(() => {
-    dispatch(callScheduleSearETCAPI());
-  }, [dispatch]);
-
-  useEffect(() => {
-    updateEvents(currentDate);
-  }, [scheduleList, currentDate]);
-
-  useEffect(() => {
-    const formattedDate = formatDatee(currentDate);
-    setYearMonth(formattedDate);
-    form.searchDate = formattedDate;
-    dispatch(callScheduleMainSearchAPI({ yearMonth: form }));
-    console.log("yearMonth : ", yearMonth);
-    console.log("formattedDate : ", formattedDate);
-
-    updateEvents(currentDate);
-  }, []);
-
-  function formatDatee(date) {
-    const month2 = (date.getMonth() + 1).toString().padStart(2, "0");
-    return `${date.getFullYear()}-${month2}`;
-  }
-
-  function formatDate(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
-  }
-
-  function formatDate2(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    return `${year}년 ${month}월`;
-  }
-
-  function formatDate3(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  function formatDate4(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}년 ${month}월 ${day}일`;
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    const year = new Date().getFullYear();
-    const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
-    const day = new Date().getDate().toString().padStart(2, "0");
-
-    form.searchDate = `${year}-${month}-${day}`;
-
-    dispatch(
-      searchAttendanceDateInfoAPICalls({
-        form,
-      })
-    );
-  }, []);
-
-  useEffect(() => {
-    const calendar = calendarRef?.current?.getInstance();
-
-    const handleSelectDateTime = async (eventInfo) => {
-      const year = new Date(eventInfo.start).getFullYear();
-      const month = (new Date(eventInfo.start).getMonth() + 1)
-        .toString()
-        .padStart(2, "0");
-      const day = new Date(eventInfo.start)
-        .getDate()
-        .toString()
-        .padStart(2, "0");
-
-      calendar.clearGridSelections();
-
-      form.searchDate = `${year}-${month}-${day}`;
-
-      setCurrentTime1(eventInfo.start);
-
-      await dispatch(
-        searchAttendanceDateInfoAPICalls({
-          form,
-        })
-      );
+    const onClickNext = () => {
+        calendar.next();
+        setYearMonthFunction(calendar);
+        updateEvents(calendar.getDate());
     };
 
-    calendar?.on("selectDateTime", handleSelectDateTime);
-  }, []);
+    useEffect(() => {
+        dispatch(callScheduleSearETCAPI());
+    }, [dispatch]);
 
-  const attendanceList = useSelector((state) => state.attendanceInfoReducer);
+    useEffect(() => {
+        updateEvents(currentDate);
+    }, [scheduleList, currentDate]);
 
-  function clickStart() {
-    const year = new Date().getFullYear();
-    const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
-    const day = new Date().getDate().toString().padStart(2, "0");
-    const hours = new Date().getHours().toString().padStart(2, "0");
-    const minutes = new Date().getMinutes().toString().padStart(2, "0");
-    const seconds = new Date().getSeconds().toString().padStart(2, "0");
+    useEffect(() => {
+        const formattedDate = formatDatee(currentDate);
+        setYearMonth(formattedDate);
+        form.searchDate = formattedDate;
+        dispatch(callScheduleMainSearchAPI({ yearMonth: form }));
+        console.log('yearMonth : ', yearMonth);
+        console.log('formattedDate : ', formattedDate);
 
-    start.attWorkDate = `${year}-${month}-${day}`;
-    start.attStartTime = `${hours}:${minutes}:${seconds}`;
+        updateEvents(currentDate);
+    }, []);
 
-    dispatch(
-      attendanceStartAPICalls({
-        start,
-      })
-    );
-    window.location.reload();
-  }
+    function formatDatee(date) {
+        const month2 = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${date.getFullYear()}-${month2}`;
+    }
 
-  function clickEnd() {
-    const hours = new Date().getHours().toString().padStart(2, "0");
-    const minutes = new Date().getMinutes().toString().padStart(2, "0");
-    const seconds = new Date().getSeconds().toString().padStart(2, "0");
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+    }
 
-    start.attEndTime = `${hours}:${minutes}:${seconds}`;
-    start.attValue = 1;
+    function formatDate2(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${year}년 ${month}월`;
+    }
 
-    dispatch(
-      attendanceEndAPICalls({
-        start,
-      })
-    );
+    function formatDate3(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatDate4(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일`;
+    }
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    useEffect(() => {
+        const year = new Date().getFullYear();
+        const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        const day = new Date().getDate().toString().padStart(2, '0');
+
+        form.searchDate = `${year}-${month}-${day}`;
+
+        dispatch(
+            searchAttendanceDateInfoAPICalls({
+                form,
+            })
+        );
+    }, []);
+
+    useEffect(() => {
+        const calendar = calendarRef?.current?.getInstance();
+
+        const handleSelectDateTime = async (eventInfo) => {
+            const year = new Date(eventInfo.start).getFullYear();
+            const month = (new Date(eventInfo.start).getMonth() + 1).toString().padStart(2, '0');
+            const day = new Date(eventInfo.start).getDate().toString().padStart(2, '0');
+
+            calendar.clearGridSelections();
+
+            form.searchDate = `${year}-${month}-${day}`;
+
+            setCurrentTime1(eventInfo.start);
+
+            await dispatch(
+                searchAttendanceDateInfoAPICalls({
+                    form,
+                })
+            );
+        };
+
+        calendar?.on('selectDateTime', handleSelectDateTime);
+    }, []);
+
+    const attendanceList = useSelector((state) => state.attendanceInfoReducer);
+
+    function clickStart() {
+        const year = new Date().getFullYear();
+        const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
+        const day = new Date().getDate().toString().padStart(2, '0');
+        const hours = new Date().getHours().toString().padStart(2, '0');
+        const minutes = new Date().getMinutes().toString().padStart(2, '0');
+        const seconds = new Date().getSeconds().toString().padStart(2, '0');
+
+        start.attWorkDate = `${year}-${month}-${day}`;
+        start.attStartTime = `${hours}:${minutes}:${seconds}`;
+
+        dispatch(
+            attendanceStartAPICalls({
+                start,
+            })
+        );
+        window.location.reload();
+    }
+
+    function clickEnd() {
+        const hours = new Date().getHours().toString().padStart(2, '0');
+        const minutes = new Date().getMinutes().toString().padStart(2, '0');
+        const seconds = new Date().getSeconds().toString().padStart(2, '0');
+
+        start.attEndTime = `${hours}:${minutes}:${seconds}`;
+        start.attValue = 1;
+
+        dispatch(
+            attendanceEndAPICalls({
+                start,
+            })
+        );
 
         window.location.reload();
     }
@@ -434,7 +428,11 @@ function Main() {
                                         <button
                                             className='btn btn-secondary btn-lg'
                                             onClick={clickEnd}
-                                            disabled={attendance?.attValue === 0 || attendance?.attValue === 2}
+                                            disabled={
+                                                attendance?.attValue === 0 ||
+                                                attendance?.attValue === 2 ||
+                                                attendance?.startTime === null
+                                            }
                                             style={
                                                 attendance?.attValue === 0 || attendance?.attValue === 2
                                                     ? {
