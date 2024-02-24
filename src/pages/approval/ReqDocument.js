@@ -7,7 +7,7 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { callAprovalRequestDocumentAPI } from '../../apis/ApprovalAPICalls';
@@ -22,7 +22,8 @@ function ReqDocument({ appCodes, refCodes }) {
 
     const formattedDate = year + '-' + month + '-' + day;
 
-    const memberCode = 240130003;
+    const memberCode = appCodes;
+    const refCode = refCodes;
 
     const [form, setForm] = useState({
         reqKind: '',
@@ -39,6 +40,29 @@ function ReqDocument({ appCodes, refCodes }) {
             memCode: memberCode,
         },
     });
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+
+        const formattedDate = year + '-' + month + '-' + day;
+        setForm({
+            approval: {
+                payDate: formattedDate,
+                payKind: '서류 요청',
+                approvalMember: {
+                    memCode: token.memCode,
+                },
+                payName: '서류 요청',
+            },
+            cMember: {
+                memCode: memberCode,
+            },
+            rMember: refCode,
+        });
+    }, [memberCode, refCode]);
 
     const dispatch = useDispatch();
 
@@ -60,6 +84,9 @@ function ReqDocument({ appCodes, refCodes }) {
         formData.append('approval.payName', form.approval.payName);
         formData.append('approval.payKind', form.approval.payKind);
         formData.append('cMember.memCode', form.cMember.memCode);
+        form.rMember.forEach((memCode, index) => {
+            formData.append(`rMember[${index}]`, memCode);
+        });
 
         dispatch(
             callAprovalRequestDocumentAPI({
@@ -72,7 +99,7 @@ function ReqDocument({ appCodes, refCodes }) {
     };
     return (
         <>
-            <div id='req-document-div'>
+            <div id='req-document-div1'>
                 <span style={{ paddingLeft: '50px' }}>종류</span>
                 <span style={{ color: 'red', marginRight: '40px' }}>*</span>
                 <select name='reqKind' id='req-document' onChange={onChange}>
@@ -91,7 +118,7 @@ function ReqDocument({ appCodes, refCodes }) {
                     paddingLeft: '50px',
                 }}
             >
-                <label htmlFor='basic-default-message'>
+                <label htmlFor='basic-default-message' style={{ paddingBottom: '100px' }}>
                     내용<span style={{ color: 'red' }}>*</span>
                 </label>
                 <textarea

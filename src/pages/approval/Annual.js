@@ -130,10 +130,6 @@ function Annual({ appCodes, refCodes }) {
             formData.append('approvalFile', form.file);
         }
 
-        console.log('file', form.file);
-
-        console.log('FormData123:', formData.get('cMember.memCode'));
-
         dispatch(
             callAprovalAnnualAPI({
                 form: formData,
@@ -141,7 +137,7 @@ function Annual({ appCodes, refCodes }) {
             console.log('dt')
         );
 
-        // navigate(`/main/Approval`, { replace: false });
+        navigate(`/main/Approval`, { replace: false });
     };
 
     return (
