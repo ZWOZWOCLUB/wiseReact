@@ -196,7 +196,7 @@ function RequestApproval() {
                                                         </div>
                                                         <div id='manager-btn'>전결자</div>
                                                         <div id='payment-manager1'>
-                                                            <div className='refSpan'>이동락</div>
+                                                            <div className='refSpan'></div>
                                                         </div>
                                                         <div id='manager-btn2'>
                                                             참조자
