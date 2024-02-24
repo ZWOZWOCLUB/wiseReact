@@ -618,7 +618,7 @@ function Header() {
               />
             </li>
           </ul>
-        </div>
+        
 
         {/* 알림함 시작 */}
         <div
