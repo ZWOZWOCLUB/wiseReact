@@ -184,7 +184,7 @@ export const callAprovalRetiredAPI = ({ form }) => {
 export const callAprovalCompleteAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/complete`;
 
-    console.log('---------> ', JSON.stringify(form));
+    console.log('---------> ', form);
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {

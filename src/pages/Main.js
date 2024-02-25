@@ -104,9 +104,9 @@ function Main() {
 
         weeks.forEach((week) => {
             week.forEach((day) => {
-                const matchingSchedules = scheduleList.filter((schedule) => {
-                    const startDate = new Date(schedule.schStartDate);
-                    const endDate = new Date(schedule.schEndDate);
+                const matchingSchedules = scheduleList?.filter((schedule) => {
+                    const startDate = new Date(schedule?.schStartDate);
+                    const endDate = new Date(schedule?.schEndDate);
                     return day >= startDate && day <= endDate;
                 });
 
