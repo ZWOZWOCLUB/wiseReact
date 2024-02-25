@@ -58,6 +58,21 @@ const SchedulePattenAddPattern = (props) => {
 
   console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
 
+  useEffect(() => {
+    if (updateState) {
+      setPattern((prevForm) => ({
+        ...prevForm,
+        wokCode: patternList[sendIndex].wokCode,
+        wokStartTime: patternList[sendIndex].wokStartTime,
+        wokRestTime: patternList[sendIndex].wokRestTime,
+        wokEndTime: patternList[sendIndex].wokEndTime,
+        wokDeleteState: patternList[sendIndex].wokDeleteState,
+        wokColor: patternList[sendIndex].wokColor,
+        wokType: patternList[sendIndex].wokType,
+      }));
+    }
+  }, [updateState]);
+
   const onClickInsertPattern = () => {
     console.log("클릭");
 
@@ -82,30 +97,7 @@ const SchedulePattenAddPattern = (props) => {
   };
 
   const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    setPattern((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
-    console.log("pattern", pattern);
-  };
-
-  useEffect(() => {
-    if (updateState) {
-      setPattern((prevForm) => ({
-        ...prevForm,
-        wokCode: patternList[sendIndex].wokCode,
-        wokStartTime: patternList[sendIndex].wokStartTime,
-        wokRestTime: patternList[sendIndex].wokRestTime,
-        wokEndTime: patternList[sendIndex].wokEndTime,
-        wokDeleteState: patternList[sendIndex].wokDeleteState,
-        wokColor: patternList[sendIndex].wokColor,
-        wokType: patternList[sendIndex].wokType,
-      }));
-    }
-  }, [updateState]);
-
-  const onChangeHandler2 = (e) => {
+    setUpdateState(true);
     const { name, value } = e.target;
     setPattern((prevForm) => ({
       ...prevForm,
@@ -147,16 +139,9 @@ const SchedulePattenAddPattern = (props) => {
   };
 
   const onClickSendIndex = (index) => {
-    console.log("1111111111111111111", index);
-    setPattern({
-      wokCode: patternList[index].wokCode,
-      wokStartTime: patternList[index].wokStartTime,
-      wokRestTime: patternList[index].wokRestTime,
-      wokEndTime: patternList[index].wokEndTime,
-      wokDeleteState: patternList[index].wokDeleteState,
-      wokColor: patternList[index].wokColor,
-      wokType: patternList[index].wokType,
-    });
+    setSendIndex(index);
+    const wokCode = patternList[index].wokCode;
+    setSendWokCode(wokCode);
   };
 
   const onClickUpdatePattern = () => {
@@ -180,8 +165,9 @@ const SchedulePattenAddPattern = (props) => {
     <div className={`${payCSS["contentLeft"]}`}>
       <div
         className={`${payCSS["newSchedule"]}`}
+        id="newGroup"
         data-bs-toggle="modal"
-        data-bs-target="#newPatternGroup"
+        data-bs-target="#modalCenter1"
       >
         <strong>
           <i
@@ -227,7 +213,7 @@ const SchedulePattenAddPattern = (props) => {
                         <span
                           className="dropdown-item"
                           data-bs-toggle="modal"
-                          data-bs-target="#patternUpdate"
+                          data-bs-target="#modalCenter1"
                           onClick={() => onClickSendIndex(index)}
                         >
                           수정
@@ -249,10 +235,9 @@ const SchedulePattenAddPattern = (props) => {
             </div>
           ))
         : ""}
-      {/* patternInsert */}
       <div
         className="modal fade"
-        id="newPatternGroup"
+        id="modalCenter1"
         tabIndex="-1"
         aria-hidden="true"
         style={{ display: showModal ? "block" : "none" }}
@@ -274,7 +259,13 @@ const SchedulePattenAddPattern = (props) => {
                   className={`${payCSS["inputColor"]}`}
                   name="wokColor"
                   onChange={onChangeHandler}
-                  value={pattern.wokColor}
+                  value={
+                    !updateState
+                      ? sendWokCode > 0
+                        ? patternList[sendIndex].wokColor
+                        : pattern.wokColor
+                      : pattern.wokColor
+                  }
                 />
                 <label className={`${payCSS["colorLabel"]}`}>
                   편성명
@@ -283,7 +274,13 @@ const SchedulePattenAddPattern = (props) => {
                     className={`${payCSS["patternName"]}`}
                     name="wokType"
                     onChange={onChangeHandler}
-                    value={pattern.wokType}
+                    value={
+                      !updateState
+                        ? sendWokCode > 0
+                          ? patternList[sendIndex].wokType
+                          : pattern.wokType
+                        : pattern.wokType
+                    }
                   />
                 </label>
               </div>
@@ -297,7 +294,11 @@ const SchedulePattenAddPattern = (props) => {
                     name="wokStartTime"
                     className={`${payCSS["timeInput"]}`}
                     onChange={onChangeHandler}
-                    value={pattern.wokStartTime}
+                    value={
+                      sendWokCode > 0
+                        ? patternList[sendIndex].wokStartTime
+                        : pattern.wokType
+                    }
                   />
                 </div>
                 <div className={`${payCSS["modalMiddleWrapper"]}`}>
@@ -310,7 +311,13 @@ const SchedulePattenAddPattern = (props) => {
                     className={`${payCSS["timeInput"]}`}
                     onChange={onChangeHandler}
                     name="wokEndTime"
-                    value={pattern.wokEndTime}
+                    value={
+                      !updateState
+                        ? sendWokCode > 0
+                          ? patternList[sendIndex].wokEndTime
+                          : pattern.wokEndTime
+                        : pattern.wokEndTime
+                    }
                   />
                 </div>
                 <div className={`${payCSS["modalMiddleWrapper"]}`}>
@@ -319,7 +326,13 @@ const SchedulePattenAddPattern = (props) => {
                     className={`${payCSS["timeSelect"]}`}
                     onChange={onChangeHandler}
                     name="wokRestTime"
-                    value={pattern.wokRestTime}
+                    value={
+                      !updateState
+                        ? sendWokCode > 0
+                          ? patternList[sendIndex].wokRestTime
+                          : pattern.wokRestTime
+                        : pattern.wokRestTime
+                    }
                   >
                     <option value="">--선택--</option>
                     <option value="00:30:00">00:30</option>
@@ -333,122 +346,27 @@ const SchedulePattenAddPattern = (props) => {
               </div>
               <hr />
               <div className={`${payCSS["modalBtnWrapper"]}`}>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                  style={{ marginRight: "1rem" }}
-                  onClick={onClickInsertPattern}
-                >
-                  저장
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  data-bs-dismiss="modal"
-                  onClick={onClickCloseModal}
-                >
-                  닫기
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* patternUpdate */}
-      <div
-        className="modal fade"
-        id="patternUpdate"
-        tabIndex="-1"
-        aria-hidden="true"
-        style={{ display: showModal ? "block" : "none" }}
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className={`${payCSS["modalTotalWrapper"]}`}>
-              <h5 className={`${payCSS["modalTopText"]}`}>
-                <i
-                  className="bx bxs-briefcase"
-                  style={{ fontSize: "2rem", marginRight: "1rem" }}
-                ></i>
-                새 근무편성
-              </h5>
-              <hr />
-              <div className={`${payCSS["modalTopWrapper"]}`}>
-                <input
-                  type="color"
-                  className={`${payCSS["inputColor"]}`}
-                  name="wokColor"
-                  onChange={onChangeHandler2}
-                  value={pattern.wokColor}
-                />
-                <label className={`${payCSS["colorLabel"]}`}>
-                  편성명
-                  <input
-                    type="text"
-                    className={`${payCSS["patternName"]}`}
-                    name="wokType"
-                    onChange={onChangeHandler2}
-                    value={pattern.wokType}
-                  />
-                </label>
-              </div>
-              <div className={`${payCSS["modalMiddleTotalWrapper"]}`}>
-                <div className={`${payCSS["modalMiddleWrapper"]}`}>
-                  <div className={`${payCSS["modalMiddleText"]}`}>
-                    근무시작시간
-                  </div>
-                  <input
-                    type="time"
-                    name="wokStartTime"
-                    className={`${payCSS["timeInput"]}`}
-                    onChange={onChangeHandler2}
-                    value={pattern.wokStartTime}
-                  />
-                </div>
-                <div className={`${payCSS["modalMiddleWrapper"]}`}>
-                  <div className={`${payCSS["modalMiddleText"]}`}>
-                    근무종료시간
-                  </div>
-                  <div id="timepicker-wrapper"></div>
-                  <input
-                    type="time"
-                    className={`${payCSS["timeInput"]}`}
-                    onChange={onChangeHandler2}
-                    name="wokEndTime"
-                    value={pattern.wokEndTime}
-                  />
-                </div>
-                <div className={`${payCSS["modalMiddleWrapper"]}`}>
-                  <div className={`${payCSS["modalMiddleText"]}`}>휴게시간</div>
-                  <select
-                    className={`${payCSS["timeSelect"]}`}
-                    onChange={onChangeHandler2}
-                    name="wokRestTime"
-                    value={pattern.wokRestTime}
+                {sendWokCode > 0 ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    data-bs-dismiss="modal"
+                    style={{ marginRight: "1rem" }}
+                    onClick={onClickUpdatePattern}
                   >
-                    <option value="">--선택--</option>
-                    <option value="00:30:00">00:30</option>
-                    <option value="01:00:00">01:00</option>
-                    <option value="01:30:00">01:30</option>
-                    <option value="02:00:00">02:00</option>
-                    <option value="02:30:00">02:30</option>
-                    <option value="03:00:00">03:00</option>
-                  </select>
-                </div>
-              </div>
-              <hr />
-              <div className={`${payCSS["modalBtnWrapper"]}`}>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                  style={{ marginRight: "1rem" }}
-                  onClick={onClickUpdatePattern}
-                >
-                  수정
-                </button>
-
+                    수정
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    data-bs-dismiss="modal"
+                    style={{ marginRight: "1rem" }}
+                    onClick={onClickInsertPattern}
+                  >
+                    저장
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn btn-outline-secondary"

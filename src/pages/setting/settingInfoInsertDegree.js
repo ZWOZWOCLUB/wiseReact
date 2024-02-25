@@ -6,6 +6,7 @@ function SettingInfoInsertDegree({ onUpdate }) {
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
   const [degreeRows, setDegreeRows] = useState([0]);
+  const prevList = useSelector((state) => state.settingDegreeInsertReducer);
 
   const [degForm, setDegForm] = useState([
     {
@@ -19,6 +20,22 @@ function SettingInfoInsertDegree({ onUpdate }) {
       degAdmissions: "",
     },
   ]);
+
+  useEffect(() => {
+    setDegForm([
+      {
+        memCode: memberCode,
+        degCode: "",
+        degKind: "",
+        degMajor: "",
+        degName: "",
+        degGraduation: "",
+        degState: "",
+        degAdmissions: "",
+      }
+    ]);
+    setDegreeRows([0])
+  }, [prevList]);
 
   const onChangeDegHandler = (e, index) => {
     const { name, value } = e.target;
@@ -54,7 +71,7 @@ function SettingInfoInsertDegree({ onUpdate }) {
   };
 
   const handleRemoveRow = (index) => {
-    setDegreeRows((prevRows) => prevRows.filter((row, i) => i !== index));
+    degreeRows.splice(index, 1);
     setDegForm((prevForms) => prevForms.filter((form, i) => i !== index));
   };
 
@@ -76,6 +93,8 @@ function SettingInfoInsertDegree({ onUpdate }) {
               }}
               onChange={(e) => onChangeDegHandler(e, index)}
               name="degAdmissions"
+              value={degForm[index]? degForm[index].degAdmissions : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -84,6 +103,8 @@ function SettingInfoInsertDegree({ onUpdate }) {
               type="date"
               onChange={(e) => onChangeDegHandler(e, index)}
               name="degGraduation"
+              value={degForm[index]? degForm[index].degGraduation : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -93,6 +114,8 @@ function SettingInfoInsertDegree({ onUpdate }) {
               aria-describedby="basic-addon11"
               onChange={(e) => onChangeDegHandler(e, index)}
               name="degName"
+              value={degForm[index]? degForm[index].degName : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -102,6 +125,8 @@ function SettingInfoInsertDegree({ onUpdate }) {
               onChange={(e) => onChangeDegHandler(e, index)}
               aria-describedby="basic-addon11"
               name="degMajor"
+              value={degForm[index]? degForm[index].degMajor : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -111,10 +136,14 @@ function SettingInfoInsertDegree({ onUpdate }) {
               aria-describedby="basic-addon11"
               onChange={(e) => onChangeDegHandler(e, index)}
               name="degKind"
+              value={degForm[index]? degForm[index].degKind : ''}
+
             />
           </div>
           <div className="inputWrapper">
-            <select name="degState" className="form-select1">
+            <select name="degState" className="form-select1"
+              value={degForm[index]? degForm[index].degState : ''}
+              >
               <option value={0}>선택</option>
               <option value="졸업">졸업</option>
               <option value="수료">수료</option>

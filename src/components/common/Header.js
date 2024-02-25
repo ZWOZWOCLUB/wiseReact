@@ -194,7 +194,6 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              
               memCode: token?.memCode,
               memCode: token.memCode,
             })
@@ -296,14 +295,13 @@ function Header() {
   };
 
   const onClickLogout = () => {
-    window.localStorage.removeItem('accessToken');
+    window.localStorage.removeItem("accessToken");
     //로그아웃
     dispatch(callLogoutAPI());
 
-    alert('로그아웃 완료! 메인화면으로 이동');
+    alert("로그아웃 완료! 메인화면으로 이동");
 
-    navigate('/login', {replace: true})
-
+    navigate("/login", { replace: true });
   };
 
   const onClickMyPage = () => {
@@ -371,14 +369,13 @@ function Header() {
   useEffect(() => {
     console.log("------ sendNewMsgReducer useEffect 호출 -----");
 
-    if(sendNewMsgReducer.status === 200){
-      alert('메세지가 성공적으로 등록되었습니다.');
+    if (sendNewMsgReducer.status === 200) {
+      alert("메세지가 성공적으로 등록되었습니다.");
 
       setChecked([]);
       setNames("");
       setCodes("");
       setInputValue("");
-
     }
   }, [sendNewMsgReducer]);
 
@@ -512,113 +509,111 @@ function Header() {
           id="navbar-collapse"
         >
           <div>
-          <div>안녕하세요, <span style={{ color: "#696cff", fontWeight: "bold" }}>{token?.memName} ({token?.memCode})</span>님</div>
-          </div>  
             <div>
               안녕하세요,{" "}
               <span style={{ color: "#696cff", fontWeight: "bold" }}>
-                {token.memName} ({token.memCode})
+                {token?.memName} ({token?.memCode})
               </span>
               님
             </div>
           </div>
-          <ul
-            className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
-              coreCSS[`align-items-center`]
-            } ${coreCSS[`ms-auto`]}`}
+        </div>
+        <ul
+          className={`${coreCSS[`navbar-nav`]} ${coreCSS[`flex-row`]} ${
+            coreCSS[`align-items-center`]
+          } ${coreCSS[`ms-auto`]}`}
+        >
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
+            style={{
+              alignSelf: "center",
+              height: 24,
+              borderLeft: "1px solid #d3d3d3",
+            }}
+          />
+
+          {/* 공지사항? */}
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
+              coreCSS[`me-3`]
+            }`}
+            style={notice ? { color: "#697a8d" } : { color: "red" }}
           >
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
-              style={{
-                alignSelf: "center",
-                height: 24,
-                borderLeft: "1px solid #d3d3d3",
-              }}
+            <i
+              className="bx bxs-megaphone"
+              style={{ fontSize: 27 }}
+              onClick={onClickNotice}
             />
+          </li>
 
-            {/* 공지사항? */}
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
-                coreCSS[`me-3`]
-              }`}
-              style={notice ? { color: "#697a8d" } : { color: "red" }}
-            >
-              <i
-                className="bx bxs-megaphone"
-                style={{ fontSize: 27 }}
-                onClick={onClickNotice}
-              />
-            </li>
-
-            {/* 알림함 */}
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
-                coreCSS[`me-3`]
-              }`}
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasEnd1"
-              onClick={() => handleTabChange("sended")}
-              style={alarm ? { color: "#697a8d" } : { color: "red" }}
-            >
-              <i
-                className="bx bxs-bell"
-                style={{ fontSize: 27 }}
-                onClick={onClickAlarm}
-              />
-            </li>
-
-            {/* 쪽지함 */}
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
-                coreCSS[`me-3`]
-              }`}
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasEnd"
-              onClick={() => handleTabChange1("sended")}
-              style={check ? { color: "#697a8d" } : { color: "red" }}
-            >
-              <i
-                className="bx bxs-envelope"
-                style={{ fontSize: 27 }}
-                onClick={handleColorChange}
-              />
-            </li>
-
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
-              style={{
-                alignSelf: "center",
-                height: 24,
-                borderLeft: "1px solid #d3d3d3",
-              }}
+          {/* 알림함 */}
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
+              coreCSS[`me-3`]
+            }`}
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasEnd1"
+            onClick={() => handleTabChange("sended")}
+            style={alarm ? { color: "#697a8d" } : { color: "red" }}
+          >
+            <i
+              className="bx bxs-bell"
+              style={{ fontSize: 27 }}
+              onClick={onClickAlarm}
             />
-            <li
-              className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
-                coreCSS[`me-3`]
-              }`}
-              onClick={onClickMyPage}
-            >
-              <i
-                class="bx bxs-user-rectangle"
-                style={{ fontSize: 29, color: "#696cff" }}
-              />
-              {/* <img
+          </li>
+
+          {/* 쪽지함 */}
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
+              coreCSS[`me-3`]
+            }`}
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasEnd"
+            onClick={() => handleTabChange1("sended")}
+            style={check ? { color: "#697a8d" } : { color: "red" }}
+          >
+            <i
+              className="bx bxs-envelope"
+              style={{ fontSize: 27 }}
+              onClick={handleColorChange}
+            />
+          </li>
+
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
+            style={{
+              alignSelf: "center",
+              height: 24,
+              borderLeft: "1px solid #d3d3d3",
+            }}
+          />
+          <li
+            className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
+              coreCSS[`me-3`]
+            }`}
+            onClick={onClickMyPage}
+          >
+            <i
+              class="bx bxs-user-rectangle"
+              style={{ fontSize: 29, color: "#696cff" }}
+            />
+            {/* <img
                 src={profile}
                 alt=""
                 className={`${coreCSS[`w-px-30`]} ${coreCSS[`h-auto`]} ${
                   coreCSS[`rounded-circle`]
                 }`}
               /> */}
-            </li>
-            <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
-              <i
-                className="bx bx-log-out"
-                style={{ fontSize: 28 }}
-                onClick={onClickLogout}
-              />
-            </li>
-          </ul>
-        
+          </li>
+          <li className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]}`}>
+            <i
+              className="bx bx-log-out"
+              style={{ fontSize: 28 }}
+              onClick={onClickLogout}
+            />
+          </li>
+        </ul>
 
         {/* 알림함 시작 */}
         <div
@@ -788,7 +783,8 @@ function Header() {
                       <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
-                        발신자 : {recMessage.aamSendMessenger?.aamMember.memName}
+                        발신자 :{" "}
+                        {recMessage.aamSendMessenger?.aamMember.memName}
                         발신자 :{" "}
                         {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>
@@ -838,21 +834,20 @@ function Header() {
                         </div>
                       </div>
                       <div>{sendMessage?.msgContents}</div>
-                      <div>수신자 :
-
-                      {sendMessage.aamRecMessenger &&
-                  sendMessage.aamRecMessenger.map((aamRecMessenger) => ( 
-                    <span>
-                        {sendMessage.aamRecMessenger !== null
-                          ? ' '+aamRecMessenger.aamMember.memName
-                          : ""}
-                          {aamRecMessenger.recMsgCheckStatus === "N"
-                          ? "(안읽음)"
-                          : "(읽음)"}
-                      </span>
-                   ))}
-                        </div>
-               
+                      <div>
+                        수신자 :
+                        {sendMessage.aamRecMessenger &&
+                          sendMessage.aamRecMessenger.map((aamRecMessenger) => (
+                            <span>
+                              {sendMessage.aamRecMessenger !== null
+                                ? " " + aamRecMessenger.aamMember.memName
+                                : ""}
+                              {aamRecMessenger.recMsgCheckStatus === "N"
+                                ? "(안읽음)"
+                                : "(읽음)"}
+                            </span>
+                          ))}
+                      </div>
                     </div>
                   ))}
               </div>
@@ -931,6 +926,7 @@ function Header() {
       {/* 모달 화면 시작 */}
       <div
         className="modal fade"
+        a
         id="modalCenter"
         tabindex="-1"
         aria-hidden="true"
@@ -955,8 +951,8 @@ function Header() {
                 data-bs-dismiss="modal"
                 aria-label="Close"
                 style={{
-                  marginTop: '20px',
-                  marginRight: '20px',
+                  marginTop: "20px",
+                  marginRight: "20px",
                 }}
               ></button>
             </div>

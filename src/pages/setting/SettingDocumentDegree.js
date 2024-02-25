@@ -89,7 +89,9 @@ function SettingDocumentDegree() {
   // 파일 업로드 버튼 클릭 시 호출되는 함수
   const onClickDegreeFileUpload = (index) => {
     console.log("클릭1");
-    degFileInput.current.click();
+    DegreeFileChange(index, {
+      target: { files: degFileInput.current.files },
+    });
   };
 
   // 파일 입력 변경 시 호출되는 함수

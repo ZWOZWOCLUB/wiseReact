@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import payCSS from "../../@core/css/pay.module.css";
 import { callScheduleSearcValueAPI } from "../../apis/ScheduleSearchValueAPICalls";
 import { callScheduleSearcValueNotAPI } from "../../apis/ScheduleSearchValueNotAPICalls";
+import { callScheduleSearETCAPI } from "../../apis/ScheduleSearchETCAPICalls";
 
 function ScheduleDetails() {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,13 @@ function ScheduleDetails() {
   const notContain = useSelector(
     (state) => state.scheduleSearchValueNotReducer
   );
+  const ETCList = useSelector((state) => state.scheduleSearchETCReducer);
+
+  console.log("ETCList", ETCList);
+  console.log("getDate", getDate);
+  useEffect(() => {
+    dispatch(callScheduleSearETCAPI());
+  }, [dispatch]);
 
   console.log(dayOfWeek);
   console.log(notContain);
@@ -95,6 +103,49 @@ function ScheduleDetails() {
                 </div>
               ))
             : ""}
+
+          <div className={payCSS.detailWrapper}>
+            <div
+              className={payCSS.timeNameWrapper}
+              style={{ background: "#696cff" }}
+            >
+              <div className={payCSS.schType}>ETC PATTERN</div>
+              <div className={payCSS.wokTime}></div>
+            </div>
+            <div className={payCSS.leftWrapperName}>
+              {ETCList
+                ? ETCList.map((s, index) =>
+                    s.etcDate === getDate.slice(0, -2) ? (
+                      <div
+                        key={index}
+                        style={{ textAlign: "center", fontWeight: "bolder" }}
+                      >
+                        <div>
+                          {s.etcKind === "0"
+                            ? "OFF"
+                            : s.etcKind === "1"
+                            ? "DAY"
+                            : s.etcKind === "2"
+                            ? "EVENING"
+                            : "NIGHT"}
+                        </div>
+                        <div className={payCSS.notContainName}>
+                          <div className={payCSS.depName}>
+                            {s.member.departmentDTO.depName}
+                          </div>
+                          <b>
+                            {s.member.memName} {s.member.positionDTO.posName}
+                          </b>
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  )
+                : ""}
+            </div>
+          </div>
+
           <div className={payCSS.detailWrapper}>
             <div
               className={payCSS.timeNameWrapper}
