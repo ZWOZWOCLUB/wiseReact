@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../@core/css/customApproval.css';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ function ReqDocumentCom(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -26,6 +27,15 @@ function ReqDocumentCom(props) {
         appComment: '',
         appDate: formattedDate,
     });
+
+    useEffect(() => {
+        setForm({
+            appCode: props?.data?.approvalComplete[0]?.appCode,
+            appState: '',
+            appComment: '',
+            appDate: formattedDate,
+        });
+    }, []);
 
     const onChange = (e) => {
         setForm({
@@ -48,7 +58,8 @@ function ReqDocumentCom(props) {
     };
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -74,6 +85,8 @@ function ReqDocumentCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>

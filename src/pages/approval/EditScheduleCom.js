@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function EditScheduleCom(props) {
     console.log('props', props);
@@ -10,6 +11,7 @@ function EditScheduleCom(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -25,6 +27,44 @@ function EditScheduleCom(props) {
         appDate: formattedDate,
     });
 
+    const onClickDocFileDown = async (index) => {
+        try {
+            const urlPath =
+                'http://localhost:8001' +
+                '/memberFiles/' +
+                props.data.approvalType.approval.approvalMember.memCode +
+                '/' +
+                props.data.approvalAttachment[0]?.payAtcName +
+                '.png';
+
+            console.log(urlPath);
+
+            const response = await fetch(urlPath); //파일 경로 지정
+            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            console.log('blobs', blob);
+            const url = window.URL.createObjectURL(blob); //다운로드 링크 생성
+            const link = document.createElement('a'); //a 요소 생성
+            link.href = url; //url을 a태그의 href속성으로 지정
+            link.setAttribute('download', props.data.approvalAttachment[0]?.payAtcOriginalName); //다운로드 파일 이름 지정
+            document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            link.click(); //생성한 링크 클릭해서 파일 다운
+            link.parentNode.removeChild(link); //a요소 제거
+        } catch (error) {
+            console.log('등록된 파일이 없습니다');
+        }
+    };
+
+    useEffect(() => {
+        setForm({
+            appCode: props?.data?.approvalComplete[0]?.appCode,
+            appState: '',
+            appComment: '',
+            appDate: formattedDate,
+        });
+    }, []);
+
+    console.log('schForm', form);
+
     const onChange = (e) => {
         setForm({
             ...form,
@@ -39,11 +79,12 @@ function EditScheduleCom(props) {
             })
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' ? (
+            {props.data?.approvalComplete[0]?.appState === '대기' &&
+            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -69,6 +110,8 @@ function EditScheduleCom(props) {
                         ></textarea>
                     </div>
                 </div>
+            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
+                <div></div>
             ) : (
                 <div>
                     <div id='appDiv'>
@@ -91,7 +134,14 @@ function EditScheduleCom(props) {
                     <div>정정일</div>
                     <div>근무일</div>
                     <div>근무 시간</div>
-                    <div style={{ marginTop: '115px' }}>내용</div>
+                    <div style={{ marginTop: '105%' }}>내용</div>
+                    {props.data.approvalAttachment[0] ? (
+                        <>
+                            <div style={{ marginTop: '70%' }}>첨부파일</div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <div id='margintop'>
                     <div>{props.data.approvalComplete[0]?.approval?.payName}</div>
@@ -105,6 +155,21 @@ function EditScheduleCom(props) {
                     <div name='vacContents' id='document-contents2'>
                         {props.data.approvalType?.eshContents}
                     </div>
+                    {props.data.approvalAttachment[0] &&
+                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+                        <>
+                            <div style={{ marginTop: '30px' }}>
+                                {props.data.approvalAttachment[0]?.payAtcOriginalName}
+                                <i
+                                    className='bx bx-down-arrow-alt'
+                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
+                                    onClick={() => onClickDocFileDown()}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
         </>

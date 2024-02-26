@@ -13,6 +13,8 @@ import {
     GET_APPROVAL_ATTACHMENT_INFO,
 } from '../modules/ApprovalModule.js';
 
+
+
 export const callReceiveApprovalAPI = ({ form }) => {
     console.log('Rform', form);
 
@@ -88,8 +90,8 @@ export const callMemberInfoAPI = ({ memCode }) => {
 };
 
 export const callAprovalAnnualAPI = ({ form }) => {
-    console.log('formCode', form.get('cMember.memCode'));
-    console.log('file', form.get('approvalFile'));
+    console.log('언디?', form);
+    console.log('form.approval.payKind', form.get('approval.payDate'));
 
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/annual`;
 
@@ -184,7 +186,7 @@ export const callAprovalRetiredAPI = ({ form }) => {
 export const callAprovalCompleteAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/complete`;
 
-    console.log('---------> ', JSON.stringify(form));
+    console.log('---------> ', form);
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {

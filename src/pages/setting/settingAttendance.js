@@ -32,6 +32,7 @@ function SettingAttendance() {
   const resources = Array.isArray(resultList)
     ? resultList.map((list) => ({
         id: list.memCode,
+        building: list.department.depName,
         title: list.memName,
       }))
     : [];
@@ -42,12 +43,16 @@ function SettingAttendance() {
           if (list.attendances) {
             return {
               resourceId: list.memCode,
-              title: list.attendances.attStatus,
+              title:
+                list.attendances.attStatus === "출근"
+                  ? ""
+                  : list.attendances.attStatus,
               start: `${list.attendances.attWorkDate}T${list.attendances.attStartTime}`,
               end: `${list.attendances.attWorkDate}T${list.attendances.attEndTime}`,
+              color: list.scheduleDTO.schColor,
             };
           }
-          return null; // 또는 다른 기본값을 반환할 수 있습니다.
+          return null;
         })
         .filter((event) => event !== null)
     : [];
@@ -66,8 +71,8 @@ function SettingAttendance() {
   return (
     <div>
       <FullCalendar
-        slotMinWidth={150}
-        resourceMinWidth={150}
+        slotMinWidth={160}
+        resourceMinWidth={180}
         locale={"kr"}
         plugins={[dayGridPlugin, timeGridPlugin, resourceTimelinePlugin]}
         initialView="resourceTimelineMonth"
@@ -76,6 +81,7 @@ function SettingAttendance() {
         datesSet={handleDatesSet}
         resourceAreaWidth="8rem"
         resourceAreaHeaderContent="이름"
+        resourceGroupField="building"
       />
     </div>
   );

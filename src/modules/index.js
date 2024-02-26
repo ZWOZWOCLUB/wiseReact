@@ -17,11 +17,7 @@ import mpDocReducer from "./MPDocModule";
 import mpATTReducer from "./MPATTModule";
 import mpVacHisReducer from "./MPVacHisModule";
 import mpVacReducer from "./MPVacModule";
-import settingCareerReducer from "./SettingCareearModule";
-import settingDegreeReducer from "./SettingDegreeModule";
-import settingCertificateReducer from "./SettingCertificateModule";
 import settingInfoSearchReducer from "./SettingInfoSearchModuel";
-import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
@@ -58,7 +54,23 @@ import schedulePatternDayReducer from "./SchedulePatternDayModule";
 import scheduleUpdateReducer from "./ScheduleUpdateModule";
 import settingSearchMemListReducer from "./SettingSearchMemListModule";
 import scheduleInsertReducer from "./ScheduleInsertModule";
-import settingSalaryReducer from "./SettingSalaryModule";
+import settingCareerInsertReducer from "./SettingCareearInsertModule";
+import settingCareerUpdateReducer from "./SettingCareearUpdateModule";
+import settingCareerDeleteReducer from "./SettingCareearDeleteModule";
+import settingDegreeInsertReducer from "./SettingDegreeInsertModule";
+import settingDegreeUpdateReducer from "./SettingDegreeUpdateModule";
+import settingDegreeDeleteReducer from "./SettingDegreeDeleteModule";
+import settingCertificateInsertReducer from "./SettingCertificateInsertModule";
+import settingCertificateUpdateReducer from "./SettingCertificateUpdateModule";
+import settingCertificateDeleteReducer from "./SettingCertificateDeleteModule";
+import settingDocumentInsertReducer from "./SettingDocumentInsertModule";
+import settingDocumentUpdateReducer from "./SettingDocumentUpdateModule";
+import settingDocumentDeleteReducer from "./SettingDocumentDeleteModule";
+import settingSalaryInsertReducer from "./SettingSalaryInsertModule";
+import settingSalaryUpdateReducer from "./SettingSalaryUpdateModule";
+import settingSalaryDeleteReducer from "./SettingSalaryDeleteModule";
+import scheduleTreeReducer from "./ScheduleTreeModule";
+import searchProxyReducer from "./SearchProxyModule";
 import organizationEditSearchReducer from "./OrganizationEditSearchModule";
 const { combineReducers } = require("redux");
 
@@ -85,11 +97,7 @@ const rootReducer = combineReducers({
   mpATTReducer,
   mpVacHisReducer,
   mpVacReducer,
-  settingCareerReducer,
-  settingDegreeReducer,
-  settingCertificateReducer,
   settingInfoSearchReducer,
-  settingDocumentReducer,
   noticeReducer,
   notCommentReducer,
   schedulePatternDayReducer,
@@ -124,7 +132,23 @@ const rootReducer = combineReducers({
   scheduleUpdateReducer,
   scheduleInsertReducer,
   settingSearchMemListReducer,
-  settingSalaryReducer,
+  settingCareerInsertReducer,
+  settingCareerUpdateReducer,
+  settingCareerDeleteReducer,
+  settingDegreeInsertReducer,
+  settingDegreeUpdateReducer,
+  settingDegreeDeleteReducer,
+  settingCertificateInsertReducer,
+  settingCertificateUpdateReducer,
+  settingCertificateDeleteReducer,
+  settingDocumentInsertReducer,
+  settingDocumentUpdateReducer,
+  settingDocumentDeleteReducer,
+  settingSalaryInsertReducer,
+  settingSalaryUpdateReducer,
+  settingSalaryDeleteReducer,
+  scheduleTreeReducer,
+  searchProxyReducer,
   dataFormatReducer,
   organizationEditSearchReducer,
 });

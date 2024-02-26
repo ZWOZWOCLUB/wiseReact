@@ -1,11 +1,15 @@
 import {
   POST_SALAY,
-  PUT_SALAY,
-  DELETE_SALAY,
   POST_SALAY_FILE,
+} from "../modules/SettingSalaryInsertModule";
+import {
+  PUT_SALAY,
   PUT_SALAY_FILE,
+} from "../modules/SettingSalaryUpdateModule";
+import {
+  DELETE_SALAY,
   DELETE_SALAY_FILE,
-} from "../modules/SettingSalaryModule";
+} from "../modules/SettingSalaryDeleteModule";
 
 //통장정보 등록
 export const callSalaryInsertAPI = ({ salForm }) => {
@@ -23,10 +27,7 @@ export const callSalaryInsertAPI = ({ salForm }) => {
       body: JSON.stringify(salForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callSalaryInsertAPI] callSalaryInsertAPI RESULT : ",
-      result
-    );
+    console.log("[callSalaryInsertAPI] callSalaryInsertAPI RESULT : ", result);
 
     dispatch({ type: POST_SALAY, payload: result });
     console.log({ result });
@@ -49,10 +50,7 @@ export const callSalaryUpdateAPI = ({ salForm }) => {
       body: JSON.stringify(salForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callSalaryUpdateAPI] callSalaryUpdateAPI RESULT : ",
-      result
-    );
+    console.log("[callSalaryUpdateAPI] callSalaryUpdateAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: PUT_SALAY, payload: result });
       console.log({ result });
@@ -73,13 +71,10 @@ export const callSalaryDeleteAPI = ({ salCode }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify({salCode}),
+      body: JSON.stringify({ salCode }),
     }).then((response) => response.json());
 
-    console.log(
-      "[callSalaryDeleteAPI] callSalaryDeleteAPI RESULT : ",
-      result
-    );
+    console.log("[callSalaryDeleteAPI] callSalaryDeleteAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: DELETE_SALAY, payload: result });
       console.log({ result });

@@ -11,6 +11,7 @@ import { callScheduleSearETCAPI } from "../../apis/ScheduleSearchETCAPICalls";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import "tui-calendar/dist/tui-calendar.css";
 import ScheduleDetails from "./ScheduleDetails";
+import { decodeJwt } from "../../utils/tokenUtils";
 
 function Schedule() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function Schedule() {
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const [events, setEvents] = useState([]);
   const [currentTime1, setCurrentTime1] = useState(new Date());
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
+  const [statuse, setStatuse] = useState(false);
+  const [code, setCode] = useState([]);
 
   console.log("ETCList", ETCList);
 
@@ -70,6 +74,27 @@ function Schedule() {
         });
       });
     });
+
+    if (ETCList) {
+      ETCList.map((e, index) => {
+        updatedEvents.push({
+          id: `event_${e.etcCode}`,
+          calendarId: "cal2",
+          title:
+            e.etcKind === "0"
+              ? "ETC_OFF"
+              : e.etcKind === "1"
+              ? "ETC_DAY"
+              : e.etcKind === "2"
+              ? "ETC_EVENING"
+              : "ETC_NIGTH",
+          start: e.etcDate,
+          end: e.etcDate,
+          category: "allday",
+          backgroundColor: "#696CFF",
+        });
+      });
+    }
 
     setEvents(updatedEvents);
   };
@@ -197,6 +222,24 @@ function Schedule() {
 
   const onClickGetMemCode = (e) => {
     console.log(e);
+    console.log("statuse", statuse);
+    const formattedDate = formatDate(currentDate);
+    setYearMonth(formattedDate);
+    const memberCode = [e.value];
+    let code = 0;
+
+    if (!statuse) {
+      dispatch(
+        callScheduleSearchAPI({
+          yearMonth: formattedDate,
+          memberCode: memberCode,
+        })
+      );
+      updateEvents(currentDate);
+      setStatuse(true);
+    } else if (statuse) {
+      setStatuse(false);
+    }
   };
 
   const searchMethod = (node, searchQuery) =>
@@ -291,7 +334,24 @@ function Schedule() {
               <CheckboxTree
                 nodes={nodes}
                 checked={checked}
+                showExpandAll={true}
+                showNodeTitle={true}
                 expanded={expanded}
+                // onCheck={(checked) => {
+                //   const checkedNodesCount = Object.keys(checked).filter(
+                //     (key) => checked[key]
+                //   ).length;
+
+                //   if (checkedNodesCount > 1) {
+                //     const test = checked.filter((item) => item !== checked[0]);
+
+                //     setChecked(test);
+                //     // setCheck(test);
+                //   } else {
+                //     // setCheck(checked);
+                //     setChecked(checked);
+                //   }
+                // }}
                 onCheck={setChecked}
                 onExpand={setExpanded}
                 onClick={onClickGetMemCode}
@@ -301,8 +361,8 @@ function Schedule() {
                   halfCheck: <span className="bx bx-checkbox-square" />,
                   expandClose: <span className="bx bx-chevron-right" />,
                   expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
+                  expandAll: <span className="bx bx-plus" />,
+                  collapseAll: <span className="bx bx-minus" />,
                   parentClose: <span className="bx bx-folder" />,
                   parentOpen: (
                     <span
@@ -319,7 +379,8 @@ function Schedule() {
           </div>
           <div className={`${payCSS["Wrapper"]}`} style={{ flex: 3 }}>
             <div className={`${payCSS["btnWrapper"]}`}>
-              <input
+              <div className={`${payCSS["form-control44"]}`}></div>
+              {/* <input
                 type="text"
                 className={`${payCSS["form-control4"]}`}
                 placeholder="검색어를 입력하세요"
@@ -332,7 +393,7 @@ function Schedule() {
                 id="basic-addon-search31"
               >
                 <i className="bx bx-search" />
-              </span>
+              </span> */}
               <button className={`${payCSS["prev"]}`} onClick={onClickPrev}>
                 <i
                   className="bx bx-chevron-left"
@@ -349,17 +410,23 @@ function Schedule() {
               <button className={`${payCSS["today"]}`} onClick={onClickToday}>
                 Today
               </button>
+              <div className={`${payCSS["scheduleAdd"]}`}>&nbsp;</div>
               <button
                 className={`${payCSS["patternInscription"]}`}
                 onClick={schedulePattenAdd}
+                style={{
+                  display: token.memRole === "USER" ? "none" : "",
+                }}
               >
                 <span
                   className="bx bx-calendar-edit"
-                  style={{ paddingBottom: 3 }}
+                  style={{
+                    paddingBottom: 3,
+                  }}
                 />
                 근무패턴등록
               </button>
-              <button
+              {/* <button
                 className={`${payCSS["scheduleAdd"]}`}
                 onClick={scheduleAdd}
               >
@@ -368,7 +435,7 @@ function Schedule() {
                   style={{ paddingBottom: 3 }}
                 />
                 근무일정추가
-              </button>
+              </button> */}
             </div>
             <Calendars
               height="70vh"

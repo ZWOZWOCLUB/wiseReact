@@ -10,9 +10,6 @@ import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
 import { callSchedulePatternSearchAPI } from "../../apis/SchedulePatternAPICalls";
-import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
-import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
-import { callScheduleWorkPatterDeleteAPI } from "../../apis/SchedulePatternDeleteAPICalls";
 import SchedulePattenAddPattern from "./SchedulePattenAddPattern.js";
 import SchedulePattenAddSchedule from "./SchedulePattenAddSchedule.js";
 import SchedulePattenAddInsertSchedule from "./SchedulePattenAddInsertSchedule.js";
@@ -23,7 +20,10 @@ function SchedulePattenAdd() {
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, serInsertRows] = useState([]);
   const [selectedColor, setSelectedColor] = useState();
+  const [selectedColorStatus, setSelectedColorStatus] = useState();
+
   const result = useSelector((state) => state.scheduleInsertReducer);
+  const result1 = useSelector((state) => state.scheduleUpdateReducer);
 
   const scheduleRef = useRef();
 
@@ -59,12 +59,13 @@ function SchedulePattenAdd() {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
-  }, [result]);
+    setSelectedColor("");
+  }, [result, result1, insertReducer, updateReducer, deleteReducer]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
   useEffect(() => {
     dispatch(callSchedulePatternSearchAPI());
-  }, [insertReducer, updateReducer, deleteReducer]);
+  }, [insertReducer, updateReducer, deleteReducer, result, result1]);
 
   console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
 
@@ -105,6 +106,11 @@ function SchedulePattenAdd() {
     setSelectedColor(selectedPattern);
   };
 
+  const getSeletedColorStatus = (selectedColorStatus) => {
+    console.log("선택한 색상 부모컴포넌트에 전달:", selectedColorStatus);
+    setSelectedColor(selectedColorStatus);
+  };
+
   return (
     <div className={`${payCSS["allWrapper"]}`}>
       <div className={`${payCSS["schedule_head"]}`}>
@@ -123,9 +129,11 @@ function SchedulePattenAdd() {
       </div>
       <div className={`${payCSS["schedule_content"]}`}>
         <div className={`${payCSS["side_schedule"]}`} id="side_schedule">
+          <SchedulePattenAddInsertSchedule />
           <SchedulePattenAddPattern
             getSelectedPattern={getSelectedPattern}
             selectedColor={selectedColor}
+            selectedColorStatus={selectedColorStatus}
           />
         </div>
         <div className={`${payCSS["main_content"]}`}>
@@ -133,6 +141,8 @@ function SchedulePattenAdd() {
             <SchedulePattenAddInsertSchedule
               ref={scheduleRef}
               selectedColor={selectedColor}
+              getSeletedColorStatus={getSeletedColorStatus}
+              selectedColorStatus={selectedColorStatus}
             />
             <SchedulePattenAddSchedule selectedColor={selectedColor} />
           </div>

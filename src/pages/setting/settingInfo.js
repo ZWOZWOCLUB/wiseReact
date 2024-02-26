@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { callInfoSearchAPI } from "../../apis/SettingInfoSearchAPICalls";
 import SettingInfoSalary from "./settingInfoSalary";
@@ -31,8 +31,26 @@ function SettingInfo() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
-  const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const scrollRef = useRef();
+  const [insertEvent, setInsertEvent] = useState(false);
 
+
+  const prevList = useSelector((state) => state.settingCareerInsertReducer);
+  const result = useSelector((state) => state.settingCareerUpdateReducer);
+  const result2 = useSelector((state) => state.settingCareerDeleteReducer);
+  const result3 = useSelector((state) => state.settingDegreeInsertReducer);
+  const result4 = useSelector((state) => state.settingDegreeUpdateReducer);
+  const result5 = useSelector((state) => state.settingDegreeDeleteReducer);
+  const result6 = useSelector((state) => state.settingCertificateInsertReducer);
+  const result7 = useSelector((state) => state.settingCertificateUpdateReducer);
+  const result8 = useSelector((state) => state.settingCertificateDeleteReducer);
+  const result9 = useSelector((state) => state.settingDocumentInsertReducer);
+  const result10 = useSelector((state) => state.settingDocumentUpdateReducer);
+  const result11 = useSelector((state) => state.settingDocumentDeleteReducer);
+  const result12 = useSelector((state) => state.settingSalaryInsertReducer);
+  const result13 = useSelector((state) => state.settingSalaryUpdateReducer);
+  const result14 = useSelector((state) => state.settingSalaryDeleteReducer);
+  console.log("prevList", prevList);
   useEffect(
     (memCode) => {
       dispatch(
@@ -41,7 +59,23 @@ function SettingInfo() {
         })
       );
     },
-    [memberCode]
+    [
+      memberCode,
+      result,
+      result2,
+      result3,
+      result4,
+      result5,
+      result6,
+      result7,
+      result8,
+      result9,
+      result10,
+      result11,
+      result12,
+      result13,
+      result14,
+    ]
   );
   console.log(prevList);
 
@@ -174,6 +208,7 @@ function SettingInfo() {
   const DegreeInsert = (data) => {
     setInsertDegForm(data);
   };
+
   const onClickSave = () => {
     if (salForm.salCode) {
       dispatch(callSalaryUpdateAPI({ salForm }));
@@ -193,12 +228,14 @@ function SettingInfo() {
     console.log("자격정보수정", updateCerForm);
     console.log("경력정보수정", updateCrrForm);
     console.log("학위정보수정", updateDegForm);
-    window.location.reload();
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    setInsertEvent(0);
+
   };
 
   return (
     <>
-      <h4 className="fw-bold py-3 mb-4">
+      <h4 className="fw-bold py-3 mb-4" ref={(e) => (scrollRef.current = e)}>
         <span className="text-muted fw-light">설정 &gt;</span> 직원 등록
       </h4>
       <div className="col-xxl">
@@ -244,11 +281,20 @@ function SettingInfo() {
             <div className="card-body">
               <SettingInfoSalary onUpdate={SalaryUpdate} />
               <SettingInfoUpdateCertificate onUpdate={CertificateUpdate} />
-              <SettingInfoInsertCertificate onUpdate={CertificateInsert} />
+              <SettingInfoInsertCertificate
+                onUpdate={CertificateInsert}
+                insertEvent={insertEvent}
+              />
               <SettingInfoUpdateCareer onUpdate={CareerUpdate} />
-              <SettingInfoInsertCareer onUpdate={CareerInsert} />
+              <SettingInfoInsertCareer
+                onUpdate={CareerInsert}
+                insertEvent={insertEvent}
+              />
               <SettingInfoDegree onUpdate={DegreeUpdate} />
-              <SettingInfoInsertDegree onUpdate={DegreeInsert} />
+              <SettingInfoInsertDegree
+                onUpdate={DegreeInsert}
+                insertEvent={insertEvent}
+              />
               <br />
               <div className="btn-wrapper">
                 <button

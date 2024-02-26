@@ -109,7 +109,7 @@ function SignatureCanvas() {
     document.body.removeChild(link);
   };
   const onClickBack = () => {
-    navigate("/mp",{replace:true})
+    navigate("/main/mp",{replace:true})
   };
 
   return (

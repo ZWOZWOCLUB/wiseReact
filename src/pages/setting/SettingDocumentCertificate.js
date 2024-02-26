@@ -15,7 +15,9 @@ function SettingDocumentCertificate() {
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingCertificateReducer);
+  const result = useSelector((state) => state.settingCertificateInsertReducer);
+  const result2 = useSelector((state) => state.settingCertificateUpdateReducer);
+  const result3 = useSelector((state) => state.settingCertificateDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -25,14 +27,19 @@ function SettingDocumentCertificate() {
         })
       );
     },
-    [result]
+    [result, result3, result3]
   );
 
   const onClickCerFileDown = async (index) => {
     try {
-      const response = await fetch(
-        prevList.certificateFileDTO[index].cerAtcPath
-      ); //파일 경로 지정
+      const urlPath =
+        "http://localhost:8001" +
+        "/certificate/" +
+        prevList.certificateFileDTO[index].cerAtcConvertName;
+      console.log(urlPath);
+
+      const response = await fetch(urlPath); //파일 경로 지정
+
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
       const link = document.createElement("a"); //a 요소 생성
@@ -53,7 +60,10 @@ function SettingDocumentCertificate() {
     console.log(cerFile, "cerFile555555555555555");
     console.log(index, "index555555555555555");
 
-    if (prevList.certificateFileDTO && prevList.certificateFileDTO.length > 0) {
+    if (
+      prevList.certificateFileDTO &&
+      prevList.certificateFileDTO[index].cerAtcCode === index
+    ) {
       console.log(index, "여기44444444444555555555555555");
 
       const formData = new FormData();
@@ -87,7 +97,9 @@ function SettingDocumentCertificate() {
   // 파일 업로드 버튼 클릭 시 호출되는 함수
   const onClickCertificateFileUpload = (index) => {
     console.log("클릭1");
-    cerFileInput.current.click();
+    CertificateFileChange(index, {
+      target: { files: cerFileInput.current.files },
+    });
   };
 
   // 파일 입력 변경 시 호출되는 함수
@@ -97,9 +109,9 @@ function SettingDocumentCertificate() {
     if (e.target.files.length > 0) {
       console.log("클릭3");
 
-      const file = e.target.files[0]; // 변경된 파일은 배열의 첫 번째 요소입니다.
+      const file = e.target.files[0];
       setCerFile(file);
-      CertificateFileUpload(file, index); // 파일을 업로드합니다.
+      CertificateFileUpload(file, index);
     }
   };
   const onClickCertificateFileDelete = (index) => {
@@ -141,13 +153,17 @@ function SettingDocumentCertificate() {
               prevList.certificateFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-image-alt"
+                    className="bx bx-down-arrow-alt"
                     onClick={() => onClickCerFileDown(index)}
+                    style={{ cursor: "pointer" }}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-image-alt" />
+                  <i
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
+                  />
                 </td>
               )}
               {Array.isArray(prevList.certificateFileDTO) &&
@@ -163,7 +179,11 @@ function SettingDocumentCertificate() {
                       type="file"
                       id="cerFile"
                       name="cerFile"
-                      onClick={() => onClickCertificateFileUpload(index)}
+                      onClick={() =>
+                        onClickCertificateFileUpload(
+                          prevList.certificateFileDTO.cerAtcCode
+                        )
+                      }
                       onChange={(e) => CertificateFileChange(index, e)}
                       ref={cerFileInput}
                     />

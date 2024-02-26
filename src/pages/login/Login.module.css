@@ -22,16 +22,20 @@
   align-items: center; /* 세로 축에서 중앙 정렬 */
 }
 
-#btn btn-primary{
-width: 280px; /* 동일하게 비밀번호 입력창의 너비를 조절합니다. */
+.loginbtn{
+width: 280px;
 padding: 10px;
 margin-bottom: 15px;
 border-radius: 5px;
-border: 1px solid #ccc;
+border: 1px solid #222483;
 display: flex; /* Flexbox 사용 설정 */
 justify-content: center; /* 가로 축에서 중앙 정렬 */
 align-items: center; 
+background-color: #5f61e6;
+color: white;
+
 }
+
 .card{
   display: flex;
   flex-direction: column; /* 자식 요소들을 수직 방향으로 정렬 */

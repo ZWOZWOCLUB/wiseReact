@@ -2,10 +2,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-function SettingInfoInsertCareer({ onUpdate }) {
+function SettingInfoInsertCareer({ onUpdate, insertEvent }) {
   const [searchParams] = useSearchParams();
   const memberCode = searchParams.get("memCode");
   const [careerRows, setCareerRows] = useState([0]);
+  const prevList = useSelector((state) => state.settingCareerInsertReducer);
 
   const [crrForm, setCrrForm] = useState([
     {
@@ -53,20 +54,34 @@ function SettingInfoInsertCareer({ onUpdate }) {
     ]);
   };
 
-  const handleRemoveRow = (a) => {
-    console.log(a);
-    setCareerRows((prevRows) =>
-      prevRows.filter((row, index) => {
-        console.log(a, index);
-      })
-    );
-    setCrrForm((prevForms) => prevForms.filter((form, i) => i !== a));
+  const handleRemoveRow = (index) => {
+    console.log(index);
+    careerRows.splice(index, 1);
+
+    setCrrForm((prevForms) => prevForms.filter((form, i) => i !== index));
   };
 
   useEffect(() => {
     onUpdate(crrForm);
   }, [crrForm, onUpdate]);
+  console.log("crrForm", crrForm);
 
+  useEffect(() => {
+    setCrrForm([
+      {
+        memCode: memberCode,
+        crrCode: "",
+        crrName: "",
+        crrPosition: "",
+        crrStartDate: "",
+        crrEndDate: "",
+        crrState: "Y",
+        crrDescription: "",
+      }
+    ]);
+    setCareerRows([0])
+  }, [prevList]);
+  
   return (
     <>
       {careerRows.map((row, index) => (
@@ -79,6 +94,7 @@ function SettingInfoInsertCareer({ onUpdate }) {
                 borderTopLeftRadius: "0.375rem",
                 borderBottomLeftRadius: "0.375rem",
               }}
+              value={crrForm[index]? crrForm[index].crrStartDate : ''}
               onChange={(e) => onChangeCrrHandler(e, index)}
               name="crrStartDate"
             />
@@ -89,6 +105,8 @@ function SettingInfoInsertCareer({ onUpdate }) {
               type="date"
               onChange={(e) => onChangeCrrHandler(e, index)}
               name="crrEndDate"
+              value={crrForm[index]? crrForm[index].crrEndDate : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -98,6 +116,8 @@ function SettingInfoInsertCareer({ onUpdate }) {
               aria-describedby="basic-addon11"
               onChange={(e) => onChangeCrrHandler(e, index)}
               name="crrName"
+              value={crrForm[index]? crrForm[index].crrName : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -107,6 +127,8 @@ function SettingInfoInsertCareer({ onUpdate }) {
               aria-describedby="basic-addon11"
               onChange={(e) => onChangeCrrHandler(e, index)}
               name="crrPosition"
+              value={crrForm[index]? crrForm[index].crrPosition : ''}
+
             />
           </div>
           <div className="inputWrapper">
@@ -116,6 +138,8 @@ function SettingInfoInsertCareer({ onUpdate }) {
               aria-describedby="basic-addon11"
               onChange={(e) => onChangeCrrHandler(e, index)}
               name="crrDescription"
+              value={crrForm[index]? crrForm[index].crrDescription : ''}
+
             />
           </div>
           <div>

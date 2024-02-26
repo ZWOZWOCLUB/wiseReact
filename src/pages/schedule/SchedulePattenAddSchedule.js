@@ -11,7 +11,7 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
-import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import { callSchaduleTreeAPI } from "../../apis/ScheduleAPICalls.js";
 import { callScheduleUpdateAPI } from "../../apis/ScheduleUpdateAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree2 from "react-checkbox-tree";
@@ -19,8 +19,9 @@ import CheckboxTree2 from "react-checkbox-tree";
 const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.schedulePatternDayReducer);
-  const department = useSelector((state) => state.organizationChartReducer);
+  const department = useSelector((state) => state.scheduleTreeReducer);
   const result = useSelector((state) => state.scheduleUpdateReducer);
+
   const [checkeds, setCheckeds] = useState([]);
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
@@ -29,9 +30,8 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const [updateState, setUpdateState] = useState([]);
   const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
-
   useEffect(() => {
-    dispatch(callOrganizationTreeAPI());
+    dispatch(callSchaduleTreeAPI());
   }, []);
 
   useEffect(() => {
@@ -145,13 +145,17 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
 
   const [scheduleForm, setScheduleForm] = useState([]);
   const changeState = (index) => {
-    if (Array.isArray(allList)) {
-      const selectedSchedule = allList[index];
-      const updatedForm = [...scheduleForm];
-      updatedForm[index] = selectedSchedule;
-      setScheduleForm(updatedForm);
-      const updatedUpdateState = [...updateState, index];
-      setUpdateState(updatedUpdateState);
+    if (scheduleForm.length === 0) {
+      if (Array.isArray(allList)) {
+        const selectedSchedule = allList[index];
+        const updatedForm = [...scheduleForm];
+        updatedForm[index] = selectedSchedule;
+        setScheduleForm(updatedForm);
+        const updatedUpdateState = [...updateState, index];
+        setUpdateState(updatedUpdateState);
+      }
+    } else {
+      alert("수정 중인 스케줄의 변경을 먼저 완료해주세요.");
     }
   };
 
@@ -191,7 +195,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       label: mem.memName + " " + mem.posName,
                     }))
                   : dep.children.map((chi) => ({
-                      value: chi.depCode,
+                      value: chi.depName,
                       label: chi.depName,
                       children: chi.memberList.map((mem) => ({
                         value: mem.memCode + "/" + mem.memName,
@@ -204,6 +208,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
       : [];
 
   console.log("setChecked +++++++++++++++++++++", checkeds);
+  console.log("department +++++++++++++++++++++", department);
 
   const onClickIndex = (index) => {
     console.log("ddddddddddddd", index);
@@ -249,7 +254,6 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const onClick = () => {
     setCheckeds([]);
   };
-
   const updateSchedule = (index) => {
     const formData = new FormData();
     formData.append("wokCode", scheduleForm[index].patternList.wokCode);
@@ -278,6 +282,9 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
 
     console.log("formData@@@@@@@@@@@@@@@@@@@@@", formData);
     dispatch(callScheduleUpdateAPI({ form: formData }));
+
+    setUpdateState([]);
+    setScheduleForm([]);
   };
 
   const deleteSchedule = (index) => {
@@ -310,10 +317,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       name="schType"
                     />
                   </div>
-                  <div className={`${payCSS["hours"]}`}>
-                    <i className={"bx bxs-alarm"} />
-                    <div style={{ marginTop: 3 }}>&nbsp; 35시간</div>
-                  </div>
+                  <div className={`${payCSS["hours"]}`}></div>
                 </div>
                 <div className={`${payCSS["top_right"]}`}>
                   <div className={`${payCSS["schedule_date"]}`}>
@@ -447,7 +451,12 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       })
                     : p.allowanceList.map((allowance, idx) => (
                         <div className={`${payCSS["name"]}`}>
-                          <span key={idx}>{allowance.memberList.memName}</span>
+                          <span key={idx}>
+                            {allowance.memberList &&
+                            allowance.memberList.memName
+                              ? allowance.memberList.memName
+                              : ""}
+                          </span>
                         </div>
                       ))}
                 </div>
@@ -479,6 +488,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                     <hr />
                     <CheckboxTree2
                       showExpandAll={true}
+                      showNodeTitle={true}
                       nodes={nodes}
                       checked={checkeds}
                       expanded={expanded}
@@ -490,10 +500,8 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                         halfCheck: <span className="bx bx-checkbox-square" />,
                         expandClose: <span className="bx bx-chevron-right" />,
                         expandOpen: <span className="bx bx-chevron-down" />,
-                        expandAll: (
-                          <span className="rct-icon rct-icon-expand-all" />
-                        ),
-                        collapseAll: <span className="bx folder-open" />,
+                        expandAll: <span className="bx bx-plus" />,
+                        collapseAll: <span className="bx bx-minus" />,
                         parentClose: <span className="bx bx-folder" />,
                         parentOpen: (
                           <span

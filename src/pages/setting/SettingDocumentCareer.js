@@ -16,7 +16,9 @@ function SettingDocumentCareer() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
-  const result = useSelector((state) => state.settingCareerReducer);
+  const result = useSelector((state) => state.settingCareerInsertReducer);
+  const result2 = useSelector((state) => state.settingCareerUpdateReducer);
+  const result3 = useSelector((state) => state.settingCareerDeleteReducer);
 
   useEffect(
     (memCode) => {
@@ -26,13 +28,19 @@ function SettingDocumentCareer() {
         })
       );
     },
-    [result]
+    [result, result2, result3]
   );
 
   //파일 다운하는 함수
   const onClickCrrFileDown = async (index) => {
     try {
-      const response = await fetch(prevList.careerFileDTO[index].crrAtcPath); //파일 경로 지정
+      const urlPath =
+        "http://localhost:8001" +
+        "/career/" +
+        prevList.careerFileDTO[index].crrAtcConvertName;
+      console.log(urlPath);
+
+      const response = await fetch(urlPath); //파일 경로 지정
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
       const link = document.createElement("a"); //a 요소 생성
@@ -60,7 +68,6 @@ function SettingDocumentCareer() {
       console.log(formData, "formData555555555555555");
 
       dispatch(callCareerFileUpdateAPI({ formData }));
-      window.location.reload();
     } else {
       console.log(index, "여기555555555555555");
       console.log(prevList.careerDTO[index].crrCode, "여기555555555555555");
@@ -73,14 +80,13 @@ function SettingDocumentCareer() {
       console.log(formData, "formData555555555555555");
 
       dispatch(calCareerFileInsertAPI({ formData }));
-      window.location.reload();
     }
   };
 
   // 파일 업로드 버튼 클릭 시 호출되는 함수
-  const onClickCareerFileUpload = () => {
+  const onClickCareerFileUpload = (index) => {
     console.log("클릭1");
-    crrFileInput.current.click();
+    CareerFileChange(index, { target: { files: crrFileInput.current.files } });
   };
 
   // 파일 입력 변경 시 호출되는 함수
@@ -90,9 +96,9 @@ function SettingDocumentCareer() {
     if (e.target.files.length > 0) {
       console.log("클릭3");
 
-      const file = e.target.files[0]; // 변경된 파일은 배열의 첫 번째 요소입니다.
+      const file = e.target.files[0];
       setCrrFile(file);
-      CareerFileUpload(file, index); // 파일을 업로드합니다.
+      CareerFileUpload(file, index);
     }
   };
 
@@ -133,13 +139,17 @@ function SettingDocumentCareer() {
               prevList.careerFileDTO[index] ? (
                 <td>
                   <i
-                    className="bx bx-image-alt"
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
                     onClick={() => onClickCrrFileDown(index)}
                   />
                 </td>
               ) : (
                 <td>
-                  <i className="bx bx-image-alt" />
+                  <i
+                    className="bx bx-down-arrow-alt"
+                    style={{ cursor: "pointer" }}
+                  />
                 </td>
               )}
               {Array.isArray(prevList.careerFileDTO) &&

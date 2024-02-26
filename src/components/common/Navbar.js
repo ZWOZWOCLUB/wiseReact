@@ -16,40 +16,48 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/vendor/js/helpers.js";
 import { useState } from "react";
 
-
-
 function Navbar() {
+  const location = useLocation();
 
-    const location = useLocation();
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
 
+  const [openedMenu, setOpenedMenu] = useState("");
 
-    const [openedMenu, setOpenedMenu] = useState('')
+  function openPopup() {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
 
-
-
-    const menuPaths = {
-      dep: ["/main/organizationChart", "/main/organizationTree"],
-      app: ["/main/Approval", "/main/SendApproval", "/main/Assignment"],
-      not: ["/main/notice", "main/NoticeWrite"],
-      doc: ["/main/dataformat"],
-      pay: ["/main/pay"],
-      set: ["/main/setting", "/main/memberAdd", "/main/settingAttendance" ],
+    const windowHeight = 800;
+    const top = (screenHeight - windowHeight) / 2;
+    const newWindow = window.open(
+      "/settingAttendance",
+      "_blank",
+      `width=${screenWidth},height=${screenHeight},top=${top},menubar=no,toolbar=no,location=no,resizable=yes`
+    );
+    if (newWindow) {
+      newWindow.focus();
     }
+  }
+  const menuPaths = {
+    dep: ["/main/organizationChart", "/main/organizationTree"],
+    app: ["/main/Approval", "/main/SendApproval", "/main/Assignment"],
+    not: ["/main/notice", "main/NoticeWrite"],
+    doc: ["/main/dataformat"],
+    pay: ["/main/pay"],
+    set: ["/main/setting", "/main/memberAdd", "/main/settingAttendance"],
+  };
 
-    useEffect(() => {
-      Object.keys(menuPaths).forEach(menuKey => {
-        if (menuPaths[menuKey].some(path => location.pathname.includes(path))) {
-          setOpenedMenu(menuKey);
-        }
-      });
-    }, [location]);
+  useEffect(() => {
+    Object.keys(menuPaths).forEach((menuKey) => {
+      if (menuPaths[menuKey].some((path) => location.pathname.includes(path))) {
+        setOpenedMenu(menuKey);
+      }
+    });
+  }, [location]);
 
-    const toggleMenu = (menuKey) => {
-      setOpenedMenu(prevMenuKey => prevMenuKey === menuKey ? '' : menuKey);
-    };
-
-
-
+  const toggleMenu = (menuKey) => {
+    setOpenedMenu((prevMenuKey) => (prevMenuKey === menuKey ? "" : menuKey));
+  };
 
   return (
     <div
@@ -75,51 +83,15 @@ function Navbar() {
             <div style={{ paddingLeft: 10 }}>스케줄</div>
           </NavLink>
         </li>
-        {/* <li className={`${coreCSS[`menu-item`]}`}>
-          <NavLink to="/main/approval" className={`${coreCSS[`menu-link`]}`}>
-            <img src={approval} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>결재</div>
-          </NavLink>
-        </li>
-        <li className={`${coreCSS[`menu-item`]}`}>
-          <NavLink
-            to="/main/organizationChart"
-            className={`${coreCSS[`menu-link`]}`}
-          >
-            <img src={organization} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>부서</div>
-          </NavLink>
-        </li>
-        <li className={`${coreCSS[`menu-item`]}`}>
-          <NavLink to="/main/notice" className={`${coreCSS[`menu-link`]}`}>
-            <img src={notice} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>공지</div>
-          </NavLink>
-        </li>
-        <li className={`${coreCSS[`menu-item`]}`}>
-          <NavLink to="/main/dataformat" className={`${coreCSS[`menu-link`]}`}>
-            <img src={document} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>파일함</div>
-          </NavLink>
-        </li>
-        <li className={`${coreCSS[`menu-item`]} `}>
-          <NavLink to="/main/pay" className={`${coreCSS[`menu-link`]}`}>
-            <img src={pay} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>급여관리</div>
-          </NavLink>
-        </li>
-        <li className={`${coreCSS[`menu-item`]}`}>
-          <NavLink to="/main/setting" className={`${coreCSS[`menu-link`]}`}>
-            <img src={setting} style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>설정</div>
-          </NavLink>
-        </li> */}
-
-
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'app' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('app')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "app" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("app")}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={approval} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>결재</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>결재</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
@@ -132,7 +104,10 @@ function Navbar() {
                 보낸 결재
               </NavLink>
             </li>
-            <li className={coreCSS[`menu-item`]}>
+            <li
+              className={coreCSS[`menu-item`]}
+              style={{ display: token.memRole === "USER" ? "none" : "" }}
+            >
               <NavLink to="/main/Assignment" className={coreCSS[`menu-link`]}>
                 전결자 지정
               </NavLink>
@@ -140,30 +115,45 @@ function Navbar() {
           </ul>
         </li>
 
-
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'dep' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('dep')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "dep" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("dep")}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={organization} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>부서</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>부서</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
-              <NavLink to="/main/organizationChart" className={coreCSS[`menu-link`]}>
+              <NavLink
+                to="/main/organizationChart"
+                className={coreCSS[`menu-link`]}
+              >
                 부서 조회
               </NavLink>
             </li>
             <li className={coreCSS[`menu-item`]}>
-              <NavLink to="/main/organizationTree" className={coreCSS[`menu-link`]}>
+              <NavLink
+                to="/main/organizationTree"
+                className={coreCSS[`menu-link`]}
+              >
                 조직도
               </NavLink>
             </li>
           </ul>
         </li>
 
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'not' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('not')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "not" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("not")}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={notice} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>공지</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>공지</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
@@ -171,7 +161,10 @@ function Navbar() {
                 공지사항
               </NavLink>
             </li>
-            <li className={coreCSS[`menu-item`]}>
+            <li
+              className={coreCSS[`menu-item`]}
+              style={{ display: token.memRole === "USER" ? "none" : "" }}
+            >
               <NavLink to="/main/NoticeWrite" className={coreCSS[`menu-link`]}>
                 공지작성
               </NavLink>
@@ -179,10 +172,15 @@ function Navbar() {
           </ul>
         </li>
 
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'doc' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('doc')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "doc" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("doc")}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={document} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>자료실</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>자료실</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
@@ -193,10 +191,15 @@ function Navbar() {
           </ul>
         </li>
 
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'pay' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('pay')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "pay" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("pay")}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={pay} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>급여</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>급여</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
@@ -207,10 +210,16 @@ function Navbar() {
           </ul>
         </li>
 
-        <li className={`${coreCSS['menu-item']} ${openedMenu === 'set' ? coreCSS['open'] : ''}`} onClick={() => toggleMenu('set')}>
+        <li
+          className={`${coreCSS["menu-item"]} ${
+            openedMenu === "set" ? coreCSS["open"] : ""
+          }`}
+          onClick={() => toggleMenu("set")}
+          style={{ display: token.memRole === "USER" ? "none" : "" }}
+        >
           <div className={`${coreCSS[`menu-link`]} ${coreCSS[`menu-toggle`]}`}>
             <img src={setting} alt="" style={{ width: 40 }} />
-            <div style={{ paddingLeft: 10 }}>설정</div>
+            <div style={{ paddingLeft: 10, cursor: "pointer" }}>설정</div>
           </div>
           <ul className={coreCSS[`menu-sub`]}>
             <li className={coreCSS[`menu-item`]}>
@@ -223,14 +232,15 @@ function Navbar() {
                 직원 등록
               </NavLink>
             </li>
-            <li className={coreCSS[`menu-item`]}>
-              <NavLink to="/main/settingAttendance" className={coreCSS[`menu-link`]}>
-                근태 조회
-              </NavLink>
+            <li
+              className={coreCSS[`menu-item`]}
+              onClick={openPopup}
+              style={{ cursor: "pointer" }}
+            >
+              <li className={coreCSS[`menu-link`]}>근태 조회</li>
             </li>
           </ul>
         </li>
-
       </ul>
     </div>
   );

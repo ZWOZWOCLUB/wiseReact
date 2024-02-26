@@ -16,7 +16,7 @@ function SettingDocument() {
   const [rows, setRows] = useState([0]);
   const [etcFile, setEtcFile] = useState(null);
   const etcFileInput = useRef();
-  const result = useSelector((state) => state.settingDocumentReducer);
+  const result = useSelector((state) => state.settingDocumentInsertReducer);
 
   const [activeTab, setActiveTab] = useState();
 
@@ -189,7 +189,10 @@ function SettingDocument() {
                       <td>-</td>
                       <td>-</td>
                       <td>
-                        <i className="bx bx-image-alt" />
+                        <i
+                          className="bx bx-down-arrow-alt"
+                          style={{ cursor: "pointer" }}
+                        />
                       </td>
                       <td>
                         <label

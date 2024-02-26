@@ -3,9 +3,11 @@ import './dataformat.css';
 import { useEffect, useState } from 'react';
 import { callAllViewDataFormatAPI } from '../../apis/DataFormatAPICalls';
 import { callDataFormatInsertAPI } from '../../apis/DataFormatAPICalls';
+import { callDtaFormatDeleteAPI } from '../../apis/DataFormatAPICalls';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { decodeJwt } from '../../utils/tokenUtils.js';
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -18,6 +20,7 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 function DataFormat() {
+    const [dataFormatList, setDataFormatList] = useState([]);
     const registDate = new Date();
     const formattedDate = registDate.toISOString().slice(0, 10);
     const [currentDate, setCurrentDate] = useState(registDate);
@@ -28,8 +31,11 @@ function DataFormat() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const dataFormat = useSelector((state) => state.dataFormatReducer);
-    const dataFormatList = dataFormat?.data?.content;
-    const pageInfo = dataFormat?.pageInfo || {};
+    // const dataFormatList = dataFormat.data?.content;
+    const pageInfo = dataFormat.pageInfo || {};
+
+    console.log('dataFormatList', dataFormatList);
+    console.log('dataFormat', dataFormat);
 
     const pageNumber = [];
     if (pageInfo) {
@@ -50,18 +56,28 @@ function DataFormat() {
     }, [currentPage]);
 
     const [form, setForm] = useState({
-        dataCode: token.dataCode,
+        dataCode: '',
         dataName: '',
-        memCode: token.memCode,
+        memCode: '',
         registDate: '',
         dataSize: '',
         dataPath: '',
         dataDeleteStatus: 'N',
     });
 
+    // token.memCode;
+    //     useEffect(() => {
+    // const fetchData = async () => {
+    //     const response = await fetchSomeData(); // 데이터 불러오기 예시 함수
+    //     setDataFormatList(response.data); // 데이터 설정
+    // };
+
+    //     },[])
+
     useEffect(() => {
         console.log('form22222222222222222222222', form);
     }, [form]);
+    console.log('form : ', form);
 
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
@@ -71,7 +87,6 @@ function DataFormat() {
                 dataName: file.name,
                 registDate: registDate,
                 dataSize: file.size,
-                
             }));
 
             console.log(file);
@@ -93,11 +108,14 @@ function DataFormat() {
                 formData.append(key, formData[key]);
             });
             // 파일 업로드 함수 호출
+            console.log('formData', formData);
+
             uploadFile(formData);
         } else {
             console.error('파일이 선택되지 않았습니다.');
         }
     };
+    // console.log("form.dataCode",form?.dataCode);
 
     const uploadFile = async (formData) => {
         try {
@@ -125,38 +143,54 @@ function DataFormat() {
         }
     };
 
-    // const uploadFile = async (formData) => {
-    //     try {
-    //         const response = await callDataFormatInsertAPI(formData);
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             const dataCode = data.dataCode; // 서버 응답에서 dataCode 추출
-    //             return dataCode; // 추출한 dataCode 반환
+    //api전까지의 정보가 오는지=> api에 값이 오는지 확인(dataCode) api에 form값이 재대로 오는지 확인
+    //딜리트 할 때 
+    //
+    const onClickDeleteFile = async (dataCode) => {
+        console.log('삭제 버튼 클릭', dataCode);
+
+        form.dataCode = dataCode;
+
+        console.log('form', form);
+
+        // 서버에 삭제 요청 보내기
+        try {
+            await dispatch(callDtaFormatDeleteAPI(form)); // API 호출 부분 수정 (오타 주의: callDataFormatDeleteAPI가 맞는지 확인)
+            console.log('서버에서 삭제 성공', dataCode);
+
+            // 성공적으로 삭제 후 클라이언트 상태 업데이트
+            const updatedList = dataFormatList.filter((df) => df.dataCode !== dataCode);
+            setDataFormatList(updatedList);
+        } catch (error) {
+            console.error('서버에서 삭제 실패', error);
+        }
+    };
+
+    // const onClickDeleteFile = (dataCode) => {
+    //     // 선택된 dataCode에 해당하는 항목 찾기
+    //     const dataFormatList = dataFormatList.map((df) => {
+    //         if (df.dataCode === dataCode) {
+    //             return { ...df, dataDeleteStatus: 'Y' };
+
     //         } else {
-    //             // 에러 처리
-    //             console.error('파일 업로드 실패');
+    //             console.log("aaaaa",dataFormatList);
     //         }
-    //     } catch (error) {
-    //         console.error('파일 업로드 중 오류 발생', error);
-    //     }
+    //         return df;
+    //     });
+
+    //     // 상태 업데이트 로직 추가
+    //     // 예: setDataFormatList(updatedList);
+
+    //     console.log(`파일 ${dataCode} 삭제 상태로 변경`);
+    //     console.log(dataFormat?.dataCode);
+
     // };
+    useEffect(() => {
+        if (dataFormat.data?.content) {
+            setDataFormatList(dataFormat.data.content);
+        }
+    }, [dataFormat]);
 
-
-    // const uploadFile = (formData) => {
-    //     // 파일 업로드 API 호출
-    //     dispatch(callDataFormatInsertAPI(formData))
-    //         .then(() => {
-    //             // 업로드 성공 시 추가 처리
-    //             console.log('파일 업로드 및 데이터 삽입 성공');
-    //             // 추가 작업 수행
-    //         })
-    //         .catch((error) => {
-    //             // 업로드 실패 시 처리
-    //             console.error('파일 업로드 및 데이터 삽입 실패', error);
-    //         });
-    // };
-
-    
     return (
         <>
             <div className='layout-wrapper layout-content-navbar'>
@@ -210,23 +244,28 @@ function DataFormat() {
                                                     <th style={{ width: '40%' }} />
                                                 </tr>
                                                 {Array.isArray(dataFormatList) &&
-                                                    dataFormatList.map((df, index) => (
-                                                        <tr key={index}>
-                                                            <td>{df.dataName}</td>
-                                                            <td>
-                                                                {df.dataMember?.posCode.posName}{' '}
-                                                                {df.dataMember?.memName}
-                                                            </td>
-                                                            <td>{formatDate(new Date(df.registDate))}</td>
-                                                            <td>{(df.dataSize / 1024).toFixed(2)} KB</td>
-                                                            <td style={{ textAlign: 'right' }}>
-                                                                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANFJREFUSEvtlMENAWEQRt+6uStBEVx1INEHpdCHRAeuFKEEdzfkJSS7sr+ZPWyQ+M4z35v/m9mt6FlVz/58DeBWeGk4YFjwMP4Dwlv6vYjWwDJ8V7NgA6xee0pXNAC2wDwJ2QEL4JoFWDcE9sAkgByBGXBpq4u+gxFwAMYFyAmYAufSEBHAPs2FCKtLU82FFJUB2GxMxmVsyjiMxXjeKgvQxIW7eOVCXWyoLgDNnmfoGafUFZAyrRd9BFD672Snbwzd9oLeAdlJU3Uf2UFqsmzRHehrHBmAe1VEAAAAAElFTkSuQmCC' />
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAARlJREFUSEvt1M8qxUEYxvHP2SrZEMpCUlyD/Cls5TZkq9yJzsZKuQG5AmSFbP3JmiVX4PfWqF/6nZlx6mRzZjm98zzv8513pmfEqzdifWODIuF/R3SMM7wPaHUFGzgdFCWX4BAneMFmh8kyrjGHfVx0meQM4mAIhNBr6vQnyRJuMYtHbOHrrwZR32UyUSseAjWXPI+rlOQJU8n4vkm4g8/cKNUYxPmFhGsxiWWxtA1rDYJ1MA/2sR6aVNul7msRhfhNQvScEMXeXbO/WzIpJWh3/oY1TLbGs5gkZ9Al/pEQxegGspkSrpzBQTPnfQSWmPPfr3k1JZnGHi6HeQdHOM98FWGyPuxXUfwpawpKl1yjka0ZGxQRjhzRNxi0NBmpupZSAAAAAElFTkSuQmCC' />
-                                                                &nbsp;&nbsp;
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                    dataFormatList
+                                                        .filter((df) => df?.dataDeleteStatus === 'N') // dataDeleteStatus가 "N"인 항목만 필터링
+                                                        .map((df, index) => (
+                                                            <tr key={index}>
+                                                                <td>{df?.dataName}</td>
+                                                                <td>
+                                                                    {df?.dataMember?.posCode?.posName}{' '}
+                                                                    {df?.dataMember?.memName}
+                                                                </td>
+                                                                <td>{formatDate(new Date(df.registDate))}</td>
+                                                                <td>{(df.dataSize / 1024).toFixed(2)} KB</td>
+                                                                <td style={{ textAlign: 'right' }}>
+                                                                    <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANFJREFUSEvtlMENAWEQRt+6uStBEVx1INEHpdCHRAeuFKEEdzfkJSS7sr+ZPWyQ+M4z35v/m9mt6FlVz/58DeBWeGk4YFjwMP4Dwlv6vYjWwDJ8V7NgA6xee0pXNAC2wDwJ2QEL4JoFWDcE9sAkgByBGXBpq4u+gxFwAMYFyAmYAufSEBHAPs2FCKtLU82FFJUB2GxMxmVsyjiMxXjeKgvQxIW7eOVCXWyoLgDNnmfoGafUFZAyrRd9BFD672Snbwzd9oLeAdlJU3Uf2UFqsmzRHehrHBmAe1VEAAAAAElFTkSuQmCC' />
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <img
+                                                                        src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAARlJREFUSEvt1M8qxUEYxvHP2SrZEMpCUlyD/Cls5TZkq9yJzsZKuQG5AmSFbP3JmiVX4PfWqF/6nZlx6mRzZjm98zzv8513pmfEqzdifWODIuF/R3SMM7wPaHUFGzgdFCWX4BAneMFmh8kyrjGHfVx0meQM4mAIhNBr6vQnyRJuMYtHbOHrrwZR32UyUSseAjWXPI+rlOQJU8n4vkm4g8/cKNUYxPmFhGsxiWWxtA1rDYJ1MA/2sR6aVNul7msRhfhNQvScEMXeXbO/WzIpJWh3/oY1TLbGs5gkZ9Al/pEQxegGspkSrpzBQTPnfQSWmPPfr3k1JZnGHi6HeQdHOM98FWGyPuxXUfwpawpKl1yjka0ZGxQRjhzRNxi0NBmpupZSAAAAAElFTkSuQmCC'
+                                                                        onClick={() => onClickDeleteFile(df?.dataCode)}
+                                                                    />
+                                                                    &nbsp;&nbsp;
+                                                                </td>
+                                                            </tr>
+                                                        ))}
                                             </tbody>
                                         </table>
                                         <div className='pay-top-wrapper'>

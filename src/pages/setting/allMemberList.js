@@ -15,7 +15,7 @@ function Setting() {
   const [start, setStart] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState("");
   const pageInfo = member.pageInfo || {};
   const firstDayOfMonth = new Date().toISOString().slice(0, 7);
   const [currentYearMonth, setCurrentYearMonth] = useState(firstDayOfMonth);
@@ -35,12 +35,22 @@ function Setting() {
   useEffect(() => {
     console.log(currentPage);
     setStart((currentPage - 1) * 5);
+    setSearch("");
     dispatch(
       callSearchSettingMemberAPI({
         currentPage: currentPage,
       })
     );
   }, [currentPage]);
+  console.log("search-------------", search);
+
+  useEffect(() => {
+    dispatch(
+      callSearchMemListAPI({
+        search: search,
+      })
+    );
+  }, []);
 
   const onClickMemberInsert = () => {
     console.log(onClickMemberInsert);
@@ -82,6 +92,10 @@ function Setting() {
         search: search,
       })
     );
+  };
+
+  const onClickBlock = () => {
+    alert("퇴사한 직원입니다.");
   };
 
   return (
@@ -132,32 +146,68 @@ function Setting() {
                 ? searchList.map((s, index) => (
                     <tr
                       key={index}
-                      onDoubleClick={onClickMemberDetail(s.memCode)}
+                      onDoubleClick={
+                        s.memStatus === "Y"
+                          ? onClickBlock
+                          : onClickMemberDetail(s.memCode)
+                      }
+                      style={{ color: s.memStatus === "Y" ? "#ff3e1d" : "" }}
                     >
                       <td>{index + 1}</td>
                       <td>{s.memCode}</td>
                       <td>{s.memName}</td>
-                      <td>{s.departmentDTO ? s.departmentDTO.depName : "-"}</td>
-                      <td>{s.positionDTO ? s.positionDTO.posName : "-"}</td>
+                      <td>
+                        {s.memStatus === "N"
+                          ? s.departmentDTO
+                            ? s.departmentDTO.depName
+                            : "-"
+                          : "-"}
+                      </td>
+                      <td>
+                        {s.memStatus === "N"
+                          ? s.positionDTO
+                            ? s.positionDTO.posName
+                            : "-"
+                          : "-"}
+                      </td>
                       <td>{s.memHireDate}</td>
-                      <td>{s.memEndDate ? s.memEndDate : "-"}</td>
-                      <td>{s.memPhone}</td>
+                      <td style={{ color: s.memStatus === "Y" ? "red" : "" }}>
+                        {s.memEndDate ? s.memEndDate : "-"}
+                      </td>
+                      <td>{s.memStatus === "N" ? s.memPhone : "-"}</td>
                     </tr>
                   ))
                 : Array.isArray(memberList) &&
                   memberList.map((m, index) => (
                     <tr
                       key={index}
-                      onDoubleClick={onClickMemberDetail(m.memCode)}
+                      onDoubleClick={
+                        m.memStatus === "Y"
+                          ? onClickBlock
+                          : onClickMemberDetail(m.memCode)
+                      }
+                      style={{ color: m.memStatus === "Y" ? "#ff3e1d" : "" }}
                     >
                       <td>{index + 1}</td>
                       <td>{m.memCode}</td>
                       <td>{m.memName}</td>
-                      <td>{m.departmentDTO ? m.departmentDTO.depName : "-"}</td>
-                      <td>{m.positionDTO ? m.positionDTO.posName : "-"}</td>
+                      <td>
+                        {m.memStatus === "N"
+                          ? m.departmentDTO
+                            ? m.departmentDTO.depName
+                            : "-"
+                          : "-"}
+                      </td>
+                      <td>
+                        {m.memStatus === "N"
+                          ? m.positionDTO
+                            ? m.positionDTO.posName
+                            : "-"
+                          : "-"}
+                      </td>
                       <td>{m.memHireDate}</td>
                       <td>{m.memEndDate ? m.memEndDate : "-"}</td>
-                      <td>{m.memPhone}</td>
+                      <td>{m.memStatus === "N" ? m.memPhone : "-"}</td>
                     </tr>
                   ))}
             </tbody>
