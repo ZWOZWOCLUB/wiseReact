@@ -36,18 +36,15 @@ function MPAttendance() {
     if (token !== null) {
       dispatch(
         callATTAPI({
-          memCode: 2,
+          memCode: token.memCode,
           date: checkDate,
 
-          // memCode: token.memCode
-          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
         })
       );
       dispatch(
         callATTListAPI({
-          memCode: 2,
-          // memCode: token.memCode
-          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
+          memCode: token.memCode,
+        
         })
       );
     }
@@ -176,10 +173,9 @@ function MPAttendance() {
   useEffect(() => {
     dispatch(
       callATTAPI({
-        memCode: 2,
+        memCode: token.memCode,
         date: checkDate,
-        // memCode: token.memCode
-        // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
+       
       })
     );
   }, [checkDate]);

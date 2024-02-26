@@ -14,7 +14,6 @@ import { callMemberDetailAPI, callMemberUpdateAPI } from "../../apis/MyPageAPICa
 function MyPageUpdate() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const member = useSelector((state) => state.mypageReducer);
   const profile = useSelector((state) => state.mpProReducer);
@@ -41,12 +40,6 @@ function MyPageUpdate() {
   // 저장하기 클릭 시 실행되는 메소드
   const onClickUpdateMemberInfoHandler = () => {
     console.log("[memberUpdate] onClickUpdateMemberInfoHandler");
-
-    console.log("memCode----->", form.memCode);
-    console.log("memBirth----->", form.memBirth);
-    console.log("memEmail----->", form.memEmail);
-    console.log("memPhone----->", form.memPhone);
-    console.log("memAddress----->", form.memAddress);
 
     const formData = new FormData();
 
@@ -86,13 +79,7 @@ function MyPageUpdate() {
     }
   }, []);
 
-  function openSignatureCanvasPopup() {
-    window.open(
-      "/sign",
-      "SignatureCanvas",
-      "width=500,height=500,left=200,top=200"
-    );
-  }
+
 
   const onClickBack = () => {
     navigate("/main/mp", { replace: true });

@@ -49,11 +49,6 @@ function MyPage() {
   const onClickUpdateMemberInfoHandler = () => {
     console.log("[memberUpdate] onClickUpdateMemberInfoHandler");
 
-    console.log("memCode----->", form.memCode);
-    console.log("originMemPassword----->", form.originMemPassword);
-    console.log("newMemPassword1----->", form.newMemPassword1);
-    console.log("newMemPassword2----->", form.newMemPassword2);
-
     const formData = new FormData();
 
     formData.append("memCode", form.memCode);
@@ -67,10 +62,6 @@ function MyPage() {
         form: formData,
       })
     );
-
-    // alert("마이페이지 정보 출력 화면으로 이동합니다.");
-    // navigate("/main/mp", { replace: true });
-    // window.location.reload();
    
   };
 
@@ -121,9 +112,6 @@ function MyPage() {
 
   const onClickUpdate = () => {
     navigate("/main/mpUpdate", { replace: true });
-  };
-  const onClickMyPage = () => {
-    navigate("/main/mp", { replace: true });
   };
 
   function openSignatureCanvasPopup() {
@@ -210,7 +198,7 @@ function MyPage() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li
