@@ -69,6 +69,7 @@ import settingDocumentDeleteReducer from "./SettingDocumentDeleteModule";
 import settingSalaryInsertReducer from "./SettingSalaryInsertModule";
 import settingSalaryUpdateReducer from "./SettingSalaryUpdateModule";
 import settingSalaryDeleteReducer from "./SettingSalaryDeleteModule";
+import dataFormatInsertReducer from "./DataFormatInsertModule";
 import scheduleTreeReducer from "./ScheduleTreeModule";
 import searchProxyReducer from "./SearchProxyModule";
 import scheduleUpdateTreeReducer from "./ScheduleUpdateTreeModule";
@@ -153,6 +154,7 @@ const rootReducer = combineReducers({
   dataFormatReducer,
   scheduleUpdateTreeReducer,
   organizationEditSearchReducer,
+  dataFormatInsertReducer,
 });
 
 export default rootReducer;
