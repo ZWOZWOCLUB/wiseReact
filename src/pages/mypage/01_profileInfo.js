@@ -27,9 +27,6 @@ function MyPage() {
   const profileDetail = profile.data;
   const signDetail = sign.data;
   
-
-  const [error, setError] = useState('');
-
   const [form, setForm] = useState({
     memCode: token.memCode,
     originMemPassword: '',
@@ -398,6 +395,10 @@ function MyPage() {
                       className="btn-close"
                       data-bs-dismiss="modal"
                       aria-label="Close"
+                      style={{
+                        marginTop: "20px",
+                        marginRight: "20px",
+                      }}
                     ></button>
                   </div>
                   <div className="modal-body">
@@ -479,7 +480,9 @@ function MyPage() {
                     >
                       비밀번호 변경
                     </h5>
-                    <div className="close-area2 close-css">X</div>
+                    <div className="close-area2 close-css"
+                    
+                    >X</div>
                   </div>
                   <div className="modal-body">
                     <div className="row">
