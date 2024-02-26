@@ -67,9 +67,8 @@ function Pay() {
     if (selectedPayDetail) {
       setPayDetailsData(selectedPayDetail);
       console.log(selectedPayDetail);
-      scrollRef.current.scrollIntoView({behavior: "smooth"})
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-
   };
 
   useEffect(() => {
@@ -84,7 +83,6 @@ function Pay() {
     console.log("클릭");
     setCurrentYear(e.target.value);
   };
-
 
   return (
     <>
@@ -114,11 +112,11 @@ function Pay() {
               ;
             </select>
             <div style={{ width: "100%" }} />
-            <div style={{ width: "20%" }}>
+            {/* <div style={{ width: "20%" }}>
               <b>급여명세표 출력</b>
-            </div>
-<PayConverPDF payDetailsData={payDetailsData} token={token}/>
-</div>
+            </div> */}
+            {/* <PayConverPDF payDetailsData={payDetailsData} token={token}/> */}
+          </div>
           <table className={`${coreCSS["table"]} ${coreCSS["table-hover"]}`}>
             <thead>
               <tr style={{ backgroundColor: "#DCDCFF" }}>
@@ -331,9 +329,6 @@ function Pay() {
       </div>
     </>
   );
-  
 }
-
-
 
 export default Pay;

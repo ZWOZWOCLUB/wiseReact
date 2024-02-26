@@ -28,7 +28,7 @@ export const callScheduleSearchAPI = ({ yearMonth, memberCode }) => {
   };
 };
 
-//전체 스케줄 조회
+//트리 조회
 export const callSchaduleTreeAPI = () => {
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/treeView`;
 
