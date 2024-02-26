@@ -129,7 +129,6 @@ function SchedulePattenAdd() {
       </div>
       <div className={`${payCSS["schedule_content"]}`}>
         <div className={`${payCSS["side_schedule"]}`} id="side_schedule">
-          <SchedulePattenAddInsertSchedule />
           <SchedulePattenAddPattern
             getSelectedPattern={getSelectedPattern}
             selectedColor={selectedColor}
