@@ -106,6 +106,7 @@ function Retiredment({ appCodes, refCodes }) {
         if (form.file) {
             formData.append('approvalFile', form.file);
         }
+        const confirmLeave = window.confirm('결재를 상신하시겠습니까? ');
 
         dispatch(
             callAprovalRetiredAPI({
@@ -113,6 +114,9 @@ function Retiredment({ appCodes, refCodes }) {
             }),
             console.log('dt')
         );
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
 
         // navigate(`/main/Approval`, { replace: false });
     };

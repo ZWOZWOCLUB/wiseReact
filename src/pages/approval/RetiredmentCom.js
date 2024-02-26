@@ -71,19 +71,35 @@ function RetiredmentCom(props) {
     };
     const approvalComplete = () => {
         console.log('form', form);
+
+        const confirmLeave = window.confirm('결재를 승인하시겠습니까? ');
         dispatch(
             callAprovalCompleteAPI({
                 form: form,
             })
         );
 
-        // navigate(`/main/Approval`, { replace: false });
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
     };
 
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' &&
-            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+            {props.data?.approvalComplete[0]?.appState !== '대기' ? (
+                <div>
+                    <div id='appDiv'>
+                        <h1 style={{ color: '#bbbdfc' }}>{props.data?.approvalComplete[0]?.appState}</h1>
+                    </div>
+                    <div id='appComentBox'>
+                        <span>결재의견 </span>
+                        <div name='appComment' id='commentBox' style={{ padding: '20px' }}>
+                            {props.data?.approvalComplete[0]?.appComment}
+                        </div>
+                    </div>
+                </div>
+            ) : props.data?.approvalComplete[0]?.appState === '대기' &&
+              props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -109,31 +125,18 @@ function RetiredmentCom(props) {
                         ></textarea>
                     </div>
                 </div>
-            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
-                <div></div>
             ) : (
-                <div>
-                    <div id='appDiv'>
-                        <h1 style={{ color: '#bbbdfc' }}>{props.data?.approvalComplete[0]?.appState}</h1>
-                    </div>
-                    <div id='appComentBox'>
-                        <span>결재의견 </span>
-                        <div name='appComment' id='commentBox' style={{ padding: '20px' }}>
-                            {props.data?.approvalComplete[0]?.appComment}
-                        </div>
-                    </div>
-                </div>
+                <div></div>
             )}
-
             <hr style={{ marginTop: '50px' }} />
 
             <div className='approvalTemp'>
                 <div id='margintop2'>
                     <div>퇴직일</div>
-                    <div style={{ marginTop: '115px' }}>내용</div>
+                    <div>내용</div>
                     {props.data.approvalAttachment[0] ? (
                         <>
-                            <div style={{ marginTop: '125px' }}>첨부파일</div>
+                            <div>첨부파일</div>
                         </>
                     ) : (
                         <></>
@@ -146,11 +149,11 @@ function RetiredmentCom(props) {
                     </div>
                     {props.data.approvalAttachment[0] ? (
                         <>
-                            <div style={{ marginTop: '80px' }}>
+                            <div>
                                 {props.data.approvalAttachment[0]?.payAtcOriginalName}
                                 <i
                                     className='bx bx-down-arrow-alt'
-                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
+                                    style={{ cursor: 'pointer', marginLeft: 'auto', color: 'blue' }}
                                     onClick={() => onClickDocFileDown()}
                                 />
                             </div>
