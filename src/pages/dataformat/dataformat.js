@@ -28,8 +28,8 @@ function DataFormat() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const dataFormat = useSelector((state) => state.dataFormatReducer);
-    const dataFormatList = dataFormat.data?.content;
-    const pageInfo = dataFormat.pageInfo || {};
+    const dataFormatList = dataFormat?.data?.content;
+    const pageInfo = dataFormat?.pageInfo || {};
 
     const pageNumber = [];
     if (pageInfo) {

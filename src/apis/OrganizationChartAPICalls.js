@@ -8,6 +8,10 @@ import {
     PUT_ORGANIZATION_UPDATEROLE,
 
 } from '../modules/OrganizationChartModule';
+import { GET_ORGANIZATION_LIST } from '../modules/OrganizationListModule';
+import { GET_ORGANIZATION_REFLIST } from '../modules/OrganizationRefListModule';
+import { callOrganizationListAPI } from './OrganizationListAPICalls';
+import { callOrganizationRefListAPI } from './OrganizationRefListAPICalls';
 
 export const callOrganizationTreeAPI = () => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/org/treeView`;
@@ -101,6 +105,8 @@ export const callOrgCreateAPI = ({ depName, refDepCode }) => {
 
         console.log('[callOrgCreateAPI] callOrgCreateAPI result:', result);
         dispatch(callOrganizationCardAPI());
+        dispatch(callOrganizationListAPI());
+        dispatch(callOrganizationRefListAPI());
         // dispatch({ type: POST_ORGANIZATION_CREATE, payload: result.data });
         console.log({result});
     };
@@ -154,6 +160,8 @@ export const callOrgModifyAPI = ({ depName, depCode, refDepCode }) => {
         console.log('[callOrgModifyAPI] callOrgModifyAPI result:', result);
 
         dispatch(callOrganizationCardAPI());
+        dispatch(callOrganizationListAPI());
+        dispatch(callOrganizationRefListAPI());
         // dispatch({ type: PUT_ORGANIZATION_MODIFY, payload: result.data });
         console.log({result});
     };

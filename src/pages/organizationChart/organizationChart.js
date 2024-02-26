@@ -124,11 +124,19 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
       //부서 생성폼 열기
       const enterCreateForm = () => {
         setShowCreateForm(!showCreateForm);
+
+        if(showModifyForm){
+          setShowModifyForm(false);
+        }
       }
 
       //부서 수정폼 열기
       const enterModifyForm = () => {
         setShowModifyForm(!showModifyForm);
+
+        if(showCreateForm){
+          setShowCreateForm(false);
+        }
       }
 
       //편집버튼에 연결(부서 편집 페이지)
@@ -172,6 +180,8 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
       const modifyDepChange = (e) => {
         const deptCode = e.target.value;
         setSelectedDep(deptCode);
+
+        console.log("deptCode의 타입 찍어보기=============>",typeof(deptCode));
 
         const deptInfo = orgListData.find(dep => dep.depCode.toString() === deptCode);
         if (deptInfo) {
@@ -440,8 +450,8 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                 <div className="ms-auto me-3 mt-3">
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-primary me-3"
-                    disabled={refDepCode === 1 && depName !== "인사팀"}
+                    className="btn btn-sm btn-outline-primary"
+                    hidden={refDepCode === 1 && depName !== "인사팀"}
                     onClick={() => goEditDepartmentPage(depCode)}
                   >
                     편집
@@ -449,8 +459,8 @@ import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
                   
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-danger"
-                    disabled={depName === "인사팀"}
+                    className="btn btn-sm btn-outline-danger ms-3"
+                    hidden={depName === "인사팀"}
                     onClick={()=>deleteDep(depCode)}
                   >
                     삭제

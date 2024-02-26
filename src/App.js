@@ -39,6 +39,7 @@ import ImageDownloader from "./pages/mypage/test";
 import ScheduleAdd from "./pages/schedule/ScheduleAdd";
 import SchedulePattenAdd from "./pages/schedule/SchedulePattenAdd";
 import ScheduleDetails from "./pages/schedule/ScheduleDetails";
+import MemberDetails from "./pages/setting/memberDetails"
 
 function App() {
   return (
@@ -96,6 +97,7 @@ function App() {
                   <Route path='test' element={<ImageDownloader />} />
                   <Route path='ScheduleAdd' element={<ScheduleAdd />} />
                   <Route path='SchedulePattenAdd' element={<SchedulePattenAdd />} />
+                  <Route path='memberdetails' element={<MemberDetails />} />
               </Route>
               <Route path='/ScheduleDetails' element={<ScheduleDetails />} />
           </Routes>
