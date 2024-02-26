@@ -71,6 +71,7 @@ import settingSalaryUpdateReducer from "./SettingSalaryUpdateModule";
 import settingSalaryDeleteReducer from "./SettingSalaryDeleteModule";
 import scheduleTreeReducer from "./ScheduleTreeModule";
 import searchProxyReducer from "./SearchProxyModule";
+import scheduleUpdateTreeReducer from "./ScheduleUpdateTreeModule";
 const { combineReducers } = require("redux");
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
@@ -149,6 +150,7 @@ const rootReducer = combineReducers({
   scheduleTreeReducer,
   searchProxyReducer,
   dataFormatReducer,
+  scheduleUpdateTreeReducer,
 });
 
 export default rootReducer;
