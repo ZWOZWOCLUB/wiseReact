@@ -764,7 +764,6 @@ function Header() {
                         }}
                       >
                         <div>{recMessage.aamSendMessenger?.msgDate}</div>
-                        <div>{recMessage.aamSendMessenger?.msgDate}</div>
                         <div>
                           <button
                             style={{
@@ -781,10 +780,7 @@ function Header() {
                         </div>
                       </div>
                       <div>{recMessage.aamSendMessenger?.msgContents}</div>
-                      <div>{recMessage.aamSendMessenger?.msgContents}</div>
                       <div>
-                        발신자 :{" "}
-                        {recMessage.aamSendMessenger?.aamMember.memName}
                         발신자 :{" "}
                         {recMessage.aamSendMessenger?.aamMember.memName}
                       </div>
