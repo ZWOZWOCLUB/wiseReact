@@ -21,7 +21,8 @@ const SchedulePattenAddPattern = (props) => {
   const [insertRows, serInsertRows] = useState([]);
   const [selectedDayIndex, setSelectedDayIndex] = useState(null);
   const [selectedColor, setSelectedColor] = useState("");
-
+  const result3 = useSelector((state) => state.scheduleUpdateReducer);
+  const allList1 = useSelector((state) => state.scheduleReducer);
   const updateReducer = useSelector(
     (state) => state.schedulePatternUpdateReducer
   );
@@ -54,7 +55,17 @@ const SchedulePattenAddPattern = (props) => {
 
   useEffect(() => {
     dispatch(callSchedulePatternSearchAPI());
-  }, [insertReducer, updateReducer, deleteReducer]);
+    setPattern({
+      wokCode: 0,
+      wokStartTime: "",
+      wokRestTime: "",
+      wokEndTime: "",
+      wokDeleteState: "N",
+      wokColor: "",
+      wokType: "",
+    });
+    props.getSelectedPattern([]);
+  }, [insertReducer, updateReducer, deleteReducer, result3, allList1]);
 
   console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
 

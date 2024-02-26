@@ -59,6 +59,7 @@ function SchedulePattenAdd() {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
+    setSelectedColor("");
   }, [result, result1, insertReducer, updateReducer, deleteReducer]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
