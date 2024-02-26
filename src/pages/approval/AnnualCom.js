@@ -40,6 +40,33 @@ function AnnualCom(props) {
         });
     }, []);
 
+    const onClickDocFileDown = async (index) => {
+        try {
+            const urlPath =
+                'http://localhost:8001' +
+                '/memberFiles/' +
+                props.data.approvalType.approval.approvalMember.memCode +
+                '/' +
+                props.data.approvalAttachment[0]?.payAtcName +
+                '.png';
+
+            console.log(urlPath);
+
+            const response = await fetch(urlPath); //파일 경로 지정
+            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            console.log('blobs', blob);
+            const url = window.URL.createObjectURL(blob); //다운로드 링크 생성
+            const link = document.createElement('a'); //a 요소 생성
+            link.href = url; //url을 a태그의 href속성으로 지정
+            link.setAttribute('download', props.data.approvalAttachment[0]?.payAtcOriginalName); //다운로드 파일 이름 지정
+            document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            link.click(); //생성한 링크 클릭해서 파일 다운
+            link.parentNode.removeChild(link); //a요소 제거
+        } catch (error) {
+            console.log('등록된 파일이 없습니다');
+        }
+    };
+
     const onChange = (e) => {
         setForm({
             ...form,
@@ -110,7 +137,17 @@ function AnnualCom(props) {
                     <div>제목</div>
                     <div>연차구분</div>
                     <div>신청일</div>
-                    <div style={{ marginTop: '115px' }}>내용</div>
+                    <div style={{ marginTop: '105px' }}>내용</div>
+                    {props.data.approvalAttachment[0] &&
+                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+                        <>
+                            <div style={{ marginTop: '80px' }}>첨부파일</div>
+                        </>
+                    ) : (
+                        <>
+                            <div style={{ marginTop: '80px' }}>첨부파일</div>
+                        </>
+                    )}
                 </div>
                 <div id='margintop'>
                     <div>{props.data.approvalComplete[0]?.approval?.payName}</div>
@@ -121,6 +158,33 @@ function AnnualCom(props) {
                     <div name='vacContents' id='document-contents2'>
                         {props.data.approvalType?.vacContents}
                     </div>
+
+                    {props.data.approvalAttachment[0] &&
+                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+                        <>
+                            <div>
+                                {props.data.approvalAttachment[0]?.payAtcOriginalName}
+                                <i
+                                    className='bx bx-down-arrow-alt'
+                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
+                                    onClick={() => onClickDocFileDown()}
+                                />
+                            </div>
+                        </>
+                    ) : props.data.approvalAttachment[0] ? (
+                        <>
+                            <div>
+                                {props.data.approvalAttachment[0]?.payAtcOriginalName}
+                                <i
+                                    className='bx bx-down-arrow-alt'
+                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
+                                    onClick={() => onClickDocFileDown()}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
         </>
