@@ -332,8 +332,8 @@
 
 .btnWrapper{
     display: flex;
-    justify-content: space-between
-
+    justify-content: space-between; 
+    padding-right: 2rem;
 
 }
 
@@ -343,6 +343,21 @@
 
 #calendar{
     height: 90%;
+}
+
+.form-control44 {
+    display: block;
+    width: 20%;   
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.53;
+    background-color: #fff;
+    background-clip: padding-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
 }
 
 .today, .next, .prev

@@ -317,10 +317,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       name="schType"
                     />
                   </div>
-                  <div className={`${payCSS["hours"]}`}>
-                    <i className={"bx bxs-alarm"} />
-                    <div style={{ marginTop: 3 }}>&nbsp; 35시간</div>
-                  </div>
+                  <div className={`${payCSS["hours"]}`}></div>
                 </div>
                 <div className={`${payCSS["top_right"]}`}>
                   <div className={`${payCSS["schedule_date"]}`}>

@@ -52,6 +52,15 @@ const SchedulePattenAddPattern = (props) => {
     wokColor: "",
     wokType: "",
   });
+  const [insertPattern, setInsertPattern] = useState({
+    wokStartTime: "",
+    wokCode: 0,
+    wokRestTime: "",
+    wokEndTime: "",
+    wokDeleteState: "N",
+    wokColor: "",
+    wokType: "",
+  });
 
   useEffect(() => {
     dispatch(callSchedulePatternSearchAPI());
@@ -74,11 +83,11 @@ const SchedulePattenAddPattern = (props) => {
 
     dispatch(
       callScheduleWorkPatternInsertAPI({
-        pattern: pattern,
+        pattern: insertPattern,
       })
     );
 
-    setPattern({
+    setInsertPattern({
       wokCode: 0,
       wokStartTime: "",
       wokRestTime: "",
@@ -95,6 +104,15 @@ const SchedulePattenAddPattern = (props) => {
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     setPattern((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+    console.log("pattern", pattern);
+  };
+
+  const onChangeInsertHandler = (e) => {
+    const { name, value } = e.target;
+    setInsertPattern((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
@@ -127,6 +145,15 @@ const SchedulePattenAddPattern = (props) => {
 
   const onClickCloseModal = () => {
     setPattern({
+      wokCode: 0,
+      wokStartTime: "",
+      wokRestTime: "",
+      wokEndTime: "",
+      wokDeleteState: "N",
+      wokColor: "",
+      wokType: "",
+    });
+    setInsertPattern({
       wokCode: 0,
       wokStartTime: "",
       wokRestTime: "",
@@ -284,8 +311,8 @@ const SchedulePattenAddPattern = (props) => {
                   type="color"
                   className={`${payCSS["inputColor"]}`}
                   name="wokColor"
-                  onChange={onChangeHandler}
-                  value={pattern.wokColor}
+                  onChange={onChangeInsertHandler}
+                  value={insertPattern.wokColor}
                 />
                 <label className={`${payCSS["colorLabel"]}`}>
                   편성명
@@ -293,8 +320,8 @@ const SchedulePattenAddPattern = (props) => {
                     type="text"
                     className={`${payCSS["patternName"]}`}
                     name="wokType"
-                    onChange={onChangeHandler}
-                    value={pattern.wokType}
+                    onChange={onChangeInsertHandler}
+                    value={insertPattern.wokType}
                   />
                 </label>
               </div>
@@ -307,8 +334,8 @@ const SchedulePattenAddPattern = (props) => {
                     type="time"
                     name="wokStartTime"
                     className={`${payCSS["timeInput"]}`}
-                    onChange={onChangeHandler}
-                    value={pattern.wokStartTime}
+                    onChange={onChangeInsertHandler}
+                    value={insertPattern.wokStartTime}
                   />
                 </div>
                 <div className={`${payCSS["modalMiddleWrapper"]}`}>
@@ -319,18 +346,18 @@ const SchedulePattenAddPattern = (props) => {
                   <input
                     type="time"
                     className={`${payCSS["timeInput"]}`}
-                    onChange={onChangeHandler}
+                    onChange={onChangeInsertHandler}
                     name="wokEndTime"
-                    value={pattern.wokEndTime}
+                    value={insertPattern.wokEndTime}
                   />
                 </div>
                 <div className={`${payCSS["modalMiddleWrapper"]}`}>
                   <div className={`${payCSS["modalMiddleText"]}`}>휴게시간</div>
                   <select
                     className={`${payCSS["timeSelect"]}`}
-                    onChange={onChangeHandler}
+                    onChange={onChangeInsertHandler}
                     name="wokRestTime"
-                    value={pattern.wokRestTime}
+                    value={insertPattern.wokRestTime}
                   >
                     <option value="">--선택--</option>
                     <option value="00:30:00">00:30</option>
