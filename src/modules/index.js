@@ -54,40 +54,11 @@ import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
 import dataFormatReducer from './DataFormatModule';
-
-const { combineReducers } = require("redux");
-
-// import settingDegreeReducer from './SettingDegreeModule';
-// import settingCertificateReducer from './SettingCertificateModule';
-// import settingInfoSearchReducer from './SettingInfoSearchModuel';
-// import settingDocumentReducer from './SettingDocumentModule';
-// import noticeReducer from './NoticeModule';
-// import notCommentReducer from './NotCommentModule';
-// import scheduleReducer from './ScheduleModule';
-// import mpUpdateReducer from './MPUpdateModule';
-// import approvalTypeReducer from './ApprovalTypeModule';
-// import approvalCompleteReducer from './ApprovalCompleteInfoModule';
-// import approvalInfoReducer from './ApprovalInfoModule';
-// import mpProReducer from './MPProfileModule';
-// import mpSignReducer from './MPSignModule';
-// import schedulePatternReducer from './SchedulePatternModule';
-// import organizationItemReducer from './OrganizationRefListModule';
-// import organizationMemberReducer from './OrganizationMemberModule';
-// import organizationCreateReducer from './OrganizationCreateModule';
-// import organizationListReducer from './OrganizationListModule';
-// import organizationModifyReducer from './OrganizationModifyModule';
-// import organizationDeleteReducer from './OrganizationDeleteModule';
-// import organizationEditReducer from './OrganizationEditModule';
-// import schedulePatternUpdateReducer from './SchedulePatternUpdateModule';
-// import schedulePatternInsertReducer from './SchedulePatternInsertModule';
-// import schedulePatternDeleteReducer from './SchedulePatternDeleteModule';
-// const { combineReducers } = require('redux');
 import schedulePatternDayReducer from "./SchedulePatternDayModule";
 import scheduleInsetMemReducer from "./ScheduleInsertMemModule";
 
-import notCommentReducer from "./NotCommentModule";
-import dataFormatReducer from "./DataFormatModule";
 const { combineReducers } = require("redux");
+
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
 
