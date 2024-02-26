@@ -11,7 +11,7 @@ import { callSignAPI } from "../../apis/MyPageAPICalls.js";
 function Sign() {
   const dispatch = useDispatch();
 
-  const sign = useSelector((state) => state.mypageReducer);
+  const sign = useSelector((state) => state.mpSignReducer);
   const navigate = useNavigate();
   const canvasRef = useRef({ width: 500, height: 300 });
   const [image, setImage] = useState(null);
@@ -19,7 +19,6 @@ function Sign() {
   const imageInput = useRef();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
 
-  const [error, setError] = useState(0);
   console.log(canvasRef);
   const [drawble, setDrawble] = useState(false);
 
@@ -55,23 +54,15 @@ function Sign() {
           memCode: token.memCode,
         })
       );
-      
-    //   setError(sign.status);
-    //   console.log("맨처음 useEffect에서 setError 설정 완료", error);
+
     }
-    // setError(sign.status);
-    // console.log("맨처음 useEffect에서 setError 설정 완료", error);
-    // console.log('result---->',sign);
+
   }, []);
 
-  // result가 변경될때마다 상태 업데이트
-  // useEffect(() => {
-  //   setError(result.status);
-  //   console.log(result.status);
-  //   console.log("useEffect에서 setError 설정 완료", error);
-  // }, [result]);
+
 
   console.log("result--->", sign);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -189,7 +180,7 @@ const dataURLtoBlob = (dataURL) => {
     console.log('link.href',link.href);
     const dataURL = canvas.toDataURL("image/png");
 
-    link.download = "image.png";
+    link.download = "sign.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -223,9 +214,9 @@ const dataURLtoBlob = (dataURL) => {
       );
     }
 
-    // alert("서명 등록/수정이 완료되었습니다");
-    // navigate("/main/mp", { replace: true });
-    // window.location.reload();
+    alert("서명 등록/수정이 완료되었습니다");
+    navigate("/main/mp", { replace: true });
+    window.location.reload();
   };
 
   const onClickBack = () => {
@@ -274,7 +265,7 @@ const dataURLtoBlob = (dataURL) => {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li

@@ -140,7 +140,7 @@ function MPDocument() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li

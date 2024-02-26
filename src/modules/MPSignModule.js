@@ -5,9 +5,11 @@ const initialState = [];
 
 /* 액션 */
 export const GET_SIGN   = 'login/GET_SIGN';
+export const PUT_SIGN   = 'login/PUT_SIGN';
 
 const actions = createActions({
     [GET_SIGN]: () => {},
+    [PUT_SIGN]: () => {},
 
 });
 
@@ -15,6 +17,10 @@ const actions = createActions({
 const mpSignReducer = handleActions(
     {
         [GET_SIGN]: (state, { payload }) => {
+            
+            return payload;
+        },
+        [PUT_SIGN]: (state, { payload }) => {
             
             return payload;
         },

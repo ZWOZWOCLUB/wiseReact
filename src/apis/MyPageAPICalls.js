@@ -7,7 +7,7 @@ import { GET_DOC } from "../modules/MPDocModule";
 import { GET_MEM } from "../modules/MPModule";
 import { GET_PRO } from "../modules/MPProfileModule";
 import { GET_SAL } from "../modules/MPSalaryModule";
-import { GET_SIGN } from "../modules/MPSignModule";
+import { GET_SIGN, PUT_SIGN } from "../modules/MPSignModule";
 import { PUT_MEM } from "../modules/MPUpdateModule";
 import { GET_VAC_HIS } from "../modules/MPVacHisModule";
 import { GET_VAC } from "../modules/MPVacModule";
@@ -306,7 +306,7 @@ export const callSignUpdateAPI = ({ form }) => {
 
     console.log("[callSignUpdateAPI] callSignUpdateAPI RESULT : ", result);
 
-    dispatch({ type: PUT_MEM, payload: result });
+    dispatch({ type: PUT_SIGN, payload: result });
     
   };
 };
@@ -401,3 +401,26 @@ export const callATTListAPI = ({ memCode }) => {
     }
   };
 };
+
+// // 공휴일 조회
+// export const callHolidayAPI = () => {
+
+//   const requestURL = `https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=fC3o1F%2F7ZWMRqCqStgU5PKqw%2FXpDjMJMzHdnXtA4Mr6fvjiPYq%2FblEBzExy3OqB6rcsO7DAwlvJ663cW02qQ%2Fg%3D%3D&solYear=2015&solMonth=09`;
+
+//   return async (dispatch, getState) => {
+//     const result = await fetch(requestURL, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "*/*",
+//         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+//       },
+//     }).then((response) => response.json());
+
+//     console.log("[callATTListAPI] callATTListAPI RESULT : ", result);
+//     if (result.status === 200) {
+//       console.log("[callATTListAPI] callATTListAPI SUCCESS");
+//       dispatch({ type: GET_SIGN, payload: result });
+//     }
+//   };
+// };

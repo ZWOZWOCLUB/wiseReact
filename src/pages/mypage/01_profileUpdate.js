@@ -21,11 +21,10 @@ function MyPageUpdate() {
   const profileDetail = profile.data;
 
   const [form, setForm] = useState({
-    memCode: memberDetail.memCode,
-    memBirth: memberDetail.memBirth,
-    memEmail: memberDetail.memEmail,
-    memPhone: memberDetail.memPhone,
-    memAddress: memberDetail.memAddress,
+    memCode: token.memCode,
+      memEmail: memberDetail.memEmail,
+      memPhone: memberDetail.memPhone,
+      memAddress: memberDetail.memAddress,
   });
   
 
@@ -44,7 +43,6 @@ function MyPageUpdate() {
     const formData = new FormData();
 
     formData.append("memCode", form.memCode);
-    formData.append("memBirth", form.memBirth);
     formData.append("memEmail", form.memEmail);
     formData.append("memPhone", form.memPhone);
     formData.append("memAddress", form.memAddress);
@@ -78,6 +76,18 @@ function MyPageUpdate() {
       );
     }
   }, []);
+
+  // useEffect(() => {
+
+  //   console.log("setForm useEffect 실행--->",memberDetail);
+
+  //   setForm({
+  //     memCode: token.memCode,
+  //     memEmail: memberDetail.memEmail,
+  //     memPhone: memberDetail.memPhone,
+  //     memAddress: memberDetail.memAddress,
+  //   });
+  // }, [memberDetail]);
 
 
 
@@ -128,7 +138,7 @@ function MyPageUpdate() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li
@@ -217,14 +227,7 @@ function MyPageUpdate() {
                             <label htmlFor="lastName" className="form-label">
                               생년월일
                             </label>
-                            <input
-                              className="form-control"
-                              name="memBirth"
-                              type="text"
-                              autofocus
-                              value={form.memBirth}
-                              onChange={ onChangeHandler }
-                            />
+                            <div>{memberDetail.memBirth}</div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="email" className="form-label">
