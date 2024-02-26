@@ -9,7 +9,7 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
-import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import { callSchaduleTreeAPI } from "../../apis/ScheduleAPICalls.js";
 import { callScheduleInsertAPI } from "../../apis/ScheduleInsertAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree from "react-checkbox-tree";
@@ -19,7 +19,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, setInsertRows] = useState([]);
-  const departmentList = useSelector((state) => state.organizationChartReducer);
+  const departmentList = useSelector((state) => state.scheduleTreeReducer);
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
@@ -31,8 +31,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const scheduleRef = useRef();
   const [checkedList, setCheckedList] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
-
-  useEffect(() => {}, [selectedColor]);
 
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
@@ -54,13 +52,6 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       return newSelectedDayIndices;
     });
   };
-
-  useEffect(() => {
-    if (result2) {
-      setSelectedRowIndex("");
-      setScheduleForm("");
-    }
-  }, [result2]);
 
   const getDayStyle = (dayIndex) => {
     if (selectedDayIndices[dayIndex]) {
@@ -101,6 +92,23 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       .map((memName) => memName.split("/")[0]),
   });
 
+  useEffect(() => {
+    setInsertRows([]);
+    setScheduleForm([
+      {
+        schType: "",
+        schStartDate: "",
+        schEndDate: "",
+        schColor: "",
+        schDeleteStatus: "N",
+        dayCode: "",
+        wokCode: selectedColor ? selectedColor.wokCode : "",
+        memCode: checked
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[0]),
+      },
+    ]);
+  }, [allList, result2]);
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
       if (insertRows.length === 0) {
@@ -150,7 +158,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   }, [selectedColor, selectedDayIndices, checked]);
 
   useEffect(() => {
-    dispatch(callOrganizationTreeAPI());
+    dispatch(callSchaduleTreeAPI());
   }, []);
 
   const nodes =
@@ -211,7 +219,10 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
         scheduleForm: formData,
       })
     );
-    window.location.reload();
+    setChecked([]);
+    setSelectedIndices([]);
+
+    props.getSeletedColorStatus("");
   };
 
   const onClickIndex = (index) => {
@@ -339,6 +350,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               <hr />
               <CheckboxTree
                 nodes={nodes}
+                showExpandAll={true}
+                showNodeTitle={true}
                 checked={checked}
                 expanded={expanded}
                 onCheck={(checked) => setChecked(checked)}
@@ -350,8 +363,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   halfCheck: <span className="bx bx-checkbox-square" />,
                   expandClose: <span className="bx bx-chevron-right" />,
                   expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
+                  expandAll: <span className="bx bx-plus" />,
+                  collapseAll: <span className="bx bx-minus" />,
                   parentClose: <span className="bx bx-folder" />,
                   parentOpen: (
                     <span

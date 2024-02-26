@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../@core/css/customApproval.css';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
@@ -27,6 +27,15 @@ function ReqDocumentCom(props) {
         appComment: '',
         appDate: formattedDate,
     });
+
+    useEffect(() => {
+        setForm({
+            appCode: props?.data?.approvalComplete[0]?.appCode,
+            appState: '',
+            appComment: '',
+            appDate: formattedDate,
+        });
+    }, []);
 
     const onChange = (e) => {
         setForm({

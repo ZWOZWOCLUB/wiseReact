@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -23,6 +23,15 @@ function EditCommuteCom(props) {
         appDate: formattedDate,
     });
 
+    useEffect(() => {
+        setForm({
+            appCode: props?.data?.approvalComplete[0]?.appCode,
+            appState: '',
+            appComment: '',
+            appDate: formattedDate,
+        });
+    }, []);
+
     const onChange = (e) => {
         setForm({
             ...form,
@@ -30,7 +39,7 @@ function EditCommuteCom(props) {
         });
     };
     const approvalComplete = () => {
-        console.log('form', form);
+        console.log('form-------------->', form);
         dispatch(
             callAprovalCompleteAPI({
                 form: form,

@@ -23,6 +23,21 @@ function Navbar() {
 
   const [openedMenu, setOpenedMenu] = useState("");
 
+  function openPopup() {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+
+    const windowHeight = 800;
+    const top = (screenHeight - windowHeight) / 2;
+    const newWindow = window.open(
+      "/settingAttendance",
+      "_blank",
+      `width=${screenWidth},height=${screenHeight},top=${top},menubar=no,toolbar=no,location=no,resizable=yes`
+    );
+    if (newWindow) {
+      newWindow.focus();
+    }
+  }
   const menuPaths = {
     dep: ["/main/organizationChart", "/main/organizationTree"],
     app: ["/main/Approval", "/main/SendApproval", "/main/Assignment"],
@@ -68,7 +83,6 @@ function Navbar() {
             <div style={{ paddingLeft: 10 }}>스케줄</div>
           </NavLink>
         </li>
-        
         <li
           className={`${coreCSS["menu-item"]} ${
             openedMenu === "app" ? coreCSS["open"] : ""
@@ -218,13 +232,12 @@ function Navbar() {
                 직원 등록
               </NavLink>
             </li>
-            <li className={coreCSS[`menu-item`]}>
-              <NavLink
-                to="/main/settingAttendance"
-                className={coreCSS[`menu-link`]}
-              >
-                근태 조회
-              </NavLink>
+            <li
+              className={coreCSS[`menu-item`]}
+              onClick={openPopup}
+              style={{ cursor: "pointer" }}
+            >
+              <li className={coreCSS[`menu-link`]}>근태 조회</li>
             </li>
           </ul>
         </li>

@@ -178,7 +178,6 @@ function Approval() {
                                                         <td
                                                             colSpan={6}
                                                             style={{
-                                                                display: 'flex',
                                                                 textAlign: 'center',
                                                                 alignItems: 'center',
                                                             }}

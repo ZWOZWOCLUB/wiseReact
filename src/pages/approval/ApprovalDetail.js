@@ -11,6 +11,7 @@ import RetiredmentCom from './RetiredmentCom';
 import EditCommuteCom from './EditCommuteCom';
 import EditScheduleCom from './EditScheduleCom';
 import { callApprovalInfoAPI } from '../../apis/ApprovalInfoAPICalls';
+import { callProxyAPI } from '../../apis/AttendanceAPICalls';
 
 function ApprovalDetail(props) {
     const location = useLocation();
@@ -23,11 +24,18 @@ function ApprovalDetail(props) {
     const approvalType = useSelector((state) => state.approvalTypeReducer);
     const refapproval = useSelector((state) => state.approvalInfoReducer);
     const refapprovalList = refapproval?.data?.content;
+    const proxyMember = useSelector((state) => state.attendanceInfoReducer);
+    const [form, setForm] = useState({
+        memCode: '',
+        date: '',
+    });
 
     console.log('approvalComplete', approvalComplete);
     console.log('approvalAttachment', approvalAttachment);
     console.log('approvalType', approvalType);
     console.log('refapproval', refapproval);
+    console.log('form AD', form);
+    console.log('nonofalse', proxyMember?.data);
 
     let proxy = '';
 
@@ -36,10 +44,28 @@ function ApprovalDetail(props) {
         console.log('-------123>', test[0]?.memName);
     }
 
-    if (approvalComplete[0]?.approvalMember?.memRole === 'USER') {
+    if (proxyMember?.data) {
         proxy = approvalComplete[0]?.approvalMember?.memName;
         console.log('proxy', proxy);
     }
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+
+        const formattedDate = year + '-' + month + '-' + day;
+        setForm({
+            memCode: token.memCode,
+            date: formattedDate,
+        });
+        dispatch(
+            callProxyAPI({
+                form,
+            })
+        );
+    }, [test]);
 
     useEffect(() => {
         dispatch(
