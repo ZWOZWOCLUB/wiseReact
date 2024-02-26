@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { callAprovalCompleteAPI } from '../../apis/ApprovalAPICalls';
@@ -30,6 +30,15 @@ function AnnualCom(props) {
         appComment: '',
         appDate: formattedDate,
     });
+
+    useEffect(() => {
+        setForm({
+            appCode: props?.data?.approvalComplete[0]?.appCode,
+            appState: '',
+            appComment: '',
+            appDate: formattedDate,
+        });
+    }, []);
 
     const onChange = (e) => {
         setForm({
