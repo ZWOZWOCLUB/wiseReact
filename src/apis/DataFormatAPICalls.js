@@ -1,4 +1,5 @@
-import { GET_DATAFORMAT_ALL, POST_DATAFORMAT_DATA, PUT_DATAFORMAT_DELETE } from '../modules/DataFormatModule';
+import { GET_DATAFORMAT_ALL, PUT_DATAFORMAT_DELETE } from '../modules/DataFormatModule';
+import { POST_DATAFORMAT_DATA  } from '../modules/DataFormatInsertModule';
 
 export const callAllViewDataFormatAPI = ({ currentPage }) => {
     console.log('[callDataFormatAPI] callDataFormatAPI');
