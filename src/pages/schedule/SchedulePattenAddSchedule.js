@@ -21,6 +21,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const allList = useSelector((state) => state.schedulePatternDayReducer);
   const department = useSelector((state) => state.scheduleTreeReducer);
   const result = useSelector((state) => state.scheduleUpdateReducer);
+
   const [checkeds, setCheckeds] = useState([]);
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
@@ -29,7 +30,6 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const [updateState, setUpdateState] = useState([]);
   const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
-  useEffect(() => {}, [result, result2]);
   useEffect(() => {
     dispatch(callSchaduleTreeAPI());
   }, []);
@@ -317,10 +317,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       name="schType"
                     />
                   </div>
-                  <div className={`${payCSS["hours"]}`}>
-                    <i className={"bx bxs-alarm"} />
-                    <div style={{ marginTop: 3 }}>&nbsp; 35시간</div>
-                  </div>
+                  <div className={`${payCSS["hours"]}`}></div>
                 </div>
                 <div className={`${payCSS["top_right"]}`}>
                   <div className={`${payCSS["schedule_date"]}`}>
@@ -454,7 +451,12 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       })
                     : p.allowanceList.map((allowance, idx) => (
                         <div className={`${payCSS["name"]}`}>
-                          <span key={idx}>{allowance.memberList.memName}</span>
+                          <span key={idx}>
+                            {allowance.memberList &&
+                            allowance.memberList.memName
+                              ? allowance.memberList.memName
+                              : ""}
+                          </span>
                         </div>
                       ))}
                 </div>

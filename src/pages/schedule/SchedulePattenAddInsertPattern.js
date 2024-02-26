@@ -14,7 +14,7 @@ import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpda
 import { callScheduleWorkPatternInsertAPI } from "../../apis/SchedulePatternInsertAPICalls";
 import { callScheduleWorkPatterDeleteAPI } from "../../apis/SchedulePatternDeleteAPICalls";
 
-const SchedulePattenAddPattern = (props) => {
+const SchedulePattenAddPattern = () => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
@@ -57,21 +57,6 @@ const SchedulePattenAddPattern = (props) => {
   }, [insertReducer, updateReducer, deleteReducer]);
 
   console.log("!!!!!!!!!!!!!!!!!!!!patternList", patternList);
-
-  useEffect(() => {
-    if (updateState) {
-      setPattern((prevForm) => ({
-        ...prevForm,
-        wokCode: patternList[sendIndex].wokCode,
-        wokStartTime: patternList[sendIndex].wokStartTime,
-        wokRestTime: patternList[sendIndex].wokRestTime,
-        wokEndTime: patternList[sendIndex].wokEndTime,
-        wokDeleteState: patternList[sendIndex].wokDeleteState,
-        wokColor: patternList[sendIndex].wokColor,
-        wokType: patternList[sendIndex].wokType,
-      }));
-    }
-  }, [updateState]);
 
   const onClickInsertPattern = () => {
     console.log("클릭");
@@ -121,23 +106,6 @@ const SchedulePattenAddPattern = (props) => {
     setUpdateState(false);
   };
 
-  const onClickColorBox = (event, index) => {
-    const selectedPattern = patternList[index];
-    setPattern(selectedPattern);
-
-    console.log("Selected Pattern:", selectedPattern);
-
-    props.getSelectedPattern(selectedPattern);
-  };
-
-  const onClickDeletePattern = (index) => {
-    console.log("index.........................", index);
-
-    const sendWokCode = patternList[index].wokCode;
-
-    dispatch(callScheduleWorkPatterDeleteAPI({ sendWokCode }));
-  };
-
   const onClickSendIndex = (index) => {
     setSendIndex(index);
     const wokCode = patternList[index].wokCode;
@@ -167,7 +135,7 @@ const SchedulePattenAddPattern = (props) => {
         className={`${payCSS["newSchedule"]}`}
         id="newGroup"
         data-bs-toggle="modal"
-        data-bs-target="#modalCenter1"
+        data-bs-target="#modalPatternInsert1"
       >
         <strong>
           <i
@@ -177,64 +145,7 @@ const SchedulePattenAddPattern = (props) => {
           새 근무 편성
         </strong>
       </div>
-      {Array.isArray(patternList) && patternList.length > 0
-        ? patternList.map((p, index) => (
-            <div
-              className={`${payCSS["work"]}`}
-              id="work"
-              key={index}
-              onClick={(event) => onClickColorBox(event, index)}
-            >
-              <div className={`${payCSS["content_left"]}`}>
-                <div
-                  className={`${payCSS["color_box"]}`}
-                  style={{ backgroundColor: p.wokColor }}
-                ></div>
-              </div>
-              <div className={`${payCSS["content_right"]}`}>
-                <div className={`${payCSS["contentRightWrapper"]}`}>
-                  <div className={`${payCSS["contentRightWrapper2"]}`}>
-                    <div className={`${payCSS["schedule"]}`}>{p.wokType}</div>
-                    <div className="dropdown">
-                      <button
-                        className="btn p-0"
-                        type="button"
-                        id="transactionID"
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div
-                        className="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="transactionID"
-                      >
-                        <span
-                          className="dropdown-item"
-                          data-bs-toggle="modal"
-                          data-bs-target="#modalCenter1"
-                          onClick={() => onClickSendIndex(index)}
-                        >
-                          수정
-                        </span>
-                        <span
-                          className="dropdown-item"
-                          onClick={() => onClickDeletePattern(index)}
-                        >
-                          삭제
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`${payCSS["time"]}`}>
-                    {formatTime(p.wokStartTime)} ~{formatTime(p.wokEndTime)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        : ""}
+
       <div
         className="modal fade"
         id="modalCenter1"
@@ -259,13 +170,7 @@ const SchedulePattenAddPattern = (props) => {
                   className={`${payCSS["inputColor"]}`}
                   name="wokColor"
                   onChange={onChangeHandler}
-                  value={
-                    !updateState
-                      ? sendWokCode > 0
-                        ? patternList[sendIndex].wokColor
-                        : pattern.wokColor
-                      : pattern.wokColor
-                  }
+                  value={pattern.wokColor}
                 />
                 <label className={`${payCSS["colorLabel"]}`}>
                   편성명
@@ -346,27 +251,15 @@ const SchedulePattenAddPattern = (props) => {
               </div>
               <hr />
               <div className={`${payCSS["modalBtnWrapper"]}`}>
-                {sendWokCode > 0 ? (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    style={{ marginRight: "1rem" }}
-                    onClick={onClickUpdatePattern}
-                  >
-                    수정
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    style={{ marginRight: "1rem" }}
-                    onClick={onClickInsertPattern}
-                  >
-                    저장
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  style={{ marginRight: "1rem" }}
+                  onClick={onClickInsertPattern}
+                >
+                  저장
+                </button>
                 <button
                   type="button"
                   className="btn btn-outline-secondary"

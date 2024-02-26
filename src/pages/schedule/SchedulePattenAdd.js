@@ -59,6 +59,7 @@ function SchedulePattenAdd() {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
+    setSelectedColor("");
   }, [result, result1, insertReducer, updateReducer, deleteReducer]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
@@ -128,6 +129,7 @@ function SchedulePattenAdd() {
       </div>
       <div className={`${payCSS["schedule_content"]}`}>
         <div className={`${payCSS["side_schedule"]}`} id="side_schedule">
+          <SchedulePattenAddInsertSchedule />
           <SchedulePattenAddPattern
             getSelectedPattern={getSelectedPattern}
             selectedColor={selectedColor}

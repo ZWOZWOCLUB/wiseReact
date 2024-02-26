@@ -379,7 +379,8 @@ function Schedule() {
           </div>
           <div className={`${payCSS["Wrapper"]}`} style={{ flex: 3 }}>
             <div className={`${payCSS["btnWrapper"]}`}>
-              <input
+              <div className={`${payCSS["form-control44"]}`}></div>
+              {/* <input
                 type="text"
                 className={`${payCSS["form-control4"]}`}
                 placeholder="검색어를 입력하세요"
@@ -392,7 +393,7 @@ function Schedule() {
                 id="basic-addon-search31"
               >
                 <i className="bx bx-search" />
-              </span>
+              </span> */}
               <button className={`${payCSS["prev"]}`} onClick={onClickPrev}>
                 <i
                   className="bx bx-chevron-left"
@@ -409,7 +410,7 @@ function Schedule() {
               <button className={`${payCSS["today"]}`} onClick={onClickToday}>
                 Today
               </button>
-              <div></div>
+              <div className={`${payCSS["scheduleAdd"]}`}>&nbsp;</div>
               <button
                 className={`${payCSS["patternInscription"]}`}
                 onClick={schedulePattenAdd}

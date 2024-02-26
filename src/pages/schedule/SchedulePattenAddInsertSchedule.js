@@ -221,8 +221,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     );
     setChecked([]);
     setSelectedIndices([]);
-
-    props.getSeletedColorStatus("");
+    setSelectedDayIndices([]);
   };
 
   const onClickIndex = (index) => {
