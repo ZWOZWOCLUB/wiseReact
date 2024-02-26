@@ -71,6 +71,7 @@ import settingSalaryUpdateReducer from "./SettingSalaryUpdateModule";
 import settingSalaryDeleteReducer from "./SettingSalaryDeleteModule";
 import scheduleTreeReducer from "./ScheduleTreeModule";
 import searchProxyReducer from "./SearchProxyModule";
+import organizationEditSearchReducer from "./OrganizationEditSearchModule";
 const { combineReducers } = require("redux");
 
 
@@ -150,6 +151,7 @@ const rootReducer = combineReducers({
   scheduleTreeReducer,
   searchProxyReducer,
   dataFormatReducer,
+  organizationEditSearchReducer,
 });
 
 export default rootReducer;

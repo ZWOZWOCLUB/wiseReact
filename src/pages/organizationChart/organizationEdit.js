@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { callOrganizationMemberAPI } from "../../apis/OrganizationMemberAPICalls";
-import { callOrganizationEditAPI, callOrganizationUpdateAPI, callOrgSearchNameAPI } from "../../apis/OrganizationEditAPICalls";
+import { callOrganizationEditAPI, callOrganizationUpdateAPI } from "../../apis/OrganizationEditAPICalls";
 import { useParams } from "react-router-dom";
+import { callOrgSearchNameAPI } from "../../apis/OrganizationEditSearchCalls";
 
 //부서편집
 
@@ -116,7 +117,7 @@ function OrganizationEdit(){
   const [search, setSearch] = useState('');
 
   //검색 결과 담아줄 상태값
-  const [searchName, setSearchName] = useState([]);
+  // const [searchName, setSearchName] = useState([]);
 
   //검색어 핸들러 함수
   const searchChange = (e) => {
@@ -126,14 +127,26 @@ function OrganizationEdit(){
   }
 
 
+  // const onEnterKeyHandler = (e) => {
+  //   if(e.key === 'Enter' || e.type === 'click') {
+  //     // 엔터키 누르거나 검색 아이콘 클릭시
+  //     let searchResult = orgMemberList.filter((member) => 
+  //       member.memName.includes(search)
+  //     );
+  
+  //     setSearchName(searchResult);
+  //   }
+  // };
+
+  const searchResult = useSelector(state => state.organizationEditSearchReducer);
+
   const onEnterKeyHandler = (e) => {
     if(e.key === 'Enter' || e.type === 'click') {
       // 엔터키 누르거나 검색 아이콘 클릭시
-      let searchResult = orgMemberList.filter((member) => 
-        member.memName.includes(search)
-      );
-  
-      setSearchName(searchResult);
+      dispatch(callOrgSearchNameAPI({
+        search: search,
+      }));
+      console.log(searchResult);
     }
   };
 
@@ -141,6 +154,18 @@ const handleFormSubmit = (e) => {
   e.preventDefault(); // 폼 동작 방지
   onEnterKeyHandler(e); // 검색 실행
 };
+
+const refresh = ()=> {
+
+  setSearch('');
+
+  setStart((currentPage - 1) * 5);
+  dispatch(callOrganizationMemberAPI({
+    currentPage: currentPage,
+  })
+  ,[currentPage]);
+
+}
   
 
 
@@ -231,6 +256,7 @@ const handleFormSubmit = (e) => {
         <button className="btn btn-outline-primary" onClick={onEnterKeyHandler} style={{marginBottom : 0}}>
           검색
         </button>
+        <i class='bx bx-refresh' onClick={refresh}></i>
       </form>
       <div className="table-responsive text-nowrap">
         <table className="table table-bordered">
@@ -244,8 +270,8 @@ const handleFormSubmit = (e) => {
             </tr>
           </thead>
             <tbody>
-            { Array.isArray(searchName) && searchName.length > 0 ? (
-                searchName.map((member, index) => (
+            { Array.isArray(searchResult) && search ? (
+                searchResult.map((member, index) => (
                   <tr key={index}>
                     <td>{member.memCode}</td>
                     <td>{member.memName}</td>
