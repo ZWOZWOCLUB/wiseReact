@@ -8,11 +8,11 @@ import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalScheduleAPI } from '../../apis/ApprovalAPICalls';
 
-function EditSchedule() {
+function EditSchedule({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const [img, setImg] = useState(null);
@@ -24,7 +24,31 @@ function EditSchedule() {
 
     const formattedDate = year + '-' + month + '-' + day;
 
-    const memberCode = 240130003;
+    const memberCode = appCodes;
+    const refCode = refCodes;
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+
+        const formattedDate = year + '-' + month + '-' + day;
+        setForm({
+            approval: {
+                payDate: formattedDate,
+                payKind: '스케줄 정정',
+                approvalMember: {
+                    memCode: token.memCode,
+                },
+                payName: '스케줄 정정',
+            },
+            cMember: {
+                memCode: memberCode,
+            },
+            rMember: refCode,
+        });
+    }, [memberCode, refCode]);
 
     const [form, setForm] = useState({
         eshDateType: '',
@@ -99,6 +123,9 @@ function EditSchedule() {
         formData.append('approval.payName', form.approval.payName);
         formData.append('approval.payKind', form.approval.payKind);
         formData.append('cMember.memCode', form.cMember.memCode);
+        form.rMember.forEach((memCode, index) => {
+            formData.append(`rMember[${index}]`, memCode);
+        });
 
         if (form.file) {
             formData.append('approvalFile', form.file);
@@ -110,7 +137,7 @@ function EditSchedule() {
             })
         );
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (

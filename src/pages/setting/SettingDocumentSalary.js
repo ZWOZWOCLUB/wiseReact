@@ -16,31 +16,49 @@ function SettingDocumentSalary() {
   const memberCode = searchParams.get("memCode");
   // const [prevList, setPrevList] = useState();
   const prevList = useSelector((state) => state.settingInfoSearchReducer);
+  const result = useSelector((state) => state.settingSalaryInsertReducer);
+  const result2 = useSelector((state) => state.settingSalaryUpdateReducer);
+  const result3 = useSelector((state) => state.settingSalaryDeleteReducer);
 
-  useEffect((memCode) => {
-    dispatch(
-      callInfoSearchAPI({
-        memCode: memberCode,
-      })
-    );
-  }, []);
+  useEffect(
+    (memCode) => {
+      dispatch(
+        callInfoSearchAPI({
+          memCode: memberCode,
+        })
+      );
+    },
+    [result, result2, result3]
+  );
 
   //파일 다운하는 함수
   const onClickSalFileDown = async () => {
     try {
-      const urlPath = prevList.salaryFileDTO.salAtcPath;
+      const urlPath =
+        "http://localhost:8001" +
+        "/salary/" +
+        prevList.salaryFileDTO.salAtcConvertName;
+      console.log(urlPath);
 
       const response = await fetch(urlPath); //파일 경로 지정
+      console.log(response);
+
       const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
       const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
+      console.log(url);
+
       const link = document.createElement("a"); //a 요소 생성
+      console.log(link);
+
       link.href = url; //url을 a태그의 href속성으로 지정
+
       link.setAttribute("download", prevList.salaryFileDTO.salAtcName); //다운로드 파일 이름 지정
       document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
       link.click(); //생성한 링크 클릭해서 파일 다운
       link.parentNode.removeChild(link); //a요소 제거
     } catch (error) {
       console.log("등록된 파일이 없습니다");
+      // href="${ pageContext.servletContext.contextPath }/resources/upload/original/${ requestScope.thumbnail.attachmentList[0].savedName }" download>
     }
   };
 
@@ -63,7 +81,6 @@ function SettingDocumentSalary() {
       formData.append("salCode", prevList.salary.salCode);
       dispatch(callSalaryFileInsertAPI({ formData }));
     }
-    window.location.reload();
   };
 
   // 파일 업로드 버튼 클릭 시 호출되는 함수
@@ -113,7 +130,7 @@ function SettingDocumentSalary() {
           <td>
             <i
               className="bx bx-down-arrow-alt"
-              style={{ paddingRight: 10 }}
+              style={{ paddingRight: 10, cursor: "pointer" }}
               onClick={onClickSalFileDown}
             />
           </td>

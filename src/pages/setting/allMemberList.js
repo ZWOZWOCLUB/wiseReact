@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/pay.module.css";
 import { callSearchSettingMemberAPI } from "../../apis/SettingMemberListAPICalls";
+import { callSearchMemListAPI } from "../../apis/SettingMemberSearchListAPICalls";
 
 function Setting() {
   const dispatch = useDispatch();
@@ -16,10 +17,10 @@ function Setting() {
   const [pageEnd, setPageEnd] = useState(1);
   const [search, setSearch] = useState("");
   const pageInfo = member.pageInfo || {};
-  const [searchMember, setSearchMember] = useState([]);
   const firstDayOfMonth = new Date().toISOString().slice(0, 7);
   const [currentYearMonth, setCurrentYearMonth] = useState(firstDayOfMonth);
   const resultList = useSelector((state) => state.settingReducer);
+  const searchList = useSelector((state) => state.settingSearchMemListReducer);
 
   console.log("pageInfo", pageInfo);
   console.log("pageInfo.pageEnd", pageInfo.pageEnd);
@@ -34,12 +35,22 @@ function Setting() {
   useEffect(() => {
     console.log(currentPage);
     setStart((currentPage - 1) * 5);
+    setSearch("");
     dispatch(
       callSearchSettingMemberAPI({
         currentPage: currentPage,
       })
     );
   }, [currentPage]);
+  console.log("search-------------", search);
+
+  useEffect(() => {
+    dispatch(
+      callSearchMemListAPI({
+        search: search,
+      })
+    );
+  }, []);
 
   const onClickMemberInsert = () => {
     console.log(onClickMemberInsert);
@@ -59,19 +70,32 @@ function Setting() {
   const onEnterKeyHandler = (e) => {
     if (e.key === "Enter") {
       console.log("Enter key", search);
-      const searchResult = memberList.filter((member) =>
-        member.memName.includes(search)
+      dispatch(
+        callSearchMemListAPI({
+          search: search,
+        })
       );
-      setSearchMember(searchResult);
-      console.log(searchMember);
+      console.log(searchList);
     }
   };
 
   const onClickMemberDetail = (memCode) => {
     return () => {
       console.log(memCode, "클릭");
-      navigate(`/main/memberAdd?memCode=${memCode}`, { replace: true });
+      navigate(`/main/memberdetails?memCode=${memCode}`, { replace: true });
     };
+  };
+
+  const onClickSearch = () => {
+    dispatch(
+      callSearchMemListAPI({
+        search: search,
+      })
+    );
+  };
+
+  const onClickBlock = () => {
+    alert("퇴사한 직원입니다.");
   };
 
   return (
@@ -118,36 +142,72 @@ function Setting() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(searchMember) && searchMember.length > 0
-                ? searchMember.map((s, index) => (
+              {Array.isArray(searchList) && searchList.length > 0
+                ? searchList.map((s, index) => (
                     <tr
                       key={index}
-                      onDoubleClick={onClickMemberDetail(s.memCode)}
+                      onDoubleClick={
+                        s.memStatus === "Y"
+                          ? onClickBlock
+                          : onClickMemberDetail(s.memCode)
+                      }
+                      style={{ color: s.memStatus === "Y" ? "#ff3e1d" : "" }}
                     >
                       <td>{index + 1}</td>
                       <td>{s.memCode}</td>
                       <td>{s.memName}</td>
-                      <td>{s.departmentDTO ? s.departmentDTO.depName : "-"}</td>
-                      <td>{s.positionDTO ? s.positionDTO.posName : "-"}</td>
+                      <td>
+                        {s.memStatus === "N"
+                          ? s.departmentDTO
+                            ? s.departmentDTO.depName
+                            : "-"
+                          : "-"}
+                      </td>
+                      <td>
+                        {s.memStatus === "N"
+                          ? s.positionDTO
+                            ? s.positionDTO.posName
+                            : "-"
+                          : "-"}
+                      </td>
                       <td>{s.memHireDate}</td>
-                      <td>{s.memEndDate ? s.memEndDate : "-"}</td>
-                      <td>{s.memPhone}</td>
+                      <td style={{ color: s.memStatus === "Y" ? "red" : "" }}>
+                        {s.memEndDate ? s.memEndDate : "-"}
+                      </td>
+                      <td>{s.memStatus === "N" ? s.memPhone : "-"}</td>
                     </tr>
                   ))
                 : Array.isArray(memberList) &&
                   memberList.map((m, index) => (
                     <tr
                       key={index}
-                      onDoubleClick={onClickMemberDetail(m.memCode)}
+                      onDoubleClick={
+                        m.memStatus === "Y"
+                          ? onClickBlock
+                          : onClickMemberDetail(m.memCode)
+                      }
+                      style={{ color: m.memStatus === "Y" ? "#ff3e1d" : "" }}
                     >
                       <td>{index + 1}</td>
                       <td>{m.memCode}</td>
                       <td>{m.memName}</td>
-                      <td>{m.departmentDTO ? m.departmentDTO.depName : "-"}</td>
-                      <td>{m.positionDTO ? m.positionDTO.posName : "-"}</td>
+                      <td>
+                        {m.memStatus === "N"
+                          ? m.departmentDTO
+                            ? m.departmentDTO.depName
+                            : "-"
+                          : "-"}
+                      </td>
+                      <td>
+                        {m.memStatus === "N"
+                          ? m.positionDTO
+                            ? m.positionDTO.posName
+                            : "-"
+                          : "-"}
+                      </td>
                       <td>{m.memHireDate}</td>
                       <td>{m.memEndDate ? m.memEndDate : "-"}</td>
-                      <td>{m.memPhone}</td>
+                      <td>{m.memStatus === "N" ? m.memPhone : "-"}</td>
                     </tr>
                   ))}
             </tbody>
@@ -171,79 +231,131 @@ function Setting() {
               id="basic-addon-search31"
               onClick={onEnterKeyHandler}
             >
-              <i className="bx bx-search" />
+              <i className="bx bx-search" onClick={onClickSearch} />
             </span>
+            {/* <button onClick={reset}>초기화</button> */}
           </div>
           <nav aria-label="Page navigation">
-            <ul
-              className={`${coreCSS["pagination"]} ${coreCSS["justify-content-center"]}`}
-              style={{ paddingTop: 20 }}
-            >
-              {Array.isArray(memberList) && (
+            {searchList.length > 0 ? (
+              <ul
+                className={`${coreCSS["pagination"]} ${coreCSS["justify-content-center"]}`}
+                style={{ paddingTop: 20 }}
+              >
                 <li
                   className={`${coreCSS["page-item"]} ${coreCSS["first"]}`}
-                  onClick={() => setCurrentPage(1)}
-                  disabled={currentPage === 1}
+                  disabled={true}
                 >
                   <li className={`${coreCSS["page-link"]}`}>
                     <i className="tf-icon bx bx-chevrons-left" />
                   </li>
                 </li>
-              )}
-              <li
-                className={`${coreCSS["page-item"]} ${coreCSS["prev"]}`}
-                onClick={() =>
-                  currentPage === 1 || currentPage === 0
-                    ? undefined
-                    : setCurrentPage(currentPage - 1)
-                }
-                disabled={currentPage === 1 || currentPage === 0}
-              >
-                <li className={`${coreCSS["page-link"]}`}>
-                  <i className="tf-icon bx bx-chevron-left" />
-                </li>
-              </li>
-              {pageNumber.map((num) => (
                 <li
-                  key={num}
-                  className={
-                    currentPage === num
-                      ? `${coreCSS["page-item"]} ${coreCSS["active"]}`
-                      : `${coreCSS["page-item"]}`
-                  }
-                  onClick={() => setCurrentPage(num)}
+                  className={`${coreCSS["page-item"]} ${coreCSS["prev"]}`}
+                  disabled={true}
                 >
-                  <li className={`${coreCSS["page-link"]}`}>{num}</li>
+                  <li className={`${coreCSS["page-link"]}`}>
+                    <i className="tf-icon bx bx-chevron-left" />
+                  </li>
                 </li>
-              ))}
+                <li className={`${coreCSS["page-item"]} ${coreCSS["active"]}`}>
+                  <li className={`${coreCSS["page-link"]}`}>1</li>
+                </li>
 
-              <li
-                className={`${coreCSS["page-item"]} ${coreCSS["next"]}`}
-                disabled={
-                  currentPage === pageInfo.pageEnd || pageInfo.total === 0
-                }
-                onClick={() =>
-                  currentPage === pageInfo.pageEnd || currentPage === 0
-                    ? undefined
-                    : setCurrentPage(currentPage + 1)
-                }
-              >
-                <li className={`${coreCSS["page-link"]}`}>
-                  <i className="tf-icon bx bx-chevron-right" />
+                <li
+                  className={`${coreCSS["page-item"]} ${coreCSS["next"]}`}
+                  disabled={
+                    currentPage === pageInfo.pageEnd || pageInfo.total === 0
+                  }
+                  onClick={() =>
+                    currentPage === pageInfo.pageEnd || currentPage === 0
+                      ? undefined
+                      : setCurrentPage(currentPage + 1)
+                  }
+                >
+                  <li className={`${coreCSS["page-link"]}`}>
+                    <i className="tf-icon bx bx-chevron-right" />
+                  </li>
                 </li>
-              </li>
-              {Array.isArray(memberList) && (
                 <li
                   className={`${coreCSS["page-item"]} ${coreCSS["last"]}`}
-                  onClick={() => setCurrentPage(pageInfo.pageEnd)}
-                  disabled={pageInfo.total === 0}
+                  disabled={true}
                 >
                   <li className={`${coreCSS["page-link"]}`}>
                     <i className="tf-icon bx bx-chevrons-right" />
                   </li>
                 </li>
-              )}
-            </ul>
+              </ul>
+            ) : (
+              <ul
+                className={`${coreCSS["pagination"]} ${coreCSS["justify-content-center"]}`}
+                style={{ paddingTop: 20 }}
+              >
+                {Array.isArray(memberList) && (
+                  <li
+                    className={`${coreCSS["page-item"]} ${coreCSS["first"]}`}
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                  >
+                    <li className={`${coreCSS["page-link"]}`}>
+                      <i className="tf-icon bx bx-chevrons-left" />
+                    </li>
+                  </li>
+                )}
+                <li
+                  className={`${coreCSS["page-item"]} ${coreCSS["prev"]}`}
+                  onClick={() =>
+                    currentPage === 1 || currentPage === 0
+                      ? undefined
+                      : setCurrentPage(currentPage - 1)
+                  }
+                  disabled={currentPage === 1 || currentPage === 0}
+                >
+                  <li className={`${coreCSS["page-link"]}`}>
+                    <i className="tf-icon bx bx-chevron-left" />
+                  </li>
+                </li>
+                {pageNumber.map((num) => (
+                  <li
+                    key={num}
+                    className={
+                      currentPage === num
+                        ? `${coreCSS["page-item"]} ${coreCSS["active"]}`
+                        : `${coreCSS["page-item"]}`
+                    }
+                    onClick={() => setCurrentPage(num)}
+                  >
+                    <li className={`${coreCSS["page-link"]}`}>{num}</li>
+                  </li>
+                ))}
+
+                <li
+                  className={`${coreCSS["page-item"]} ${coreCSS["next"]}`}
+                  disabled={
+                    currentPage === pageInfo.pageEnd || pageInfo.total === 0
+                  }
+                  onClick={() =>
+                    currentPage === pageInfo.pageEnd || currentPage === 0
+                      ? undefined
+                      : setCurrentPage(currentPage + 1)
+                  }
+                >
+                  <li className={`${coreCSS["page-link"]}`}>
+                    <i className="tf-icon bx bx-chevron-right" />
+                  </li>
+                </li>
+                {Array.isArray(memberList) && (
+                  <li
+                    className={`${coreCSS["page-item"]} ${coreCSS["last"]}`}
+                    onClick={() => setCurrentPage(pageInfo.pageEnd)}
+                    disabled={pageInfo.total === 0}
+                  >
+                    <li className={`${coreCSS["page-link"]}`}>
+                      <i className="tf-icon bx bx-chevrons-right" />
+                    </li>
+                  </li>
+                )}
+              </ul>
+            )}
           </nav>
         </div>
       </div>

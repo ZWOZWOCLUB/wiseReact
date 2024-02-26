@@ -1,40 +1,26 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, createContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { callSearchDepAPI } from "../../apis/SettingMemberListAPICalls";
-import {
-  callMemberAddAPI,
-  callMemberUpdateAPI,
-} from "../../apis/SettingMemberAPICalls";
+import { callMemberAddAPI } from "../../apis/SettingMemberAPICalls";
 import { callSearchPosAPI } from "../../apis/SettingSearchPosition";
 import imageSample from "../../@core/img/icons/unicons/image.png";
-import { callMemberDetailAPI } from "../../apis/MyPageAPICalls";
 
 export const MemberContext = createContext(null);
 
 function MemberAdd() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [updateState, setUpdateState] = useState(false);
-
-  const memberCode = searchParams.get("memCode");
   const [profile, setProfile] = useState(null);
   const [profileUrl, setProfileUrl] = useState();
   const profileInput = useRef();
   const depList = useSelector((state) => state.settingReducer);
   const posList = useSelector((state) => state.settingSerchPositionReducer);
-  const memList = useSelector((state) => state.settingMemberReducer);
-  const memDetailList = useSelector((state) => state.mypageReducer);
-  const resutlList = memDetailList.data;
   const [memCode, setMemCode] = useState(0);
   const hireDate = new Date();
   const formattedDate = hireDate.toISOString().slice(0, 10);
   const [currentDate, setCurrentDate] = useState(formattedDate);
-  const [activeTab, setActiveTab] = useState("프로필 정보");
-  const [resultMemCode, setResultMemCode] = useState(0);
-  console.log("~~~~~~~~memList", memList);
-  console.log("~~~~~~~~resutlList", resutlList);
+  const memberResult = useSelector((state) => state.settingMemberReducer);
 
   useEffect(() => {
     dispatch(callSearchDepAPI());
@@ -43,16 +29,6 @@ function MemberAdd() {
   useEffect(() => {
     dispatch(callSearchPosAPI());
   }, []);
-
-  useEffect(() => {
-    if (memberCode) {
-      dispatch(
-        callMemberDetailAPI({
-          memCode: memberCode,
-        })
-      );
-    }
-  }, [memberCode]);
 
   const [form, setForm] = useState({
     memCode: 0,
@@ -68,22 +44,6 @@ function MemberAdd() {
     posCode: 0,
     depCode: 0,
   });
-
-  useEffect(() => {
-    if (resutlList) {
-      setForm((prevForm) => ({
-        ...prevForm,
-        memName: resutlList.memName,
-        memBirth: resutlList.memBirth,
-        memEmail: resutlList.memEmail,
-        memPhone: resutlList.memPhone,
-        memAddress: resutlList.memAddress,
-        depCode: resutlList.depCode,
-        posCode: resutlList.posCode,
-        memRole: resutlList.memRole,
-      }));
-    }
-  }, [resutlList]);
 
   useEffect(() => {
     if (profile) {
@@ -114,18 +74,6 @@ function MemberAdd() {
     console.log("~~~~~~~~~클릭");
   };
 
-  const onChangeHandler = (e) => {
-    setUpdateState(true);
-
-    const { name, value } = e.target;
-
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
-    console.log(form);
-  };
-
   const onClickMemberInsertHandler = () => {
     console.log(
       "~~~~~~~~~onClickMemberInsertHandler",
@@ -148,87 +96,27 @@ function MemberAdd() {
 
     formData.append("profile", profile);
     dispatch(callMemberAddAPI({ form: formData }));
-
-    console.log(memList, "memList#######################");
-    console.log(memCode, "memCode@@@@@@@@@@@@@@@@@@@@@@@@");
   };
 
-  const onClickUpdateHandler = () => {
-    const updateData = new FormData();
-    updateData.append("memCode", memberCode ? memberCode : memList.memCode);
-    updateData.append("memName", form.memName);
-    updateData.append("memPhone", form.memPhone);
-    updateData.append("memEmail", form.memEmail);
-    updateData.append("memAddress", form.memAddress);
-    updateData.append("memBirth", form.memBirth);
-    updateData.append("memPassword", form.memPassword);
-    updateData.append("memHireDate", form.memHireDate);
-    updateData.append("memStatus", form.memStatus);
-    updateData.append("memRole", form.memRole);
-    updateData.append("posCode", form.posCode);
-    updateData.append("depCode", form.depCode);
+  useEffect(() => {
+    if (memberResult && memberResult.memCode > 0) {
+      const memCode = memberResult.memCode;
 
-    updateData.append("profile", profile);
-    dispatch(callMemberUpdateAPI({ form: updateData }));
-    console.log(form);
-    console.log(profile);
-
-    alert("직원수정이 완료되었습니다.");
-
-    console.log(memList, "callMemberUpdateAPI#######################");
-    console.log(memCode, "callMemberUpdateAPI@@@@@@@@@@@@@@@@@@@@@@@@");
-  };
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-
-    if (tab === "프로필 정보") {
-      navigate(`/main/memberAdd`, { replace: true });
-    } else if (tab === "인사 정보") {
-      if (memList.length === 0 && memberCode === 0) {
-        alert("직원 정보를 먼저 등록해주세요");
-      } else {
-        if (memList.length > 0) {
-          navigate(`/main/settingInfo?memCode=${memList.memCode}`, {
-            replace: true,
-          });
-        } else {
-          navigate(`/main/settingInfo?memCode=${memberCode}`, {
-            replace: true,
-          });
-        }
-      }
-    } else if (tab === "연차 관리") {
-      if (memList.length === 0 && memberCode === 0) {
-        alert("직원 정보를 먼저 등록해주세요");
-      } else {
-        if (memList.length > 0) {
-          navigate(`/main/settingVacation?memCode=${memList.memCode}`, {
-            replace: true,
-          });
-        } else {
-          navigate(`/main/settingVacation?memCode=${memberCode}`, {
-            replace: true,
-          });
-        }
-      }
-    } else if (tab === "서류함") {
-      if (memList.length === 0 && memberCode === 0) {
-        alert("인사 정보를 먼저 등록해주세요");
-      } else {
-        if (memList.length > 0) {
-          navigate(`/main/settingDocument?memCode=${memList.memCode}`, {
-            replace: true,
-          });
-        } else {
-          navigate(`/main/settingDocument?memCode=${memberCode}`, {
-            replace: true,
-          });
-        }
-      }
+      console.log(memCode, "memCode@@@@@@@@@@@@@@@@@@@@@@@@");
+      alert("직원 등록이 완료되었습니다.");
+      navigate(`/main/memberDetails?memCode=${memCode}`, { replace: true });
     }
+  });
+
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+    console.log(form);
   };
-  console.log("~~~~~~~~memList2", memList);
 
   return (
     <>
@@ -240,40 +128,6 @@ function MemberAdd() {
       </div>
       <div className="row">
         <div className="col-md-12">
-          <ul className="nav nav-pills flex-column flex-md-row mb-3">
-            <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li
-                className={`nav-link active`}
-                onClick={() => handleTabClick("프로필 정보")}
-              >
-                프로필 정보
-              </li>
-            </li>
-            <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li
-                className={`nav-link `}
-                onClick={() => handleTabClick("인사 정보")}
-              >
-                인사 정보
-              </li>
-            </li>
-            <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li
-                className={`nav-link`}
-                onClick={() => handleTabClick("서류함")}
-              >
-                서류함
-              </li>
-            </li>
-            <li className={`nav-item`} style={{ cursor: "pointer" }}>
-              <li
-                className={`nav-link`}
-                onClick={() => handleTabClick("연차 관리")}
-              >
-                연차 관리
-              </li>
-            </li>
-          </ul>
           <div className="card mb-4">
             <h5 className="card-header">프로필 사진 등록</h5>
             <div className="card-body">
@@ -344,7 +198,6 @@ function MemberAdd() {
                     type="text"
                     id="memCode"
                     name="memCode"
-                    defaultValue={memberCode ? memberCode : memList.memCode}
                     disabled="true"
                     input
                   />
@@ -359,13 +212,6 @@ function MemberAdd() {
                     name="memName"
                     id="Name"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.memName
-                          : ""
-                        : form.memName
-                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -378,13 +224,6 @@ function MemberAdd() {
                     id="birthday"
                     name="memBirth"
                     onChange={(e) => onChangeHandler(e)}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.memBirth
-                          : ""
-                        : form.memBirth
-                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -398,13 +237,6 @@ function MemberAdd() {
                     name="memEmail"
                     placeholder="abc@example.com"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.memEmail
-                          : ""
-                        : form.memEmail
-                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -415,16 +247,8 @@ function MemberAdd() {
                     name="depCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.depCode
-                            ? resutlList.depCode
-                            : ""
-                          : ""
-                        : form.depCode
-                    }
                   >
+                    <option> -- 부서 선택 --</option>
                     {Array.isArray(depList) &&
                       depList.map((d) => (
                         <option value={d.depCode}>{d.depName}</option>
@@ -440,14 +264,8 @@ function MemberAdd() {
                     name="posCode"
                     className="select2 form-select"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.posCode
-                          : ""
-                        : form.posCode
-                    }
                   >
+                    <option> -- 직위 선택 --</option>
                     {Array.isArray(posList) &&
                       posList.map((p) => (
                         <option value={p.posCode}>{p.posName}</option>
@@ -479,14 +297,6 @@ function MemberAdd() {
                         id="memRole"
                         onChange={onChangeHandler}
                         value={"Y"}
-                        checked={
-                          !updateState
-                            ? resutlList
-                              ? resutlList.memRole === "ADMIN" ||
-                                resutlList.memRole === "SUPERADMIN"
-                              : false
-                            : form.memRole === "Y"
-                        }
                         style={{
                           paddingRight: "1rem",
                           marginRight: "0.5rem",
@@ -505,13 +315,7 @@ function MemberAdd() {
                           paddingRight: "1rem",
                           marginRight: "0.5rem",
                         }}
-                        checked={
-                          !updateState
-                            ? resutlList
-                              ? resutlList.memRole === "USER"
-                              : true
-                            : form.memRole === "N"
-                        }
+                        checked="true"
                       />
                       아니오
                     </label>
@@ -528,13 +332,6 @@ function MemberAdd() {
                     name="memPhone"
                     placeholder="000-0000-0000"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.memPhone
-                          : ""
-                        : form.memPhone
-                    }
                   />
                 </div>
                 <div className="mb-3 col-md-6">
@@ -547,28 +344,15 @@ function MemberAdd() {
                     id="address"
                     name="memAddress"
                     onChange={onChangeHandler}
-                    value={
-                      !updateState
-                        ? resutlList
-                          ? resutlList.memAddress
-                          : ""
-                        : form.memAddress
-                    }
                   />
                 </div>
                 <div className="btn-wrapper">
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={
-                      memCode !== 0 || (memList && memList.memCode > 0)
-                        ? onClickUpdateHandler
-                        : onClickMemberInsertHandler
-                    }
+                    onClick={onClickMemberInsertHandler}
                   >
-                    {memCode !== 0 || (memList && memList.memCode > 0)
-                      ? "수정"
-                      : "등록"}
+                    등록
                   </button>
                 </div>
               </div>

@@ -130,37 +130,33 @@ export const callNoticeInsertAPI = ({ form }) => {
     console.log('callNoticeInsertAPI Call', form);
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/notice`;
     console.log('formData', form);
-return async (dispatch, getState) => {
-    const result = await fetch(requestURL, {
-        method: 'POST',
-        headers: {
-            Accept: '*/*',
-            Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
-        },
-        body: form,
-    }).then((response) => response.json());
+    return async (dispatch, getState) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                Accept: '*/*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            },
+            body: form,
+        }).then((response) => response.json());
 
-    console.log('callNoticeInsertAPI RESULT : ', result);
-    console.log('callNoticeInsertAPI form', form);
-    dispatch({ type: POST_INSERT_NOTICE, payload: result.data });
-    console.log({ result });
-    console.log(result);
-    
-    console.log({FormData});
-}
+        console.log('callNoticeInsertAPI RESULT : ', result);
+        console.log('callNoticeInsertAPI form', form);
+        dispatch({ type: POST_INSERT_NOTICE, payload: result.data });
+        console.log({ result });
+        console.log(result);
 
+        console.log({ FormData });
+    };
 };
 
-//공지 수정
+//공지수정
 export const callNoticeUpdateAPI = ({ form }) => {
     console.log('callNoticeUpdateAPI Call');
-    console.log('callNoticeUpdateAPI', form);
-    
-     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/updateNotice`;
+    console.log('callNoticeUpdateAPI', form.get('notDeleteStatus'));
 
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/updateNotice`;
 
-
-   
     return async (dispatch, getState) => {
         const result = await fetch(requestURL, {
             method: 'PUT',
@@ -175,4 +171,4 @@ export const callNoticeUpdateAPI = ({ form }) => {
 
         dispatch({ type: PUT_UPDATE_NOTICE, payload: result });
     };
-}
+};

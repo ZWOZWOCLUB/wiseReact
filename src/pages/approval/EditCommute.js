@@ -8,11 +8,11 @@ import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import '../../@core/css/payment-annual.css';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { callAprovalCommuteAPI } from '../../apis/ApprovalAPICalls';
 
-function EditCommute() {
+function EditCommute({ appCodes, refCodes }) {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
 
@@ -23,7 +23,31 @@ function EditCommute() {
 
     const formattedDate = year + '-' + month + '-' + day;
 
-    const memberCode = 240130003;
+    const memberCode = appCodes;
+    const refCode = refCodes;
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+
+        const formattedDate = year + '-' + month + '-' + day;
+        setForm({
+            approval: {
+                payDate: formattedDate,
+                payKind: '출퇴근 정정',
+                approvalMember: {
+                    memCode: token.memCode,
+                },
+                payName: '출퇴근 정정',
+            },
+            cMember: {
+                memCode: memberCode,
+            },
+            rMember: refCode,
+        });
+    }, [memberCode, refCode]);
 
     const [img, setImg] = useState(null);
 
@@ -94,6 +118,9 @@ function EditCommute() {
         formData.append('approval.payName', form.approval.payName);
         formData.append('approval.payKind', form.approval.payKind);
         formData.append('cMember.memCode', form.cMember.memCode);
+        form.rMember.forEach((memCode, index) => {
+            formData.append(`rMember[${index}]`, memCode);
+        });
 
         if (form.file) {
             formData.append('approvalFile', form.file);
@@ -107,7 +134,7 @@ function EditCommute() {
 
         console.log('time', formData.get('ediTime'));
 
-        navigate(`/main/Approval`, { replace: false });
+        // navigate(`/main/Approval`, { replace: false });
     };
 
     return (

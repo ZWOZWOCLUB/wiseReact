@@ -13,9 +13,18 @@ import {
     GET_APPROVAL_ATTACHMENT_INFO,
 } from '../modules/ApprovalModule.js';
 
-export const callReceiveApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${memCode}`;
 
+
+export const callReceiveApprovalAPI = ({ form }) => {
+    console.log('Rform', form);
+
+    let requestURL;
+
+    if (form.currentPage !== undefined || form.currentPage !== null) {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${form.memCode}?offset=${form.currentPage}`;
+    } else {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/receivedapproval/${form.memCode}`;
+    }
     return async (dispatch) => {
         const result = await fetch(requestURL, {
             method: 'GET',
@@ -34,8 +43,14 @@ export const callReceiveApprovalAPI = ({ memCode }) => {
     };
 };
 
-export const callSendApprovalAPI = ({ memCode }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${memCode}`;
+export const callSendApprovalAPI = ({ form }) => {
+    let requestURL;
+
+    if (form.currentPage !== undefined || form.currentPage !== null) {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${form.memCode}?offset=${form.currentPage}`;
+    } else {
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/sendapproval/${form.memCode}`;
+    }
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {
@@ -75,8 +90,8 @@ export const callMemberInfoAPI = ({ memCode }) => {
 };
 
 export const callAprovalAnnualAPI = ({ form }) => {
-    console.log('formCode', form.get('cMember.memCode'));
-    console.log('file', form.get('approvalFile'));
+    console.log('언디?', form);
+    console.log('form.approval.payKind', form.get('approval.payDate'));
 
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/annual`;
 
@@ -171,7 +186,7 @@ export const callAprovalRetiredAPI = ({ form }) => {
 export const callAprovalCompleteAPI = ({ form }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/complete`;
 
-    console.log('---------> ', JSON.stringify(form));
+    console.log('---------> ', form);
 
     return async (dispatch) => {
         const result = await fetch(requestURL, {

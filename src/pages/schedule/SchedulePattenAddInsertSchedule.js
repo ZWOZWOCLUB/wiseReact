@@ -9,8 +9,8 @@ import "../../assets/vendor/js/menu.js";
 import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
-import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
-import { callScheduleInsertAPI } from "../../apis/SchedulePatternInsertAPICalls.js";
+import { callSchaduleTreeAPI } from "../../apis/ScheduleAPICalls.js";
+import { callScheduleInsertAPI } from "../../apis/ScheduleInsertAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree from "react-checkbox-tree";
 
@@ -19,7 +19,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const allList = useSelector((state) => state.scheduleReducer);
   const patternList = useSelector((state) => state.schedulePatternReducer);
   const [insertRows, setInsertRows] = useState([]);
-  const departmentList = useSelector((state) => state.organizationChartReducer);
+  const departmentList = useSelector((state) => state.scheduleTreeReducer);
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
@@ -29,7 +29,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   );
   const [selectedRowIndex, setSelectedRowIndex] = useState("");
   const scheduleRef = useRef();
-  useEffect(() => {}, [selectedColor]);
+  const [checkedList, setCheckedList] = useState([]);
+  const result2 = useSelector((state) => state.scheduleInsertReducer);
 
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
@@ -44,6 +45,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
 
   const onClickMonToSun = (index, dayIndex) => {
     setSelectedRowIndex(index);
+
     setSelectedDayIndices((prevState) => {
       const newSelectedDayIndices = [...prevState];
       newSelectedDayIndices[dayIndex] = !prevState[dayIndex];
@@ -90,6 +92,23 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       .map((memName) => memName.split("/")[0]),
   });
 
+  useEffect(() => {
+    setInsertRows([]);
+    setScheduleForm([
+      {
+        schType: "",
+        schStartDate: "",
+        schEndDate: "",
+        schColor: "",
+        schDeleteStatus: "N",
+        dayCode: "",
+        wokCode: selectedColor ? selectedColor.wokCode : "",
+        memCode: checked
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[0]),
+      },
+    ]);
+  }, [allList, result2]);
   useImperativeHandle(ref, () => ({
     handleAddRow: () => {
       if (insertRows.length === 0) {
@@ -102,18 +121,22 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
 
   const insertSchedule = (e, index) => {
     const { name, value } = e.target;
+    setScheduleForm((prevScheduleForm) => ({
+      ...prevScheduleForm,
+      [name]: value,
+
+      memCode: checked
+        .filter((memName) => memName.includes("/"))
+        .map((memName) => memName.split("/")[0]),
+    }));
     if (selectedColor) {
       setScheduleForm((prevScheduleForm) => ({
         ...prevScheduleForm,
-        [name]: value,
-        wokCode: selectedColor.wokCode,
         schColor: selectedColor.wokColor,
+        wokCode: selectedColor.wokCode,
         dayCode: selectedDayIndices
           .map((isSelected, index) => (isSelected ? index : null))
           .filter((index) => index !== null),
-        memCode: checked
-          .filter((memName) => memName.includes("/"))
-          .map((memName) => memName.split("/")[0]),
       }));
     }
   };
@@ -135,7 +158,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   }, [selectedColor, selectedDayIndices, checked]);
 
   useEffect(() => {
-    dispatch(callOrganizationTreeAPI());
+    dispatch(callSchaduleTreeAPI());
   }, []);
 
   const nodes =
@@ -178,7 +201,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
     formData.append("schStartDate", scheduleForm.schStartDate);
     formData.append("schEndDate", scheduleForm.schEndDate);
     formData.append("schColor", scheduleForm.schColor);
-    formData.append("schDeleteStatus", scheduleForm.schDeleteStatus);
+    formData.append("schDeleteStatus", "N");
     formData.append("dayCode", scheduleForm.dayCode);
     formData.append(
       "memCode",
@@ -196,16 +219,16 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
         scheduleForm: formData,
       })
     );
-  };
-
-  const onChecks = (value) => {
-    setChecked(value);
-    console.log("ddddddddddddd", checked);
+    setChecked([]);
+    setSelectedIndices([]);
+    setSelectedDayIndices([]);
   };
 
   const onClickIndex = (index) => {
     console.log("ddddddddddddd", index);
   };
+  console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^", scheduleForm);
+
   return (
     <>
       {insertRows.map((row, index) => (
@@ -280,7 +303,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               <button
                 className={`${payCSS["plus-icon"]}`}
                 data-bs-toggle="modal"
-                data-bs-target="#modalCenter2"
+                data-bs-target="#modalCenterScheduleInsert"
                 onClick={() => onClickIndex(index)}
               >
                 <i
@@ -309,7 +332,7 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
       ))}
       <div
         className="modal fade"
-        id="modalCenter2"
+        id="modalCenterScheduleInsert"
         tabIndex="-1"
         aria-hidden="true"
       >
@@ -326,6 +349,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
               <hr />
               <CheckboxTree
                 nodes={nodes}
+                showExpandAll={true}
+                showNodeTitle={true}
                 checked={checked}
                 expanded={expanded}
                 onCheck={(checked) => setChecked(checked)}
@@ -337,8 +362,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
                   halfCheck: <span className="bx bx-checkbox-square" />,
                   expandClose: <span className="bx bx-chevron-right" />,
                   expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
+                  expandAll: <span className="bx bx-plus" />,
+                  collapseAll: <span className="bx bx-minus" />,
                   parentClose: <span className="bx bx-folder" />,
                   parentOpen: (
                     <span

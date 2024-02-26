@@ -11,16 +11,17 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
-import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
-import { callScheduleWorkPatternUpdateAPI } from "../../apis/SchedulePatternUpdateAPICalls";
+import { callSchaduleTreeAPI } from "../../apis/ScheduleAPICalls.js";
+import { callScheduleUpdateAPI } from "../../apis/ScheduleUpdateAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree2 from "react-checkbox-tree";
 
 const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.schedulePatternDayReducer);
-  const patternList = useSelector((state) => state.schedulePatternReducer);
-  const department = useSelector((state) => state.organizationChartReducer);
+  const department = useSelector((state) => state.scheduleTreeReducer);
+  const result = useSelector((state) => state.scheduleUpdateReducer);
+
   const [checkeds, setCheckeds] = useState([]);
   const [expanded, setExpanded] = useState(["동물원병원"]);
   const selectedColor = props.selectedColor;
@@ -28,9 +29,9 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const [memCode, setMemCode] = useState([]);
   const [updateState, setUpdateState] = useState([]);
   const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
-
+  const result2 = useSelector((state) => state.scheduleInsertReducer);
   useEffect(() => {
-    dispatch(callOrganizationTreeAPI());
+    dispatch(callSchaduleTreeAPI());
   }, []);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
 
   const onClickMonToSun = (index, dayIndex) => {
     if (updateState.includes(index)) {
-      setUpdateSelectedDayIndices([Array(7).fill(false)]);
+      setUpdateSelectedDayIndices([index][Array(7).fill(false)]);
       if (!updateSelectedDayIndices[index]) {
         const newDayIndices = Array(7).fill(false);
         const updatedDayIndices = [...updateSelectedDayIndices];
@@ -62,6 +63,12 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
           !updatedDayIndices[index][dayIndex];
         setUpdateSelectedDayIndices(updatedDayIndices);
       }
+      scheduleForm[index].patternList = selectedColor;
+      scheduleForm[index].etcPatternList = updateSelectedDayIndices[index]
+        ? updateSelectedDayIndices[index]
+            .map((isSelected, index) => (isSelected ? index : null))
+            .filter((index) => index !== null)
+        : "";
     }
   };
 
@@ -131,20 +138,24 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
 
   useEffect(() => {
     dispatch(callSchedulePatternAndDaySearchAPI());
-  }, []);
+  }, [result, result2]);
   console.log("!!!!!!!!!!!!!!!!!!!!allList", allList);
 
   const [selectedDayIndex, setSelectedDayIndex] = useState(null);
 
   const [scheduleForm, setScheduleForm] = useState([]);
   const changeState = (index) => {
-    if (Array.isArray(allList)) {
-      const selectedSchedule = allList[index];
-      const updatedForm = [...scheduleForm];
-      updatedForm[index] = selectedSchedule;
-      setScheduleForm(updatedForm);
-      const updatedUpdateState = [...updateState, index];
-      setUpdateState(updatedUpdateState);
+    if (scheduleForm.length === 0) {
+      if (Array.isArray(allList)) {
+        const selectedSchedule = allList[index];
+        const updatedForm = [...scheduleForm];
+        updatedForm[index] = selectedSchedule;
+        setScheduleForm(updatedForm);
+        const updatedUpdateState = [...updateState, index];
+        setUpdateState(updatedUpdateState);
+      }
+    } else {
+      alert("수정 중인 스케줄의 변경을 먼저 완료해주세요.");
     }
   };
 
@@ -184,7 +195,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       label: mem.memName + " " + mem.posName,
                     }))
                   : dep.children.map((chi) => ({
-                      value: chi.depCode,
+                      value: chi.depName,
                       label: chi.depName,
                       children: chi.memberList.map((mem) => ({
                         value: mem.memCode + "/" + mem.memName,
@@ -197,19 +208,27 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
       : [];
 
   console.log("setChecked +++++++++++++++++++++", checkeds);
+  console.log("department +++++++++++++++++++++", department);
 
   const onClickIndex = (index) => {
     console.log("ddddddddddddd", index);
     setModalIndex(index);
   };
 
-  // useEffect(() => {
-  //   if (modalIndex) {
-  //     scheduleForm[modalIndex].memberList = checked
-  //       .filter((memName) => memName.includes("/"))
-  //       .map((memName) => memName.split("/")[0]);
-  //   }
-  // }, [checked]);
+  useEffect(() => {
+    if (modalIndex !== null && checkeds.length > 0) {
+      setScheduleForm((prevScheduleForm) => {
+        const updatedScheduleForm = [...prevScheduleForm];
+        updatedScheduleForm[modalIndex].memberList = checkeds
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[0]);
+        updatedScheduleForm[modalIndex].allowanceList = checkeds
+          .filter((memName) => memName.includes("/"))
+          .map((memName) => memName.split("/")[1]);
+        return updatedScheduleForm;
+      });
+    }
+  }, [modalIndex, checkeds]);
 
   const onCancel = (index) => {
     setUpdateSelectedDayIndices((prevIndices) => {
@@ -232,7 +251,51 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
     });
     console.log("ddddddddddddd", scheduleForm);
   };
+  const onClick = () => {
+    setCheckeds([]);
+  };
+  const updateSchedule = (index) => {
+    const formData = new FormData();
+    formData.append("wokCode", scheduleForm[index].patternList.wokCode);
+    formData.append("schCode", scheduleForm[index].schCode);
+    formData.append("schType", scheduleForm[index].schType);
+    formData.append("schStartDate", scheduleForm[index].schStartDate);
+    formData.append("schEndDate", scheduleForm[index].schEndDate);
+    formData.append("schDeleteStatus", scheduleForm[index].schDeleteStatus);
+    formData.append("schColor", scheduleForm[index].patternList.wokColor);
+    formData.append(
+      "dayCode",
+      scheduleForm[index].etcPatternList
+        ? scheduleForm[index].etcPatternList
+        : ""
+    );
+    formData.append(
+      "memCode",
+      scheduleForm[index].memberList ? scheduleForm[index].memberList : ""
+    );
+    scheduleForm[index].patternDayList.forEach((day, idx) => {
+      formData.append(`prevDayCode[${idx}]`, day.patternDayID.dayCode);
+    });
+    scheduleForm[index].patternDayList.forEach((day, idx) => {
+      formData.append(`prevWokCode[${idx}]`, day.patternDayID.wokCode);
+    });
 
+    console.log("formData@@@@@@@@@@@@@@@@@@@@@", formData);
+    dispatch(callScheduleUpdateAPI({ form: formData }));
+
+    setUpdateState([]);
+    setScheduleForm([]);
+  };
+
+  const deleteSchedule = (index) => {
+    console.log("formDatadeleteSchedule", deleteSchedule);
+
+    const formData = new FormData();
+    formData.append("schDeleteStatus", "Y");
+    formData.append("schCode", allList[index].schCode);
+
+    dispatch(callScheduleUpdateAPI({ form: formData }));
+  };
   return (
     <>
       {Array.isArray(allList) && allList.length > 0
@@ -254,10 +317,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                       name="schType"
                     />
                   </div>
-                  <div className={`${payCSS["hours"]}`}>
-                    <i className={"bx bxs-alarm"} />
-                    <div style={{ marginTop: 3 }}>&nbsp; 35시간</div>
-                  </div>
+                  <div className={`${payCSS["hours"]}`}></div>
                 </div>
                 <div className={`${payCSS["top_right"]}`}>
                   <div className={`${payCSS["schedule_date"]}`}>
@@ -290,7 +350,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                     <button
                       className={`${payCSS["check"]}`}
                       style={{ background: "#696CFF", color: "white" }}
-                      // onClick={() => changeState(index)}
+                      onClick={() => updateSchedule(index)}
                     >
                       <i className={"bx bx-check"} style={{ marginRight: 1 }} />
                       <div style={{ marginTop: 3, color: "white" }}>
@@ -324,6 +384,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                     <button
                       className={`${payCSS["check"]}`}
                       style={{ background: "#EB5757", color: "white" }}
+                      onClick={() => deleteSchedule(index)}
                     >
                       <i className={"bx bx-check"} style={{ marginRight: 1 }} />
                       <div style={{ marginTop: 3, color: "white" }}>
@@ -364,7 +425,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                 <button
                   className={`${payCSS["plus-icon"]}`}
                   data-bs-toggle="modal"
-                  data-bs-target="#modalCenter2"
+                  data-bs-target={`#modalCenterScheduleUpdate${index}`}
                   onClick={() => onClickIndex(index)}
                   disabled={updateState.includes(index) ? false : true}
                   style={{
@@ -378,19 +439,24 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
                   />
                 </button>
                 <div className={`${payCSS["wrapperName"]}`}>
-                  {updateState.includes(index) && scheduleForm[index]
-                    ? scheduleForm[index].allowanceList.map(
-                        (allowance, idx) => (
-                          <div className={`${payCSS["name"]}`}>
-                            <span key={idx}>
-                              {allowance.memberList.memName}
-                            </span>
+                  {updateState.includes(index) &&
+                  scheduleForm[index].memberList &&
+                  checkeds
+                    ? scheduleForm[index].allowanceList.map((s, idx) => {
+                        return (
+                          <div className={`${payCSS["name"]}`} key={idx}>
+                            <span>{s}</span>
                           </div>
-                        )
-                      )
+                        );
+                      })
                     : p.allowanceList.map((allowance, idx) => (
                         <div className={`${payCSS["name"]}`}>
-                          <span key={idx}>{allowance.memberList.memName}</span>
+                          <span key={idx}>
+                            {allowance.memberList &&
+                            allowance.memberList.memName
+                              ? allowance.memberList.memName
+                              : ""}
+                          </span>
                         </div>
                       ))}
                 </div>
@@ -398,70 +464,80 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
             </div>
           ))
         : ""}
-      <div
-        className="modal fade"
-        id="modalCenter3"
-        tabIndex="-1"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className={`${payCSS["modalTotalWrapper"]}`}>
-              <h5 className={`${payCSS["modalTopText"]}`}>
-                <i
-                  className="bx bxs-briefcase"
-                  style={{ fontSize: "2rem", marginRight: "1rem" }}
-                ></i>
-                새 근무편성
-              </h5>
-              <hr />
-              <CheckboxTree2
-                showExpandAll={true}
-                nodes={nodes}
-                checked={checkeds}
-                expanded={expanded}
-                onExpand={(expanded) => setExpanded(expanded)}
-                onCheck={(checked) => setCheckeds(checked)}
-                icons={{
-                  check: <span className="bx bx-checkbox-checked" />,
-                  uncheck: <span className="bx bx-checkbox" />,
-                  halfCheck: <span className="bx bx-checkbox-square" />,
-                  expandClose: <span className="bx bx-chevron-right" />,
-                  expandOpen: <span className="bx bx-chevron-down" />,
-                  expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                  collapseAll: <span className="bx folder-open" />,
-                  parentClose: <span className="bx bx-folder" />,
-                  parentOpen: (
-                    <span
-                      className="bx bx-folder-open"
-                      style={{ color: "#696cff" }}
+      {Array.isArray(allList) && allList.length > 0
+        ? allList.map((p, index) => (
+            <div
+              className="modal fade"
+              id={`modalCenterScheduleUpdate${index}`}
+              tabIndex="-1"
+              aria-hidden="true"
+            >
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
+              >
+                <div className="modal-content">
+                  <div className={`${payCSS["modalTotalWrapper"]}`}>
+                    <h5 className={`${payCSS["modalTopText"]}`}>
+                      <i
+                        className="bx bxs-briefcase"
+                        style={{ fontSize: "2rem", marginRight: "1rem" }}
+                      ></i>
+                      새 근무편성
+                    </h5>
+                    <hr />
+                    <CheckboxTree2
+                      showExpandAll={true}
+                      showNodeTitle={true}
+                      nodes={nodes}
+                      checked={checkeds}
+                      expanded={expanded}
+                      onExpand={(expanded) => setExpanded(expanded)}
+                      onCheck={(checked) => setCheckeds(checked)}
+                      icons={{
+                        check: <span className="bx bx-checkbox-checked" />,
+                        uncheck: <span className="bx bx-checkbox" />,
+                        halfCheck: <span className="bx bx-checkbox-square" />,
+                        expandClose: <span className="bx bx-chevron-right" />,
+                        expandOpen: <span className="bx bx-chevron-down" />,
+                        expandAll: <span className="bx bx-plus" />,
+                        collapseAll: <span className="bx bx-minus" />,
+                        parentClose: <span className="bx bx-folder" />,
+                        parentOpen: (
+                          <span
+                            className="bx bx-folder-open"
+                            style={{ color: "#696cff" }}
+                          />
+                        ),
+                        leaf: <span className="bx bx-user" />,
+                      }}
                     />
-                  ),
-                  leaf: <span className="bx bx-user" />,
-                }}
-              />
-              <hr />
-              <div className={`${payCSS["modalBtnWrapper"]}`}>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                  style={{ marginRight: "1rem" }}
-                >
-                  선택
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  닫기
-                </button>
+                    <hr />
+                    <div className={`${payCSS["modalBtnWrapper"]}`}>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        data-bs-dismiss="modal"
+                        style={{ marginRight: "1rem" }}
+                        onClick={onClick}
+                      >
+                        선택
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                        onClick={onClick}
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          ))
+        : ""}
     </>
   );
 });

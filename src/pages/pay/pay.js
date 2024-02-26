@@ -3,11 +3,11 @@ import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/pay.module.css";
-import pdfImg from "../../@core/img/icons/unicons/pdf.png";
 import excelImg from "../../@core/img/icons/unicons/excel.png";
 import { callPayListAPI } from "../../apis/PayAPICalls";
 import { callPayYEARAPI } from "../../apis/OtherAPICalls";
 import { decodeJwt } from "../../utils/tokenUtils";
+import PayConverPDF from "./payConvertPDF";
 
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -31,7 +31,7 @@ function Pay() {
   const currentYears = firstYearMonth.getFullYear();
   const [currentYear, setCurrentYear] = useState(currentYears);
   console.log("currentYear : ", currentYear);
-
+  const scrollRef = useRef();
   const payList = useSelector((state) => state.payReducer);
   const yList = useSelector((state) => state.otherReducer);
   console.log("yList -------------", yList);
@@ -67,6 +67,7 @@ function Pay() {
     if (selectedPayDetail) {
       setPayDetailsData(selectedPayDetail);
       console.log(selectedPayDetail);
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -82,19 +83,6 @@ function Pay() {
     console.log("클릭");
     setCurrentYear(e.target.value);
   };
-
-  // const save = async () => {
-  //   const response = await fetch("your_server_url/payConvertPDF", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       payDetailsData,
-  //       payList,
-  //     }),
-  //   });
-  // };
 
   return (
     <>
@@ -124,20 +112,10 @@ function Pay() {
               ;
             </select>
             <div style={{ width: "100%" }} />
-            <div style={{ width: "20%" }}>
+            {/* <div style={{ width: "20%" }}>
               <b>급여명세표 출력</b>
-            </div>
-            <img
-              src={pdfImg}
-              alt="pdfImg"
-              style={{ width: "1.5rem", margin: "0.5rem" }}
-            />
-            <div
-              // onClick={save}
-              style={{ width: "5%" }}
-            >
-              PDF
-            </div>
+            </div> */}
+            {/* <PayConverPDF payDetailsData={payDetailsData} token={token}/> */}
           </div>
           <table className={`${coreCSS["table"]} ${coreCSS["table-hover"]}`}>
             <thead>
@@ -211,7 +189,7 @@ function Pay() {
           </table>
         </div>
       </div>
-      <div className={`${coreCSS["row"]}`}>
+      <div className={`${coreCSS["row"]}`} ref={(e) => (scrollRef.current = e)}>
         <div
           className={`${coreCSS["col-md-6"]} ${coreCSS["col-12"]} ${coreCSS["mb-md-0"]} ${coreCSS["mb-4"]}`}
         >

@@ -34,7 +34,7 @@ function SettingVacation() {
     setActiveTab(tab);
 
     if (tab === "프로필 정보") {
-      navigate(`/main/memberAdd?memCode=${memberCode}`, { replace: true });
+      navigate(`/main/memberdetails?memCode=${memberCode}`, { replace: true });
     }
     if (tab === "인사 정보") {
       navigate(`/main/settingInfo?memCode=${memberCode}`, { replace: true });
@@ -297,40 +297,13 @@ function SettingVacation() {
                           className="rounded"
                         />
                       </div>
-                      <div className="dropdown">
-                        <button
-                          className="btn p-0"
-                          type="button"
-                          id="cardOpt1"
-                          data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          <i className="bx bx-dots-vertical-rounded"></i>
-                        </button>
-                        <div
-                          className="dropdown-menu"
-                          aria-labelledby="cardOpt1"
-                        >
-                          <span
-                            className="dropdown-item"
-                            href="javascript:void(0);"
-                          >
-                            View More
-                          </span>
-                          <span
-                            className="dropdown-item"
-                            href="javascript:void(0);"
-                          >
-                            Delete
-                          </span>
-                        </div>
-                      </div>
                     </div>
                     <span className="fw-semibold d-block mb-1">
                       누적 사용 연차
                     </span>
-                    <h3 className="card-title mb-2">5회</h3>
+                    <h3 className="card-title mb-2">
+                      {vacData ? vacData.vctAmountSpendVacation : 0}회
+                    </h3>
                     <small className="text-success fw-semibold">
                       이번년도 기준
                     </small>

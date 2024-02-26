@@ -6,9 +6,10 @@ import '../../@core/css/pay.css';
 import '../../@core/vendor/libs/perfect-scrollbar/perfect-scrollbar.css';
 import '../../@core/vendor/libs/apex-charts/apex-charts.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { callReceiveApprovalAPI } from '../../apis/ApprovalAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
+import { callSearchApprovalAPI } from '../../apis/ApprovalInfoAPICalls';
 
 // const { useDispatch, useSelector } = require('react-redux');
 const { useNavigate } = require('react-router-dom');
@@ -17,15 +18,69 @@ function Approval() {
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const approvalList = useSelector((state) => state.approvalReducer);
+    const [start, setStart] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const approval = useSelector((state) => state.approvalReducer);
+    const approvalList = approval?.data?.content;
+    const searchData = useSelector((state) => state.approvalInfoReducer);
+    const searchDataList = searchData?.data?.data?.content;
+    const [form, setForm] = useState({
+        memCode: token.memCode,
+        currentPage: 1,
+    });
+
+    const [search, setSearch] = useState({
+        memCode: token.memCode,
+        approvalStart: '',
+        approvalEnd: '',
+        approvalType: '',
+        approvalStatus: '',
+        approvalName: '',
+        currentPage: 1,
+    });
+
+    const onChange = (e) => {
+        setSearch({
+            ...search,
+            [e.target.name]: e.target.value,
+        });
+        console.log('폼ㅍ뫂모', search);
+    };
 
     useEffect(() => {
+        setStart((currentPage - 1) * 5);
+        form.currentPage = currentPage;
         dispatch(
             callReceiveApprovalAPI({
-                memCode: token?.memCode,
+                form,
             })
         );
-    }, []);
+    }, [currentPage]);
+
+    function searchBtn() {
+        setStart((currentPage - 1) * 5);
+        search.currentPage = currentPage;
+
+        console.log('가기전에', search);
+
+        dispatch(
+            callSearchApprovalAPI({
+                search,
+            })
+        );
+        console.log('searchData', searchData?.data?.data?.content);
+    }
+
+    const pageInfo = approval.pageInfo || {};
+
+    console.log('pageInfo', pageInfo);
+
+    const pageNumber = [];
+    if (pageInfo) {
+        for (let i = 1; i <= pageInfo.pageEnd; i++) {
+            pageNumber.push(i);
+        }
+    }
 
     // const approvals = useSelector((state) => state.approvalReducer);
     // const approvalList = approvals.data;
@@ -91,30 +146,61 @@ function Approval() {
                                     <div className='card mb-4'>
                                         <div className='pay-top-wrapper'>
                                             <div></div>
-                                            <input className='inputDate' type='date' /> ~
-                                            <input className='inputDate' type='date' />
-                                            <select name='payment-type1' className='payment-type1' id='payment-type1'>
-                                                <option value='0'>결재유형</option>
+                                            <input
+                                                name='approvalStart'
+                                                onChange={onChange}
+                                                className='inputDate'
+                                                type='date'
+                                            />{' '}
+                                            <select
+                                                name='approvalType'
+                                                onChange={onChange}
+                                                className='payment-type1'
+                                                id='payment-type1'
+                                            >
+                                                <option value=''>결재유형</option>
+                                                <option value='연차 신청'>연차 신청</option>
+                                                <option value='서류 요청'>서류 요청</option>
+                                                <option value='퇴직 신청'>퇴직 신청</option>
+                                                <option value='출퇴근 정정'>출퇴근 기록 정정</option>
+                                                <option value='스케줄 정정'>스케줄 변경 신청</option>
                                             </select>
                                             <select
-                                                name='payment-status'
+                                                name='approvalStatus'
+                                                onChange={onChange}
                                                 className='payment-status'
                                                 id='payment-status'
                                             >
-                                                <option value='0'>결재상태</option>
-                                                <option value='1'>반려</option>
-                                                <option value='2'>승인</option>
-                                                <option value='3'>대기</option>
+                                                <option value=''>결재상태</option>
+                                                <option value='반려'>반려</option>
+                                                <option value='승인'>승인</option>
+                                                <option value='대기'>대기</option>
                                             </select>
                                             <input
                                                 type='search'
                                                 placeholder='결재 제목을 알려주세요 '
+                                                name='approvalName'
+                                                onChange={onChange}
                                                 style={{ width: '400px' }}
                                             />
-                                            <img
-                                                src='../../assets/img/paymentimg/search.png'
-                                                style={{ width: '20px', marginLeft: '5px' }}
-                                            />
+                                            <button
+                                                style={{
+                                                    backgroundColor: '#dcdcff',
+                                                    width: '50px',
+                                                    height: '26px',
+                                                    color: 'white',
+                                                    boxShadow: '0 2px 4px 0 rgba(105, 108, 255, 0.4)',
+                                                    marginLeft: '3px',
+                                                    border: 'none',
+                                                }}
+                                                onClick={searchBtn}
+                                            >
+                                                {/* <img
+                                                    src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAd5JREFUSEu11cvLTWEUx/HPGxnIpSiXiZAwcIuSAQpFL2XqUgxIURhQBv4AMiEhDCgk5Q+Q0VsImSAlopTIgFwi9+uz6nl1HO/e5xnssya7zn7O+j5rrd9v7R5djp4u51cHmIB1WInZ+SJ3cAkX8LzkcgMBRuAcVtck+I2L2IRPdaB2wFDcwgx8xUkcxpOcZDJ2YQuG5LOL8L0K0g44iw14hhV4UPHHWbicLjAeB7G7BDAT9/Aj9Xk+ot91sRhX8A2T8GKgw60VHMF2HMWOkgHiPNYnyF7s7wR4jCm5//cLAUvQh2vpGRX9F60VfEQMeRB+FQJGpWpf4w1GdwK8x3AMQ8BKIs5+wCuM6QS4mw01L3ngdkn2pKQFSW03c5uWdQIcSKbZgxPYVgg4kzyyMbUnBLKzE2AqHuJnoUzDYFdz0sqq2412Ktv/KZYnCT6qqGRONtrY7PatJUaLM62r4guO41B2dryPKmNVbMbgnDRmEK6PYdfKtP/lyGygVTVzeJd20b7U0rWYm12/FPH7P1G3ridml/Yids/nrK4bOIa3CB+E0WKdhwpDSeGJv9HEBycg1zEdsQ0W4mU/oQlA5AqThaKm5fmcbhoQ+cal9b4mfz8abVGtJ5tqUSWk64A/OxFWGSrrSC8AAAAASUVORK5CYII='
+                                                    style={{ width: '20px', marginLeft: '5px' }}
+                                                /> */}
+                                                검색
+                                            </button>
                                             <button className='payment-insert-button' onClick={requestApproval}>
                                                 결재신청
                                             </button>
@@ -128,11 +214,38 @@ function Approval() {
                                                     <th>반려/승인일</th>
                                                     <th>결재 유형</th>
                                                     <th>상태</th>
-                                                    <th>참조자</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {Array.isArray(approvalList) && approvalList.length > 0 ? (
+                                                {Array.isArray(searchDataList) && searchDataList.length > 0 ? (
+                                                    searchDataList.map((a) => (
+                                                        <tr
+                                                            key={a.approval.payCode}
+                                                            onDoubleClick={() => {
+                                                                ondblclickapproval(a.approval.payCode);
+                                                            }}
+                                                        >
+                                                            <td>{a.approval?.approvalMember?.memName}</td>
+                                                            <td>{a.approval?.payName}</td>
+                                                            <td>{a.approval?.payDate}</td>
+                                                            <td>{a.appDate}</td>
+                                                            <td>{a.approval?.payKind}</td>
+                                                            <td>{a.appState}</td>
+                                                        </tr>
+                                                    ))
+                                                ) : searchDataList?.length === 0 ? (
+                                                    <tr>
+                                                        <td
+                                                            colSpan={6}
+                                                            style={{
+                                                                textAlign: 'center',
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            검색된 결재가 없습니다.
+                                                        </td>
+                                                    </tr>
+                                                ) : Array.isArray(approvalList) && approvalList.length > 0 ? (
                                                     approvalList.map((a) => (
                                                         <tr
                                                             key={a.approval.payCode}
@@ -146,7 +259,6 @@ function Approval() {
                                                             <td>{a.appDate}</td>
                                                             <td>{a.approval?.payKind}</td>
                                                             <td>{a.appState}</td>
-                                                            <td>:</td>
                                                         </tr>
                                                     ))
                                                 ) : (
@@ -154,7 +266,6 @@ function Approval() {
                                                         <td
                                                             colSpan={6}
                                                             style={{
-                                                                display: 'flex',
                                                                 textAlign: 'center',
                                                                 alignItems: 'center',
                                                             }}
@@ -165,6 +276,29 @@ function Approval() {
                                                 )}
                                             </tbody>
                                         </table>
+                                        <ul className='pagination pagination-sm' id='pageBtn1'>
+                                            <li className='page-item' onClick={() => setCurrentPage(1)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-left'></i>
+                                                </a>
+                                            </li>
+                                            {pageNumber.map((num) => (
+                                                <li
+                                                    key={num}
+                                                    className={`page-item ${currentPage === num ? 'active' : ''}`}
+                                                    onClick={() => setCurrentPage(num)}
+                                                >
+                                                    <a className='page-link' href='javascript:void(0);'>
+                                                        {num}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                            <li className='page-item' onClick={() => setCurrentPage(pageNumber.length)}>
+                                                <a className='page-link' href='javascript:void(0);'>
+                                                    <i className='tf-icon bx bx-chevrons-right'></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

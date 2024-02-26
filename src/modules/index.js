@@ -17,11 +17,7 @@ import mpDocReducer from "./MPDocModule";
 import mpATTReducer from "./MPATTModule";
 import mpVacHisReducer from "./MPVacHisModule";
 import mpVacReducer from "./MPVacModule";
-import settingCareerReducer from "./SettingCareearModule";
-import settingDegreeReducer from "./SettingDegreeModule";
-import settingCertificateReducer from "./SettingCertificateModule";
 import settingInfoSearchReducer from "./SettingInfoSearchModuel";
-import settingDocumentReducer from "./SettingDocumentModule";
 import noticeReducer from "./NoticeModule";
 import scheduleReducer from "./ScheduleModule";
 import mpUpdateReducer from "./MPUpdateModule";
@@ -53,10 +49,28 @@ import aamSendNewMsgReducer from "./AAMSendNewMsgModule";
 import aamRecNewMsgReducer from "./AAMRecNewMsgModule";
 import mpATTListReducer from "./MPATTListModule";
 import settingSerchPositionReducer from "./SettingSerchPositionModule";
-import dataFormatReducer from './DataFormatModule';
+import dataFormatReducer from "./DataFormatModule";
 import schedulePatternDayReducer from "./SchedulePatternDayModule";
-import scheduleInsetMemReducer from "./ScheduleInsertMemModule";
-
+import scheduleUpdateReducer from "./ScheduleUpdateModule";
+import settingSearchMemListReducer from "./SettingSearchMemListModule";
+import scheduleInsertReducer from "./ScheduleInsertModule";
+import settingCareerInsertReducer from "./SettingCareearInsertModule";
+import settingCareerUpdateReducer from "./SettingCareearUpdateModule";
+import settingCareerDeleteReducer from "./SettingCareearDeleteModule";
+import settingDegreeInsertReducer from "./SettingDegreeInsertModule";
+import settingDegreeUpdateReducer from "./SettingDegreeUpdateModule";
+import settingDegreeDeleteReducer from "./SettingDegreeDeleteModule";
+import settingCertificateInsertReducer from "./SettingCertificateInsertModule";
+import settingCertificateUpdateReducer from "./SettingCertificateUpdateModule";
+import settingCertificateDeleteReducer from "./SettingCertificateDeleteModule";
+import settingDocumentInsertReducer from "./SettingDocumentInsertModule";
+import settingDocumentUpdateReducer from "./SettingDocumentUpdateModule";
+import settingDocumentDeleteReducer from "./SettingDocumentDeleteModule";
+import settingSalaryInsertReducer from "./SettingSalaryInsertModule";
+import settingSalaryUpdateReducer from "./SettingSalaryUpdateModule";
+import settingSalaryDeleteReducer from "./SettingSalaryDeleteModule";
+import scheduleTreeReducer from "./ScheduleTreeModule";
+import searchProxyReducer from "./SearchProxyModule";
 const { combineReducers } = require("redux");
 
 
@@ -83,44 +97,59 @@ const rootReducer = combineReducers({
   mpATTReducer,
   mpVacHisReducer,
   mpVacReducer,
-  settingCareerReducer,
-  settingDegreeReducer,
-  settingCertificateReducer,
   settingInfoSearchReducer,
-  settingDocumentReducer,
   noticeReducer,
-    notCommentReducer,
+  notCommentReducer,
   schedulePatternDayReducer,
-  scheduleInsetMemReducer,
-    scheduleReducer,
-    mpUpdateReducer,
-    approvalInfoReducer,
-    approvalCompleteReducer,
-    approvalTypeReducer,
-    mpProReducer,
-    mpSignReducer,
-    schedulePatternReducer,
-    attendanceInfoReducer,
-    organizationItemReducer,
-    organizationMemberReducer,
-    organizationCreateReducer,
-    organizationListReducer,
-    organizationModifyReducer,
-    organizationDeleteReducer,
-    organizationEditReducer,
-    schedulePatternUpdateReducer,
-    schedulePatternInsertReducer,
-    schedulePatternDeleteReducer,
-    aamPutReducer,
-    aamPutAlarmReducer,
-    mpSalReducer,
-    scheduleSearchValueReducer,
-    scheduleSearchValueNotReducer,
-    scheduleSearchETCReducer,
-    aamSendNewMsgReducer,
-    aamRecNewMsgReducer,
-    mpATTListReducer,
-    dataFormatReducer,
+  scheduleReducer,
+  mpUpdateReducer,
+  approvalInfoReducer,
+  approvalCompleteReducer,
+  approvalTypeReducer,
+  mpProReducer,
+  mpSignReducer,
+  schedulePatternReducer,
+  attendanceInfoReducer,
+  organizationItemReducer,
+  organizationMemberReducer,
+  organizationCreateReducer,
+  organizationListReducer,
+  organizationModifyReducer,
+  organizationDeleteReducer,
+  organizationEditReducer,
+  schedulePatternUpdateReducer,
+  schedulePatternInsertReducer,
+  schedulePatternDeleteReducer,
+  aamPutReducer,
+  aamPutAlarmReducer,
+  mpSalReducer,
+  scheduleSearchValueReducer,
+  scheduleSearchValueNotReducer,
+  scheduleSearchETCReducer,
+  aamSendNewMsgReducer,
+  aamRecNewMsgReducer,
+  mpATTListReducer,
+  scheduleUpdateReducer,
+  scheduleInsertReducer,
+  settingSearchMemListReducer,
+  settingCareerInsertReducer,
+  settingCareerUpdateReducer,
+  settingCareerDeleteReducer,
+  settingDegreeInsertReducer,
+  settingDegreeUpdateReducer,
+  settingDegreeDeleteReducer,
+  settingCertificateInsertReducer,
+  settingCertificateUpdateReducer,
+  settingCertificateDeleteReducer,
+  settingDocumentInsertReducer,
+  settingDocumentUpdateReducer,
+  settingDocumentDeleteReducer,
+  settingSalaryInsertReducer,
+  settingSalaryUpdateReducer,
+  settingSalaryDeleteReducer,
+  scheduleTreeReducer,
+  searchProxyReducer,
+  dataFormatReducer,
 });
 
 export default rootReducer;

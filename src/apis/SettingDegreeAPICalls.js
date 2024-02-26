@@ -1,12 +1,15 @@
 import {
   POST_DEGREE,
-  PUT_DEGREE,
-  DELETE_DEGREE,
   POST_DEGREE_FILE,
+} from "../modules/SettingDegreeInsertModule";
+import {
+  PUT_DEGREE,
   PUT_DEGREE_FILE,
+} from "../modules/SettingDegreeUpdateModule";
+import {
+  DELETE_DEGREE,
   DELETE_DEGREE_FILE,
-
-} from "../modules/SettingDegreeModule";
+} from "../modules/SettingDegreeDeleteModule";
 
 //학위정보 등록
 export const callDegreeInsertAPI = ({ insertDegForm }) => {
@@ -24,10 +27,7 @@ export const callDegreeInsertAPI = ({ insertDegForm }) => {
       body: JSON.stringify(insertDegForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callDegreeInsertAPI] callDegreeInsertAPI RESULT : ",
-      result
-    );
+    console.log("[callDegreeInsertAPI] callDegreeInsertAPI RESULT : ", result);
 
     dispatch({ type: POST_DEGREE, payload: result });
     console.log({ result });
@@ -50,17 +50,13 @@ export const callDegreeUpdateAPI = ({ updateDegForm }) => {
       body: JSON.stringify(updateDegForm),
     }).then((response) => response.json());
 
-    console.log(
-      "[callDegreeUpdateAPI] callDegreeUpdateAPI RESULT : ",
-      result
-    );
+    console.log("[callDegreeUpdateAPI] callDegreeUpdateAPI RESULT : ", result);
     if (result.status === 200) {
-    dispatch({ type: PUT_DEGREE, payload: result });
-    console.log({ result });
+      dispatch({ type: PUT_DEGREE, payload: result });
+      console.log({ result });
     }
   };
 };
-
 
 //학위정보 삭제
 export const callDegreeDeleteAPI = ({ degCode }) => {
@@ -75,13 +71,10 @@ export const callDegreeDeleteAPI = ({ degCode }) => {
         Accept: "*/*",
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
       },
-      body: JSON.stringify(degCode),
+      body: JSON.stringify({ degCode }),
     }).then((response) => response.json());
 
-    console.log(
-      "[callDegreeDeleteAPI] callDegreeDeleteAPI RESULT : ",
-      result
-    );
+    console.log("[callDegreeDeleteAPI] callDegreeDeleteAPI RESULT : ", result);
     if (result.status === 200) {
       dispatch({ type: DELETE_DEGREE, payload: result });
       console.log({ result });
@@ -109,9 +102,8 @@ export const callDegreeFileInsertAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: POST_DEGREE_FILE, payload: result.data });
-    console.log({ result });
+      dispatch({ type: POST_DEGREE_FILE, payload: result.data });
+      console.log({ result });
     }
   };
 };
@@ -135,9 +127,8 @@ export const callDegreeFileUpdateAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: PUT_DEGREE_FILE, payload: result.data });
-    console.log({ result });
+      dispatch({ type: PUT_DEGREE_FILE, payload: result.data });
+      console.log({ result });
     }
   };
 };
@@ -161,9 +152,8 @@ export const callDegreeFileDeleteAPI = ({ formData }) => {
       result
     );
     if (result.status === 200) {
-
-    dispatch({ type: DELETE_DEGREE_FILE, payload: result.data });
-    console.log({ result });
+      dispatch({ type: DELETE_DEGREE_FILE, payload: result.data });
+      console.log({ result });
     }
   };
 };
