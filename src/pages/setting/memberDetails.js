@@ -20,7 +20,7 @@ function MemberAdd() {
 
   const memberCode = searchParams.get("memCode");
   const [profile, setProfile] = useState(null);
-  const [profileUrl, setProfileUrl] = useState();
+  const [profileUrl, setProfileUrl] = useState(null);
   const profileInput = useRef();
   const depList = useSelector((state) => state.settingReducer);
   const posList = useSelector((state) => state.settingSerchPositionReducer);
@@ -43,18 +43,16 @@ function MemberAdd() {
   }, []);
 
   useEffect(() => {
-    if (memberCode) {
-      dispatch(
-        callMemberDetailAPI({
-          memCode: memberCode,
-        })
-      );
-      dispatch(
-        callProfileAPI({
-          memCode: memberCode,
-        })
-      );
-    }
+    dispatch(
+      callMemberDetailAPI({
+        memCode: memberCode,
+      })
+    );
+    dispatch(
+      callProfileAPI({
+        memCode: memberCode,
+      })
+    );
   }, [memberCode]);
 
   const [form, setForm] = useState({
@@ -64,7 +62,7 @@ function MemberAdd() {
     memEmail: "",
     memAddress: "",
     memBirth: "",
-    memPassword: "0000",
+    memPassword: "",
     memHireDate: currentDate,
     memStatus: "N",
     memRole: "N",
@@ -188,6 +186,7 @@ function MemberAdd() {
       });
     }
   };
+  console.log("profileUrl", profileUrl);
 
   return (
     <>
@@ -237,21 +236,19 @@ function MemberAdd() {
             <h5 className="card-header">프로필 사진 수정</h5>
             <div className="card-body">
               <div className="d-flex align-items-start align-items-sm-center gap-4">
-                {profileDetail &&
-                profileDetail.docAtcPath &&
-                profileDetail.memCode === resutlList.memCode ? (
+                {profileUrl ? (
                   <img
-                    src={profileDetail.docAtcPath}
-                    alt="사진 등록"
+                    src={profileUrl}
+                    alt="profileUrl 사진 등록"
                     className="d-block rounded"
                     height={120}
                     width={100}
                     style={{ marginLeft: 10, marginRight: 10 }}
                   />
-                ) : profileUrl ? (
+                ) : profileDetail ? (
                   <img
-                    src={profileUrl}
-                    alt="사진 등록"
+                    src={profileDetail.docAtcPath}
+                    alt="profileDetail 사진 등록"
                     className="d-block rounded"
                     height={120}
                     width={100}

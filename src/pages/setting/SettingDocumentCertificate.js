@@ -62,7 +62,8 @@ function SettingDocumentCertificate() {
 
     if (
       prevList.certificateFileDTO &&
-      prevList.certificateFileDTO[index].cerAtcCode === index
+      prevList.certificateFileDTO.length > 0 &&
+      prevList.certificateFileDTO[index]
     ) {
       console.log(index, "여기44444444444555555555555555");
 
@@ -179,11 +180,7 @@ function SettingDocumentCertificate() {
                       type="file"
                       id="cerFile"
                       name="cerFile"
-                      onClick={() =>
-                        onClickCertificateFileUpload(
-                          prevList.certificateFileDTO.cerAtcCode
-                        )
-                      }
+                      onClick={() => onClickCertificateFileUpload(index)}
                       onChange={(e) => CertificateFileChange(index, e)}
                       ref={cerFileInput}
                     />

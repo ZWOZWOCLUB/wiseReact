@@ -113,18 +113,7 @@ function Setting() {
         <ul
           className="nav nav-pills flex-column flex-md-row mb-3"
           style={{ flex: 1, display: "flex", justifyContent: "space-between" }}
-        >
-          <li className={`nav-item`} style={{ cursor: "pointer" }}>
-            <li className={`nav-link active`} onClick={onClickMemberInsert}>
-              직원 등록
-            </li>
-          </li>
-          <li className={`nav-item`} style={{ cursor: "pointer" }}>
-            <li className={`nav-link active`} onClick={onClickAttendance}>
-              근태 조회
-            </li>
-          </li>
-        </ul>
+        ></ul>
       </div>
       <div className={`${coreCSS["col-xxl"]}`}>
         <div className={`${coreCSS["card"]} ${coreCSS["mb-4"]}`}>

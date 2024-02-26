@@ -77,7 +77,10 @@ function SettingDocument() {
 
   const onClickEtcFileUpload = (index) => {
     console.log("클릭1", index);
-    etcFileInput.current.click();
+
+    EtcFileChange(index, {
+      target: { files: etcFileInput.current.files },
+    });
   };
 
   const EtcFileChange = (index, e) => {
