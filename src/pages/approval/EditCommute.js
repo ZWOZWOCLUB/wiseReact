@@ -126,11 +126,16 @@ function EditCommute({ appCodes, refCodes }) {
             formData.append('approvalFile', form.file);
         }
 
+        const confirmLeave = window.confirm('결재를 상신하시겠습니까? ');
+
         dispatch(
             callAprovalCommuteAPI({
                 form: formData,
             })
         );
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
 
         console.log('time', formData.get('ediTime'));
 

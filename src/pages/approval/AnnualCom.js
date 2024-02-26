@@ -16,6 +16,7 @@ function AnnualCom(props) {
     console.log('propsCode', props.data?.approvalComplete[0]?.approval.approvalMember.memCode);
 
     console.log('머여 ', props.data?.approvalComplete[0]?.approval.approvalMember.memCode === token.memCode);
+    // console.log('래퍼런스', props.data?.refApprovalList[0]);
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -76,19 +77,39 @@ function AnnualCom(props) {
 
     const approvalComplete = () => {
         console.log('form', form);
+
+        const confirmLeave = window.confirm('결재를 승인하시겠습니까? ');
+
+        form.appCode = props?.data?.approvalComplete[0]?.appCode;
         dispatch(
             callAprovalCompleteAPI({
                 form: form,
             })
         );
 
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
+
         // navigate(`/main/Approval`, { replace: false });
     };
 
     return (
         <>
-            {props.data?.approvalComplete[0]?.appState === '대기' &&
-            props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+            {props.data?.approvalComplete[0]?.appState !== '대기' ? (
+                <div>
+                    <div id='appDiv'>
+                        <h1 style={{ color: '#bbbdfc' }}>{props.data?.approvalComplete[0]?.appState}</h1>
+                    </div>
+                    <div id='appComentBox'>
+                        <span>결재의견 </span>
+                        <div name='appComment' id='commentBox' style={{ padding: '20px' }}>
+                            {props.data?.approvalComplete[0]?.appComment}
+                        </div>
+                    </div>
+                </div>
+            ) : props.data?.approvalComplete[0]?.appState === '대기' &&
+              props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
                 <div>
                     <div id='appDiv'>
                         <select id='comType' name='appState' onChange={onChange}>
@@ -114,20 +135,8 @@ function AnnualCom(props) {
                         ></textarea>
                     </div>
                 </div>
-            ) : props.data?.approvalComplete[0]?.approvalMember?.memCode !== token.memCode ? (
-                <div></div>
             ) : (
-                <div>
-                    <div id='appDiv'>
-                        <h1 style={{ color: '#bbbdfc' }}>{props.data?.approvalComplete[0]?.appState}</h1>
-                    </div>
-                    <div id='appComentBox'>
-                        <span>결재의견 </span>
-                        <div name='appComment' id='commentBox' style={{ padding: '20px' }}>
-                            {props.data?.approvalComplete[0]?.appComment}
-                        </div>
-                    </div>
-                </div>
+                <div></div>
             )}
 
             <hr style={{ marginTop: '50px' }} />
@@ -137,16 +146,13 @@ function AnnualCom(props) {
                     <div>제목</div>
                     <div>연차구분</div>
                     <div>신청일</div>
-                    <div style={{ marginTop: '105px' }}>내용</div>
-                    {props.data.approvalAttachment[0] &&
-                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+                    <div>내용</div>
+                    {props.data.approvalAttachment[0] ? (
                         <>
-                            <div style={{ marginTop: '80px' }}>첨부파일</div>
+                            <div>첨부파일</div>
                         </>
                     ) : (
-                        <>
-                            <div style={{ marginTop: '80px' }}>첨부파일</div>
-                        </>
+                        <></>
                     )}
                 </div>
                 <div id='margintop'>
@@ -159,29 +165,15 @@ function AnnualCom(props) {
                         {props.data.approvalType?.vacContents}
                     </div>
 
-                    {props.data.approvalAttachment[0] &&
-                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
-                        <>
-                            <div>
-                                {props.data.approvalAttachment[0]?.payAtcOriginalName}
-                                <i
-                                    className='bx bx-down-arrow-alt'
-                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
-                                    onClick={() => onClickDocFileDown()}
-                                />
-                            </div>
-                        </>
-                    ) : props.data.approvalAttachment[0] ? (
-                        <>
-                            <div>
-                                {props.data.approvalAttachment[0]?.payAtcOriginalName}
-                                <i
-                                    className='bx bx-down-arrow-alt'
-                                    style={{ cursor: 'pointer', marginLeft: '150px', color: 'blue' }}
-                                    onClick={() => onClickDocFileDown()}
-                                />
-                            </div>
-                        </>
+                    {props.data.approvalAttachment[0] ? (
+                        <div style={{ marginTop: '12%' }}>
+                            {props.data.approvalAttachment[0]?.payAtcOriginalName}
+                            <i
+                                className='bx bx-down-arrow-alt'
+                                style={{ cursor: 'pointer', marginLeft: 'auto', color: 'blue', marginRight: '0' }}
+                                onClick={() => onClickDocFileDown()}
+                            />
+                        </div>
                     ) : (
                         <></>
                     )}
