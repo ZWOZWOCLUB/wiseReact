@@ -86,10 +86,9 @@ function MPAttendance() {
     "08-15",
   ];
 
-
   const onChangeDate = (activeStartDate) => {
-    console.log('activeStartDate',activeStartDate);
-  }
+    console.log("activeStartDate", activeStartDate);
+  };
 
   // 날짜 리스트를 보고 해당 날짜에 css를 추가하는 함수
   const addContent = (date) => {
@@ -129,7 +128,7 @@ function MPAttendance() {
     // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
     if (holidayList.find((day) => day === moment(date).format("MM-DD"))) {
       return (
-        <div className="diaryContent" style={{ backgroundColor: "yellow" }}>
+        <div className="diaryContent" style={{ backgroundColor: "lightYellow" }}>
           공휴일
         </div>
       );
@@ -140,28 +139,37 @@ function MPAttendance() {
     else {
       if (arr.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "blue" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightBlue" }}
+          >
             출근
           </div>
         );
       }
       if (arr2.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "red" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightGrey" }}
+          >
             결근
           </div>
         );
       }
       if (arr3.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "purple" }}>
+          <div className="diaryContent" style={{ backgroundColor: "lightPink" }}>
             지각
           </div>
         );
       }
       if (arr4.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "green" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightGreen" }}
+          >
             조퇴
           </div>
         );
@@ -236,7 +244,11 @@ function MPAttendance() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
+                      <i
+                        className="bx bx-user me-1"
+                        style={{ color: "#566a7f" }}
+                      ></i>{" "}
+                      프로필 정보
                     </span>
                   </li>
                   <li
@@ -311,7 +323,7 @@ function MPAttendance() {
                                 onClickDay={onClickDayHandler}
                                 tileContent={({ date }) => addContent(date)}
                                 view="month"
-                                // onViewChange={handleViewChange} 
+                                // onViewChange={handleViewChange}
                               />
                             </div>
                             {/* 캘린더 끝 */}
