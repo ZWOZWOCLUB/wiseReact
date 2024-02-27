@@ -132,7 +132,6 @@ function DataFormat() {
     // console.log('uploadFile', uploadFile);
 
     //딜리트 할 때
-    //
     const onClickDeleteFile = async (dataCode) => {
         console.log('삭제 버튼 클릭', dataCode);
 
@@ -159,6 +158,7 @@ function DataFormat() {
         }
     }, [dataFormat]);
 
+    //업로드 파일
     const onClickFileUpload = () => {
         // if (dataFormatFileInput.current) {
         dataFormatFileInput.current.click();
@@ -178,6 +178,7 @@ function DataFormat() {
         }
     };
 
+    //다운로드
     const onClickDown = async (index) => {
         try {
             const urlPath =
@@ -272,7 +273,7 @@ function DataFormat() {
                                                                     name='dataFormatFile'
                                                                     src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANFJREFUSEvtlMENAWEQRt+6uStBEVx1INEHpdCHRAeuFKEEdzfkJSS7sr+ZPWyQ+M4z35v/m9mt6FlVz/58DeBWeGk4YFjwMP4Dwlv6vYjWwDJ8V7NgA6xee0pXNAC2wDwJ2QEL4JoFWDcE9sAkgByBGXBpq4u+gxFwAMYFyAmYAufSEBHAPs2FCKtLU82FFJUB2GxMxmVsyjiMxXjeKgvQxIW7eOVCXWyoLgDNnmfoGafUFZAyrRd9BFD672Snbwzd9oLeAdlJU3Uf2UFqsmzRHehrHBmAe1VEAAAAAElFTkSuQmCC'
                                                                     onClick={() => onClickDown(index)}
-                                                                    // onChange={(e) => dataFormatChange(index, e)}
+                                                                    
 
                                                                     alt='파일 다운로드'
                                                                 />

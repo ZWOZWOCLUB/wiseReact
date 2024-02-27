@@ -308,8 +308,9 @@ function Header() {
   };
 
   // 공지사항 클릭 시 작동하는 함수
-  const onClickNotice = () => {
-    console.log("------ onClickNotice 호출 -----");
+const onClickNotice = () => {
+    console.log('------ onClickNotice 호출 -----');
+    navigate(`/main/notice`, { replace: true });
 
     if (firstNotice.data !== undefined && firstNotice.data.length !== 0) {
       if (firstNotice.data[0].allArmCheck === "N") {
@@ -324,7 +325,7 @@ function Header() {
         );
       }
     }
-  };
+};
 
   const onClickLogout = () => {
     window.localStorage.removeItem("accessToken");
