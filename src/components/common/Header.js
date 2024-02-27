@@ -29,6 +29,18 @@ import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import { callMemberDetailAPI } from '../../apis/MyPageAPICalls.js';
 import { callLogoutAPI } from '../../apis/MemberAPICalls.js';
+import "../../pages/alarmAndMessage/message.css";
+import "../../assets/vendor/libs/jquery/jquery.js";
+import "../../assets/vendor/libs/popper/popper.js";
+import "../../assets/vendor/js/bootstrap.js";
+import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
+import "../../assets/vendor/js/menu.js";
+import "../../assets/js/config.js";
+import { callFirstRecMessageAPI } from "../../apis/AAMAPICalls.js";
+import { callFirstPerAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callFirstAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import "tui-tree/dist/tui-tree.css";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 <script async defer src='https://buttons.github.io/buttons.js'></script>;
 function Header() {
@@ -54,6 +66,11 @@ function Header() {
     const recMessageList = recMessage.data;
     const allAlarmList = allAlarm.data;
     const sendNewMsgReducerDetail = sendNewMsgReducer.data;
+
+  const firstRec = useSelector((state) => state.aamFirstRecReducer);
+  const firstNotice = useSelector((state) => state.aamFirstNoticeReducer);
+  const firstAlarm = useSelector((state) => state.aamFirstSendReducer);
+
 
     const [checked, setChecked] = useState([]);
     const [names, setNames] = useState('');
@@ -171,6 +188,7 @@ function Header() {
 
   const handleColorChange = () => {
     console.log("------ handleColorChange 호출 -----");
+    setCheck(true);
     if (token !== null) {
       dispatch(
         callSendMessageAPI({
@@ -191,7 +209,6 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              memCode: token?.memCode,
               memCode: token.memCode,
             })
           );
@@ -205,6 +222,7 @@ function Header() {
     console.log("------ handleTabChange 호출 -----");
     setTab(selectedTab);
   };
+
   // 받은 메신저 삭제 API 요청
   const onClickRecMsgDelete = (msgCode) => {
     console.log("------ onClickRecMsgDelete 호출 -----");
@@ -212,7 +230,6 @@ function Header() {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       dispatch(
         callRecDeleteStatusUpdateAPI({
-          msgCode: msgCode,
           memCode: token?.memCode,
         })
       );
@@ -250,7 +267,7 @@ function Header() {
   // 알림함 API 요청
   const onClickAlarm = () => {
     console.log("------ onClickAlarm 호출 -----");
-
+    setAlarm(true);
     if (token !== null) {
       dispatch(
         callPerAlarmDetailAPI({
@@ -277,17 +294,18 @@ const onClickNotice = () => {
     console.log('------ onClickNotice 호출 -----');
     navigate(`/main/notice`, { replace: true });
 
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-        if (allAlarm.data[0].allArmCheck === 'N') {
-            setNotice(true);
+    if (firstNotice.data !== undefined && firstNotice.data.length !== 0) {
+      if (firstNotice.data[0].allArmCheck === "N") {
+        setNotice(true);
 
-            // 상태 N을 Y로 업데이트 하는 API 호출
-            dispatch(
-                callNoticeCheckStatusChangeAPI({
-                    allArmCode: allAlarm.data[0].allArmCode,
-                })
-            );
-        }
+        // 상태 N을 Y로 업데이트 하는 API 호출
+
+        dispatch(
+          callNoticeCheckStatusChangeAPI({
+            allArmCode: firstNotice.data[0].allArmCode,
+          })
+        );
+      }
     }
 };
 
@@ -299,6 +317,8 @@ const onClickNotice = () => {
     alert("로그아웃 완료! 메인화면으로 이동");
 
     navigate("/login", { replace: true });
+    window.location.reload();
+
   };
 
   const onClickMyPage = () => {
@@ -310,40 +330,22 @@ const onClickNotice = () => {
     console.log("------ useEffect 호출 -----");
 
     dispatch(
-      callRecMessageAPI({
+      callFirstRecMessageAPI({
         memCode: token?.memCode,
       })
     );
 
     dispatch(
-      callPerAlarmDetailAPI({
+      callFirstPerAlarmDetailAPI({
         memCode: token?.memCode,
       })
     );
 
     dispatch(
-      callAllAlarmDetailAPI({
+      callFirstAllAlarmDetailAPI({
         memCode: token?.memCode,
       })
     );
-
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
-        setNotice(false);
-      }
-    }
-
-    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      if (perAlarm.data[0].perArmCheckStatus === "N") {
-        setAlarm(false);
-      }
-    }
-
-    if (recMessageList !== undefined && recMessageList.length !== 0) {
-      if (recMessage.data[0].recMsgCheckStatus === "N") {
-        setCheck(false);
-      }
-    }
   }, []);
 
   // 메신저 리듀서 update 시 작동하는 useEffect
@@ -376,47 +378,43 @@ const onClickNotice = () => {
     }
   }, [sendNewMsgReducer]);
 
+
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ recMessage useEffect 호출 -----");
 
-    if (recMessageList !== undefined && recMessageList.length !== 0) {
-      if (recMessage.data[0].recMsgCheckStatus === "N") {
+    if (firstRec.data !== undefined && firstRec.data.length !== 0) {
+      if (firstRec.data[0].recMsgCheckStatus === "N") {
         setCheck(false);
       }
-      if (recMessage.data[0].recMsgCheckStatus === "Y") {
-        setCheck(true);
-      }
     }
-  }, [recMessage]);
+  }, [firstRec]);
 
   // perAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ perAlarm useEffect 호출 -----");
 
-    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      if (perAlarm.data[0].perArmCheckStatus === "N") {
+    if (firstAlarm.data !== undefined && firstAlarm.data.length !== 0) {
+
+      if (firstAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(false);
       }
-      if (perAlarm.data[0].perArmCheckStatus === "Y") {
-        setAlarm(true);
-      }
     }
-  }, [perAlarm]);
+  }, [firstAlarm]);
 
   // allAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ allAlarm useEffect 호출 -----");
 
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
+    if (firstNotice.data !== undefined && firstNotice.data.length !== 0) {
+      if (firstNotice.data[0].allArmCheck === "N") {
         setNotice(false);
       }
-      if (allAlarm.data[0].allArmCheck === "Y") {
+      if (firstNotice.data[0].allArmCheck === "Y") {
         setNotice(true);
       }
     }
-  }, [allAlarm]);
+  }, [firstNotice]);
 
   const onClickTree = (event) => {
     const clickedElement = event.target;
@@ -529,6 +527,7 @@ const onClickNotice = () => {
             }}
           />
 
+
           {/* 공지사항? */}
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
@@ -544,6 +543,7 @@ const onClickNotice = () => {
           </li>
 
           {/* 알림함 */}
+
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
               coreCSS[`me-3`]

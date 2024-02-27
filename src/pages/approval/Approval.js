@@ -134,12 +134,16 @@ function Approval() {
                                                 보낸 결재
                                             </button>
                                         </li>
-                                        <li className='nav-item'>
-                                            <button className='nav-link' onClick={onClickAssignment}>
-                                                {' '}
-                                                전결자 지정
-                                            </button>
-                                        </li>
+                                        {token.memRole !== 'USER' ? (
+                                            <li className='nav-item'>
+                                                <button className='nav-link' onClick={onClickAssignment}>
+                                                    {' '}
+                                                    전결자 지정
+                                                </button>
+                                            </li>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </ul>
                                 </div>
                                 <div className='col-xxl'>
