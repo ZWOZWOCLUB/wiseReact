@@ -67,6 +67,9 @@ function Annual({ appCodes, refCodes }) {
         },
         rMember: refCode,
     });
+    function clearClick() {
+        window.location.replace('/main/requestApproval');
+    }
 
     const dispatch = useDispatch();
 
@@ -241,6 +244,7 @@ function Annual({ appCodes, refCodes }) {
                             backgroundColor: '#bbbdfc',
                             borderColor: '#bbbdfc',
                         }}
+                        onClick={clearClick}
                     >
                         <b>초기화</b>
                     </div>

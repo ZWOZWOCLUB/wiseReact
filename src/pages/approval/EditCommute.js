@@ -48,6 +48,9 @@ function EditCommute({ appCodes, refCodes }) {
             rMember: refCode,
         });
     }, [memberCode, refCode]);
+    function clearClick() {
+        window.location.replace('/main/requestApproval');
+    }
 
     const [img, setImg] = useState(null);
 
@@ -226,6 +229,7 @@ function EditCommute({ appCodes, refCodes }) {
                         backgroundColor: '#bbbdfc',
                         borderColor: '#bbbdfc',
                     }}
+                    onClick={clearClick}
                 >
                     <b>초기화</b>
                 </div>

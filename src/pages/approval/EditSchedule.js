@@ -70,6 +70,9 @@ function EditSchedule({ appCodes, refCodes }) {
         },
     });
 
+    function clearClick() {
+        window.location.replace('/main/Assignment');
+    }
     const dispatch = useDispatch();
 
     const onChange = (e) => {
@@ -257,6 +260,7 @@ function EditSchedule({ appCodes, refCodes }) {
                         backgroundColor: '#bbbdfc',
                         borderColor: '#bbbdfc',
                     }}
+                    onClick={clearClick}
                 >
                     <b>초기화</b>
                 </div>
