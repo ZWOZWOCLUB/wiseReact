@@ -33,7 +33,7 @@ function SettingDocumentCertificate() {
   const onClickCerFileDown = async (index) => {
     try {
       const urlPath =
-        "http://localhost:8001" +
+        "http://3.39.174.77:8001" +
         "/certificate/" +
         prevList.certificateFileDTO[index].cerAtcConvertName;
       console.log(urlPath);
