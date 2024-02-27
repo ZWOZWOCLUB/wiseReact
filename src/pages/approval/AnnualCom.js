@@ -78,18 +78,12 @@ function AnnualCom(props) {
     const approvalComplete = () => {
         console.log('form', form);
 
-        const confirmLeave = window.confirm('결재를 승인하시겠습니까? ');
-
         form.appCode = props?.data?.approvalComplete[0]?.appCode;
         dispatch(
             callAprovalCompleteAPI({
                 form: form,
             })
         );
-
-        if (confirmLeave) {
-            navigate(`/main/Approval`, { replace: false });
-        }
 
         // navigate(`/main/Approval`, { replace: false });
     };

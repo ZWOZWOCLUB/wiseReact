@@ -73,6 +73,10 @@ function ReqDocument({ appCodes, refCodes }) {
         });
         console.log(form);
     };
+    function clearClick() {
+        window.location.replace('/main/requestApproval');
+
+    }
 
     const approvalComplete = () => {
         const formData = new FormData();
@@ -143,6 +147,7 @@ function ReqDocument({ appCodes, refCodes }) {
                         backgroundColor: '#bbbdfc',
                         borderColor: '#bbbdfc',
                     }}
+                    onClick={clearClick}
                 >
                     <b>초기화</b>
                 </div>

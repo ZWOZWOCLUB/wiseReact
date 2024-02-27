@@ -88,6 +88,9 @@ function Retiredment({ appCodes, refCodes }) {
             file: file,
         }));
     };
+    function clearClick() {
+        window.location.replace('/main/requestApproval');
+    }
 
     const approvalComplete = () => {
         const formData = new FormData();
@@ -202,6 +205,7 @@ function Retiredment({ appCodes, refCodes }) {
                         backgroundColor: '#bbbdfc',
                         borderColor: '#bbbdfc',
                     }}
+                    onClick={clearClick}
                 >
                     <b>초기화</b>
                 </div>
