@@ -87,6 +87,16 @@ function SettingVacation() {
 
     window.location.reload();
   };
+  const currentDate = new Date();
+
+  const formattedDate = currentDate.toLocaleDateString("en-US", {
+    year: "numeric",
+  });
+
+  const [selectedOption, setSelectedOption] = useState(formattedDate);
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
   return (
     <>
@@ -146,39 +156,15 @@ function SettingVacation() {
                       </span>
                     </h5>
                     <div className="dropdown">
-                      <button
-                        className="btn p-0"
-                        type="button"
-                        id="transactionID"
-                        data-bs-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div
-                        className="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="transactionID"
-                      >
-                        <span
-                          className="dropdown-item"
-                          href="javascript:void(0);"
-                        >
-                          Last 28 Days
-                        </span>
-                        <span
-                          className="dropdown-item"
-                          href="javascript:void(0);"
-                        >
-                          Last Month
-                        </span>
-                        <span
-                          className="dropdown-item"
-                          href="javascript:void(0);"
-                        >
-                          Last Year
-                        </span>
-                      </div>
+                      <select value={selectedOption} onChange={handleChange}>
+                        <option value={formattedDate}>{formattedDate}</option>
+                        <option value={formattedDate - 1}>
+                          {formattedDate - 1}
+                        </option>
+                        <option value={formattedDate - 2}>
+                          {formattedDate - 2}
+                        </option>
+                      </select>
                     </div>
                   </div>
                   <div className="card-body" style={{ overflowY: "auto" }}>
