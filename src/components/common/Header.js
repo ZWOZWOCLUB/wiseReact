@@ -53,7 +53,6 @@ function Header() {
   const sendMessageList = sendMessage.data;
   const recMessageList = recMessage.data;
   const allAlarmList = allAlarm.data;
-  const sendNewMsgReducerDetail = sendNewMsgReducer.data;
 
   const [checked, setChecked] = useState([]);
   const [names, setNames] = useState("");
@@ -194,7 +193,6 @@ function Header() {
 
           dispatch(
             callMsgCheckStatusChangeAPI({
-              memCode: token?.memCode,
               memCode: token.memCode,
             })
           );
@@ -215,7 +213,6 @@ function Header() {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       dispatch(
         callRecDeleteStatusUpdateAPI({
-          msgCode: msgCode,
           memCode: token?.memCode,
         })
       );
@@ -378,6 +375,7 @@ function Header() {
       setInputValue("");
     }
   }, [sendNewMsgReducer]);
+
 
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
