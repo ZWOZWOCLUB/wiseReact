@@ -299,6 +299,8 @@ function Header() {
     alert("로그아웃 완료! 메인화면으로 이동");
 
     navigate("/login", { replace: true });
+    window.location.reload();
+
   };
 
   const onClickMyPage = () => {
