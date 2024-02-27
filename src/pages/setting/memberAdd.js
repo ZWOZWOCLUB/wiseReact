@@ -96,9 +96,6 @@ function MemberAdd() {
 
     formData.append("profile", profile);
     dispatch(callMemberAddAPI({ form: formData }));
-  };
-
-  useEffect(() => {
     if (memberResult && memberResult.memCode > 0) {
       const memCode = memberResult.memCode;
 
@@ -106,7 +103,7 @@ function MemberAdd() {
       alert("직원 등록이 완료되었습니다.");
       navigate(`/main/memberDetails?memCode=${memCode}`, { replace: true });
     }
-  });
+  };
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
