@@ -68,13 +68,6 @@ function NoticeUpdate() {
         const file = e.target.files[0];
         setNoticeFiles(file);
         setFileName(file.name);
-        // console.log("file",file);
-
-        // setForm((prevForm) => ({
-        // ...prevForm,
-        // notAttachedFile: [file],
-        // }));
-
         console.log('파일', file);
     };
 
@@ -97,7 +90,7 @@ function NoticeUpdate() {
 
     console.log('form.notCode', form.notCode);
 
-    const onClickNoticeUpdateHandler = () => {
+    const onClickNoticeUpdateHandler = async () => {
         console.log('onClickNoticeUpdateHandler', onClickNoticeUpdateHandler);
         if (!form.notName || !form.notComment) {
             alert('제목과 내용을 입력해주세요.');
@@ -124,8 +117,14 @@ function NoticeUpdate() {
 
         console.log('폼데이터 ', formData.get('noticeFile'));
 
-        dispatch(callNoticeUpdateAPI({ form: formData }));
-        console.log('update 완료');
+        try {
+            await dispatch(callNoticeUpdateAPI({ form: formData })).unwrap(); // 비동기 API 호출 및 대기
+            console.log('공지사항 업데이트 완료');
+            navigate(`/main/notice`); // 업데이트 완료 후 메인 페이지로 이동
+        } catch (error) {
+            console.error('공지사항 업데이트 실패', error);
+            alert('공지사항 업데이트에 실패했습니다. 다시 시도해주세요.');
+        }
     };
 
     return (

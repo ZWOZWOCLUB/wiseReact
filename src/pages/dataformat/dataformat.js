@@ -167,6 +167,14 @@ function DataFormat() {
 
     console.log("form", form);
 
+    const isConfirmed = window.confirm("해당 자료를 삭제하시겠습니까?");
+
+    if (!isConfirmed) {
+        // 사용자가 '취소'를 선택한 경우, 삭제 작업 중단
+        console.log("삭제 취소됨");
+        return;
+    }
+
     // 서버에 삭제 요청 보내기
     try {
       await dispatch(callDtaFormatDeleteAPI(form)); // API 호출
