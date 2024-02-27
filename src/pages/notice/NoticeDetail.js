@@ -70,7 +70,7 @@ function NoticeDetail() {
         navigate(`/main/NoticeUpdate/${notCode}`, { state: { detail: detail[0] } });
     };
 
-    //댓글
+    //댓글form
     const [form, setForm] = useState({
         comCode: '',
         comContents: '',
