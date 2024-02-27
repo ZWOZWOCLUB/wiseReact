@@ -1,6 +1,6 @@
 import '../../@core/vendor/css/themeDefault.css';
 import './dataformat.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { callAllViewDataFormatAPI } from '../../apis/DataFormatAPICalls';
 import { callDataFormatInsertAPI } from '../../apis/DataFormatAPICalls';
 import { callDtaFormatDeleteAPI } from '../../apis/DataFormatAPICalls';
@@ -25,7 +25,8 @@ function DataFormat() {
     const formattedDate = registDate.toISOString().slice(0, 10);
     const [currentDate, setCurrentDate] = useState(registDate);
     const token = decodeJwt(window.localStorage.getItem('accessToken'));
-    const [dataFormatFiles, setDataFormatFiles] = useState(null);
+    const [dataFormatFile, setDataFormatFile] = useState(null);
+    const dataFormatFileInput = useRef();
     const [start, setStart] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function DataFormat() {
     const dataFormat = useSelector((state) => state.dataFormatReducer);
     // const dataFormatList = dataFormat.data?.content;
     const pageInfo = dataFormat.pageInfo || {};
+    const result = useSelector((state) => state.dataFormatInsertReducer);
 
     console.log('dataFormatList', dataFormatList);
     console.log('dataFormat', dataFormat);
@@ -53,7 +55,7 @@ function DataFormat() {
                 currentPage: currentPage,
             })
         );
-    }, [currentPage]);
+    }, [currentPage, result]);
 
     const [form, setForm] = useState({
         dataCode: '',
@@ -64,15 +66,6 @@ function DataFormat() {
         dataPath: '',
         dataDeleteStatus: 'N',
     });
-
-    // token.memCode;
-    //     useEffect(() => {
-    // const fetchData = async () => {
-    //     const response = await fetchSomeData(); // 데이터 불러오기 예시 함수
-    //     setDataFormatList(response.data); // 데이터 설정
-    // };
-
-    //     },[])
 
     useEffect(() => {
         console.log('form22222222222222222222222', form);
@@ -96,38 +89,32 @@ function DataFormat() {
             // 파일 업로드를 위해 FormData 생성 및 파일 추가
             const formData = new FormData();
             formData.append('dataFormatFile', file);
-
             formData.append('dataName', file.name);
-            // formData.append('memCode', formData.memCode)
             formData.append('registDate', formattedDate);
             formData.append('dataSize', file.size);
-            // formData.append('dataPath', formData.dataPath);
-            // formData.append('dataDeleteStatus', formData.dataDeleteStatus);
 
             Object.keys(formData).forEach((key) => {
                 formData.append(key, formData[key]);
             });
             // 파일 업로드 함수 호출
-            console.log('formData', formData);
+            console.log('formData파일업로드', formData);
 
             uploadFile(formData);
         } else {
             console.error('파일이 선택되지 않았습니다.');
         }
     };
-    // console.log("form.dataCode",form?.dataCode);
+    const refreshDataFormatList = async () => {
+        // 데이터 목록을 불러오기
+        dispatch(callAllViewDataFormatAPI({ currentPage: 1 }));
+    };
+    // console.log('refreshDataFormatList', refreshDataFormatList);
 
     const uploadFile = async (formData) => {
         try {
-            // 파일 업로드 API 호출하고 응답을 기다림
             const response = await dispatch(callDataFormatInsertAPI(formData)).unwrap();
-
-            // 업로드 성공 시 서버로부터 반환된 데이터에서 dataCode 추출
             const { dataCode } = response;
-
-            // dataCode를 기반으로 dataPath 설정 (실제 경로 설정 방식은 서버의 구현에 따라 달라질 수 있음)
             const newDataPath = `src/main/resources/static/dataFormats/${dataCode}`;
-
             // form 상태 업데이트에 dataCode와 dataPath 추가
             setForm((prevForm) => ({
                 ...prevForm,
@@ -136,15 +123,15 @@ function DataFormat() {
             }));
 
             console.log('파일 업로드 및 데이터 삽입 성공', response);
-            // window.location.reload(); // API 호출 성공 후 페이지 새로고침
+            refreshDataFormatList();
         } catch (error) {
             // 업로드 실패 시 처리
             console.error('파일 업로드 및 데이터 삽입 실패', error);
         }
     };
+    // console.log('uploadFile', uploadFile);
 
-    //api전까지의 정보가 오는지=> api에 값이 오는지 확인(dataCode) api에 form값이 재대로 오는지 확인
-    //딜리트 할 때 
+    //딜리트 할 때
     //
     const onClickDeleteFile = async (dataCode) => {
         console.log('삭제 버튼 클릭', dataCode);
@@ -155,7 +142,7 @@ function DataFormat() {
 
         // 서버에 삭제 요청 보내기
         try {
-            await dispatch(callDtaFormatDeleteAPI(form)); // API 호출 부분 수정 (오타 주의: callDataFormatDeleteAPI가 맞는지 확인)
+            await dispatch(callDtaFormatDeleteAPI(form)); // API 호출
             console.log('서버에서 삭제 성공', dataCode);
 
             // 성공적으로 삭제 후 클라이언트 상태 업데이트
@@ -166,30 +153,54 @@ function DataFormat() {
         }
     };
 
-    // const onClickDeleteFile = (dataCode) => {
-    //     // 선택된 dataCode에 해당하는 항목 찾기
-    //     const dataFormatList = dataFormatList.map((df) => {
-    //         if (df.dataCode === dataCode) {
-    //             return { ...df, dataDeleteStatus: 'Y' };
-
-    //         } else {
-    //             console.log("aaaaa",dataFormatList);
-    //         }
-    //         return df;
-    //     });
-
-    //     // 상태 업데이트 로직 추가
-    //     // 예: setDataFormatList(updatedList);
-
-    //     console.log(`파일 ${dataCode} 삭제 상태로 변경`);
-    //     console.log(dataFormat?.dataCode);
-
-    // };
     useEffect(() => {
         if (dataFormat.data?.content) {
             setDataFormatList(dataFormat.data.content);
         }
     }, [dataFormat]);
+
+    const onClickFileUpload = () => {
+        // if (dataFormatFileInput.current) {
+        dataFormatFileInput.current.click();
+        // } else {
+        // console.error('File input is not available.');
+        // }
+    };
+    const dataFormatChange = (index, e) => {
+        console.log('클릭2');
+
+        if (e.target.files.length > 0) {
+            console.log('클릭3');
+
+            const file = e.target.files[0]; // 변경된 파일은 배열의 첫 번째 요소입니다.
+            setDataFormatFile(file);
+            onClickFileUpload(file, index); // 파일을 업로드합니다.
+        }
+    };
+
+    const onClickDown = async (index) => {
+        try {
+            const urlPath =
+                'http://localhost:8001' +
+                '/dataFomats/' +
+                dataFormatList[index].dataCode +
+                '/' +
+                dataFormatList[index].dataName;
+            console.log(urlPath);
+
+            const response = await fetch(urlPath); //파일 경로 지정
+            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
+            const link = document.createElement('a'); //a 요소 생성
+            link.href = url; //url을 a태그의 href속성으로 지정
+            link.setAttribute('download', dataFormatList[index].dataName); //다운로드 파일 이름 지정
+            document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            link.click(); //생성한 링크 클릭해서 파일 다운
+            link.parentNode.removeChild(link); //a요소 제거
+        } catch (error) {
+            console.log('등록된 파일이 없습니다');
+        }
+    };
 
     return (
         <>
@@ -221,14 +232,16 @@ function DataFormat() {
                                             <input
                                                 type='file'
                                                 id='fileInput'
+                                                name='dataFormatFile'
                                                 style={{ display: 'none' }}
                                                 onChange={handleFileSelect}
+                                                onClick={onClickFileUpload}
+                                                ref={dataFormatFileInput}
                                             />
                                             <label
                                                 htmlFor='fileInput'
                                                 className='btn btn-primary'
                                                 style={{ width: '14%' }}
-                                                // onClick={handleFileUpload}
                                             >
                                                 <b>자료 추가</b>
                                             </label>
@@ -244,28 +257,36 @@ function DataFormat() {
                                                     <th style={{ width: '40%' }} />
                                                 </tr>
                                                 {Array.isArray(dataFormatList) &&
-                                                    dataFormatList
-                                                        .filter((df) => df?.dataDeleteStatus === 'N') // dataDeleteStatus가 "N"인 항목만 필터링
-                                                        .map((df, index) => (
-                                                            <tr key={index}>
-                                                                <td>{df?.dataName}</td>
-                                                                <td>
-                                                                    {df?.dataMember?.posCode?.posName}{' '}
-                                                                    {df?.dataMember?.memName}
-                                                                </td>
-                                                                <td>{formatDate(new Date(df.registDate))}</td>
-                                                                <td>{(df.dataSize / 1024).toFixed(2)} KB</td>
-                                                                <td style={{ textAlign: 'right' }}>
-                                                                    <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANFJREFUSEvtlMENAWEQRt+6uStBEVx1INEHpdCHRAeuFKEEdzfkJSS7sr+ZPWyQ+M4z35v/m9mt6FlVz/58DeBWeGk4YFjwMP4Dwlv6vYjWwDJ8V7NgA6xee0pXNAC2wDwJ2QEL4JoFWDcE9sAkgByBGXBpq4u+gxFwAMYFyAmYAufSEBHAPs2FCKtLU82FFJUB2GxMxmVsyjiMxXjeKgvQxIW7eOVCXWyoLgDNnmfoGafUFZAyrRd9BFD672Snbwzd9oLeAdlJU3Uf2UFqsmzRHehrHBmAe1VEAAAAAElFTkSuQmCC' />
-                                                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                    <img
-                                                                        src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAARlJREFUSEvt1M8qxUEYxvHP2SrZEMpCUlyD/Cls5TZkq9yJzsZKuQG5AmSFbP3JmiVX4PfWqF/6nZlx6mRzZjm98zzv8513pmfEqzdifWODIuF/R3SMM7wPaHUFGzgdFCWX4BAneMFmh8kyrjGHfVx0meQM4mAIhNBr6vQnyRJuMYtHbOHrrwZR32UyUSseAjWXPI+rlOQJU8n4vkm4g8/cKNUYxPmFhGsxiWWxtA1rDYJ1MA/2sR6aVNul7msRhfhNQvScEMXeXbO/WzIpJWh3/oY1TLbGs5gkZ9Al/pEQxegGspkSrpzBQTPnfQSWmPPfr3k1JZnGHi6HeQdHOM98FWGyPuxXUfwpawpKl1yjka0ZGxQRjhzRNxi0NBmpupZSAAAAAElFTkSuQmCC'
-                                                                        onClick={() => onClickDeleteFile(df?.dataCode)}
-                                                                    />
-                                                                    &nbsp;&nbsp;
-                                                                </td>
-                                                            </tr>
-                                                        ))}
+                                                    dataFormatList.map((df, index) => (
+                                                        <tr key={index}>
+                                                            <td>{df?.dataName}</td>
+                                                            <td>
+                                                                {df?.dataMember?.posCode?.posName}{' '}
+                                                                {df?.dataMember?.memName}
+                                                            </td>
+                                                            <td>{formatDate(new Date(df.registDate))}</td>
+                                                            <td>{(df.dataSize / 1024).toFixed(2)} KB</td>
+                                                            <td style={{ textAlign: 'right' }}>
+                                                                <img
+                                                                    type='file'
+                                                                    name='dataFormatFile'
+                                                                    src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANFJREFUSEvtlMENAWEQRt+6uStBEVx1INEHpdCHRAeuFKEEdzfkJSS7sr+ZPWyQ+M4z35v/m9mt6FlVz/58DeBWeGk4YFjwMP4Dwlv6vYjWwDJ8V7NgA6xee0pXNAC2wDwJ2QEL4JoFWDcE9sAkgByBGXBpq4u+gxFwAMYFyAmYAufSEBHAPs2FCKtLU82FFJUB2GxMxmVsyjiMxXjeKgvQxIW7eOVCXWyoLgDNnmfoGafUFZAyrRd9BFD672Snbwzd9oLeAdlJU3Uf2UFqsmzRHehrHBmAe1VEAAAAAElFTkSuQmCC'
+                                                                    onClick={() => onClickDown(index)}
+                                                                    // onChange={(e) => dataFormatChange(index, e)}
+
+                                                                    alt='파일 다운로드'
+                                                                />
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <img
+                                                                    src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAARlJREFUSEvt1M8qxUEYxvHP2SrZEMpCUlyD/Cls5TZkq9yJzsZKuQG5AmSFbP3JmiVX4PfWqF/6nZlx6mRzZjm98zzv8513pmfEqzdifWODIuF/R3SMM7wPaHUFGzgdFCWX4BAneMFmh8kyrjGHfVx0meQM4mAIhNBr6vQnyRJuMYtHbOHrrwZR32UyUSseAjWXPI+rlOQJU8n4vkm4g8/cKNUYxPmFhGsxiWWxtA1rDYJ1MA/2sR6aVNul7msRhfhNQvScEMXeXbO/WzIpJWh3/oY1TLbGs5gkZ9Al/pEQxegGspkSrpzBQTPnfQSWmPPfr3k1JZnGHi6HeQdHOM98FWGyPuxXUfwpawpKl1yjka0ZGxQRjhzRNxi0NBmpupZSAAAAAElFTkSuQmCC'
+                                                                    onClick={() => onClickDeleteFile(df?.dataCode)}
+                                                                    alt='파일 삭제처리
+'
+                                                                />
+                                                                &nbsp;&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                    ))}
                                             </tbody>
                                         </table>
                                         <div className='pay-top-wrapper'>

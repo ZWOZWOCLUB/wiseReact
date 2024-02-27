@@ -18,15 +18,16 @@ import { callNoticeCommentInsertAPI } from '../../apis/NoticeCommentAPICall.js';
 function NoticeDetail() {
     const { data } = useSelector((state) => state.someReducer) || {};
     console.log('useSelector : ', useSelector);
+    const [hasViewCountIncreased, setHasViewCountIncreased] = useState(false);
     // console.log("data : ",data);
-const token = decodeJwt(window.localStorage.getItem('accessToken'));
+    const token = decodeJwt(window.localStorage.getItem('accessToken'));
     const { notCode } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const detail = useSelector((state) => state.noticeReducer);
     const comment = useSelector((state) => state.notCommentReducer);
-    console.log("commmmmment",comment);
-    
+    console.log('commmmmment', comment);
+
     // const comment = useSelector((state) => state.noticeReducer);
     console.log('!!!!!!!!!!!!!!!!', detail);
     // console.log('ccoommmmeenntt', comment);
@@ -56,18 +57,20 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
     console.log('file', detail[0]?.notAttachedFile);
     console.log('cm', comments);
 
+    //목록
     const onClickNoticeMain = () => {
-        
         // 목록
         console.log('NoticeMain click');
         navigate(`/main/notice`, { replace: false });
     };
-    const onClickNoticeUpdate = () => { 
+
+    //공지 수정
+    const onClickNoticeUpdate = () => {
         console.log('NoticeUpdate click');
-       navigate(`/main/NoticeUpdate/${notCode}`, { state: { detail: detail[0] } });
-        
-    }
-    
+        navigate(`/main/NoticeUpdate/${notCode}`, { state: { detail: detail[0] } });
+    };
+
+    //댓글
     const [form, setForm] = useState({
         comCode: '',
         comContents: '',
@@ -75,12 +78,9 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
         memCode: token.memCode,
         comDeleteState: 'N',
         notCode: notCode,
-        posCode: token.posCode
+        posCode: token.posCode,
     });
-   
-    
-    
-
+    //댓글
     const onClickNoticeCommentInsertHandler = (e) => {
         e.preventDefault();
         console.log('onClickNoticeCommentInsertHandler', onClickNoticeCommentInsertHandler);
@@ -91,22 +91,21 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
             comMember: { memCode: form.memCode }, // 객체 형태로 memCode 지정
             comDeleteState: form.comDeleteState,
             notCode: { notCode: form.notCode }, // 객체 형태로 notCode 지정
-            posCode: { posCode: form.posCode}
+            posCode: { posCode: form.posCode },
         };
-        
-        dispatch(callNoticeCommentInsertAPI({form: commentData}))
-        .then(() => {
-            console.log('댓글 등록 성공');
-            window.location.reload(); // API 호출 성공 후 페이지 새로고침
-        })
-        .catch(error => {
-            console.error('댓글 등록 실패', error);
-        });
-            
+
+        dispatch(callNoticeCommentInsertAPI({ form: commentData }))
+            .then(() => {
+                console.log('댓글 등록 성공');
+                window.location.reload(); // API 호출 성공 후 페이지 새로고침
+            })
+            .catch((error) => {
+                console.error('댓글 등록 실패', error);
+            });
     };
-    
-    console.log("댓글 등록");
-    console.log('form',form);
+
+    console.log('댓글 등록');
+    console.log('form', form);
     console.log('comments', comments);
 
     const onChangeHandler = (e) => {
@@ -120,10 +119,85 @@ const token = decodeJwt(window.localStorage.getItem('accessToken'));
         }));
         console.log(form);
     };
-    console.log("form",form);
-    console.log("comments.",comments);
+    console.log('form', form);
+    console.log('comments.', comments);
     console.log('comment.comMember', comment.comMember);
-console.log('posCode', comment.comMember?.posCode);
+    console.log('posCode', comment.comMember?.posCode);
+
+    const onClickDown = async (index) => {
+        try {
+            const urlPath =
+                'http://localhost:8001' +
+                '/noticeFiles/' +
+                detail[index].notCode +
+                '/' +
+                detail[index].notAttachedFile[0].notAtcName;
+            console.log(urlPath);
+
+            const response = await fetch(urlPath); //파일 경로 지정
+            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
+            const link = document.createElement('a'); //a 요소 생성
+            link.href = url; //url을 a태그의 href속성으로 지정
+            link.setAttribute('download', detail[index].notAttachedFile[0].notAtcName); //다운로드 파일 이름 지정   document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            link.click(); //생성한 링크 클릭해서 파일 다운
+            link.parentNode.removeChild(link); //a요소 제거
+        } catch (error) {
+            console.log('등록된 파일이 없습니다');
+        }
+    };
+
+    // useEffect(() => {
+    //     // 공지사항 상세 정보를 불러오는 동시에 조회수 증가 처리
+    //     const fetchNoticeDetail = async () => {
+    //         try {
+    //             const response = await dispatch(callDetailNoticeAPI({ notCode })).unwrap();
+    //             setNoticeDetail(response);
+    //         } catch (error) {
+    //             console.error('공지사항 상세 정보 조회 실패', error);
+    //         }
+    //     };
+
+    //     fetchNoticeDetail();
+    // }, [notCode, dispatch]);
+
+    // useEffect(() => {
+    //     let isMounted = true; // 컴포넌트 마운트 상태를 추적하는 변수
+
+    //     const fetchNoticeDetail = async () => {
+    //         if (isMounted) {
+    //             // 컴포넌트가 마운트된 상태에서만 API 호출
+    //             try {
+    //                 const response = await dispatch(callDetailNoticeAPI({ notCode })).unwrap();
+    //                 setNoticeDetail(response);
+    //             } catch (error) {
+    //                 console.error('공지사항 상세 정보 조회 실패', error);
+    //             }
+    //         }
+    //     };
+
+    //     fetchNoticeDetail();
+
+    //     return () => {
+    //         isMounted = false; // 컴포넌트 언마운트 시 isMounted를 false로 설정
+    //     };
+    // }, [notCode, dispatch]);
+
+useEffect(() => {
+    const increaseViewCount = async () => {
+        if (!hasViewCountIncreased) {
+            try {
+                // 조회수 증가 API 호출
+                await dispatch(callDetailNoticeAPI(notCode)).unwrap();
+                setHasViewCountIncreased(true); // 조회수 증가 처리 완료 표시
+            } catch (error) {
+                console.error('조회수 증가 실패', error);
+            }
+        }
+    };
+
+    increaseViewCount();
+}, [notCode, hasViewCountIncreased, dispatch]);
 
     return (
         <>
@@ -209,6 +283,8 @@ console.log('posCode', comment.comMember?.posCode);
                                                                         display: 'inline-block',
                                                                         marginRight: '4px', // 오른쪽 여백 추가
                                                                     }}
+                                                                    onClick={() => onClickDown(index)}
+                                                                    type='file'
                                                                 >
                                                                     {file.notAtcName}
                                                                 </div>

@@ -11,7 +11,9 @@ import { decodeJwt } from '../../utils/tokenUtils.js';
 import { callNoticeInsertAPI } from '../../apis/NoticeAPICalls';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 function NoticeWrite() {
+    const navigate = useNavigate();
     const [fileName, setFileName] = useState('');
     const dispatch = useDispatch();
     const [noticeFiles, setNoticeFiles] = useState(null);
@@ -84,8 +86,8 @@ function NoticeWrite() {
         }
         const formData = new FormData();
 
-        if (noticeFiles && noticeFiles.length > 0) {
-            formData.append('noticeFiles', noticeFiles[0]);
+        if (noticeFiles) {
+            formData.append('noticeFiles', noticeFiles);
         }
 
         // formData.append("notCode", form.notCode)
@@ -93,20 +95,31 @@ function NoticeWrite() {
         formData.append('notComment', form.notComment);
         formData.append('notView', form.notView);
         formData.append('notCreateDate', form.notCreateDate);
-        formData.append('memCode', form.memCode ? form.memCode : '기본값 또는 처리 로직');
+        formData.append('memCode', token.memCode);
         formData.append('notDeleteStatus', form.notDeleteStatus);
         formData.append('notAllArmCheck', form.notAllArmCheck);
 
         if (form.memCode) {
-            dispatch(callNoticeInsertAPI({ form: formData }));
+            dispatch(callNoticeInsertAPI({ form: formData }))
+                .then(() => {
+                    // 메인 페이지로 이동
+                    navigate(`/main/notice`);
+                })
+                .catch((error) => {
+                    // 에러 처리
+                    console.error('Failed to insert notice:', error);
+                });
         } else {
             console.log('memCode 값이 유효하지 않습니다.');
-            // memCode 값이 유효하지 않을 때의 처리 로직 
         }
-        
     };
 
-
+    const handleCloseClick = () => {
+        const confirmLeave = window.confirm('작성된 내용은 저장되지 않습니다. 작성페이지를 닫으시겠습니까??');
+        if (confirmLeave) {
+            navigate('/main/notice'); // 사용자가 "확인"을 클릭한 경우, 공지 메인 페이지로 리디렉션
+        }
+    };
 
     return (
         <>
@@ -249,6 +262,7 @@ function NoticeWrite() {
                                                         backgroundColor: '#bbbdfc',
                                                         borderColor: '#bbbdfc',
                                                     }}
+                                                    onClick={handleCloseClick}
                                                 >
                                                     <b>닫기</b>
                                                 </div>
