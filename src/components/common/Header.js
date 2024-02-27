@@ -273,23 +273,23 @@ function Header() {
   };
 
   // 공지사항 클릭 시 작동하는 함수
-  const onClickNotice = () => {
-    console.log("------ onClickNotice 호출 -----");
+const onClickNotice = () => {
+    console.log('------ onClickNotice 호출 -----');
+    navigate(`/main/notice`, { replace: true });
 
     if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
-        setNotice(true);
+        if (allAlarm.data[0].allArmCheck === 'N') {
+            setNotice(true);
 
-        // 상태 N을 Y로 업데이트 하는 API 호출
-
-        dispatch(
-          callNoticeCheckStatusChangeAPI({
-            allArmCode: allAlarm.data[0].allArmCode,
-          })
-        );
-      }
+            // 상태 N을 Y로 업데이트 하는 API 호출
+            dispatch(
+                callNoticeCheckStatusChangeAPI({
+                    allArmCode: allAlarm.data[0].allArmCode,
+                })
+            );
+        }
     }
-  };
+};
 
   const onClickLogout = () => {
     window.localStorage.removeItem("accessToken");
