@@ -1,34 +1,34 @@
-import coreCSS from '../../@core/vendor/css/core.module.css';
-import themDefaultCSS from '../../@core/vendor/css/themeDefault.module.css';
-import '../../pages/alarmAndMessage/message.css';
-import '../../assets/vendor/libs/jquery/jquery.js';
-import '../../assets/vendor/libs/popper/popper.js';
-import '../../assets/vendor/js/bootstrap.js';
-import '../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js';
-import '../../assets/vendor/js/menu.js';
-import '../../assets/js/config.js';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { decodeJwt } from '../../utils/tokenUtils.js';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { callPerAlarmDetailAPI } from '../../apis/AAMAPICalls.js';
-import { callSendMessageAPI } from '../../apis/AAMAPICalls.js';
-import { callRecMessageAPI } from '../../apis/AAMAPICalls.js';
-import { callMsgCheckStatusChangeAPI } from '../../apis/AAMAPICalls.js';
-import { callRecDeleteStatusUpdateAPI } from '../../apis/AAMAPICalls.js';
-import { callSendDeleteStatusUpdateAPI } from '../../apis/AAMAPICalls.js';
-import { callAlarmCheckStatusChangeAPI } from '../../apis/AAMAPICalls.js';
-import { callAllAlarmDetailAPI } from '../../apis/AAMAPICalls.js';
-import { callNoticeCheckStatusChangeAPI } from '../../apis/AAMAPICalls.js';
-import { callSendNewMsgAPI } from '../../apis/AAMAPICalls.js';
-import 'tui-tree/dist/tui-tree.css';
-import { callOrganizationTreeAPI } from '../../apis/OrganizationChartAPICalls';
-import CheckboxTree from 'react-checkbox-tree';
-import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import { callMemberDetailAPI } from '../../apis/MyPageAPICalls.js';
-import { callLogoutAPI } from '../../apis/MemberAPICalls.js';
+import coreCSS from "../../@core/vendor/css/core.module.css";
+import themDefaultCSS from "../../@core/vendor/css/themeDefault.module.css";
+import "../../pages/alarmAndMessage/message.css";
+import "../../assets/vendor/libs/jquery/jquery.js";
+import "../../assets/vendor/libs/popper/popper.js";
+import "../../assets/vendor/js/bootstrap.js";
+import "../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js";
+import "../../assets/vendor/js/menu.js";
+import "../../assets/js/config.js";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { decodeJwt } from "../../utils/tokenUtils.js";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { callPerAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callSendMessageAPI } from "../../apis/AAMAPICalls.js";
+import { callRecMessageAPI } from "../../apis/AAMAPICalls.js";
+import { callMsgCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callRecDeleteStatusUpdateAPI } from "../../apis/AAMAPICalls.js";
+import { callSendDeleteStatusUpdateAPI } from "../../apis/AAMAPICalls.js";
+import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
+import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
+import "tui-tree/dist/tui-tree.css";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import { callMemberDetailAPI } from "../../apis/MyPageAPICalls.js";
+import { callLogoutAPI } from "../../apis/MemberAPICalls.js";
 import "../../pages/alarmAndMessage/message.css";
 import "../../assets/vendor/libs/jquery/jquery.js";
 import "../../assets/vendor/libs/popper/popper.js";
@@ -39,127 +39,133 @@ import "../../assets/js/config.js";
 import { callFirstRecMessageAPI } from "../../apis/AAMAPICalls.js";
 import { callFirstPerAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callFirstAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callReferencerAPI } from "../../apis/AAMAPICalls.js";
+import { callApprovalAPI } from "../../apis/AAMAPICalls.js";
 import "tui-tree/dist/tui-tree.css";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 
-<script async defer src='https://buttons.github.io/buttons.js'></script>;
+<script async defer src="https://buttons.github.io/buttons.js"></script>;
 function Header() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [tab, setTab] = useState('sended');
-    const [check, setCheck] = useState(true);
-    const [alarm, setAlarm] = useState(true);
-    const [notice, setNotice] = useState(true);
-    // const color = check ? 'blue' : 'red';
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [tab, setTab] = useState("sended");
+  const [check, setCheck] = useState(true);
+  const [alarm, setAlarm] = useState(true);
+  const [notice, setNotice] = useState(true);
+  // const color = check ? 'blue' : 'red';
 
-    const perAlarm = useSelector((state) => state.aamPerAlarmReducer);
-    const allAlarm = useSelector((state) => state.aamAllAlarmReducer);
-    const sendMessage = useSelector((state) => state.aamSendMessageReducer);
-    const recMessage = useSelector((state) => state.aamRecMessageReducer);
-    const deleteStatus = useSelector((state) => state.aamPutReducer);
-    const departmentList = useSelector((state) => state.organizationChartReducer);
-    const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
-    const sendNewMsgReducer = useSelector((state) => state.aamSendNewMsgReducer);
+  const perAlarm = useSelector((state) => state.aamPerAlarmReducer);
+  const allAlarm = useSelector((state) => state.aamAllAlarmReducer);
+  const sendMessage = useSelector((state) => state.aamSendMessageReducer);
+  const recMessage = useSelector((state) => state.aamRecMessageReducer);
+  const deleteStatus = useSelector((state) => state.aamPutReducer);
+  const departmentList = useSelector((state) => state.organizationChartReducer);
+  const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
+  const sendNewMsgReducer = useSelector((state) => state.aamSendNewMsgReducer);
+  const referencer = useSelector((state) => state.aamReferenceReducer);
+  const approval = useSelector((state) => state.aamApprovalReducer);
 
-    const perAlarmList = perAlarm.data;
-    const sendMessageList = sendMessage.data;
-    const recMessageList = recMessage.data;
-    const allAlarmList = allAlarm.data;
-    const sendNewMsgReducerDetail = sendNewMsgReducer.data;
+  const perAlarmList = perAlarm.data;
+  const sendMessageList = sendMessage.data;
+  const recMessageList = recMessage.data;
+  const allAlarmList = allAlarm.data;
+  const sendNewMsgReducerDetail = sendNewMsgReducer.data;
 
   const firstRec = useSelector((state) => state.aamFirstRecReducer);
   const firstNotice = useSelector((state) => state.aamFirstNoticeReducer);
   const firstAlarm = useSelector((state) => state.aamFirstSendReducer);
 
+  const [checked, setChecked] = useState([]);
+  const [names, setNames] = useState("");
+  const [codes, setCodes] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expanded, setExpanded] = useState(["동물원병원"]);
+  const [inputValue, setInputValue] = useState("");
+  const token = decodeJwt(window.localStorage.getItem("accessToken"));
+  const [form, setForm] = useState({
+    msgContents: "",
+    memCode: token?.memCode,
+    msgDate: new Date(),
+    msgDeleteStatus: "N",
+  });
 
-    const [checked, setChecked] = useState([]);
-    const [names, setNames] = useState('');
-    const [codes, setCodes] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [expanded, setExpanded] = useState(['동물원병원']);
-    const [inputValue, setInputValue] = useState('');
-    const token = decodeJwt(window.localStorage.getItem('accessToken'));
-    const [form, setForm] = useState({
-        msgContents: '',
-        memCode: token?.memCode,
-        msgDate: new Date(),
-        msgDeleteStatus: 'N',
-    });
+  const handleChange = (event) => {
+    const { value } = event.target;
+    if (value.length <= 200) {
+      setInputValue(value);
+    } else {
+      alert("최대 200자까지만 입력이 가능합니다.");
+    }
+  };
 
-    const handleChange = (event) => {
-        const { value } = event.target;
-        if (value.length <= 200) {
-            setInputValue(value);
-        } else {
-            alert('최대 200자까지만 입력이 가능합니다.');
-        }
-    };
+  const onClickGetMemCode = (e) => {
+    // (checked) => setChecked(checked)
+    console.log(e.value);
+    // setChecked(e.value);
+  };
 
-    const onClickGetMemCode = (e) => {
-        // (checked) => setChecked(checked)
-        console.log(e.value);
-        // setChecked(e.value);
-    };
-
-    const nodes =
-        departmentList && departmentList.children
-            ? [
-                  {
-                      value: departmentList.depName,
-                      label: departmentList.depName,
-                      expandDisabled: true,
-                      children: departmentList.children.map((dep) => ({
-                          value: dep.depName === '인사팀' ? dep.depName : dep.depName,
-                          label: dep.depName === '인사팀' ? dep.depName : dep.depName,
-                          children:
-                              dep.depName === '인사팀'
-                                  ? dep.memberList.map((mem) => ({
-                                        value: mem.memCode + ' ' + mem.memName,
-                                        label: mem.memName + ' ' + mem.posName,
-                                    }))
-                                  : dep.children.map((chi) => ({
-                                        value: chi.depCode,
-                                        label: chi.depName,
-                                        children: chi.memberList.map((mem) => ({
-                                            value: mem.memCode + ' ' + mem.memName,
-                                            label: mem.memName + ' ' + mem.posName,
-                                        })),
-                                    })),
+  const nodes =
+    departmentList && departmentList.children
+      ? [
+          {
+            value: departmentList.depName,
+            label: departmentList.depName,
+            expandDisabled: true,
+            children: departmentList.children.map((dep) => ({
+              value: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              label: dep.depName === "인사팀" ? dep.depName : dep.depName,
+              children:
+                dep.depName === "인사팀"
+                  ? dep.memberList.map((mem) => ({
+                      value: mem.memCode + " " + mem.memName,
+                      label: mem.memName + " " + mem.posName,
+                    }))
+                  : dep.children.map((chi) => ({
+                      value: chi.depCode,
+                      label: chi.depName,
+                      children: chi.memberList.map((mem) => ({
+                        value: mem.memCode + " " + mem.memName,
+                        label: mem.memName + " " + mem.posName,
                       })),
-                  },
-              ]
-            : [];
+                    })),
+            })),
+          },
+        ]
+      : [];
 
-    const searchMethod = (node, searchQuery) => node.label.toLowerCase().includes(searchQuery.toLowerCase());
+  const searchMethod = (node, searchQuery) =>
+    node.label.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const onClickSendNewMsg = () => {
-        if (names === '') {
-            alert('수신자를 선택해주세요');
-        } else if (inputValue === '') {
-            alert('메세지를 입력해주세요');
-        } else {
-            console.log('inputValue--->', inputValue);
-            console.log('보낼 codes---->', codes);
-            console.log('보낼 names---->', names);
+  const onClickSendNewMsg = () => {
+    if (names === "") {
+      alert("수신자를 선택해주세요");
+    } else if (inputValue === "") {
+      alert("메세지를 입력해주세요");
+    } else {
+      console.log("inputValue--->", inputValue);
+      console.log("보낼 codes---->", codes);
+      console.log("보낼 names---->", names);
 
-            const formData = new FormData();
-            const date = new Date();
-            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
-                .getDate()
-                .toString()
-                .padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date
-                .getMinutes()
-                .toString()
-                .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-            console.log(formattedDate);
+      const formData = new FormData();
+      const date = new Date();
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+      console.log(formattedDate);
 
-            formData.append('msgContents', inputValue);
-            formData.append('memCode', token.memCode);
-            formData.append('msgDate', formattedDate);
-            formData.append('msgDeleteStatus', 'N');
-            formData.append('codes', codes);
+      formData.append("msgContents", inputValue);
+      formData.append("memCode", token.memCode);
+      formData.append("msgDate", formattedDate);
+      formData.append("msgDeleteStatus", "N");
+      formData.append("codes", codes);
 
-            console.log('dispatch 직전 formdata', formData);
+      console.log("dispatch 직전 formdata", formData);
 
       // sendMessage에 넣는거까지 성공
       dispatch(
@@ -274,6 +280,18 @@ function Header() {
           memCode: token?.memCode,
         })
       );
+      dispatch(
+        callReferencerAPI({
+          memCode: token?.memCode,
+        })
+      );
+      dispatch(
+        callApprovalAPI({
+          memCode: token?.memCode,
+        })
+      );
+
+
     }
     if (perAlarmList !== undefined && perAlarmList.length !== 0) {
       if (perAlarm.data[0].perArmCheckStatus === "N") {
@@ -317,7 +335,6 @@ function Header() {
 
     navigate("/login", { replace: true });
     window.location.reload();
-
   };
 
   const onClickMyPage = () => {
@@ -377,7 +394,6 @@ function Header() {
     }
   }, [sendNewMsgReducer]);
 
-
   // recMessage 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ recMessage useEffect 호출 -----");
@@ -394,7 +410,6 @@ function Header() {
     console.log("------ perAlarm useEffect 호출 -----");
 
     if (firstAlarm.data !== undefined && firstAlarm.data.length !== 0) {
-
       if (firstAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(false);
       }
@@ -526,7 +541,6 @@ function Header() {
             }}
           />
 
-
           {/* 공지사항? */}
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
@@ -540,9 +554,9 @@ function Header() {
               onClick={onClickNotice}
             />
           </li>
-          
+
           {/* 알림함 */}
-      
+
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
               coreCSS[`me-3`]
@@ -574,7 +588,7 @@ function Header() {
               style={{ fontSize: 27 }}
               onClick={handleColorChange}
             />
-          </li> 
+          </li>
 
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}
@@ -612,6 +626,7 @@ function Header() {
         </ul>
 
         {/* 알림함 시작 */}
+
         <div
           className="offcanvas offcanvas-end"
           tabIndex="-1"
@@ -634,35 +649,137 @@ function Header() {
             className="offcanvas-body my-auto mx-0 flex-grow-0"
             style={{ overflowY: "auto", height: "95%" }}
           >
-            {tab === "sended" && (
-              <div>
+            <div className="tabs">
+              <ul>
                 <div
-                  className="offcanvas-body my-auto mx-0 flex-grow-0"
                   style={{
-                    padding: "10px 10px 0px 10px",
+                    marginBottom: "10px",
+                    height: "25px",
                   }}
                 >
-                  {perAlarmList &&
-                    perAlarmList.map((perAlarm) => (
-                      <div
-                        className="btn btn-outline-secondary d-grid w-100"
-                        style={{
-                          textAlign: "left",
-                        }}
-                        onClick={() => onClickAlarmDetail(perAlarm.payCode)}
-                      >
-                        <div>{perAlarm.appDate}</div>
-                        <div>
-                          결재코드 {perAlarm.appCode} 번이 {perAlarm.appState}{" "}
-                          되었습니다.{" "}
-                        </div>
-                      </div>
-                    ))}
+                  <li>
+                    <span
+                      onClick={() => handleTabChange("sended")}
+                      style={{
+                        cursor: "pointer",
+                        color: tab === "sended" ? "blue" : "black", // Example color change
+                        fontWeight: tab === "sended" ? "bold" : "normal", // Example font weight change
+                      }}
+                    >
+                      나의 결재
+                    </span>
+                  </li>
+                  <li>
+                    <span
+                      onClick={() => handleTabChange("sending")}
+                      style={{
+                        cursor: "pointer",
+                        color: tab === "sending" ? "blue" : "black", // Example color change
+                        fontWeight: tab === "sending" ? "bold" : "normal", // Example font weight change
+                        margin: "0px 55px 0px 55px",
+                      }}
+                    >
+                      결재자
+                    </span>
+                  </li>
+                  <li>
+                    <span
+                      onClick={() => handleTabChange("newWrite")}
+                      style={{
+                        cursor: "pointer",
+                        color: tab === "newWrite" ? "blue" : "black", // Example color change
+                        fontWeight: tab === "newWrite" ? "bold" : "normal", // Example font weight change
+                      }}
+                    >
+                      참조자
+                    </span>
+                  </li>
                 </div>
+              </ul>
+            </div>
+
+            {tab === "sended" && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  height: "1000px",
+                  overflowY: "auto",
+                }}
+              >
+                {perAlarmList &&
+                  perAlarmList.map((perAlarm) => (
+                    <div
+                      className="btn btn-outline-secondary d-grid w-100"
+                      style={{
+                        textAlign: "left",
+                      }}
+                      onClick={() => onClickAlarmDetail(perAlarm.payCode)}
+                    >
+                      <div>{perAlarm.appDate}</div>
+                      <div>
+                        결재코드 {perAlarm.appCode}번 {" "}
+                        {perAlarm.payKind}이{" "}
+                        {perAlarm.appState}
+                        되었습니다.{" "}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+
+            {tab === "sending" && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  height: "1000px",
+                  overflowY: "auto",
+                }}
+              >
+              {approval.data &&
+                  approval.data.map((approval) => (
+                    <div
+                      className="btn btn-outline-secondary d-grid w-100"
+                      style={{
+                        textAlign: "left",
+                      }}
+                      onClick={() => onClickAlarmDetail(approval.payCode)}
+                    >
+                      <div>{approval.appDate}</div>
+                      <div>
+                        결재코드 {approval.appCode}번 {approval.payKind}에 결재자로 지정되었습니다.
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+            {tab === "newWrite" && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  height: "25px",
+                }}
+              >
+                {referencer.data &&
+                  referencer.data.map((referencer) => (
+                    <div
+                      className="btn btn-outline-secondary d-grid w-100"
+                      style={{
+                        textAlign: "left",
+                      }}
+                      onClick={() => onClickAlarmDetail(referencer.payCode)}
+                    >
+                      {/* <div>{approval.appDate}</div> */}
+                      <div>
+                        결재코드 {referencer.appCode}번 {referencer.payKind}에 참조자로 지정되었습니다.
+                      </div>
+                    </div>
+                  ))}
               </div>
             )}
           </div>
         </div>
+        {/* 중간-------------------------- */}
+
         {/* 알림함 끝 */}
 
         {/* 메신저 시작 */}

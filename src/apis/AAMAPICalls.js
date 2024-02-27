@@ -1,4 +1,5 @@
 import { GET_ALLALARM } from "../modules/AAMAllAlarmModule";
+import { GET_APP } from "../modules/AAMApprovalModule";
 import { GET_FIRST_NOTICE } from "../modules/AAMFirstNoticeModule";
 import { GET_FIRST_REC } from "../modules/AAMFirstRecModule";
 import { GET_FIRST_SEND } from "../modules/AAMFirstSendModule";
@@ -7,6 +8,7 @@ import { GET_PERALARM } from "../modules/AAMPerAlarmModule";
 import { PUT_ALARM_CHECK } from "../modules/AAMPutAlarmModule";
 import { GET_REC_MESSAGE } from "../modules/AAMRecMessageModule";
 import { POST_REC_MESSAGE } from "../modules/AAMRecNewMsgModule";
+import { GET_REFERENCE } from "../modules/AAMReferencerModule";
 import { GET_SEND_MESSAGE } from "../modules/AAMSendMessageModule";
 import { POST_MESSAGE } from "../modules/AAMSendNewMsgModule";
 
@@ -343,3 +345,47 @@ export const callAlarmCheckStatusChangeAPI = ({ perArmCode }) => {
       dispatch({ type: POST_REC_MESSAGE, payload: result });
     };
   };
+
+  // 참조자인결재 조회
+export const callReferencerAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/referencer/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callRecMessageAPI] callRecMessageAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callRecMessageAPI] callRecMessageAPI SUCCESS");
+      dispatch({ type: GET_REFERENCE, payload: result });
+    }
+  };
+};
+
+// 결재자인 결재 조회
+export const callApprovalAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/approval/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callRecMessageAPI] callRecMessageAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callRecMessageAPI] callRecMessageAPI SUCCESS");
+      dispatch({ type: GET_APP, payload: result });
+    }
+  };
+};
