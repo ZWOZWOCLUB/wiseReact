@@ -23,6 +23,9 @@ import { callAlarmCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import { callNoticeCheckStatusChangeAPI } from "../../apis/AAMAPICalls.js";
 import { callSendNewMsgAPI } from "../../apis/AAMAPICalls.js";
+import { callFirstRecMessageAPI } from "../../apis/AAMAPICalls.js";
+import { callFirstPerAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
+import { callFirstAllAlarmDetailAPI } from "../../apis/AAMAPICalls.js";
 import "tui-tree/dist/tui-tree.css";
 import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls";
 import CheckboxTree from "react-checkbox-tree";
@@ -48,6 +51,11 @@ function Header() {
   const departmentList = useSelector((state) => state.organizationChartReducer);
   const alarmReducer = useSelector((state) => state.aamPutAlarmReducer);
   const sendNewMsgReducer = useSelector((state) => state.aamSendNewMsgReducer);
+
+
+  const firstRec = useSelector((state) => state.aamFirstRecReducer);
+  const firstNotice = useSelector((state) => state.aamFirstNoticeReducer);
+  const firstAlarm = useSelector((state) => state.aamFirstSendReducer);
 
   const perAlarmList = perAlarm.data;
   const sendMessageList = sendMessage.data;
@@ -173,6 +181,7 @@ function Header() {
 
   const handleColorChange = () => {
     console.log("------ handleColorChange 호출 -----");
+    setCheck(true);
     if (token !== null) {
       dispatch(
         callSendMessageAPI({
@@ -206,6 +215,7 @@ function Header() {
     console.log("------ handleTabChange 호출 -----");
     setTab(selectedTab);
   };
+
   // 받은 메신저 삭제 API 요청
   const onClickRecMsgDelete = (msgCode) => {
     console.log("------ onClickRecMsgDelete 호출 -----");
@@ -250,7 +260,7 @@ function Header() {
   // 알림함 API 요청
   const onClickAlarm = () => {
     console.log("------ onClickAlarm 호출 -----");
-
+    setAlarm(true);
     if (token !== null) {
       dispatch(
         callPerAlarmDetailAPI({
@@ -276,15 +286,15 @@ function Header() {
   const onClickNotice = () => {
     console.log("------ onClickNotice 호출 -----");
 
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
+    if (firstNotice.data !== undefined && firstNotice.data.length !== 0) {
+      if (firstNotice.data[0].allArmCheck === "N") {
         setNotice(true);
 
         // 상태 N을 Y로 업데이트 하는 API 호출
 
         dispatch(
           callNoticeCheckStatusChangeAPI({
-            allArmCode: allAlarm.data[0].allArmCode,
+            allArmCode: firstNotice.data[0].allArmCode,
           })
         );
       }
@@ -312,40 +322,22 @@ function Header() {
     console.log("------ useEffect 호출 -----");
 
     dispatch(
-      callRecMessageAPI({
+      callFirstRecMessageAPI({
         memCode: token?.memCode,
       })
     );
 
     dispatch(
-      callPerAlarmDetailAPI({
+      callFirstPerAlarmDetailAPI({
         memCode: token?.memCode,
       })
     );
 
     dispatch(
-      callAllAlarmDetailAPI({
+      callFirstAllAlarmDetailAPI({
         memCode: token?.memCode,
       })
     );
-
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
-        setNotice(false);
-      }
-    }
-
-    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      if (perAlarm.data[0].perArmCheckStatus === "N") {
-        setAlarm(false);
-      }
-    }
-
-    if (recMessageList !== undefined && recMessageList.length !== 0) {
-      if (recMessage.data[0].recMsgCheckStatus === "N") {
-        setCheck(false);
-      }
-    }
   }, []);
 
   // 메신저 리듀서 update 시 작동하는 useEffect
@@ -383,43 +375,38 @@ function Header() {
   useEffect(() => {
     console.log("------ recMessage useEffect 호출 -----");
 
-    if (recMessageList !== undefined && recMessageList.length !== 0) {
-      if (recMessage.data[0].recMsgCheckStatus === "N") {
+    if (firstRec.data !== undefined && firstRec.data.length !== 0) {
+      if (firstRec.data[0].recMsgCheckStatus === "N") {
         setCheck(false);
       }
-      if (recMessage.data[0].recMsgCheckStatus === "Y") {
-        setCheck(true);
-      }
     }
-  }, [recMessage]);
+  }, [firstRec]);
 
   // perAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ perAlarm useEffect 호출 -----");
 
-    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      if (perAlarm.data[0].perArmCheckStatus === "N") {
+    if (firstAlarm.data !== undefined && firstAlarm.data.length !== 0) {
+
+      if (firstAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(false);
       }
-      if (perAlarm.data[0].perArmCheckStatus === "Y") {
-        setAlarm(true);
-      }
     }
-  }, [perAlarm]);
+  }, [firstAlarm]);
 
   // allAlarm 리듀서의 변화를 감지하는 useEffect
   useEffect(() => {
     console.log("------ allAlarm useEffect 호출 -----");
 
-    if (allAlarmList !== undefined && allAlarmList.length !== 0) {
-      if (allAlarm.data[0].allArmCheck === "N") {
+    if (firstNotice.data !== undefined && firstNotice.data.length !== 0) {
+      if (firstNotice.data[0].allArmCheck === "N") {
         setNotice(false);
       }
-      if (allAlarm.data[0].allArmCheck === "Y") {
+      if (firstNotice.data[0].allArmCheck === "Y") {
         setNotice(true);
       }
     }
-  }, [allAlarm]);
+  }, [firstNotice]);
 
   const onClickTree = (event) => {
     const clickedElement = event.target;
@@ -532,6 +519,7 @@ function Header() {
             }}
           />
 
+
           {/* 공지사항? */}
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
@@ -545,8 +533,9 @@ function Header() {
               onClick={onClickNotice}
             />
           </li>
-
+          
           {/* 알림함 */}
+      
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`lh-1`]} ${
               coreCSS[`me-3`]
@@ -578,7 +567,7 @@ function Header() {
               style={{ fontSize: 27 }}
               onClick={handleColorChange}
             />
-          </li>
+          </li> 
 
           <li
             className={`${coreCSS[`nav-item`]} ${coreCSS[`me-3`]}`}

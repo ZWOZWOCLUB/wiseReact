@@ -1,4 +1,7 @@
 import { GET_ALLALARM } from "../modules/AAMAllAlarmModule";
+import { GET_FIRST_NOTICE } from "../modules/AAMFirstNoticeModule";
+import { GET_FIRST_REC } from "../modules/AAMFirstRecModule";
+import { GET_FIRST_SEND } from "../modules/AAMFirstSendModule";
 import { PUT_MSG_CHECK } from "../modules/AAMModule";
 import { GET_PERALARM } from "../modules/AAMPerAlarmModule";
 import { PUT_ALARM_CHECK } from "../modules/AAMPutAlarmModule";
@@ -33,6 +36,31 @@ export const callPerAlarmDetailAPI = ({ memCode }) => {
   };
 };
 
+// 맨처음 개인 알람 조회
+export const callFirstPerAlarmDetailAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/perAlarm/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log(
+      "[callPerAlarmDetailAPI] callPerAlarmDetailAPI RESULT : ",
+      result
+    );
+    if (result.status === 200) {
+      console.log("[callPerAlarmDetailAPI] callPerAlarmDetailAPI SUCCESS");
+      dispatch({ type: GET_FIRST_SEND, payload: result });
+    }
+  };
+};
+
 // 전체 알람 조회
 export const callAllAlarmDetailAPI = ({ memCode }) => {
   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/allAlarm/${memCode}`;
@@ -54,6 +82,31 @@ export const callAllAlarmDetailAPI = ({ memCode }) => {
     if (result.status === 200) {
       console.log("[callAllAlarmDetailAPI] callAllAlarmDetailAPI SUCCESS");
       dispatch({ type: GET_ALLALARM, payload: result });
+    }
+  };
+};
+
+// 맨처음 전체 알람 조회
+export const callFirstAllAlarmDetailAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/allAlarm/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log(
+      "[callAllAlarmDetailAPI] callAllAlarmDetailAPI RESULT : ",
+      result
+    );
+    if (result.status === 200) {
+      console.log("[callAllAlarmDetailAPI] callAllAlarmDetailAPI SUCCESS");
+      dispatch({ type: GET_FIRST_NOTICE, payload: result });
     }
   };
 };
@@ -98,6 +151,28 @@ export const callRecMessageAPI = ({ memCode }) => {
     if (result.status === 200) {
       console.log("[callRecMessageAPI] callRecMessageAPI SUCCESS");
       dispatch({ type: GET_REC_MESSAGE, payload: result });
+    }
+  };
+};
+
+// 처음 받은 메세지 조회
+export const callFirstRecMessageAPI = ({ memCode }) => {
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/alarm/recMessenger/${memCode}`;
+
+  return async (dispatch, getState) => {
+    const result = await fetch(requestURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    }).then((response) => response.json());
+
+    console.log("[callRecMessageAPI] callRecMessageAPI RESULT : ", result);
+    if (result.status === 200) {
+      console.log("[callRecMessageAPI] callRecMessageAPI SUCCESS");
+      dispatch({ type: GET_FIRST_REC, payload: result });
     }
   };
 };
