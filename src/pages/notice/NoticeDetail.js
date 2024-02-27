@@ -85,6 +85,12 @@ function NoticeDetail() {
         e.preventDefault();
         console.log('onClickNoticeCommentInsertHandler', onClickNoticeCommentInsertHandler);
 
+        if (!form.comContents.trim()) {
+            // 댓글 내용이 비어 있거나 공백 문자만 있는 경우
+            alert('댓글을 작성해주세요');
+            return; // 함수 실행을 여기서 중단
+        }
+
         const commentData = {
             comContents: form.comContents,
             comDate: form.comDate,
@@ -128,7 +134,7 @@ function NoticeDetail() {
     const onClickDown = async (index) => {
         try {
             const urlPath =
-                'http://localhost:8001' +
+                'http://3.39.174.77' +
                 '/noticeFiles/' +
                 detail[index].notCode +
                 '/' +
@@ -168,8 +174,8 @@ function NoticeDetail() {
         console.log('버튼zxczxc', data);
 
         dispatch(CallDeleteCommentAPI(data));
-
         console.log('됬냐구~');
+        window.location.reload();
     };
 
     return (
