@@ -81,7 +81,7 @@ function PersonnelInfo(){
                 <ul className="nav nav-pills flex-column flex-md-row mb-3">
       <li className={`nav-item ${activeTab === '프로필 정보' ? 'active' : ''}`}>
         <span className="nav-link" onClick={() => handleTabClick('프로필 정보')}>
-          <i className="bx bx-user me-1"></i> 프로필 정보
+          <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
         </span>
       </li>
       <li className={`nav-item ${activeTab === '인사 정보' ? 'active' : ''}`}>

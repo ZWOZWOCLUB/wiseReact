@@ -270,7 +270,7 @@ function Approval() {
                                                                 alignItems: 'center',
                                                             }}
                                                         >
-                                                            보낸 결재가 없습니다.
+                                                            받은 결재가 없습니다.
                                                         </td>
                                                     </tr>
                                                 )}

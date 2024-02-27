@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { callSendApprovalAPI } from '../../apis/ApprovalAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
-import { callSearchSendApprovalAPI } from '../../apis/ApprovalInfoAPICalls';
+import { callSearchSendApprovalAPI } from '../../apis/ApprovalTypeInfo';
 
 function SendApproval() {
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ function SendApproval() {
         currentPage: 1,
     });
 
-    const searchData = useSelector((state) => state.approvalInfoReducer);
+    const searchData = useSelector((state) => state.approvalTypeReducer);
     const searchDataList = searchData?.data?.data?.content;
 
     function searchBtn() {
@@ -213,7 +213,7 @@ function SendApproval() {
                                                                 ondblclickapproval(a.approval.payCode);
                                                             }}
                                                         >
-                                                            <td>{a.approval?.approvalMember?.memName}</td>
+                                                            <td>{a.approvalMember?.memName}</td>
                                                             <td>{a.approval?.payName}</td>
                                                             <td>{a.approval?.payDate}</td>
                                                             <td>{a.appDate}</td>
@@ -241,7 +241,7 @@ function SendApproval() {
                                                                 ondblclickapproval(a.approval.payCode);
                                                             }}
                                                         >
-                                                            <td>{a.approval?.approvalMember?.memName}</td>
+                                                            <td>{a.approvalMember?.memName}</td>
                                                             <td>{a.approval?.payName}</td>
                                                             <td>{a.approval?.payDate}</td>
                                                             <td>{a.appDate}</td>

@@ -112,15 +112,21 @@ function ApprovalDetail(props) {
     const renderSelectedPage = (kind) => {
         switch (kind) {
             case '서류 요청':
-                return <ReqDocumentCom data={{ approvalType, approvalComplete }} />;
+                return <ReqDocumentCom data={{ approvalType, approvalComplete, refapprovalList }} />;
             case '출퇴근 정정':
-                return <EditCommuteCom data={{ approvalType, approvalAttachment, approvalComplete }} />;
+                return (
+                    <EditCommuteCom data={{ approvalType, approvalAttachment, approvalComplete, refapprovalList }} />
+                );
             case '스케줄 정정':
-                return <EditScheduleCom data={{ approvalType, approvalAttachment, approvalComplete }} />;
+                return (
+                    <EditScheduleCom data={{ approvalType, approvalAttachment, approvalComplete, refapprovalList }} />
+                );
             case '연차 신청':
-                return <AnnualCom data={{ approvalType, approvalAttachment, approvalComplete }} />;
+                return <AnnualCom data={{ approvalType, approvalAttachment, approvalComplete, refapprovalList }} />;
             case '퇴직 신청':
-                return <RetiredmentCom data={{ approvalType, approvalAttachment, approvalComplete }} />;
+                return (
+                    <RetiredmentCom data={{ approvalType, approvalAttachment, approvalComplete, refapprovalList }} />
+                );
             default:
                 return null;
         }
@@ -139,15 +145,13 @@ function ApprovalDetail(props) {
                                             <div className='container'>
                                                 <div className='payment-type'>
                                                     <div className='people'>
-                                                        <div className='in-people' style={{ marginLeft: '40px' }}>
-                                                            <div
-                                                                style={{
-                                                                    backgroundColor: 'white',
-                                                                    width: '40px',
-                                                                    height: '40px',
-                                                                    marginRight: '20px',
-                                                                }}
-                                                            ></div>
+                                                        <div
+                                                            className='in-people'
+                                                            style={{
+                                                                marginLeft: '40px',
+                                                                marginTop: '10px',
+                                                            }}
+                                                        >
                                                             <span>
                                                                 {approvalType?.approval?.approvalMember?.memName}
                                                             </span>

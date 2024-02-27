@@ -9,7 +9,6 @@ import { callVacAPI, callVacHisAPI } from "../../apis/MyPageAPICalls.js";
 function MPVacation() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const vac = useSelector((state) => state.mpVacReducer);
   const vacHis = useSelector((state) => state.mpVacHisReducer);
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
@@ -31,14 +30,12 @@ function MPVacation() {
     if (token !== null) {
       dispatch(
         callVacAPI({
-          memCode: 3,
-          // memCode: token.memCode
-          // 사번 1의 샘플데이터가 없어서 2번과 3번으로 대체
+          memCode: token.memCode
         })
       );
       dispatch(
         callVacHisAPI({
-          memCode: 3,
+          memCode: token.memCode,
           year: selectedOption, // 이건 나중에 원하는 년도를 넘겨주면 그 해당 날짜 데이터를 받을 수 있음
         })
       );
@@ -49,7 +46,7 @@ function MPVacation() {
 
     dispatch(
       callVacHisAPI({
-        memCode: 3,
+        memCode: token.memCode,
         year: selectedOption, 
       })
     );
@@ -99,7 +96,7 @@ function MPVacation() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li

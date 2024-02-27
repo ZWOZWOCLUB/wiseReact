@@ -6,10 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { decodeJwt } from "../../utils/tokenUtils.js";
 import { callATTAPI } from "../../apis/MyPageAPICalls.js";
 import { callATTListAPI } from "../../apis/MyPageAPICalls.js";
+import { callHolidayAPI } from "../../apis/MyPageAPICalls.js";
 // import Calendar from "@toast-ui/react-calendar";
 // import "tui-calendar/dist/tui-calendar.css";
 // import Calendar, { OnClickFunc } from "@toast-ui/react-calendar";
-import Calendar from 'react-calendar';
+import Calendar from "react-calendar";
 // import "tui-calendar/dist/tui-calendar.css";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
@@ -21,14 +22,18 @@ function MPAttendance() {
   const day = currentDate.getDate().toString().padStart(2, "0");
   const formattedDate1 = `${year}-${month}-${day}`;
 
+  const holiday = useSelector((state) => state.mpSignReducer);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const att = useSelector((state) => state.mpATTReducer);
   const attList = useSelector((state) => state.mpATTListReducer);
   const attDetail = att.data;
+  const [currentYear, setCurrentYear] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(null);
 
-  const [value, onChange] = useState(new Date()); // 초기값은 현재 날짜
+  const [value, setValue] = useState(new Date()); // 초기값은 현재 날짜
   const [checkDate, setCheckDate] = useState(formattedDate1); // 초기값은 현재 날짜
 
   // 가장 처음 실행되는 useEffect
@@ -36,22 +41,27 @@ function MPAttendance() {
     if (token !== null) {
       dispatch(
         callATTAPI({
-          memCode: 2,
+          memCode: token.memCode,
           date: checkDate,
-
-          // memCode: token.memCode
-          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
         })
       );
       dispatch(
         callATTListAPI({
-          memCode: 2,
-          // memCode: token.memCode
-          // 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
+          memCode: token.memCode,
         })
       );
+      // dispatch(
+      //   callHolidayAPI({
+
+      //   })
+      // );
     }
   }, []);
+
+  // // Calendar의 뷰가 변경될 때 호출되는 이벤트 핸들러
+  // const handleViewChange = ({ activeStartDate }) => {
+  //   console.log('View changed - Year:', activeStartDate.getFullYear(), 'Month:', activeStartDate.getMonth() + 1);
+  // };
 
   // 일기 작성 날짜 리스트
   const dayList = ["2024-02-10", "2024-02-02", "2024-02-14"];
@@ -75,10 +85,10 @@ function MPAttendance() {
     "06-06",
     "08-15",
   ];
-  // const squaredNumbers = attList.map((number) => {
-  //   return number.attWorkDate;
-  // });
-  // console.log('squaredNumbers',squaredNumbers);
+
+  const onChangeDate = (activeStartDate) => {
+    console.log("activeStartDate", activeStartDate);
+  };
 
   // 날짜 리스트를 보고 해당 날짜에 css를 추가하는 함수
   const addContent = (date) => {
@@ -118,7 +128,7 @@ function MPAttendance() {
     // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
     if (holidayList.find((day) => day === moment(date).format("MM-DD"))) {
       return (
-        <div className="diaryContent" style={{ backgroundColor: "yellow" }}>
+        <div className="diaryContent" style={{ backgroundColor: "lightYellow" }}>
           공휴일
         </div>
       );
@@ -129,28 +139,37 @@ function MPAttendance() {
     else {
       if (arr.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "blue" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightBlue" }}
+          >
             출근
           </div>
         );
       }
       if (arr2.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "red" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightGrey" }}
+          >
             결근
           </div>
         );
       }
       if (arr3.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "purple" }}>
+          <div className="diaryContent" style={{ backgroundColor: "lightPink" }}>
             지각
           </div>
         );
       }
       if (arr4.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
-          <div className="diaryContent" style={{ backgroundColor: "green" }}>
+          <div
+            className="diaryContent"
+            style={{ backgroundColor: "lightGreen" }}
+          >
             조퇴
           </div>
         );
@@ -176,10 +195,8 @@ function MPAttendance() {
   useEffect(() => {
     dispatch(
       callATTAPI({
-        memCode: 2,
+        memCode: token.memCode,
         date: checkDate,
-        // memCode: token.memCode
-        // 원래 토큰에서 memCode를 넘겨줘야하지만 사번 1번의 샘플데이터가 없어 2번으로 지정 후 임의로 데이터를 불러옴
       })
     );
   }, [checkDate]);
@@ -227,7 +244,11 @@ function MPAttendance() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i
+                        className="bx bx-user me-1"
+                        style={{ color: "#566a7f" }}
+                      ></i>{" "}
+                      프로필 정보
                     </span>
                   </li>
                   <li
@@ -296,11 +317,13 @@ function MPAttendance() {
                             {/* https://velog.io/@hhjj0513/TIL-React-캘린더-react-calendar-라이브러리-TypeScript-적용- */}
                             <div>
                               <Calendar
-                                onChange={onChange}
+                                onChange={setValue}
+                                // onChange={( activeStartDate ) => onChangeDate(activeStartDate)}
                                 value={value}
                                 onClickDay={onClickDayHandler}
                                 tileContent={({ date }) => addContent(date)}
                                 view="month"
+                                // onViewChange={handleViewChange}
                               />
                             </div>
                             {/* 캘린더 끝 */}

@@ -31,7 +31,8 @@ const SchedulePattenAddInsertSchedule = forwardRef((props, ref) => {
   const scheduleRef = useRef();
   const [checkedList, setCheckedList] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
-
+  console.log(checked);
+  console.log(checkedList);
   useImperativeHandle(ref, () => ({
     onClickMonToSun: (index, dayIndex) => {
       setSelectedIndices((prevIndices) => [...prevIndices, index]);

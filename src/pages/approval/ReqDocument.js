@@ -87,6 +87,7 @@ function ReqDocument({ appCodes, refCodes }) {
         form.rMember.forEach((memCode, index) => {
             formData.append(`rMember[${index}]`, memCode);
         });
+        const confirmLeave = window.confirm('결재를 상신하시겠습니까? ');
 
         dispatch(
             callAprovalRequestDocumentAPI({
@@ -94,6 +95,9 @@ function ReqDocument({ appCodes, refCodes }) {
             }),
             console.log('dt')
         );
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
 
         // navigate(`/main/Approval`, { replace: false });
     };

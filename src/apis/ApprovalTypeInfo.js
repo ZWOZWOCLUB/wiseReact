@@ -1,4 +1,5 @@
-import { GET_APPROVAL_TYPE_INFO, POST_ATTENDANCE_SCHEDULE_INFO } from '../modules/ApprovalTypeModule';
+import { POST_SEARCH_APPROVAL } from '../modules/ApprovalInfoModule';
+import { GET_APPROVAL_TYPE_INFO, POST_ATTENDANCE_SCHEDULE_INFO, POST_SEARCH_SEND_APPROVAL } from '../modules/ApprovalTypeModule';
 
 export const callApprovalTypeInfoAPI = ({ payCode }) => {
     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/approvaltype/${payCode}`;
@@ -42,5 +43,26 @@ export const callScheduleMainSearchAPI = ({ yearMonth }) => {
             dispatch({ type: POST_ATTENDANCE_SCHEDULE_INFO, payload: result.data });
             console.log('개인스케줄 ', { result });
         }
+    };
+};
+
+export const callSearchSendApprovalAPI = (search) => {
+    console.log('apiFormqwer', search.search);
+    const res = search.search;
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/searchReq`;
+
+    return async (dispatch) => {
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: '*/*',
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+            },
+            body: JSON.stringify(res),
+        }).then((response) => response.json());
+
+        dispatch({ type: POST_SEARCH_SEND_APPROVAL, payload: result });
     };
 };

@@ -21,7 +21,8 @@ export const GET_DETAIL_NOTICE = 'notice/GET_DETAIL_NOTICE';
 export const POST_INSERT_NOTICE = 'notice/POST_INSERT_NOTICE';
 //공지 상세페이지 수정
 export const PUT_UPDATE_NOTICE = 'notice/PUT_UPDATE_NOTICE';
-
+//공지 삭제
+export const PUT_DELETE_NOTICE = 'notice/PUT_DELETE_NOTICE';
 
 const actions = createActions({
     [POST_INSERT_NOTICE]: () => {},
@@ -30,7 +31,8 @@ const actions = createActions({
     [GET_SEARCH_COMMENT_NOTICE]: () => {},
     [GET_SEARCH_MEMBER_NOTICE]: () => {},
     [GET_DETAIL_NOTICE]: () => {},
-    [PUT_UPDATE_NOTICE]: () => {},
+    [PUT_UPDATE_NOTICE]: () => { },
+    [PUT_DELETE_NOTICE]: () => { },
 });
 
 //리듀서
@@ -61,6 +63,10 @@ const noticeReducer = handleActions(
         },
 
         [PUT_UPDATE_NOTICE]: (state, { payload }) => {
+            return payload;
+        },
+        
+        [PUT_DELETE_NOTICE]: (state, { payload }) => {
             return payload;
         },
     },

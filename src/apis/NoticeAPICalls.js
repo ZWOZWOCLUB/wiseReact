@@ -6,6 +6,7 @@ import {
     GET_SEARCH_MEMBER_NOTICE,
     GET_DETAIL_NOTICE,
     PUT_UPDATE_NOTICE,
+    PUT_DELETE_NOTICE,
 } from '../modules/NoticeModule.js';
 
 //공지 전체조회
@@ -172,3 +173,56 @@ export const callNoticeUpdateAPI = ({ form }) => {
         dispatch({ type: PUT_UPDATE_NOTICE, payload: result });
     };
 };
+//공지삭제
+export const callNoticeDeleteAPI = (selectedNotices) => {
+    console.log('callNoticeDeleteAPI Call');
+
+    // selectedNotices를 올바른 형식으로 전달받았다고 가정
+    console.log('callNoticeDeleteAPI', selectedNotices);
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/deleteNotice`;
+
+    return async (dispatch) => {
+        try {
+            const response = await fetch(requestURL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: '*/*',
+                    Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+                },
+                body: JSON.stringify(selectedNotices), // 올바른 형식으로 변환
+            });
+            const result = await response.json();
+            console.log('callNoticeUpdateAPI : ', result);
+
+            dispatch({ type: PUT_DELETE_NOTICE, payload: result });
+        } catch (error) {
+            console.error('Error calling callNoticeDeleteAPI:', error);
+        }
+    };
+};
+// export const callNoticeDeleteAPI = (selectedNotices) => {
+//     console.log('callNoticeDeleteAPI Call');
+//     console.log('callNoticeDeleteAPI', selectedNotices);
+//     // console.log('callNoticeDeleteAPI', form.get('notDeleteStatus'));
+
+//     const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/notice/deleteNotice`;
+
+//     return async (dispatch, getState) => {
+//         const result = await fetch(requestURL, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json', //컨텐츠타입 확인 (문자열 형식만 날라감 (파일X)) => 백에서 값이 올때 값의 형태확인
+//                 Accept: '*/*',
+//                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+//             },
+//             body: JSON.stringify(selectedNotices), //문자열형태로 바꿔서 백으로 전달
+//             //(백)모델어트리뷰트는 문자열형태를 받을 수 없다 그래서 리퀘스트바디로 수정
+//         }).then((response) => response.json());
+
+//         console.log('callNoticeUpdateAPI : ', result);
+
+//         dispatch({ type: PUT_DELETE_NOTICE, payload: result });
+//     };
+// };

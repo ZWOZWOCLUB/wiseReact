@@ -14,7 +14,6 @@ import { callMemberDetailAPI, callMemberUpdateAPI } from "../../apis/MyPageAPICa
 function MyPageUpdate() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const member = useSelector((state) => state.mypageReducer);
   const profile = useSelector((state) => state.mpProReducer);
@@ -22,11 +21,10 @@ function MyPageUpdate() {
   const profileDetail = profile.data;
 
   const [form, setForm] = useState({
-    memCode: memberDetail.memCode,
-    memBirth: memberDetail.memBirth,
-    memEmail: memberDetail.memEmail,
-    memPhone: memberDetail.memPhone,
-    memAddress: memberDetail.memAddress,
+    memCode: token.memCode,
+      memEmail: memberDetail.memEmail,
+      memPhone: memberDetail.memPhone,
+      memAddress: memberDetail.memAddress,
   });
   
 
@@ -42,16 +40,9 @@ function MyPageUpdate() {
   const onClickUpdateMemberInfoHandler = () => {
     console.log("[memberUpdate] onClickUpdateMemberInfoHandler");
 
-    console.log("memCode----->", form.memCode);
-    console.log("memBirth----->", form.memBirth);
-    console.log("memEmail----->", form.memEmail);
-    console.log("memPhone----->", form.memPhone);
-    console.log("memAddress----->", form.memAddress);
-
     const formData = new FormData();
 
     formData.append("memCode", form.memCode);
-    formData.append("memBirth", form.memBirth);
     formData.append("memEmail", form.memEmail);
     formData.append("memPhone", form.memPhone);
     formData.append("memAddress", form.memAddress);
@@ -86,13 +77,19 @@ function MyPageUpdate() {
     }
   }, []);
 
-  function openSignatureCanvasPopup() {
-    window.open(
-      "/sign",
-      "SignatureCanvas",
-      "width=500,height=500,left=200,top=200"
-    );
-  }
+  // useEffect(() => {
+
+  //   console.log("setForm useEffect 실행--->",memberDetail);
+
+  //   setForm({
+  //     memCode: token.memCode,
+  //     memEmail: memberDetail.memEmail,
+  //     memPhone: memberDetail.memPhone,
+  //     memAddress: memberDetail.memAddress,
+  //   });
+  // }, [memberDetail]);
+
+
 
   const onClickBack = () => {
     navigate("/main/mp", { replace: true });
@@ -141,7 +138,7 @@ function MyPageUpdate() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li
@@ -230,14 +227,7 @@ function MyPageUpdate() {
                             <label htmlFor="lastName" className="form-label">
                               생년월일
                             </label>
-                            <input
-                              className="form-control"
-                              name="memBirth"
-                              type="text"
-                              autofocus
-                              value={form.memBirth}
-                              onChange={ onChangeHandler }
-                            />
+                            <div>{memberDetail.memBirth}</div>
                           </div>
                           <div className="mb-3 col-md-6">
                             <label htmlFor="email" className="form-label">

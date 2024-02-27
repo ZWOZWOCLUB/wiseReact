@@ -130,14 +130,16 @@ function EditSchedule({ appCodes, refCodes }) {
         if (form.file) {
             formData.append('approvalFile', form.file);
         }
+        const confirmLeave = window.confirm('결재를 상신하시겠습니까? ');
 
         dispatch(
             callAprovalScheduleAPI({
                 form: formData,
             })
         );
-
-        // navigate(`/main/Approval`, { replace: false });
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
     };
 
     return (

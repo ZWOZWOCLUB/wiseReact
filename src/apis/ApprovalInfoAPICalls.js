@@ -113,25 +113,4 @@ export const callSearchApprovalAPI = (search) => {
     };
 };
 
-export const callSearchSendApprovalAPI = (search) => {
-    console.log('apiForm', search.search);
-    const res = search.search;
 
-   
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/approval/searchReq`;
-
-
-    return async (dispatch) => {
-        const result = await fetch(requestURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*',
-                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
-            },
-            body: JSON.stringify(res),
-        }).then((response) => response.json());
-
-        dispatch({ type: POST_SEARCH_APPROVAL, payload: result });
-    };
-};

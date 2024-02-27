@@ -54,40 +54,6 @@ function MPDocument() {
   };
 
     //파일 다운하는 함수
-    // const onClickCrrFileDown = async (index) => {
-    //   try {
-    //     const response = await fetch(prevList.careerFileDTO[index].crrAtcPath); //파일 경로 지정
-    //     const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
-    //     const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
-    //     const link = document.createElement("a"); //a 요소 생성
-    //     link.href = url; //url을 a태그의 href속성으로 지정
-    //     link.setAttribute("download", prevList.careerFileDTO[index].crrAtcName); //다운로드 파일 이름 지정
-    //     document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
-    //     link.click(); //생성한 링크 클릭해서 파일 다운
-    //     link.parentNode.removeChild(link); //a요소 제거
-    //   } catch (error) {
-    //     console.log("등록된 파일이 없습니다");
-    //   }
-    // };
-
-  //    //파일 다운하는 함수
-  // const onClickCrrFileDown = async () => {
-  //   try {
-  //     const response = await fetch(prevList.salaryFileDTO.salAtcPath); //파일 경로 지정
-  //     const blob = await response.blob();                              //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
-  //     const url = window.URL.createObjectURL(new Blob([blob]));        //다운로드 링크 생성
-  //     const link = document.createElement('a');                        //a 요소 생성
-  //     link.href = url;                                                 //url을 a태그의 href속성으로 지정
-  //     link.setAttribute('download', prevList.salaryFileDTO.salAtcName);//다운로드 파일 이름 지정
-  //     document.body.appendChild(link);                                 //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
-  //     link.click();                                                    //생성한 링크 클릭해서 파일 다운
-  //     link.parentNode.removeChild(link);                               //a요소 제거
-  //   } catch (error) {
-  //     console.log('등록된 파일이 없습니다')
-  //   }
-  // };
-
-    //파일 다운하는 함수
     const onClickCrrFileDown = async () => {
       try {
         const urlPath =
@@ -127,75 +93,7 @@ function MPDocument() {
     document.body.removeChild(link);
   };
 
-  // const filteredDocList = docList.filter(item => item.docAtcKind !== '서명' && item.docAtcKind !== '프로필');
-
-  const onClickDown = async (index) => {
-    // index = convertFileName
-
-    if (index === "통장사본") {
-      // 통장사본파일을 조회하는 API를 호출해서 정보를 불러온다음 다운로드
-      //파일 다운하는 함수
-      try {
-        // const imageUrl = prevList.salaryFileDTO.salAtcConvertName;
-        // console.log('image 저장하기--->',prevList.salaryFileDTO.salAtcConvertName);
-        // const link = document.createElement('a');
-
-        // link.href = imageUrl;
-        // console.log('link.href',link.href);
-
-        // link.download = 'image.png'; // 파일명을 지정할 수 있습니다.
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-
-        const response = await fetch(prevList.salaryFileDTO.salAtcPath); //파일 경로 지정
-        const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
-        const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
-        const link = document.createElement("a"); //a 요소 생성
-        link.href = url; //url을 a태그의 href속성으로 지정
-        link.setAttribute("download", prevList.salaryFileDTO.salAtcName); //다운로드 파일 이름 지정
-        document.body.appendChild(link);
-        link.download = "통장 사본"; //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
-        link.click(); //생성한 링크 클릭해서 파일 다운
-        link.parentNode.removeChild(link);
-
-        //       const imageUrl = 'http://localhost:8001/salary/d1d5cefa23184c4f9b7be548862379bf.png';
-
-        // const link = document.createElement('a');
-        // link.href = imageUrl;
-        // link.download = 'image.png'; // 파일명을 지정할 수 있습니다.
-
-        // document.body.appendChild(link);
-
-        // link.click();
-
-        // document.body.removeChild(link);
-        // navigate("/main/test", { replace: true })
-      } catch (error) {
-        console.log("등록된 파일이 없습니다");
-      }
-    } else {
-      try {
-        const response = await fetch(index); //파일 경로 지정
-        const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
-        const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
-        const link = document.createElement("a"); //a 요소 생성
-        link.href = url; //url을 a태그의 href속성으로 지정
-        link.setAttribute("download", index); //다운로드 파일 이름 지정
-        document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
-        link.click(); //생성한 링크 클릭해서 파일 다운
-        link.parentNode.removeChild(link); //a요소 제거
-      } catch (error) {
-        console.log("등록된 파일이 없습니다");
-      }
-    }
-  };
-
-  // const onClickDown = (tab) => {
-  //   if (tab === '통장사본') {
-  //     // 통장사본파일을 조회하는 API를 호출해서 정보를 불러온다음 다운로드
-  //   }
-  // };
+  
 
   console.log("doc--->", doc);
   console.log("docList--->", docList);
@@ -242,7 +140,7 @@ function MPDocument() {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1"></i> 프로필 정보
+                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
                     </span>
                   </li>
                   <li

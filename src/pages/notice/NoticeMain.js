@@ -9,6 +9,7 @@ import './noticeMain.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { callAllViewNoticeAPI } from '../../apis/NoticeAPICalls.js';
+import { callNoticeDeleteAPI } from '../../apis/NoticeAPICalls.js';
 
 import { useNavigate } from 'react-router-dom';
 function formatDate(date) {
@@ -25,19 +26,22 @@ function formatDate(date) {
 function NoticeMain() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const notice = useSelector((state) => state.noticeReducer);
     const noticeList = notice.data?.content;
-
+    
     console.log('noticeList', noticeList);
-
+    
     const [start, setStart] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageEnd, setPageEnd] = useState(1);
     const pageInfo = notice.pageInfo || {};
     const [search, setSearch] = useState('');
     const [searchNotice, setSearchNotice] = useState([]);
+    const [selectedNotices, setSelectedNotices] = useState([]);
 
+    console.log('notice', notice);
+    console.log('noticeList', noticeList);
+    
     console.log('pageInfo', pageInfo);
     console.log('pageInfo.pageEnd', pageInfo.pageEnd);
 
@@ -51,6 +55,7 @@ function NoticeMain() {
     useEffect(() => {
         console.log('currentPage', currentPage);
         setStart((currentPage - 1) * 5);
+        setSearch('');
         dispatch(
             callAllViewNoticeAPI({
                 currentPage: currentPage,
@@ -68,6 +73,8 @@ function NoticeMain() {
         console.log('~~~~~~~~~~~~', e.target.value);
         setSearch(e.target.value);
     };
+
+    
 
     // 선택한 검색 조건을 저장할 상태 (기본값은 'title'로 설정)
     const [searchType, setSearchType] = useState('title');
@@ -103,6 +110,46 @@ function NoticeMain() {
     const navigateToDetailPage = (notCode) => {
         navigate(`/main/notice/detail/${notCode}`);
     };
+
+    const handleCheckboxChange = (notCode, isChecked) => {
+        
+        if (isChecked) {
+            // 체크된 경우, 선택된 목록에 추가
+             setSelectedNotices((prev) => [...prev, { notCode }]);
+            console.log("체크박스 체크 ", notCode);
+        } else {
+            // 해제된 경우, 선택된 목록에서 제거
+            setSelectedNotices((prev) => prev.filter((notice) => notice.notCode !== notCode));
+            console.log("체크박스 체크해제", notCode);
+        }
+    };
+
+    const onClickNotDelete = async () => {
+        console.log('selectedNotices', selectedNotices);
+
+        if (selectedNotices.length > 0) {
+            // 선택된 공지사항이 있는 경우, API 호출을 통해 삭제 처리
+            try {
+                // 선택된 공지사항들의 notCode만 추출하여 배열로 생성
+                // const notCodesToDelete = selectedNotices.map((notice) => notice.notCode);
+                // console.log('Deleting notices with notCodes:', notCodesToDelete);
+                // await dispatch(callNoticeDeleteAPI(notCodesToDelete)); // 선택된 공지사항을 삭제하는 API 호출
+                const noticesToDelete = selectedNotices.map((notCode) => ( notCode ));
+                await dispatch(callNoticeDeleteAPI(noticesToDelete));
+                console.log('Deleting notices:', noticesToDelete);
+                
+                // const noticeList = 
+
+                setSelectedNotices([]); // 삭제 후 선택된 공지사항 목록 초기화
+                dispatch(callAllViewNoticeAPI({ currentPage })); // 공지사항 목록 새로고침
+            } catch (error) {
+                console.error('Error deleting notices:', error);
+            }
+        } else {
+            alert('삭제할 공지사항을 선택하세요.');
+        }
+    };
+
 
     return (
         <>
@@ -167,7 +214,7 @@ function NoticeMain() {
                                                     <input
                                                         className='form-check-input mt-0'
                                                         type='checkbox'
-                                                        defaultValue=''
+                                                        value=''
                                                         aria-label='Checkbox for following text input'
                                                     />
                                                 </th>
@@ -204,37 +251,50 @@ function NoticeMain() {
                                                           </tr>
                                                       ))
                                                     : Array.isArray(noticeList) &&
-                                                      noticeList.map((not, index) => (
-                                                          <tr
-                                                              key={index}
-                                                              onClick={() => navigateToDetailPage(not.notCode)}
-                                                              style={{ cursor: 'pointer' }}
-                                                          >
-                                                              <td>
-                                                                  <input
-                                                                      className='form-check-input mt-0'
-                                                                      type='checkbox'
-                                                                      defaultValue=''
-                                                                      aria-label='Checkbox for following text input'
-                                                                  />
-                                                              </td>
-                                                              <td>{index + 1}</td> {/*공지 번호 */}
-                                                              <td>{not.notName}</td> {/*공지 제목 */}
-                                                              <td>
-                                                                  {not.notMember.posCode.posName}{' '}
-                                                                  {not.notMember.memName}
-                                                              </td>{' '}
-                                                              {/*작성자 */}
-                                                              <td>{formatDate(new Date(not.notCreateDate))}</td>
-                                                              <td>{not.notView}</td> {/*조회수 */}
-                                                          </tr>
-                                                      ))}
+                                                      noticeList
+                                                          .map((not, index) => (
+                                                              <tr
+                                                                  key={index}
+                                                                  onDoubleClick={() =>
+                                                                      navigateToDetailPage(not.notCode)
+                                                                  }
+                                                                  style={{ cursor: 'pointer' }}
+                                                              >
+                                                                  <td>
+                                                                      <input
+                                                                          className='form-check-input mt-0'
+                                                                          type='checkbox'
+                                                                          value=''
+                                                                          aria-label='Checkbox for following text input'
+                                                                          onChange={(e) =>
+                                                                              handleCheckboxChange(
+                                                                                  not.notCode,
+                                                                                  e.target.checked
+                                                                              )
+                                                                          }
+                                                                      />
+                                                                  </td>
+                                                                  <td>{index + 1}</td> {/*공지 번호 */}
+                                                                  <td>{not.notName}</td> {/*공지 제목 */}
+                                                                  <td>
+                                                                      {not.notMember.posCode.posName}{' '}
+                                                                      {not.notMember.memName}
+                                                                  </td>{' '}
+                                                                  {/*작성자 */}
+                                                                  <td>{formatDate(new Date(not.notCreateDate))}</td>
+                                                                  <td>{not.notView}</td> {/*조회수 */}
+                                                              </tr>
+                                                          ))}
                                             </tbody>
                                         </table>
                                         <div className='pay-top-wrapper'>
                                             <div style={{ width: '3%' }} />
                                             {/* 삭제버튼 */}
-                                            <div className='btn btn-danger' style={{ width: '10%' }}>
+                                            <div
+                                                className='btn btn-danger'
+                                                style={{ width: '10%' }}
+                                                onClick={onClickNotDelete}
+                                            >
                                                 <b>삭제</b>
                                             </div>
                                             <div style={{ width: '30%' }} />

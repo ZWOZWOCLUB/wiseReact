@@ -130,6 +130,8 @@ function Annual({ appCodes, refCodes }) {
             formData.append('approvalFile', form.file);
         }
 
+        const confirmLeave = window.confirm('결재를 상신하시겠습니까? ');
+
         dispatch(
             callAprovalAnnualAPI({
                 form: formData,
@@ -137,7 +139,9 @@ function Annual({ appCodes, refCodes }) {
             console.log('dt')
         );
 
-        // navigate(`/main/Approval`, { replace: false });
+        if (confirmLeave) {
+            navigate(`/main/Approval`, { replace: false });
+        }
     };
 
     return (

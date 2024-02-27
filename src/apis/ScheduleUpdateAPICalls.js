@@ -22,6 +22,9 @@ export const callScheduleUpdateAPI = ({ form }) => {
     if (result.status === 200) {
       dispatch({ type: PUT_SCHEDULE, payload: result });
       console.log({ result });
+    } else {
+      alert("근무 기록이 있어 수정 불가능합니다.");
+      window.location.reload();
     }
   };
 };

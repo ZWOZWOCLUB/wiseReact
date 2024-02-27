@@ -104,33 +104,35 @@ function Main() {
 
         weeks.forEach((week) => {
             week.forEach((day) => {
-                const matchingSchedules = scheduleList?.filter((schedule) => {
-                    const startDate = new Date(schedule?.schStartDate);
-                    const endDate = new Date(schedule?.schEndDate);
-                    return day >= startDate && day <= endDate;
-                });
-
-                matchingSchedules.forEach((schedule) => {
-                    let shouldDisplayEvent = false;
-
-                    schedule.patternDayList.forEach((pattern) => {
-                        if (pattern.weekDay.dayName === getDayName(day.getDay())) {
-                            shouldDisplayEvent = true;
-                        }
+                if (scheduleList.length > 0) {
+                    const matchingSchedules = scheduleList?.filter((schedule) => {
+                        const startDate = new Date(schedule?.schStartDate);
+                        const endDate = new Date(schedule?.schEndDate);
+                        return day >= startDate && day <= endDate;
                     });
 
-                    if (shouldDisplayEvent) {
-                        updatedEvents.push({
-                            id: `event_${day.getDate()}_${schedule.schCode}`,
-                            calendarId: 'cal1',
-                            title: schedule.schType + ' ',
-                            start: day,
-                            end: day,
-                            category: 'allday',
-                            backgroundColor: schedule.schColor,
+                    matchingSchedules.forEach((schedule) => {
+                        let shouldDisplayEvent = false;
+
+                        schedule.patternDayList.forEach((pattern) => {
+                            if (pattern.weekDay.dayName === getDayName(day.getDay())) {
+                                shouldDisplayEvent = true;
+                            }
                         });
-                    }
-                });
+
+                        if (shouldDisplayEvent) {
+                            updatedEvents.push({
+                                id: `event_${day.getDate()}_${schedule.schCode}`,
+                                calendarId: 'cal1',
+                                title: schedule.schType + ' ',
+                                start: day,
+                                end: day,
+                                category: 'allday',
+                                backgroundColor: schedule.schColor,
+                            });
+                        }
+                    });
+                }
             });
         });
         console.log('업데이트 이벤트 ');
