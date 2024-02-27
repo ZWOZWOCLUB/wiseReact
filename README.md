@@ -1,70 +1,13 @@
-# Getting Started with Create React App
+병원 맞춤형 HR솔루션 **슬기로운HR**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ 병원 직원들을 관리하기 위한 맞춤형 HR솔루션인 슬기로운HR을 소개합니다.
 
-## Available Scripts
+ 저희 솔루션은 병원이라는 특수한 환경의 요구사항에 맞춰 설계하였습니다. 
 
-In the project directory, you can run:
+기본적인 HR기능들은 물론, 다양한 근무형태(day, night, evening)에 중점을 둔 근태 관리와 스케줄링 기능을 제공합니다. 
 
-### `npm start`
+ 메인 화면은 사용자와 그 팀원들의 근무 스케줄을 한눈에 확인할 수 있도록 스케줄 달력을 크게 차지하는 방향으로 구성하였습니다. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+이는 사용자가 그 날의, 더 넓게는 한달의 근무를 계획하고 조정하는 데에 직관성을 높여줍니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ 또한, 결재 현황 확인과 출퇴근 기록 메뉴도 포함하여, 중요하게 확인해야할 요소들을 메인화면에 배치하여 사용자로 하여금 필요한 정보를 빠르고 쉽게 접근할 수 있도록 하였습니다.
