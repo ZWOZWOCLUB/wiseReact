@@ -26,7 +26,7 @@ function EditCommuteCom(props) {
     const onClickDocFileDown = async (index) => {
         try {
             const urlPath =
-                'http://3.39.174.77' +
+                'http://localhost:8001' +
                 '/memberFiles/' +
                 props.data.approvalType.approval.approvalMember.memCode +
                 '/' +
