@@ -1,6 +1,6 @@
 import { POST_SCHEDULE } from "../modules/ScheduleModule";
 import { GET_SCHEDUEL_TREE } from "../modules/ScheduleTreeModule";
-import { GET_SCHEDUEL_UPDATE_TREE } from "../modules/ScheduleUpdateTreeModule";
+// import { GET_SCHEDUEL_UPDATE_TREE } from "../modules/ScheduleUpdateTreeModule";
 
 //전체 스케줄 조회
 export const callScheduleSearchAPI = ({ yearMonth, memberCode }) => {
@@ -55,28 +55,28 @@ export const callSchaduleTreeAPI = () => {
   };
 };
 
-//수정에서 트리 조회
-export const callSchaduleUpdateTreeAPI = ({ schCode }) => {
-  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/UpdateTreeView/${schCode}`;
+// //수정에서 트리 조회
+// export const callSchaduleUpdateTreeAPI = ({ schCode }) => {
+//   const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/schedule/UpdateTreeView/${schCode}`;
 
-  return async (dispatch) => {
-    const result = await fetch(requestURL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "*/*",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    }).then((response) => response.json({ schCode }));
+//   return async (dispatch) => {
+//     const result = await fetch(requestURL, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "*/*",
+//         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+//       },
+//     }).then((response) => response.json({ schCode }));
 
-    if (result.status === 200) {
-      console.log(
-        "[OrganizationChartAPICalls] callOrganizationTreeAPI SUCCESS"
-      );
+//     if (result.status === 200) {
+//       console.log(
+//         "[OrganizationChartAPICalls] callOrganizationTreeAPI SUCCESS"
+//       );
 
-      dispatch({ type: GET_SCHEDUEL_UPDATE_TREE, payload: result.data });
+//       dispatch({ type: GET_SCHEDUEL_UPDATE_TREE, payload: result.data });
 
-      console.log(result);
-    }
-  };
-};
+//       console.log(result);
+//     }
+//   };
+// };

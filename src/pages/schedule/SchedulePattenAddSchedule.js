@@ -11,7 +11,7 @@ import "../../assets/js/config.js";
 import coreCSS from "../../@core/vendor/css/core.module.css";
 import payCSS from "../../@core/css/make_schedule.module.css";
 import { callSchedulePatternAndDaySearchAPI } from "../../apis/SchedulePatternDayAPICalls.js";
-import { callSchaduleTreeAPI } from "../../apis/ScheduleAPICalls.js";
+import { callOrganizationTreeAPI } from "../../apis/OrganizationChartAPICalls.js";
 import { callScheduleUpdateAPI } from "../../apis/ScheduleUpdateAPICalls.js";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
 import CheckboxTree2 from "react-checkbox-tree";
@@ -19,7 +19,7 @@ import CheckboxTree2 from "react-checkbox-tree";
 const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const allList = useSelector((state) => state.schedulePatternDayReducer);
-  const department = useSelector((state) => state.scheduleUpdateTreeReducer);
+  const department = useSelector((state) => state.organizationListReducer);
   const result = useSelector((state) => state.scheduleUpdateReducer);
 
   const [checkeds, setCheckeds] = useState([]);
@@ -31,7 +31,7 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const [updateSelectedDayIndices, setUpdateSelectedDayIndices] = useState([]);
   const result2 = useSelector((state) => state.scheduleInsertReducer);
   useEffect(() => {
-    dispatch(callSchaduleTreeAPI());
+    dispatch(callOrganizationTreeAPI());
   }, []);
 
   useEffect(() => {
@@ -213,8 +213,6 @@ const SchedulePattenAddSchedule = forwardRef((props, ref) => {
   const onClickIndex = (index) => {
     console.log("ddddddddddddd", index);
     setModalIndex(index);
-
-    dispatch(callSchaduleTreeAPI());
   };
 
   useEffect(() => {

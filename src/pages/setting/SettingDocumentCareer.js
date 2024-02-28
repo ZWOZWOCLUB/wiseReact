@@ -35,7 +35,7 @@ function SettingDocumentCareer() {
   const onClickCrrFileDown = async (index) => {
     try {
       const urlPath =
-        "http://3.39.174.77/:8001" +
+        "http://localhost:8001" +
         "/career/" +
         prevList.careerFileDTO[index].crrAtcConvertName;
       console.log(urlPath);

@@ -35,7 +35,7 @@ function SettingDocumentSalary() {
   const onClickSalFileDown = async () => {
     try {
       const urlPath =
-        "http://3.39.174.77:8001" +
+        "http://localhost:8001" +
         "/salary/" +
         prevList.salaryFileDTO.salAtcConvertName;
       console.log(urlPath);

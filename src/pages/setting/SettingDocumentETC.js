@@ -62,7 +62,7 @@ function SettingDocumentETC() {
   const onClickDocFileDown = async (index) => {
     try {
       const urlPath =
-        "http://3.39.174.77:8001" +
+        "http://localhost:8001" +
         "/etcDocumentFile/" +
         prevList.documentFileDTO[index].docAtcConvertName;
       console.log(urlPath);

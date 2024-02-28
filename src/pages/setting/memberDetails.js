@@ -239,7 +239,7 @@ function MemberAdd() {
                 {profileUrl ? (
                   <img
                     src={profileUrl}
-                    alt="profileUrl 사진 등록"
+                    alt="로딩중"
                     className="d-block rounded"
                     height={120}
                     width={100}
@@ -248,7 +248,7 @@ function MemberAdd() {
                 ) : profileDetail ? (
                   <img
                     src={profileDetail.docAtcPath}
-                    alt="profileDetail 사진 등록"
+                    alt="로딩중"
                     className="d-block rounded"
                     height={120}
                     width={100}
