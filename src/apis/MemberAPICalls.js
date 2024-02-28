@@ -6,7 +6,7 @@ export const callLoginAPI = ({ form }) => {
     
     return async (dispatch, getState) => {
 
-        const result = await fetch(requestURL, {
+            const result = await fetch(requestURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ if (result.status === 200) {
             // 로그인 실패 시 사용자에게 실패 알림
             alert('로그인 실패: ' + (result.message || '로그인 실패'));
         }
-        
+                
     };
 };
 

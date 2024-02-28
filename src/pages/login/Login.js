@@ -130,7 +130,7 @@ function Login() {
                         </div>
                         <div className="mb-3">
                             {/* <button onClick={onClickLoginHandler}>로그인</button> */}
-                            <button type="submit" className={styles.loginbtn} >로그인</button> {/* className="btn btn-primary" */}
+                            <button type="submit" id='loginbtn' className={styles.loginbtn} >로그인</button> {/* className="btn btn-primary" */}
                         </div>
                         </form>
                     </div>
