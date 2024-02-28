@@ -140,12 +140,11 @@ function EditCommute({ appCodes, refCodes }) {
       })
     );
     if (confirmLeave) {
-      navigate(`/main/Approval`, { replace: false });
+      navigate(`/main/SendApproval`, { replace: false });
     }
 
     console.log("time", formData.get("ediTime"));
 
-    // navigate(`/main/Approval`, { replace: false });
   };
 
   return (

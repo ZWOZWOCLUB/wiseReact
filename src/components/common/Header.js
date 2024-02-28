@@ -784,11 +784,12 @@ const onClickNotice = () => {
             )}
             {tab === "newWrite" && (
               <div
-                style={{
-                  marginTop: "10px",
-                  height: "25px",
-                }}
-              >
+              style={{
+                marginTop: "10px",
+                height: "1000px",
+                overflowY: "auto",
+              }}
+            >
                 {referencer.data &&
                   referencer.data.map((referencer) => (
                     <div

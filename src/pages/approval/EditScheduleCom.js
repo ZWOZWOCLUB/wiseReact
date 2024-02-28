@@ -81,9 +81,8 @@ function EditScheduleCom(props) {
             })
         );
         if (confirmLeave) {
-            navigate(`/main/Approval`, { replace: false });
+            navigate(`/main/Approval`, { replace: true });
         }
-
     };
     return (
         <>
@@ -158,8 +157,7 @@ function EditScheduleCom(props) {
                     <div name='vacContents' id='document-contents2'>
                         {props.data.approvalType?.eshContents}
                     </div>
-                    {props.data.approvalAttachment[0] &&
-                    props.data?.approvalComplete[0]?.approval.approvalMember.memCode !== token.memCode ? (
+                    {props.data.approvalAttachment[0] ? (
                         <>
                             <div style={{ marginTop: '30px' }}>
                                 {props.data.approvalAttachment[0]?.payAtcOriginalName}
