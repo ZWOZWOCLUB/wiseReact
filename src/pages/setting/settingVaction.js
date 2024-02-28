@@ -14,9 +14,12 @@ function SettingVacation() {
   const vacHis = useSelector((state) => state.mpVacHisReducer);
   const vacData = vac.data;
   const vacHisData = vacHis.data;
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("en-US", {
+    year: "numeric",
+  });
+  const [selectedOption, setSelectedOption] = useState(formattedDate);
 
-  console.log(vacData);
-  console.log(vacHisData);
   useEffect(() => {
     dispatch(
       callVacAPI({
@@ -26,9 +29,21 @@ function SettingVacation() {
     dispatch(
       callVacHisAPI({
         memCode: memberCode,
+        year: selectedOption, // 이건 나중에 원하는 년도를 넘겨주면 그 해당 날짜 데이터를 받을 수 있음
       })
     );
   }, []);
+
+  useEffect(() => {
+    dispatch(
+      callVacHisAPI({
+        memCode: memberCode,
+        year: selectedOption,
+      })
+    );
+  }, [selectedOption]);
+  console.log(vacData);
+  console.log(vacHisData);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -87,13 +102,7 @@ function SettingVacation() {
 
     window.location.reload();
   };
-  const currentDate = new Date();
 
-  const formattedDate = currentDate.toLocaleDateString("en-US", {
-    year: "numeric",
-  });
-
-  const [selectedOption, setSelectedOption] = useState(formattedDate);
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
