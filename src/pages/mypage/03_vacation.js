@@ -348,7 +348,7 @@ function MPVacation() {
                                 </div>
                               </div>
                               <span className="fw-semibold d-block mb-1">
-                                누적 사용 연차
+                                이번 년도 누적 사용 연차
                               </span>
                               <h3 className="card-title mb-2">
                                 {vacDetail.vctAmountSpendVacation}회

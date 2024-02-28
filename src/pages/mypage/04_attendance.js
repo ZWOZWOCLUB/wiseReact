@@ -22,16 +22,12 @@ function MPAttendance() {
   const day = currentDate.getDate().toString().padStart(2, "0");
   const formattedDate1 = `${year}-${month}-${day}`;
 
-  const holiday = useSelector((state) => state.mpSignReducer);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = decodeJwt(window.localStorage.getItem("accessToken"));
   const att = useSelector((state) => state.mpATTReducer);
   const attList = useSelector((state) => state.mpATTListReducer);
   const attDetail = att.data;
-  const [currentYear, setCurrentYear] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(null);
 
   const [value, setValue] = useState(new Date()); // 초기값은 현재 날짜
   const [checkDate, setCheckDate] = useState(formattedDate1); // 초기값은 현재 날짜
@@ -58,13 +54,6 @@ function MPAttendance() {
     }
   }, []);
 
-  // // Calendar의 뷰가 변경될 때 호출되는 이벤트 핸들러
-  // const handleViewChange = ({ activeStartDate }) => {
-  //   console.log('View changed - Year:', activeStartDate.getFullYear(), 'Month:', activeStartDate.getMonth() + 1);
-  // };
-
-  // 일기 작성 날짜 리스트
-  const dayList = ["2024-02-10", "2024-02-02", "2024-02-14"];
 
   // 공휴일 목록
   const holidayList = [
@@ -92,23 +81,17 @@ function MPAttendance() {
 
   // 날짜 리스트를 보고 해당 날짜에 css를 추가하는 함수
   const addContent = (date) => {
-    const dayOfWeek = moment(date).format("dddd");
-
-    // 해당 날짜(하루)에 추가할 컨텐츠의 배열
-    // const contents = [];
-    // const today = moment(); // 현재 날짜를 가져옴
-    const yesterday = moment().subtract(1, "days");
-    // const dateString = moment(date).format("YYYY-MM-DD");
 
     const attListDetail = attList.data;
+
     let arr = [];
+
     let arr2 = [];
     let arr3 = [];
     let arr4 = [];
 
     if (attListDetail !== undefined) {
-      {
-        attListDetail.map((item) => {
+      { attListDetail.map((item) => {
           if (item.attStatus === "출근") {
             arr.push(item.attWorkDate);
           }
@@ -125,7 +108,6 @@ function MPAttendance() {
       }
     }
 
-    // date(각 날짜)가 리스트의 날짜와 일치하면 해당 컨텐츠(이모티콘) 추가
     if (holidayList.find((day) => day === moment(date).format("MM-DD"))) {
       return (
         <div className="diaryContent" style={{ backgroundColor: "lightYellow" }}>
@@ -133,9 +115,6 @@ function MPAttendance() {
         </div>
       );
     }
-    // else if(dayOfWeek === "Saturday" || dayOfWeek === "Sunday"){
-    //   return <div className="diaryContent"></div>;
-    // }
     else {
       if (arr.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
         return (
@@ -318,12 +297,10 @@ function MPAttendance() {
                             <div>
                               <Calendar
                                 onChange={setValue}
-                                // onChange={( activeStartDate ) => onChangeDate(activeStartDate)}
                                 value={value}
                                 onClickDay={onClickDayHandler}
                                 tileContent={({ date }) => addContent(date)}
                                 view="month"
-                                // onViewChange={handleViewChange}
                               />
                             </div>
                             {/* 캘린더 끝 */}
