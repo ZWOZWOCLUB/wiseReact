@@ -210,8 +210,8 @@ function Header() {
       );
       dispatch(callOrganizationTreeAPI());
 
-      if (recMessageList !== undefined && recMessageList.length !== 0) {
-        if (recMessage.data[0].recMsgCheckStatus === "N") {
+      if (firstRec.data !== undefined && firstRec.data.length !== 0) {
+        if (firstRec.data[0].recMsgCheckStatus === "N") {
           setCheck(true);
           // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
 
@@ -222,6 +222,19 @@ function Header() {
           );
         }
       }
+
+      // if (recMessageList !== undefined && recMessageList.length !== 0) {
+      //   if (recMessage.data[0].recMsgCheckStatus === "N") {
+      //     setCheck(true);
+      //     // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
+
+      //     dispatch(
+      //       callMsgCheckStatusChangeAPI({
+      //         memCode: token.memCode,
+      //       })
+      //     );
+      //   }
+      // }
     }
   };
 
@@ -295,18 +308,31 @@ function Header() {
 
 
     }
-    if (perAlarmList !== undefined && perAlarmList.length !== 0) {
-      if (perAlarm.data[0].perArmCheckStatus === "N") {
+
+    if (firstAlarm.data !== undefined && firstAlarm.data.length !== 0) {
+      if (firstAlarm.data[0].perArmCheckStatus === "N") {
         setAlarm(true);
         // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
 
         dispatch(
           callAlarmCheckStatusChangeAPI({
-            perArmCode: perAlarm.data[0].perArmCode,
+            perArmCode: firstAlarm.data[0].perArmCode,
           })
         );
       }
     }
+    // if (perAlarmList !== undefined && perAlarmList.length !== 0) {
+    //   if (perAlarm.data[0].perArmCheckStatus === "N") {
+    //     setAlarm(true);
+    //     // 해당 msg 코드를 넘겨 상태 N을 Y로 업데이트 하는 API 호출
+
+    //     dispatch(
+    //       callAlarmCheckStatusChangeAPI({
+    //         perArmCode: perAlarm.data[0].perArmCode,
+    //       })
+    //     );
+    //   }
+    // }
   };
 
   // 공지사항 클릭 시 작동하는 함수
