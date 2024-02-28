@@ -84,7 +84,6 @@ function EditScheduleCom(props) {
             navigate(`/main/Approval`, { replace: false });
         }
 
-        // navigate(`/main/Approval`, { replace: false });
     };
     return (
         <>
