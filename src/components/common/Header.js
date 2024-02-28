@@ -75,6 +75,8 @@ function Header() {
   const firstNotice = useSelector((state) => state.aamFirstNoticeReducer);
   const firstAlarm = useSelector((state) => state.aamFirstSendReducer);
 
+  console.log('firstRec',firstRec);
+
   const [checked, setChecked] = useState([]);
   const [names, setNames] = useState("");
   const [codes, setCodes] = useState("");
@@ -412,6 +414,7 @@ const onClickNotice = () => {
 
     if (firstAlarm.data !== undefined && firstAlarm.data.length !== 0) {
       if (firstAlarm.data[0].perArmCheckStatus === "N") {
+        console.log('setAlarm false 지정');
         setAlarm(false);
       }
     }
