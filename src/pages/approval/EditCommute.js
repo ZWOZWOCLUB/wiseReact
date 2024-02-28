@@ -163,9 +163,7 @@ function EditCommute({ appCodes, refCodes }) {
                         <option value='0'>--선택--</option>
                         <option value='퇴근시간'>퇴근시간</option>
                         <option value='출근시간'>출근시간</option>
-                        <option value='결근(근무)'>결근(근무)</option>
-                        <option value='결근(지각)'>결근(지각)</option>
-                        <option value='결근(조퇴)'>결근(조퇴)</option>
+                        <option value='결근'>결근</option>
                     </select>
                 </div>
                 <div>
