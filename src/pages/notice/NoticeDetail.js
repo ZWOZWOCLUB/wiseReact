@@ -130,7 +130,7 @@ function NoticeDetail() {
     console.log('comment.comMember', comment.comMember);
     console.log('posCode', comment.comMember?.posCode);
 
-    //e
+    //다운로드
     const onClickDown = async (index) => {
         try {
             const urlPath =
@@ -142,13 +142,13 @@ function NoticeDetail() {
             console.log(urlPath);
 
             const response = await fetch(urlPath); //파일 경로 지정
-            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            const blob = await response.blob();
             const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
-            const link = document.createElement('a'); //a 요소 생성
-            link.href = url; //url을 a태그의 href속성으로 지정
-            link.setAttribute('download', detail[index].notAttachedFile[0].notAtcName); //다운로드 파일 이름 지정   document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            const link = document.createElement('a'); 
+            link.href = url; 
+            link.setAttribute('download', detail[index].notAttachedFile[0].notAtcName); //다운로드 파일 이름
             link.click(); //생성한 링크 클릭해서 파일 다운
-            link.parentNode.removeChild(link); //a요소 제거
+            link.parentNode.removeChild(link);
         } catch (error) {
             console.log('등록된 파일이 없습니다');
         }

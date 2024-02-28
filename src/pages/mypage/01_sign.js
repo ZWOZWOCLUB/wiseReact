@@ -54,12 +54,8 @@ function Sign() {
           memCode: token.memCode,
         })
       );
-
     }
-
   }, []);
-
-
 
   console.log("result--->", sign);
 
@@ -154,30 +150,29 @@ function Sign() {
     };
   }, [drawble]);
 
-  
   // 데이터 URL을 Blob 객체로 변환하는 함수
-const dataURLtoBlob = (dataURL) => {
-  const parts = dataURL.split(';base64,');
-  const contentType = parts[0].split(':')[1];
-  const raw = window.atob(parts[1]);
-  const rawLength = raw.length;
-  const uInt8Array = new Uint8Array(rawLength);
+    const dataURLtoBlob = (dataURL) => {
+    const parts = dataURL.split(";base64,");
+    const contentType = parts[0].split(":")[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
 
-  for (let i = 0; i < rawLength; ++i) {
+    for (let i = 0; i < rawLength; ++i) {
       uInt8Array[i] = raw.charCodeAt(i);
-  }
+    }
 
-  return new Blob([uInt8Array], { type: contentType });
-};
+    return new Blob([uInt8Array], { type: contentType });
+  };
 
-  // 저장 버튼 클릭 시 넘어가는 메소드
+  // 저장 버튼 클릭 시 넘어가는 함수
   const handleSaveClick = () => {
     const canvas = canvasRef.current;
-    console.log('canvas',canvas);
+    console.log("canvas", canvas);
     const link = document.createElement("a");
 
     link.href = canvas.toDataURL("image/png");
-    console.log('link.href',link.href);
+    console.log("link.href", link.href);
     const dataURL = canvas.toDataURL("image/png");
 
     link.download = "sign.png";
@@ -190,13 +185,12 @@ const dataURLtoBlob = (dataURL) => {
     formData.append("memCode", token.memCode);
     if (dataURL) {
       const blob = dataURLtoBlob(dataURL);
-      console.log('formdata productImage 넣음');
+      console.log("formdata productImage 넣음");
       formData.append("productImage", blob);
     }
 
     // 이미 있으니 update로
     if (sign.status === 200) {
-      console.log('이미 있으니 update 합니다');
       dispatch(
         callSignUpdateAPI({
           form: formData,
@@ -206,7 +200,6 @@ const dataURLtoBlob = (dataURL) => {
 
     // 없으니까 insert로
     if (sign.status === 401) {
-      console.log('없으니 insert 합니다.');
       dispatch(
         callSignInsertAPI({
           form: formData,
@@ -265,7 +258,11 @@ const dataURLtoBlob = (dataURL) => {
                       className="nav-link"
                       onClick={() => handleTabClick("프로필 정보")}
                     >
-                      <i className="bx bx-user me-1" style={{color: '#566a7f'}}></i> 프로필 정보
+                      <i
+                        className="bx bx-user me-1"
+                        style={{ color: "#566a7f" }}
+                      ></i>{" "}
+                      프로필 정보
                     </span>
                   </li>
                   <li

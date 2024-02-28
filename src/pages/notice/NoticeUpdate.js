@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 // import { useLocation } from 'react-router';
 function NoticeUpdate() {
-    const navigate = useNavigate;
+    const navigate = useNavigate();
     const location = useLocation();
     const file = location.state.file;
     const detail = location.state.detail;
@@ -68,13 +68,6 @@ function NoticeUpdate() {
         const file = e.target.files[0];
         setNoticeFiles(file);
         setFileName(file.name);
-        // console.log("file",file);
-
-        // setForm((prevForm) => ({
-        // ...prevForm,
-        // notAttachedFile: [file],
-        // }));
-
         console.log('파일', file);
     };
 
@@ -96,37 +89,78 @@ function NoticeUpdate() {
     };
 
     console.log('form.notCode', form.notCode);
+const onClickNoticeUpdateHandler = async () => {
+    console.log('onClickNoticeUpdateHandler', onClickNoticeUpdateHandler);
+    if (!form.notName || !form.notComment) {
+        alert('제목과 내용을 입력해주세요.');
+        return; // 작성이 완료되지 않도록 함수 종료
+    }
 
-    const onClickNoticeUpdateHandler = () => {
-        console.log('onClickNoticeUpdateHandler', onClickNoticeUpdateHandler);
-        if (!form.notName || !form.notComment) {
-            alert('제목과 내용을 입력해주세요.');
-            return; // 작성이 완료되지 않도록 함수 종료
-        }
-
-        console.log('노티스파일 : ', noticeFiles);
-        form.notAttachedFile = noticeFiles;
-
-        console.log('노티스 폼파일 : ', form.notAttachedFile);
-
-        const formData = new FormData();
-
-        if (noticeFiles) {
-            formData.append('noticeFile', form.notAttachedFile);
-        }
-
-        formData.append('notCode', notCode);
-        formData.append('notName', form.notName);
-        formData.append('notComment', form.notComment);
-        formData.append('notView', form.notView);
-        formData.append('notDeleteStatus', form.notDeleteStatus);
-        formData.append('notAllArmCheck', form.notAllArmCheck);
-
-        console.log('폼데이터 ', formData.get('noticeFile'));
-
-        dispatch(callNoticeUpdateAPI({ form: formData }));
-        console.log('update 완료');
+    console.log('노티스파일 : ', noticeFiles);
+    // 직접 form 상태를 수정하는 대신 새로운 상태를 설정하는 방식으로 변경
+    const updatedForm = {
+        ...form,
+        notAttachedFile: noticeFiles,
     };
+
+    console.log('노티스 폼파일 : ', updatedForm.notAttachedFile);
+
+    const formData = new FormData();
+
+    if (noticeFiles) {
+        formData.append('noticeFile', updatedForm.notAttachedFile);
+    }
+
+    formData.append('notCode', updatedForm.notCode);
+    formData.append('notName', updatedForm.notName);
+    formData.append('notComment', updatedForm.notComment);
+    formData.append('notView', updatedForm.notView);
+    formData.append('notDeleteStatus', updatedForm.notDeleteStatus);
+    formData.append('notAllArmCheck', updatedForm.notAllArmCheck);
+
+    console.log('폼데이터 ', formData.get('noticeFile'));
+
+    try {
+        // 비동기 API 호출 및 dispatch
+        await dispatch(callNoticeUpdateAPI({ form: formData }));
+        console.log('update 완료');
+        navigate('/main/notice'); // 성공 시 메인 페이지로 이동
+    } catch (error) {
+        console.error('Update failed:', error);
+        navigate('/main/notice'); // 실패해도 메인 페이지로 이동
+    }
+};
+    // const onClickNoticeUpdateHandler = async () => {
+    //     console.log('onClickNoticeUpdateHandler', onClickNoticeUpdateHandler);
+    //     if (!form.notName || !form.notComment) {
+    //         alert('제목과 내용을 입력해주세요.');
+    //         return; // 작성이 완료되지 않도록 함수 종료
+    //     }
+
+    //     console.log('노티스파일 : ', noticeFiles);
+    //     form.notAttachedFile = noticeFiles;
+
+    //     console.log('노티스 폼파일 : ', form.notAttachedFile);
+
+    //     const formData = new FormData();
+
+    //     if (noticeFiles) {
+    //         formData.append('noticeFile', form.notAttachedFile);
+    //     }
+
+    //     formData.append('notCode', notCode);
+    //     formData.append('notName', form.notName);
+    //     formData.append('notComment', form.notComment);
+    //     formData.append('notView', form.notView);
+    //     formData.append('notDeleteStatus', form.notDeleteStatus);
+    //     formData.append('notAllArmCheck', form.notAllArmCheck);
+
+    //     console.log('폼데이터 ', formData.get('noticeFile'));
+        
+    //     dispatch(callNoticeUpdateAPI({ form: formData }));
+    //     console.log('update 완료');
+        
+    // };
 
     return (
         <>
