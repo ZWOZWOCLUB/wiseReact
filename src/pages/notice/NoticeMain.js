@@ -128,22 +128,23 @@ function NoticeMain() {
         console.log('selectedNotices', selectedNotices);
 
         if (selectedNotices.length > 0) {
-            // 선택된 공지사항이 있는 경우, API 호출을 통해 삭제 처리
-            try {
-                // 선택된 공지사항들의 notCode만 추출하여 배열로 생성
-                // const notCodesToDelete = selectedNotices.map((notice) => notice.notCode);
-                // console.log('Deleting notices with notCodes:', notCodesToDelete);
-                // await dispatch(callNoticeDeleteAPI(notCodesToDelete)); // 선택된 공지사항을 삭제하는 API 호출
-                const noticesToDelete = selectedNotices.map((notCode) => ( notCode ));
-                await dispatch(callNoticeDeleteAPI(noticesToDelete));
-                console.log('Deleting notices:', noticesToDelete);
-                
-                // const noticeList = 
+            // 사용자에게 삭제 확인을 요청하는 경고창 표시
+            const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+            if (isConfirmed) {
+                // 사용자가 '확인'을 클릭한 경우, 삭제 처리 진행
+                try {
+                    const noticesToDelete = selectedNotices.map((notCode) => notCode);
+                    await dispatch(callNoticeDeleteAPI(noticesToDelete));
+                    console.log('Deleting notices:', noticesToDelete);
 
-                setSelectedNotices([]); // 삭제 후 선택된 공지사항 목록 초기화
-                dispatch(callAllViewNoticeAPI({ currentPage })); // 공지사항 목록 새로고침
-            } catch (error) {
-                console.error('Error deleting notices:', error);
+                    setSelectedNotices([]); // 삭제 후 선택된 공지사항 목록 초기화
+                    dispatch(callAllViewNoticeAPI({ currentPage })); // 공지사항 목록 새로고침
+                } catch (error) {
+                    console.error('Error deleting notices:', error);
+                }
+            } else {
+                // 사용자가 '취소'를 클릭한 경우, 삭제하지 않음
+                console.log('Notice deletion cancelled by user.');
             }
         } else {
             alert('삭제할 공지사항을 선택하세요.');

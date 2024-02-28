@@ -1,3 +1,4 @@
+import { PUT_COMMENT_DELETE } from '../modules/ApprovalInfoModule.js';
 import {
     GET_ALLVIEW_NOTICE,
     POST_INSERT_NOTICE,
@@ -202,6 +203,36 @@ export const callNoticeDeleteAPI = (selectedNotices) => {
         }
     };
 };
+
+export const CallDeleteCommentAPI = (comCode) => {
+    console.log('callCommentDeleteAPI Call');
+
+    // selectedNotices를 올바른 형식으로 전달받았다고 가정
+    console.log('callCommentDeleteAPI', comCode);
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8001/comment/commentDelete`;
+
+    return async (dispatch) => {
+        try {
+            const response = await fetch(requestURL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: '*/*',
+                    Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+                },
+                body: JSON.stringify(comCode),
+            });
+            const result = await response.json();
+            console.log('callNoticeUpdateAPI : ', result);
+
+            dispatch({ type: PUT_COMMENT_DELETE, payload: result });
+        } catch (error) {
+            console.error('Error calling callNoticeDeleteAPI:', error);
+        }
+    };
+};
+
 // export const callNoticeDeleteAPI = (selectedNotices) => {
 //     console.log('callNoticeDeleteAPI Call');
 //     console.log('callNoticeDeleteAPI', selectedNotices);

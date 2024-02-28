@@ -74,11 +74,22 @@ import scheduleTreeReducer from "./ScheduleTreeModule";
 import searchProxyReducer from "./SearchProxyModule";
 import scheduleUpdateTreeReducer from "./ScheduleUpdateTreeModule";
 import organizationEditSearchReducer from "./OrganizationEditSearchModule";
+import aamFirstNoticeReducer from "./AAMFirstNoticeModule";
+import aamFirstRecReducer from "./AAMFirstRecModule";
+import aamFirstSendReducer from "./AAMFirstSendModule";
+import aamReferenceReducer from "./AAMReferencerModule";
+import aamApprovalReducer from "./AAMApprovalModule";
+
 const { combineReducers } = require("redux");
 
 // 사용할 리듀서들을 여기서 모아놓고 사용합니다.
 
 const rootReducer = combineReducers({
+  aamReferenceReducer,
+  aamApprovalReducer,
+  aamFirstNoticeReducer,
+  aamFirstRecReducer,
+  aamFirstSendReducer,
   memberReducer,
   payReducer,
   settingReducer,

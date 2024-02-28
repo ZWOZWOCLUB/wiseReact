@@ -356,7 +356,7 @@ function MyPage() {
                         width="100"
                         id="uploadedAvatar"
                       />
-                      ) : '로딩중'}
+                      ) : ''}
                             <button
                               id="btn-modal3"
                               className="modalButton"

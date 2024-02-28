@@ -254,7 +254,7 @@ function MPDocument() {
                                     <td>
                                       <div>통장 사본</div>
                                     </td>
-                                    <td>-</td>
+                                    <td>{salaryDetail.salAtcRegistDate}</td>
                                     <td>
                                       <i
                                         className="bx bx-down-arrow-alt"

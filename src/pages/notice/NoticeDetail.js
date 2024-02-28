@@ -10,7 +10,7 @@ import './noticeDetail.css';
 import { decodeJwt } from '../../utils/tokenUtils.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { callDetailNoticeAPI } from '../../apis/NoticeAPICalls.js';
+import { CallDeleteCommentAPI, callDetailNoticeAPI } from '../../apis/NoticeAPICalls.js';
 import { callNoticeCommentAPI } from '../../apis/NoticeCommentAPICall.js';
 import { useEffect, useState } from 'react';
 import { callNoticeCommentInsertAPI } from '../../apis/NoticeCommentAPICall.js';
@@ -70,7 +70,7 @@ function NoticeDetail() {
         navigate(`/main/NoticeUpdate/${notCode}`, { state: { detail: detail[0] } });
     };
 
-    //댓글
+    //댓글form
     const [form, setForm] = useState({
         comCode: '',
         comContents: '',
@@ -84,6 +84,12 @@ function NoticeDetail() {
     const onClickNoticeCommentInsertHandler = (e) => {
         e.preventDefault();
         console.log('onClickNoticeCommentInsertHandler', onClickNoticeCommentInsertHandler);
+
+        if (!form.comContents.trim()) {
+            // 댓글 내용이 비어 있거나 공백 문자만 있는 경우
+            alert('댓글을 작성해주세요');
+            return; // 함수 실행을 여기서 중단
+        }
 
         const commentData = {
             comContents: form.comContents,
@@ -124,10 +130,11 @@ function NoticeDetail() {
     console.log('comment.comMember', comment.comMember);
     console.log('posCode', comment.comMember?.posCode);
 
+    //다운로드
     const onClickDown = async (index) => {
         try {
             const urlPath =
-                'http://localhost:8001' +
+                'http://3.39.174.77' +
                 '/noticeFiles/' +
                 detail[index].notCode +
                 '/' +
@@ -135,69 +142,41 @@ function NoticeDetail() {
             console.log(urlPath);
 
             const response = await fetch(urlPath); //파일 경로 지정
-            const blob = await response.blob(); //파일 경로를 Blob 객체로 변환 Blob는 바이너리 데이터를 나타내는 객체임
+            const blob = await response.blob();
             const url = window.URL.createObjectURL(new Blob([blob])); //다운로드 링크 생성
-            const link = document.createElement('a'); //a 요소 생성
-            link.href = url; //url을 a태그의 href속성으로 지정
-            link.setAttribute('download', detail[index].notAttachedFile[0].notAtcName); //다운로드 파일 이름 지정   document.body.appendChild(link); //a요소 body에 추가 보이지 않지만 클릭 가능한 링크 생성
+            const link = document.createElement('a'); 
+            link.href = url; 
+            link.setAttribute('download', detail[index].notAttachedFile[0].notAtcName); //다운로드 파일 이름
             link.click(); //생성한 링크 클릭해서 파일 다운
-            link.parentNode.removeChild(link); //a요소 제거
+            link.parentNode.removeChild(link);
         } catch (error) {
             console.log('등록된 파일이 없습니다');
         }
     };
 
-    // useEffect(() => {
-    //     // 공지사항 상세 정보를 불러오는 동시에 조회수 증가 처리
-    //     const fetchNoticeDetail = async () => {
-    //         try {
-    //             const response = await dispatch(callDetailNoticeAPI({ notCode })).unwrap();
-    //             setNoticeDetail(response);
-    //         } catch (error) {
-    //             console.error('공지사항 상세 정보 조회 실패', error);
-    //         }
-    //     };
-
-    //     fetchNoticeDetail();
-    // }, [notCode, dispatch]);
-
-    // useEffect(() => {
-    //     let isMounted = true; // 컴포넌트 마운트 상태를 추적하는 변수
-
-    //     const fetchNoticeDetail = async () => {
-    //         if (isMounted) {
-    //             // 컴포넌트가 마운트된 상태에서만 API 호출
-    //             try {
-    //                 const response = await dispatch(callDetailNoticeAPI({ notCode })).unwrap();
-    //                 setNoticeDetail(response);
-    //             } catch (error) {
-    //                 console.error('공지사항 상세 정보 조회 실패', error);
-    //             }
-    //         }
-    //     };
-
-    //     fetchNoticeDetail();
-
-    //     return () => {
-    //         isMounted = false; // 컴포넌트 언마운트 시 isMounted를 false로 설정
-    //     };
-    // }, [notCode, dispatch]);
-
-useEffect(() => {
-    const increaseViewCount = async () => {
-        if (!hasViewCountIncreased) {
-            try {
-                // 조회수 증가 API 호출
-                await dispatch(callDetailNoticeAPI(notCode)).unwrap();
-                setHasViewCountIncreased(true); // 조회수 증가 처리 완료 표시
-            } catch (error) {
-                console.error('조회수 증가 실패', error);
+    // 조회수
+    useEffect(() => {
+        const increaseViewCount = async () => {
+            if (!hasViewCountIncreased) {
+                try {
+                    await dispatch(callDetailNoticeAPI(notCode)).unwrap();
+                    setHasViewCountIncreased(true); // 조회수 증가 처리 완료 표시
+                } catch (error) {
+                    console.error('조회수 증가 실패', error);
+                }
             }
-        }
-    };
+        };
 
-    increaseViewCount();
-}, [notCode, hasViewCountIncreased, dispatch]);
+        increaseViewCount();
+    }, [notCode, hasViewCountIncreased, dispatch]);
+
+    const commentDeleteBtn = (data) => {
+        console.log('버튼zxczxc', data);
+
+        dispatch(CallDeleteCommentAPI(data));
+        console.log('됬냐구~');
+        window.location.reload();
+    };
 
     return (
         <>
@@ -338,11 +317,24 @@ useEffect(() => {
                                                                                 right: '-10px',
                                                                             }}
                                                                         >
-                                                                            <img
-                                                                                src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAgBJREFUSEu11UuojlEUBuDnjFASUZJyG7hEKEPXiXIZYaCkDChGUsrINWODkyKGZGIgA6WUXDOSZCAkl6IkRSly963af/a/7e//zzl11uzb31rrXet91157wCjbwCjn1w9gDLZgHZZgFv7gFR7iKi7hR1uhvQDW41RK2qvR59iD6zWnNoCjTaVHhkHfbxzAiTKmBnAMh4eRPHfdh8H8oATYiCsjTB5h0clK3OvkyAHG4xmmVQA+NpVNKs5rZ+HytBF+Mb7HRw4QQp2uJA+6LuA2pqf/b7EKO1ro3ITLJUBQExTl9rVxXJo6m4Nb6Wckf4m5eIQY59zOYncJ8CarMHd+hzWp9dmJ59dYgBtN11MrXT/AshLgC8a1CPwBKxJIuCxsQG9iSov/p45muQafEULXrASYh7s9ACLXhLKDJ4jA0t43VKxG/I9VERarIii6g8mVmMepy64piknZVjh/wyLEOojkkTAs6Aod5qedVIp8Lk1YF8B2nK9U0zamy7EThyoxW3GxpCgEDhpmVAJqlyqEnFjxjcsaFy26/29dr8W1FqGHchyrIka6Q2X1PTiI40PJVvHZ24h+Mj9vW9fBa2zVfg9SJ9cv7C83aY2iHDzWxpmW2537xYTtytZIV2P9Khzb7JrN2JCEm5mezBe4n/SKpfazjdJ+ACOU4l/YqAP8BfGTXRkJ43i2AAAAAElFTkSuQmCC'
-                                                                                alt='Close'
-                                                                                style={{ width: 20, height: 20 }}
-                                                                            />
+                                                                            <button
+                                                                                style={{
+                                                                                    width: '20px',
+                                                                                    height: '20px',
+                                                                                    border: 'none',
+                                                                                    padding: '0',
+                                                                                    background: 'none',
+                                                                                }}
+                                                                                onClick={() =>
+                                                                                    commentDeleteBtn(comment.comCode)
+                                                                                }
+                                                                            >
+                                                                                <img
+                                                                                    src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAgBJREFUSEu11UuojlEUBuDnjFASUZJyG7hEKEPXiXIZYaCkDChGUsrINWODkyKGZGIgA6WUXDOSZCAkl6IkRSly963af/a/7e//zzl11uzb31rrXet91157wCjbwCjn1w9gDLZgHZZgFv7gFR7iKi7hR1uhvQDW41RK2qvR59iD6zWnNoCjTaVHhkHfbxzAiTKmBnAMh4eRPHfdh8H8oATYiCsjTB5h0clK3OvkyAHG4xmmVQA+NpVNKs5rZ+HytBF+Mb7HRw4QQp2uJA+6LuA2pqf/b7EKO1ro3ITLJUBQExTl9rVxXJo6m4Nb6Wckf4m5eIQY59zOYncJ8CarMHd+hzWp9dmJ59dYgBtN11MrXT/AshLgC8a1CPwBKxJIuCxsQG9iSov/p45muQafEULXrASYh7s9ACLXhLKDJ4jA0t43VKxG/I9VERarIii6g8mVmMepy64piknZVjh/wyLEOojkkTAs6Aod5qedVIp8Lk1YF8B2nK9U0zamy7EThyoxW3GxpCgEDhpmVAJqlyqEnFjxjcsaFy26/29dr8W1FqGHchyrIka6Q2X1PTiI40PJVvHZ24h+Mj9vW9fBa2zVfg9SJ9cv7C83aY2iHDzWxpmW2537xYTtytZIV2P9Khzb7JrN2JCEm5mezBe4n/SKpfazjdJ+ACOU4l/YqAP8BfGTXRkJ43i2AAAAAElFTkSuQmCC'
+                                                                                    alt='Close'
+                                                                                    style={{ width: 20, height: 20 }}
+                                                                                />
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>

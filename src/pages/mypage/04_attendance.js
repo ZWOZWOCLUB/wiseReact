@@ -401,7 +401,7 @@ function MPAttendance() {
                             </div>
                           </div>
                         ) : (
-                          "샘플데이터 없음"
+                          "정보 없음"
                         )}
                       </div>
                     </div>
