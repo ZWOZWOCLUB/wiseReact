@@ -130,7 +130,7 @@ function PersonnelInfo(){
                                 { cerList && cerList.map(
                                   (cer) => (
                                     <tr>
-                                      <td><i className="fab fa-angular fa-lg text-danger me-3"></i><strong>{ cer.cerKind }</strong></td>
+                                      <td><i className="fab fa-angular fa-lg text-danger me-3"></i><strong>{ cer.cerName }</strong></td>
                                       <td>{ cer.cerDay }</td>
                                       <td>{ cer.cerKind }</td>
                                       <td>{ cer.cerInstitution }</td>

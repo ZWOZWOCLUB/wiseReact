@@ -186,8 +186,7 @@ function SettingVacation() {
                           </tr>
                         </thead>
                         <tbody className="table-border-bottom-0">
-                          {Array.isArray(vacHisData) &&
-                          vacHisData.length > 0 ? (
+                          {vacHisData ? (
                             vacHisData.map((v, index) => (
                               <tr>
                                 <td>{v.vacStartDate}</td>

@@ -94,9 +94,6 @@ function Assignment() {
                 const proStartDate = formatDate2(eventInfo.start);
                 const proEndDate = formatDate2(eventInfo.end);
 
-                console.log('proStartDate---->', proStartDate);
-                console.log('proEndDate---->', proEndDate);
-
                 calendar.clearGridSelections();
 
                 form.proEndDate = proEndDate;

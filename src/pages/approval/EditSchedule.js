@@ -144,7 +144,7 @@ function EditSchedule({ appCodes, refCodes }) {
       })
     );
     if (confirmLeave) {
-      navigate(`/main/Approval`, { replace: false });
+      navigate(`/main/SendApproval`, { replace: false });
     }
   };
 

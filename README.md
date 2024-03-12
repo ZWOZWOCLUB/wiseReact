@@ -11,3 +11,4 @@
 이는 사용자가 그 날의, 더 넓게는 한달의 근무를 계획하고 조정하는 데에 직관성을 높여줍니다.
 
  또한, 결재 현황 확인과 출퇴근 기록 메뉴도 포함하여, 중요하게 확인해야할 요소들을 메인화면에 배치하여 사용자로 하여금 필요한 정보를 빠르고 쉽게 접근할 수 있도록 하였습니다.
+https://onedrive.live.com/edit?id=28B54C33403EDC6B!898327&resid=28B54C33403EDC6B!898327&ithint=file%2cpptx&authkey=!ABxP8clr32yMEBA&wdo=2&cid=28b54c33403edc6b

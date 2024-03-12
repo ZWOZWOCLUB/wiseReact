@@ -121,10 +121,9 @@ function Retiredment({ appCodes, refCodes }) {
       console.log("dt")
     );
     if (confirmLeave) {
-      navigate(`/main/Approval`, { replace: false });
+      navigate(`/main/SendApproval`, { replace: false });
     }
 
-    // navigate(`/main/Approval`, { replace: false });
   };
   return (
     <>
